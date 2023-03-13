@@ -1,0 +1,23 @@
+// @mixin productTitle() {
+//     font-size: calc(1vw + 1em);
+//     font-weight: 600;
+//     // color: #000;
+//     margin-bottom: 16px;
+//     padding-bottom: 16px;
+// }
+@mixin circularImage($with, $height) {
+    .circular_image {
+        width: $with;
+        height: $height;
+        border-radius: 50%;
+        overflow: hidden;
+        /*for demo*/
+        //   display: inline-block;
+        vertical-align: middle;
+        background: #ffc0c0;
+        text-align: center;
+        .img {
+            width: 100%;
+        }
+    }
+}

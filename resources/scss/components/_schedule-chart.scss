@@ -1,0 +1,282 @@
+@use "sass:math";
+
+$chart_width: 90%;
+.chart {
+    padding: 2%;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+
+    width: $chart_width;
+    min-height: 33.1875rem;
+
+    display: flex;
+    // Trục đứng
+    flex-direction: column;
+
+    background: #ffffff;
+    border-radius: 1.25rem;
+
+    &__title {
+        width: 100%;
+        // margin: 5%;
+        margin-right: 0;
+        // font-size: 1.125rem;
+        line-height: 1.4375rem;
+        text-align: center;
+        color: #2b2f3e;
+    }
+
+    &__header {
+        width: 100%;
+        text-align: center;
+        input[type="date"] {
+            font-size: 1.5rem;
+        }
+        &__content {
+            display: inline-block;
+        }
+        button {
+            vertical-align: middle;
+            cursor: pointer;
+            border: 0.0625rem solid rgb(215, 215, 215);
+            border-radius: 0.2rem;
+            transition: all 0.5 ease;
+            &:hover {
+                opacity: 0.8;
+            }
+            &:active {
+                opacity: 0.5;
+            }
+        }
+    }
+
+    &__content {
+        width: 100% !important;
+        // margin-left: 5%;
+        font-weight: 400;
+        font-size: 1rem;
+        line-height: 1.25rem;
+
+        color: #6b6d78;
+
+        a {
+            display: contents;
+            color: unset;
+        }
+
+        &__row {
+            width: inherit;
+            display: flex;
+            margin-bottom: 0.5rem;
+            border-bottom: 0.0625rem solid #f1f2f3;
+            // border-left: 0.0625rem solid #F1F2F3;
+            &__date {
+                margin-top: 0.5rem;
+                margin-bottom: 0;
+            }
+        }
+
+        &__tasks {
+            padding: 0.8rem;
+            border-radius: 0.5rem;
+            &__title {
+                font-family: "Be Vietnam Pro", Arial, sans-serif;
+                font-style: normal;
+                font-weight: 400;
+                font-size: 0.75rem;
+                line-height: 0.9375rem;
+            }
+        }
+        $width_each_col: calc(($chart_width - 10%) / 7);
+
+        &__title {
+            width: calc($width_each_col * 2);
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        &__col {
+            cursor: pointer;
+            transition: all 0.2s linear;
+            &:hover {
+                opacity: 0.8;
+            }
+
+            width: $width_each_col;
+            $height_each_col: 5rem;
+            height: $height_each_col;
+            vertical-align: middle;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            border-radius: 1rem;
+
+            // Modifiers
+            &--bluepurple {
+                color: white;
+                background: #717eee;
+                .chart__content__tasks {
+                    background: lighten(#717eee, $amount: 4);
+                    &__title {
+                        color: lighten(#717eee, $amount: 16);
+                    }
+                }
+            }
+            &--green {
+                color: white;
+                background: #84d295;
+                .chart__content__tasks {
+                    background: lighten(#84d295, $amount: 4);
+                    &__title {
+                        color: lighten(#84d295, $amount: 16);
+                    }
+                }
+            }
+            &--red {
+                color: white;
+                background: #ff7782;
+                .chart__content__tasks {
+                    background: darken(#ff7782, $amount: 4);
+                    &__title {
+                        color: lighten(#ff7782, $amount: 16);
+                    }
+                }
+            }
+            &--orange {
+                color: white;
+                background: #ffbb55;
+                .chart__content__tasks {
+                    background: darken(#ffbb55, $amount: 4);
+                    &__title {
+                        color: lighten(#ffbb55, $amount: 16);
+                    }
+                }
+            }
+            &--blue {
+                color: white;
+                background: #45bfff;
+                .chart__content__tasks {
+                    background: darken(#45bfff, $amount: 4);
+                    &__title {
+                        color: lighten(#45bfff, $amount: 16);
+                    }
+                }
+            }
+
+            // Thuộc tính width cho cột chiếm từ 2 -> 7 cột.
+            @for $i from 2 to 8 {
+                &--w#{$i} {
+                    width: $width_each_col * $i;
+                    .chart__content__title {
+                        width: unset;
+                    }
+                }
+            }
+
+            &__date {
+                cursor: unset;
+                height: 2rem;
+                justify-content: left;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 320px) {
+    .chart {
+        max-width: $chart_width;
+        &__content {
+            // margin-left: 2%;
+
+            $width_each_col: calc(($chart_width - 4%) / 7);
+            &__tasks {
+                padding: 0.2rem;
+            }
+
+            &__col {
+                width: $width_each_col;
+
+                // Thuộc tính width cho cột chiếm từ 2 -> 7 cột.
+                @for $i from 2 to 8 {
+                    &--w#{$i} {
+                        width: $width_each_col * $i;
+                        .chart__content__title {
+                            width: unset;
+                        }
+                    }
+
+                    &--w#{$i} .chart__content__tasks {
+                        padding: 0.4rem !important;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media screen and (min-width: 320px) and (max-width: 425px) {
+    .chart {
+        max-width: $chart_width;
+        &__content {
+            // margin-left: 2%;
+
+            $width_each_col: calc(($chart_width - 4%) / 7);
+            &__tasks {
+                padding: 0.2rem;
+            }
+
+            &__col {
+                width: $width_each_col;
+
+                // Thuộc tính width cho cột chiếm từ 2 -> 7 cột.
+                @for $i from 2 to 8 {
+                    &--w#{$i} {
+                        width: $width_each_col * $i;
+                        .chart__content__title {
+                            width: unset;
+                        }
+                    }
+
+                    &--w#{$i} .chart__content__tasks {
+                        padding: 0.4rem !important;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media screen and (min-width: 425px) and (max-width: 700px) {
+    .chart {
+        max-width: $chart_width;
+        &__content {
+            // margin-left: 0.625rem;
+
+            $width_each_col: calc(($chart_width - 4%) / 7);
+            &__tasks {
+                padding: 0.2rem;
+            }
+
+            &__col {
+                width: $width_each_col;
+
+                // Thuộc tính width cho cột chiếm từ 2 -> 7 cột.
+                @for $i from 2 to 8 {
+                    &--w#{$i} {
+                        width: $width_each_col * $i;
+                        .chart__content__title {
+                            width: unset;
+                        }
+                    }
+
+                    &--w#{$i} .chart__content__tasks {
+                        padding: 0.4rem !important;
+                    }
+                }
+            }
+        }
+    }
+}
