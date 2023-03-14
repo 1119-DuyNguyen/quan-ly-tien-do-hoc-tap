@@ -7,5 +7,7 @@ export class DashBoard {
         adjust.run();
         var schedule = new ScheduleChart();
         schedule.run();
+        //time header
+        customFuncs.appendTextNowTime('.classroom__header__description');
     }
 }
