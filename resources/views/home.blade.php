@@ -55,7 +55,7 @@
                         </div>
                     </li> -->
                 <li>
-                    <a href="{{ url('/') }}" class="sidebar__nav__link" onclick="return false;">
+                    <a href="{{ url('/') }}" class="sidebar__nav__link">
                         <i class="fa-solid fa-house icon"></i>
                         <span class="sidebar__nav__text"> Trang chủ </span>
                     </a>
@@ -68,19 +68,19 @@
                 </li>
 
                 <li>
-                    <a href="{{ url('/quan-ly-tot-nghiep') }}" class="sidebar__nav__link" onclick="return false;">
+                    <a href="{{ url('/quan-ly-tot-nghiep') }}" class="sidebar__nav__link">
                         <i class="fa-solid fa-chart-simple icon"></i>
                         <span class="sidebar__nav__text">Quản lý tiến trình tốt nghiệp</span>
                     </a>
                 </li>
                 <li>
-                    <a href="{{ url('/lop-hoc') }}" class="sidebar__nav__link" onclick="return false;">
+                    <a href="{{ url('/lop-hoc') }}" class="sidebar__nav__link">
                         <i class="fa-solid fa-chalkboard icon"></i>
                         <span class="sidebar__nav__text"> Lớp học</span>
                     </a>
                 </li>
                 <li>
-                    <a href="{{ url('/logout') }}" class="sidebar__nav__link" onclick="return false;">
+                    <a href="{{ url('/logout') }}" class="sidebar__nav__link">
                         <i class="fa-solid fa-arrow-right-from-bracket icon"></i>
                         <span class="sidebar__nav__text">Đăng xuất</span>
                     </a>
