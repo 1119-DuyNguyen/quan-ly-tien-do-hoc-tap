@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Test\TestApi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,5 +18,6 @@ use Illuminate\Support\Facades\Route;
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();
 // });
-Route::post('/register', 'Auth\UserAuthController@register');
-Route::post('/login', 'Auth\UserAuthController@login');
+// Route::post('/register', 'Auth\UserAuthController@register');
+// Route::post('/login', 'Auth\UserAuthController@login');
+Route::apiResource('/test', TestApi::class);

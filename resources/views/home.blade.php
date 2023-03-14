@@ -40,39 +40,8 @@
                         </div>
                     </div>
                 </li>
-                <!-- <li>
-                        <div class="sidebar__nav__static">
-                            <div class="sidebar__nav__title">
-                                <h3 class="sidebar__nav__title__header">
-                                    Nguyễn Thanh Duy
-                                </h3>
 
-                                <span class="sidebar__nav__title__description">
-                                    <i
-                                        class="fa-solid fa-graduation-cap icon"
-                                    ></i
-                                    >Sinh viên</span
-                                >
-                            </div>
-                        </div>
-                    </li> -->
-                <li>
-                    <!-- <div class="sidebar__nav__static">
-                            <div class="sidebar__nav__img user-login">
-                                <div class="user-login__info">
-                                    <h3 class="user-login__info__title">
-                                        Nguyễn Thanh Duy đẹp trai hightlight
-                                    </h3>
-                                    <div class="user-login__info__description">
-                                        <i
-                                            class="fa-solid fa-graduation-cap icon"
-                                        ></i>
-                                        <span>Sinh viên</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> -->
-                </li>
+
                 <!-- <li>
                         <div
                             class="user-search-bar input-icons sidebar__nav__link"
@@ -86,34 +55,34 @@
                         </div>
                     </li> -->
                 <li>
-                    <a href="#" class="sidebar__nav__link" onclick="return false;">
+                    <a href="{{ url('/') }}" class="sidebar__nav__link" onclick="return false;">
                         <i class="fa-solid fa-house icon"></i>
                         <span class="sidebar__nav__text"> Trang chủ </span>
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="sidebar__nav__link" onclick="return false;">
+                    <a href="{{ url('/info') }}" class="sidebar__nav__link">
                         <i class="fa-regular fa-user icon"></i>
                         <span class="sidebar__nav__text">Thông tin cá nhân</span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="#" class="sidebar__nav__link" onclick="return false;">
+                    <a href="{{ url('/quan-ly-tot-nghiep') }}" class="sidebar__nav__link" onclick="return false;">
                         <i class="fa-solid fa-chart-simple icon"></i>
                         <span class="sidebar__nav__text">Quản lý tiến trình tốt nghiệp</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="sidebar__nav__link" onclick="return false;">
+                    <a href="{{ url('/lop-hoc') }}" class="sidebar__nav__link" onclick="return false;">
                         <i class="fa-solid fa-chalkboard icon"></i>
                         <span class="sidebar__nav__text"> Lớp học</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="sidebar__nav__link" onclick="return false;">
-                        <i class="fa-solid fa-book icon"></i>
-                        <span class="sidebar__nav__text">Bài tập</span>
+                    <a href="{{ url('/logout') }}" class="sidebar__nav__link" onclick="return false;">
+                        <i class="fa-solid fa-arrow-right-from-bracket icon"></i>
+                        <span class="sidebar__nav__text">Đăng xuất</span>
                     </a>
                 </li>
             </ul>
@@ -129,6 +98,7 @@
     <script src="./js/adjustProcessLayout.js"></script>
     <script src="./js/setTimeCalendar.js"></script>
     <script src="./js/setColorClassItem.js"></script> --}}
+
 </body>
 
 </html>
