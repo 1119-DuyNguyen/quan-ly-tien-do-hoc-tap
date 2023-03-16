@@ -1,0 +1,405 @@
+<div class="center-container">
+    <div class="center-container__class-header">
+        <div class="center-container__class-header--class-name">
+            LẬP TRÌNH WEB VÀ ỨNG DỤNG
+        </div>
+        <div
+            class="center-container__class-header--teacher-name center-container__class-header--sub-header"
+        >
+            <strong>Giảng viên: </strong>Nguyễn Thanh Duy
+        </div>
+        <div
+            class="center-container__class-header--subject-code center-container__class-header--sub-header"
+        >
+            <strong>Mã môn học: </strong>861040
+        </div>
+        <div
+            class="center-container__class-header--class-group center-container__class-header--sub-header"
+        >
+            <strong>Nhóm môn học: </strong>18
+        </div>
+    </div>
+    <div class="center-container__class-dashboard">
+        <div class="center-container__class-dashboard-tab">
+            <div class="center-container__class-dashboard-tab-btn">
+                Bài đăng
+            </div>
+            <div class="center-container__class-dashboard-tab-btn">Bài tập</div>
+            <div class="center-container__class-dashboard-tab-btn">
+                Mọi người
+            </div>
+        </div>
+        <div class="center-container__class-dashboard-tab-content">
+            <div class="center-container__class-dashboard--post tab-content">
+                <button
+                    type="submit"
+                    class="center-container__class-dashboard--post--add-btn class-dashboard-btn"
+                >
+                    Thêm bài đăng mới
+                </button>
+                <form
+                    class="new-post__form center-container__class-dashboard--new-post"
+                    action="#"
+                >
+                    <div class="new-post__form--container">
+                        <label for="fname">Tiêu đề:</label>
+                        <input
+                            type="text"
+                            class="new-post__tilte"
+                            name="fname"
+                        /><br />
+                    </div>
+                    <div class="new-post__form--container">
+                        <label for="lname">Nội dung:</label>
+                        <textarea
+                            type="text"
+                            class="new-post__form--container-content"
+                            name="lname"
+                        ></textarea
+                        ><br />
+                    </div>
+
+                    <input
+                        type="file"
+                        class="new-post__form--file-input"
+                    /><br />
+                    <div class="new-post__form--submit">
+                        <button
+                            class="new-post__form--submit-cancel class-dashboard-btn-cancel"
+                        >
+                            Huỷ
+                        </button>
+                        <input type="submit" value="Thêm bài viết mới" />
+                    </div>
+                </form>
+                <div class="center-container__class-dashboard--post-feed">
+                    <div class="feed-item">
+                        <div class="feed-item__header">
+                            <img src="../img/icon.png" />
+                            <div class="feed-item__header--text">
+                                <strong>Nguyễn Thanh Duy </strong>
+                                <span>
+                                    đã thêm 1 bài tập mới: Phân tích và xử lý
+                                    cái gì đó không biết miễn là nó thật là dài
+                                    để mà test layout là chính
+                                </span>
+                                <div class="feed-item__header--text-time">
+                                    6 tháng 9
+                                </div>
+                            </div>
+                        </div>
+                        <div class="feed-item__content">
+                            <div class="feed-item__content-1">
+                                Chịu không biết ghi gì
+                            </div>
+                        </div>
+                        <form class="feed-item__comment">
+                            <img src="../img/icon.png" />
+                            <input
+                                type="text"
+                                class="feed-item__comment--input"
+                            />
+                            <input
+                                type="submit"
+                                class="feed-item__comment--btn"
+                                value="Bình luận"
+                            />
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="center-container__class-dashboard--homework tab-content"
+            >
+                <button
+                    type="submit"
+                    class="center-container__class-dashboard--homework--add-btn class-dashboard-btn"
+                >
+                    Thêm bài tập mới
+                </button>
+                <form
+                    class="new-homework__form center-container__class-dashboard--new-homework"
+                    action="#"
+                >
+                    <div class="new-homework__form--container">
+                        <label for="fname">Tiêu đề bài tập:</label>
+                        <input
+                            type="text"
+                            class="new-homework__tilte"
+                            name="fname"
+                        /><br />
+                    </div>
+                    <div class="new-homework__form--container">
+                        <label for="fname">Điểm tối đa:</label>
+                        <input
+                            type="number"
+                            class="new-homework__score"
+                            name="fname"
+                        /><br />
+                    </div>
+                    <div class="new-homework__form--container">
+                        <label for="fname">Ngày hết hạn:</label>
+                        <input
+                            type="date"
+                            class="new-homework__date"
+                            name="fname"
+                        /><br />
+                    </div>
+                    <div class="new-homework__form--container">
+                        <label for="fname">Giờ hết hạn:</label>
+                        <input
+                            type="time"
+                            class="new-homework__time"
+                            name="fname"
+                        /><br />
+                    </div>
+                    <div class="new-homework__form--container">
+                        <label for="lname">Nội dung:</label>
+                        <textarea
+                            type="text"
+                            class="new-homework__form--container-content"
+                            name="lname"
+                        ></textarea
+                        ><br />
+                    </div>
+
+                    <input
+                        type="file"
+                        class="new-homework__form--file-input"
+                    /><br />
+                    <div class="new-homework__form--submit">
+                        <button
+                            class="new-homework__form--submit-cancel class-dashboard-btn-cancel"
+                        >
+                            Huỷ
+                        </button>
+                        <input type="submit" value="Thêm bài viết mới" />
+                    </div>
+                </form>
+                <div class="homework-item">
+                    <div class="homework-item__header">
+                        <img src="../img/icon.png" />
+                        <div class="homework-item__header--text">
+                            <strong>Nguyễn Thanh Duy </strong>
+                            <span>
+                                đã thêm 1 bài tập mới: Phân tích và xử lý cái gì
+                                đó không biết miễn là nó thật là dài để mà test
+                                layout là chính </span
+                            ><br />
+                            <span class="homework-item__header--text-time">
+                                6 tháng 9 -
+                            </span>
+                            <span class="homework-item__header--text-deadline">
+                                hạn nộp 7 tháng 9
+                            </span>
+                        </div>
+                    </div>
+                    <div class="homework-item__content">
+                        <div class="homework-item__content-1">
+                            Chịu không biết ghi gì
+                        </div>
+                    </div>
+                    <div class="homework-item__progress">
+                        <div class="homework-item__progress--details">
+                            Xem thêm
+                        </div>
+                        <div class="homework-item__progress--text">
+                            Chưa hoàn thành
+                        </div>
+                        <img src="../img/clock.png" />
+                    </div>
+                </div>
+                <div class="homework-item">
+                    <div class="homework-item__header">
+                        <img src="../img/icon.png" />
+                        <div class="homework-item__header--text">
+                            <strong>Nguyễn Thanh Duy </strong>
+                            <span>
+                                đã thêm 1 bài tập mới: Phân tích và xử lý cái gì
+                                đó không biết miễn là nó thật là dài để mà test
+                                layout là chính 123123123</span
+                            ><br />
+                            <span class="homework-item__header--text-time">
+                                6 tháng 9 -
+                            </span>
+                            <span class="homework-item__header--text-deadline">
+                                hạn nộp 7 tháng 9
+                            </span>
+                        </div>
+                    </div>
+                    <div class="homework-item__content">
+                        <div class="homework-item__content-1">
+                            Chịu không biết ghi gì
+                        </div>
+                    </div>
+                    <div class="homework-item__progress">
+                        <div class="homework-item__progress--details">
+                            Xem thêm
+                        </div>
+                        <div class="homework-item__progress--text">
+                            Điểm 10/10
+                        </div>
+                        <img src="../img/green_check.png" />
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="center-container__class-dashboard--everyone tab-content"
+            >
+                <div
+                    class="center-container__class-dashboard--everyone--teacher"
+                >
+                    <div
+                        class="center-container__class-dashboard--everyone--teacher-header"
+                    >
+                        <div
+                            class="center-container__class-dashboard--everyone--teacher-header-lefttext"
+                        >
+                            Giảng viên
+                        </div>
+                        <div
+                            class="center-container__class-dashboard--everyone--teacher-header-righttext"
+                        >
+                            10
+                        </div>
+                    </div>
+                    <div
+                        class="center-container__class-dashboard--everyone--teacher-member"
+                    >
+                        <div
+                            class="center-container__class-dashboard--everyone--teacher-member-item"
+                        >
+                            <img src="../img/icon.png" />
+                            <span>Võ Khương Duy</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="center-container__class-dashboard--everyone--student"
+                >
+                    <div
+                        class="center-container__class-dashboard--everyone--student-header"
+                    >
+                        <div
+                            class="center-container__class-dashboard--everyone--student-header-lefttext"
+                        >
+                            Sinh viên
+                        </div>
+                        <div
+                            class="center-container__class-dashboard--everyone--student-header-righttext"
+                        >
+                            50
+                        </div>
+                    </div>
+                    <div
+                        class="center-container__class-dashboard--everyone--student-member"
+                    >
+                        <div
+                            class="center-container__class-dashboard--everyone--student-member-item"
+                        >
+                            <img src="../img/icon.png" />
+                            <span>Nguyễn Thanh Duy</span>
+                        </div>
+                        <div
+                            class="center-container__class-dashboard--everyone--student-member-item"
+                        >
+                            <img src="../img/icon.png" />
+                            <span>Tiền Minh Vy</span>
+                        </div>
+                        <div
+                            class="center-container__class-dashboard--everyone--student-member-item"
+                        >
+                            <img src="../img/icon.png" />
+                            <span>Trần Dương Đắc Lộc</span>
+                        </div>
+                        <div
+                            class="center-container__class-dashboard--everyone--student-member-item"
+                        >
+                            <img src="../img/icon.png" />
+                            <span>Một thằng nào đó</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="right-container">
+    <div class="exercise-container">
+        <div class="exercise__header">
+            <h3 class="exercise__header--heading">
+                <span>Bài tập</span
+                ><a href="#">xem thêm<img src="./img/next.png" /></a>
+            </h3>
+        </div>
+        <div class="exercise__content">
+            <div class="exercise__content--item">
+                <div class="exercise__content--item--name">
+                    LẬP TRÌNH WEB VÀ ỨNG DỤNG NÂNG CAO ĐỂ CỐ TÌNH ĐẶT TÊN SIÊU
+                    DÀI
+                </div>
+                <div class="exercise__content--item--time">Còn 1 ngày</div>
+                <div class="exercise__content--item--status">
+                    <span>Chưa hoàn thành</span>
+                    <img src="../img/clock.png" />
+                </div>
+                <div class="exercise__content--item--option">Nộp bài</div>
+            </div>
+            <div class="exercise__content--item">
+                <div class="exercise__content--item--name">
+                    LẬP TRÌNH WEB VÀ ỨNG DỤNG NÂNG CAO ĐỂ CỐ TÌNH ĐẶT TÊN SIÊU
+                    DÀI
+                </div>
+                <div class="exercise__content--item--time">Còn 1 ngày</div>
+                <div class="exercise__content--item--status">
+                    <span>Chưa hoàn thành</span>
+                    <img src="../img/clock.png" />
+                </div>
+                <div class="exercise__content--item--option">Nộp bài</div>
+            </div>
+            <div class="exercise__content--item">
+                <div class="exercise__content--item--name">
+                    LẬP TRÌNH WEB VÀ ỨNG DỤNG NÂNG CAO ĐỂ CỐ TÌNH ĐẶT TÊN SIÊU
+                    DÀI
+                </div>
+                <div class="exercise__content--item--time">Còn 1 ngày</div>
+                <div class="exercise__content--item--status">
+                    <span>Chưa hoàn thành</span>
+                    <img src="../img/clock.png" />
+                </div>
+                <div class="exercise__content--item--option">Nộp bài</div>
+            </div>
+        </div>
+    </div>
+    <div class="noti-container">
+        <div class="noti__header">
+            <h3 class="noti__header--heading">
+                <span>Thông báo</span
+                ><a href="#">xem thêm<img src="./img/next.png" /></a>
+            </h3>
+        </div>
+        <div class="noti__content">
+            <div class="noti__content--item">
+                <div class="noti__content--item--container">
+                    <img src="../img/teacher.png" />
+                    <span
+                        >Thanh Duy vừa đăng một cái gì đó vào trong Lập trình
+                        web</span
+                    >
+                </div>
+            </div>
+            <div class="noti__content--item">
+                <div class="noti__content--item--container">
+                    <img src="../img/teacher.png" />
+                    <span
+                        >Thanh Duy vừa đăng một cái gì đó vào trong Lập trình
+                        web</span
+                    >
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
