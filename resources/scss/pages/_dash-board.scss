@@ -1,9 +1,13 @@
-
 @use '../components/schedule-chart';
 @use '../components/percentage-circle';
 @use '../color/color';
+@use '../abstract';
 
-.center-container {
+.home-container {
+    @include abstract.gridViewTemplateTwoCol(70%, 30%);
+}
+
+.home-center-container {
     padding-left: 12px;
     background: #f7fafb;
     grid-area: center;
@@ -91,7 +95,7 @@
     }
 }
 
-.right-container {
+.home-right-container {
     grid-area: right;
     gap: 15px;
     .progress-container {
@@ -296,4 +300,41 @@
             }
         }
     }
+}
+
+//mid PC
+@media (max-width: 1023px) {
+}
+
+//tablet
+@media (max-width: 768px) {
+    .home-container {
+        @include abstract.gridViewTemplateTwoCol(65%, 35%);
+    }
+}
+
+//middle size responsive to avoid layout be collapsed
+@media (max-width: 620px) {
+    .home-container {
+        @include abstract.gridViewTemplateOneCol;
+
+        .home-right-container {
+            grid-area: unset;
+        }
+    }
+}
+
+//mobile S
+@media (max-width: 450px) {
+    .home-center-container {
+        padding: 0px !important;
+        .class-item {
+            max-width: 90% !important;
+            min-width: 90% !important;
+        }
+    }
+}
+
+//mobile avg
+@media (max-width: 387px) {
 }
