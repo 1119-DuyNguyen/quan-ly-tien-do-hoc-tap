@@ -1,11 +1,18 @@
-.center-container {
+.class-container {
+    padding-left: 50px;
+    display: grid;
+    grid-template-columns: 70% 30%;
+    grid-template-areas: 'center right';
+}
+
+.class-center-container {
+    grid-area: center;
     background: #f7fafb;
     &__class-header {
         margin: 1rem 2rem;
         padding: 1rem;
         border-radius: 0.9375rem;
         align-self: flex-start;
-        width: 100%;
         background: rgba(42, 131, 255, 0.2);
         border: 0.1875rem solid #2a83ff;
         border-radius: 0.625rem;
@@ -25,8 +32,6 @@
         }
     }
     &__class-dashboard {
-        width: 90%;
-
         //css tab chọn
         &-tab {
             overflow: hidden;
@@ -560,7 +565,8 @@
     }
 }
 
-.right-container {
+.class-right-container {
+    grid-area: right;
     .exercise-container {
         display: flex;
         flex-direction: column;
@@ -699,8 +705,33 @@
     }
 }
 
+//mid PC
+@media (max-width: 1023px) {
+}
+
+//tablet
+@media (max-width: 768px) {
+    .class-container {
+        grid-template-columns: 65% 35%;
+        grid-template-areas: 'center right';
+    }
+}
+
+//middle size responsive to avoid layout be collapsed
+@media (max-width: 620px) {
+    .class-container {
+        grid-template-columns: 100%;
+        grid-template-areas: 'center';
+
+        .class-right-container {
+            grid-area: unset;
+        }
+    }
+}
+
+//mobile S
 @media (max-width: 450px) {
-    .center-container {
+    .class-center-container {
         padding: 0px !important;
         &__class-dashboard {
             width: 100%;
@@ -724,4 +755,8 @@
             }
         }
     }
+}
+
+//mobile avg
+@media (max-width: 387px) {
 }

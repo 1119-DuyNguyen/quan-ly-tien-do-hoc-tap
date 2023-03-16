@@ -1,6 +1,6 @@
 function adjustTab() {
     var tabBtn = document.querySelectorAll(
-        '.center-container__class-dashboard-tab-btn'
+        '.class-center-container__class-dashboard-tab-btn'
     );
     var tabContent = document.querySelectorAll('.tab-content');
     tabContent[0].style.display = 'block';
