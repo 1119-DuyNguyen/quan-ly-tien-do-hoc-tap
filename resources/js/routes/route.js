@@ -2,62 +2,26 @@ import { routeList } from './route-list.js';
 
 const urlPageTitle = 'Quản lý tiến độ học tập';
 const urlRoutes = routeList;
-// create document click that watches the nav links only
-// document.addEventListener('click', (e) => {
-//     const { target } = e;
-//     if (!target.matches()) {
-//         return;
-//     }
-//     e.preventDefault();
-//     urlRoute();
-// });
-customFuncs.$('.sidebar__nav a', (a) => {
-    a.addEventListener('click', (e) => {
-        e.preventDefault();
-        urlRoute();
-    });
-});
-
-// create an object that maps the url to the template, title, and description
-// const urlRoutes = {
-//     404: {
-//         template: './templates/404.html',
-//         title: '404 | ' + urlPageTitle,
-//         description: 'Page not found',
-//     },
-//     '/': {
-//         template: './templates/dashboard.html',
-//         title: 'Home | ' + urlPageTitle,
-//         description: 'This is the home page',
-//     },
-//     '/about': {
-//         template: './templates/about.html',
-//         title: 'About Us | ' + urlPageTitle,
-//         description: 'This is the about page',
-//     },
-//     '/contact': {
-//         template: './templates/contact.html',
-//         title: 'Contact Us | ' + urlPageTitle,
-//         description: 'This is the contact page',
-//     },
-// }
-// const urlRoutes = routeList
+function routeHref(href) {
+    window.history.pushState({}, '', href);
+    urlLocationHandler();
+}
 // create a function that watches the url and calls the urlLocationHandler
 const urlRoute = (event) => {
-    event = event || window.event; // get window.event if event argument not provided
+    event = event || window.event;
     event.preventDefault();
     // window.history.pushState(state, unused, target link);
-    window.history.pushState({}, '', event.target.href);
-    urlLocationHandler();
+    routeHref(event.currentTarget.href);
 };
 
 // create a function that handles the url location
 const urlLocationHandler = async () => {
-    const location = window.location.pathname; // get the url path
+    var location = window.location.pathname; // get the url path
     // if the path length is 0, set it to primary page route
     if (location.length == 0) {
         location = '/';
     }
+    //   location = localStorage();
     // get the route object from the urlRoutes object
     const route = urlRoutes[location] || urlRoutes['404'];
     // get the html from the template
@@ -78,8 +42,28 @@ const urlLocationHandler = async () => {
 };
 
 // add an event listener to the window that watches for url changes
-window.onpopstate = urlLocationHandler;
+// window.onpopstate = urlLocationHandler;
+window.addEventListener('popstate', (e) => {
+    urlLocationHandler();
+});
 window.route = urlRoute;
+
+// create document click that watches the nav links only
+// document.addEventListener('click', (e) => {
+//     const { target } = e;
+//     if (!target.matches()) {
+//         return;
+//     }
+//     e.preventDefault();
+//     urlRoute();
+// });
+customFuncs.$('.sidebar__nav a', (a) => {
+    a.addEventListener('click', (e) => {
+        e.preventDefault();
+        urlRoute(e);
+        console.log(a);
+    });
+});
 // call the urlLocationHandler function to handle the initial url
 window.addEventListener('DOMContentLoaded', () => {
     urlLocationHandler();

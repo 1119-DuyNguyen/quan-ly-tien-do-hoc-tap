@@ -1,0 +1,104 @@
+.people-container {
+    min-width: 37.5rem;
+    padding: 1.25rem;
+    padding-left: 1.5625rem;
+    background: #2A83FF33;
+    .lecturer-container {
+        margin-top: 0.625rem;
+        margin-right: 0.625rem;
+        min-height: 8.75rem;
+    }
+    .students-container {
+        margin-top: 1.5625rem;
+        margin-right: 0.625rem;
+        min-height: 8.75rem;
+    }
+    .container {
+        &__info {
+            height: 3.125rem;
+            padding: 0.625rem;
+            position: relative;
+        }
+        &__title {
+            font-weight: 500;
+            font-size: 1.5rem;
+            line-height: 1.875rem;
+            color: #2A83FF;
+            display: inline;
+        }
+        &__splitter {
+            width: inherit;
+            margin: 0.625rem;
+            margin-right: 0;
+            border-bottom: 0.0625rem solid #2A83FF;
+        }
+        &__count {
+            position: absolute;
+            display: inline;
+            bottom: 0.625rem;
+            right: 1.5625rem;
+            font-weight: 500;
+            font-size: 0.875rem;
+            line-height: 1.125rem;
+            color: #9CA8BA;
+        }
+    }
+    .lecturer {
+        height: 3.125rem;
+        display: flex;
+        align-items: center;
+        &__avatar {
+            margin-left: 1.5625rem;
+            display: inline-block;
+            width: 2.8125rem;
+            height: 2.8125rem;
+            * {
+                width: inherit;
+            }
+        }
+        &__name {
+            display: inline-block;
+            margin-left: 0.9375rem;
+            font-weight: 500;
+            font-size: 0.9375rem;
+            line-height: 1.1875rem;
+            color: #2B2F3E;
+        }
+    }
+    .student {
+        height: 3.125rem;
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.625rem;
+        &__avatar {
+            margin-left: 1.5625rem;
+            display: inline-block;
+            width: 2.8125rem;
+            height: 2.8125rem;
+            * {
+                width: inherit;
+            }
+        }
+        &__name {
+            display: inline-block;
+            margin-left: 0.9375rem;
+            font-weight: 500;
+            font-size: 0.9375rem;
+            line-height: 1.1875rem;
+            color: #2B2F3E;
+        }
+    }
+}
+
+@media screen and (max-width: 360px) {
+    .people-container {
+        min-width: 17.5rem;
+    }
+}
+@media screen and (min-width: 360px) and (max-width: 768px) {
+    .people-container {
+        min-width: 17.5rem;
+        width: 80vw;
+        max-width: 43rem;
+    }
+}
