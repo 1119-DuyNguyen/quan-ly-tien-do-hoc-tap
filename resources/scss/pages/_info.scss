@@ -1,0 +1,107 @@
+// @use '../abstract';
+
+// .info-content {
+//     padding-top: 21px;
+//     padding-left: 50px;
+// }
+
+// .info-content > * {
+//     margin-inline: auto;
+//     // width: max-content;
+// }
+
+// .info-header {
+//     background-color: #2a83ff;
+//     color: white;
+//     width: 60%;
+//     height: 80px;
+//     display: grid;
+//     border-radius: 13px;
+// }
+
+// .header-name {
+//     font-size: 28px;
+//     margin: auto;
+// }
+
+// .info-body {
+//     display: grid;
+//     gap: 50px;
+//     grid-template-columns: auto;
+//     margin-top: 3rem;
+//     margin-inline: 3.2rem;
+// }
+
+// .item__container {
+//     width: 80%;
+//     margin: auto;
+// }
+
+// .item__title {
+//     color: black;
+//     margin-bottom: 0.6875rem;
+//     text-transform: capitalize;
+//     font-weight: bold;
+// }
+
+// .item__block {
+//     // display: grid;
+//     // grid-template-columns: auto auto;
+//     background-color: white;
+//     border: 0.0625rem solid abstract.$primary-color;
+//     border-radius: 0.625rem;
+//     padding: 1.5625rem;
+// }
+
+// .item__line:not(:last-child) {
+//     margin-bottom: 0.875rem;
+// }
+
+// .item__line {
+//     font-size: 1.125rem;
+//     display: grid;
+//     grid-template-columns: 40% auto;
+// }
+
+// .item-line__text {
+//     margin-block: auto;
+//     // display: inline-block;
+//     // width: 9.375rem;
+//     &--strong {
+//         font-weight: 700;
+//         font-size: 20px;
+//         color: abstract.$primary-color;
+//     }
+// }
+
+// input.item-line__text {
+//     height: 35px;
+//     padding-block: auto;
+//     padding-inline: 10px;
+// }
+
+// .item__button {
+//     margin-top: 30px;
+//     margin-inline: auto;
+//     width: 100px;
+//     height: 35px;
+//     display: grid;
+//     background-color: #ff7782;
+//     color: white;
+//     border-radius: 5px;
+//     font-weight: 700;
+//     & > * {
+//         margin: auto;
+//     }
+// }
+
+// .item__button:hover {
+//     background-color: #e53935;
+//     // filter: brightness(80%);
+//     cursor: pointer;
+// }
+
+// .item__button:active {
+//     transition: all 50ms;
+//     transform: translateY(2px);
+// }

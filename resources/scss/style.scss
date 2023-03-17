@@ -3,9 +3,11 @@
 @use './base/customNormalize';
 @use './base/animation';
 @use './base/fonts';
+@use './base/color';
+
 //import file scss của m vào dưới
 @use './layouts/header';
 @use './pages/dash-board';
 @use './pages/class';
-
+@use './pages/info';
 @use './theme/darkMode';
