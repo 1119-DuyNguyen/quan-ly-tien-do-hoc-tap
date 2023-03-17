@@ -1,19 +1,14 @@
-@use "../components/schedule-chart";
-@use "../components/percentage-circle";
-@use "../color/color";
+@use '../abstract';
+@use '../components/schedule-chart';
+@use '../components/percentage-circle';
+@use '../components/popup';
+@use '../components/people';
 
-body {
-    width: fit-content;
+.home-container {
+    @include abstract.gridViewTemplateTwoCol(70%, 30%);
 }
 
-#main-content {
-    padding-left: 50px;
-    display: grid;
-    grid-template-columns: 70% 30%;
-    grid-template-areas: "center right";
-}
-
-.center-container {
+.home-center-container {
     padding-left: 12px;
     background: #f7fafb;
     grid-area: center;
@@ -52,56 +47,60 @@ body {
             }
         }
     }
-    .class-item {
-        position: relative;
-        max-width: 10rem;
-        min-width: 10rem;
-        max-height: 14.6875rem;
-        min-height: 10rem;
-
-        border-radius: 0.9375rem;
-        text-align: center;
-        margin: 5px;
-
-        &:hover {
-            cursor: pointer;
-            opacity: 0.6;
-        }
-
-        .class-item__text {
-            overflow: hidden;
-            width: 90%;
-            display: -webkit-box;
-            -webkit-line-clamp: 4;
-            -webkit-box-orient: vertical;
-
+    .class-item-container {
+        display: grid;
+        grid-template-columns: 25% 25% 25% 25%;
+        justify-items: center;
+        .class-item {
+            position: relative;
+            max-width: 10rem;
+            max-height: 14.6875rem;
+            min-height: 10rem;
+            display: inline-block;
+            border-radius: 0.9375rem;
             text-align: center;
-            color: #ffffff;
-            margin: 0 auto;
-        }
-        .class-item__bar {
-            position: absolute;
-            width: 90%;
-            height: 0.3125rem;
-            background-color: #ffffff;
-            bottom: 1.5rem;
-            border-radius: 15px;
-            transform: translate(10px);
-            .class-item__bar--progress {
-                background-color: #666666;
-                height: 0.3125rem;
-                width: 56%;
-                border-radius: 15px;
+            margin: 5px;
+
+            &:hover {
+                cursor: pointer;
+                opacity: 0.6;
             }
-            > span {
-                color: white;
-                font-size: 0.8rem;
+
+            .class-item__text {
+                overflow: hidden;
+                width: 90%;
+                display: -webkit-box;
+                -webkit-line-clamp: 4;
+                -webkit-box-orient: vertical;
+
+                text-align: center;
+                color: #ffffff;
+                margin: 0 auto;
+            }
+            .class-item__bar {
+                position: absolute;
+                width: 90%;
+                height: 0.3125rem;
+                background-color: #ffffff;
+                bottom: 1.5rem;
+                border-radius: 15px;
+                transform: translate(10px);
+                .class-item__bar--progress {
+                    background-color: #666666;
+                    height: 0.3125rem;
+                    width: 56%;
+                    border-radius: 15px;
+                }
+                > span {
+                    color: white;
+                    font-size: 0.8rem;
+                }
             }
         }
     }
 }
 
-.right-container {
+.home-right-container {
     grid-area: right;
     gap: 15px;
     .progress-container {
@@ -310,57 +309,55 @@ body {
 
 //mid PC
 @media (max-width: 1023px) {
+    .class-item-container {
+        grid-template-columns: 33% 33% 33% !important;
+    }
 }
 
 //tablet
 @media (max-width: 768px) {
-    #main-content {
-        grid-template-columns: 65% 35%;
-        grid-template-areas: "center right";
+    .home-container {
+        @include abstract.gridViewTemplateTwoCol(65%, 35%);
+    }
+    .class-item-container {
+        grid-template-columns: 50% 50% !important;
+        width: 90% !important;
+        .class-item {
+            max-width: unset !important;
+            width: 95% !important;
+        }
     }
 }
 
 //middle size responsive to avoid layout be collapsed
 @media (max-width: 620px) {
-    #main-content {
-        grid-template-columns: 100%;
-        grid-template-areas: "center";
-    }
-    .right-container {
-        grid-area: unset;
-        .percentage {
-            .percentage__circle {
-                max-width: none !important;
-                min-width: none !important;
-            }
-            .percentage__taskHours {
-                .percentage__taskHours--item {
-                    max-width: none !important;
-                    img {
-                        height: 2rem !important;
-                    }
-                }
-            }
+    .home-container {
+        @include abstract.gridViewTemplateOneCol;
+
+        .home-right-container {
+            grid-area: unset;
+        }
+        .home-right-container
+            .progress-container
+            .percentage
+            .percentage__taskHours
+            .percentage__taskHours--item {
+            max-width: unset !important;
         }
     }
 }
 
 //mobile S
 @media (max-width: 450px) {
+    .home-center-container {
+        padding: 0px !important;
+    }
 }
 
 //mobile avg
-@media (max-width: 387px) {
-    .class-item {
-        max-width: unset !important;
-
-        width: 90%;
-        min-height: 8rem !important;
-        .class-item__text {
-            margin-top: 0.4rem !important;
-            h3 {
-                margin: 0px;
-            }
-        }
+@media (max-width: 390px) {
+    .class-item-container {
+        grid-template-columns: 100% !important;
+        width: 90% !important;
     }
 }

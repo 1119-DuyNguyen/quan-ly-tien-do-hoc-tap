@@ -1,10 +1,13 @@
 // tổ chức lại thư mục
-@use "./base/normalize";
-@use "./base/customNormalize";
-@use "./base/animation";
-@use "./base/fonts";
-//import file scss của m vào dưới
-@use "./layouts/header";
-@use "./pages/dash-board";
+@use './base/normalize';
+@use './base/customNormalize';
+@use './base/animation';
+@use './base/fonts';
+@use './base/color';
 
-@use "./theme/darkMode";
+//import file scss của m vào dưới
+@use './layouts/header';
+@use './pages/dash-board';
+@use './pages/class';
+@use './pages/info';
+@use './theme/darkMode';

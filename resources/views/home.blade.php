@@ -12,7 +12,7 @@
     <link href="./css/vendor/fontawesome6/css/fontawesome.css" rel="stylesheet" />
     <link href="./css/vendor/fontawesome6/css/brands.css" rel="stylesheet" />
     <link href="./css/vendor/fontawesome6/css/solid.css" rel="stylesheet" />
-
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     @vite([
     "resources/scss/style.scss",
