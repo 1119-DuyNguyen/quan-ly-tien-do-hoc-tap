@@ -2,6 +2,9 @@
 @use '../components/percentage-circle';
 @use '../color/color';
 @use '../abstract';
+@use "../components/tasks";
+@use "../components/popup";
+@use "../components/people";
 
 .home-container {
     @include abstract.gridViewTemplateTwoCol(70%, 30%);
