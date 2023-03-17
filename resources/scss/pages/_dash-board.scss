@@ -2,9 +2,8 @@
 @use '../components/percentage-circle';
 @use '../color/color';
 @use '../abstract';
-@use "../components/tasks";
-@use "../components/popup";
-@use "../components/people";
+@use '../components/popup';
+@use '../components/people';
 
 .home-container {
     @include abstract.gridViewTemplateTwoCol(70%, 30%);
@@ -49,50 +48,54 @@
             }
         }
     }
-    .class-item {
-        position: relative;
-        max-width: 10rem;
-        min-width: 10rem;
-        max-height: 14.6875rem;
-        min-height: 10rem;
-
-        border-radius: 0.9375rem;
-        text-align: center;
-        margin: 5px;
-
-        &:hover {
-            cursor: pointer;
-            opacity: 0.6;
-        }
-
-        .class-item__text {
-            overflow: hidden;
-            width: 90%;
-            display: -webkit-box;
-            -webkit-line-clamp: 4;
-            -webkit-box-orient: vertical;
-
+    .class-item-container {
+        display: grid;
+        grid-template-columns: 25% 25% 25% 25%;
+        justify-items: center;
+        .class-item {
+            position: relative;
+            max-width: 10rem;
+            max-height: 14.6875rem;
+            min-height: 10rem;
+            display: inline-block;
+            border-radius: 0.9375rem;
             text-align: center;
-            color: #ffffff;
-            margin: 0 auto;
-        }
-        .class-item__bar {
-            position: absolute;
-            width: 90%;
-            height: 0.3125rem;
-            background-color: #ffffff;
-            bottom: 1.5rem;
-            border-radius: 15px;
-            transform: translate(10px);
-            .class-item__bar--progress {
-                background-color: #666666;
-                height: 0.3125rem;
-                width: 56%;
-                border-radius: 15px;
+            margin: 5px;
+
+            &:hover {
+                cursor: pointer;
+                opacity: 0.6;
             }
-            > span {
-                color: white;
-                font-size: 0.8rem;
+
+            .class-item__text {
+                overflow: hidden;
+                width: 90%;
+                display: -webkit-box;
+                -webkit-line-clamp: 4;
+                -webkit-box-orient: vertical;
+
+                text-align: center;
+                color: #ffffff;
+                margin: 0 auto;
+            }
+            .class-item__bar {
+                position: absolute;
+                width: 90%;
+                height: 0.3125rem;
+                background-color: #ffffff;
+                bottom: 1.5rem;
+                border-radius: 15px;
+                transform: translate(10px);
+                .class-item__bar--progress {
+                    background-color: #666666;
+                    height: 0.3125rem;
+                    width: 56%;
+                    border-radius: 15px;
+                }
+                > span {
+                    color: white;
+                    font-size: 0.8rem;
+                }
             }
         }
     }
@@ -307,12 +310,23 @@
 
 //mid PC
 @media (max-width: 1023px) {
+    .class-item-container {
+        grid-template-columns: 33% 33% 33% !important;
+    }
 }
 
 //tablet
 @media (max-width: 768px) {
     .home-container {
         @include abstract.gridViewTemplateTwoCol(65%, 35%);
+    }
+    .class-item-container {
+        grid-template-columns: 50% 50% !important;
+        width: 90% !important;
+        .class-item {
+            max-width: unset !important;
+            width: 95% !important;
+        }
     }
 }
 
@@ -324,6 +338,13 @@
         .home-right-container {
             grid-area: unset;
         }
+        .home-right-container
+            .progress-container
+            .percentage
+            .percentage__taskHours
+            .percentage__taskHours--item {
+            max-width: unset !important;
+        }
     }
 }
 
@@ -331,13 +352,13 @@
 @media (max-width: 450px) {
     .home-center-container {
         padding: 0px !important;
-        .class-item {
-            max-width: 90% !important;
-            min-width: 90% !important;
-        }
     }
 }
 
 //mobile avg
-@media (max-width: 387px) {
+@media (max-width: 390px) {
+    .class-item-container {
+        grid-template-columns: 100% !important;
+        width: 90% !important;
+    }
 }
