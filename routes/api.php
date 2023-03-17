@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\UserAuthController;
 use App\Http\Controllers\Test\TestApi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -20,4 +21,9 @@ use Illuminate\Support\Facades\Route;
 // });
 // Route::post('/register', 'Auth\UserAuthController@register');
 // Route::post('/login', 'Auth\UserAuthController@login');
-Route::apiResource('/test', TestApi::class);
+//Route::post('register', [UserAuthController::class, 'register']);
+Route::post('login', [UserAuthController::class, 'login']);
+Route::middleware('auth:api')->group(function () {
+    //   Route::resource('posts', PostController::class);
+    Route::apiResource('/test', TestApi::class);
+});
