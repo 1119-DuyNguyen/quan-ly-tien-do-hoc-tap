@@ -1,43 +1,136 @@
 import { routeList } from './route-list.js';
-
-const urlPageTitle = 'Quản lý tiến độ học tập';
-const urlRoutes = routeList;
+const routeObj = {};
+const PAGE_TITLE = 'Quản lý tiến độ học tập';
+const PAGE_DESCRIPTION = 'Quản lý tiến độ, sgu';
+routeObj.listRoutes = routeList ? routeList : [];
+routeObj.currentPage = '';
+routeObj.previousPage = '';
+const SIGN_VARIABLE_URL = '$';
+/**
+ *
+ * @param {String} href
+ */
 function routeHref(href) {
+    // window.history.pushState(state, unused, target link);
     window.history.pushState({}, '', href);
     urlLocationHandler();
 }
-// create a function that watches the url and calls the urlLocationHandler
+
 const urlRoute = (event) => {
     event = event || window.event;
     event.preventDefault();
-    // window.history.pushState(state, unused, target link);
+
     routeHref(event.currentTarget.href);
 };
+// get params đã tạo
+// params url và route phải có length bằng nhau
+function checkParams(urlParams, routeParams) {
+    let paramObject = {};
+    let lengthParams = urlParams.length;
+    let matchUrl = 0;
+    console.log(urlParams, routeParams);
+    for (var i = 0; i < lengthParams; i++) {
+        //:page => ['','page']
 
-// create a function that handles the url location
+        if (routeParams[i].indexOf(SIGN_VARIABLE_URL) >= 0) {
+            var nameParam = routeParams[i].split(SIGN_VARIABLE_URL)[1];
+            paramObject[nameParam] = urlParams[i];
+            matchUrl++;
+        } else if (routeParams[i] === urlParams[i]) {
+            matchUrl++;
+        }
+    }
+    console.log(paramObject);
+    if (matchUrl === lengthParams) {
+        return paramObject;
+    }
+    return false;
+}
+/**
+ *
+ * @param {Object} route { template, js}
+ * @returns
+ */
+async function routeTo(route, _params) {
+    //  const route = routingList[href] || routingList['404'];
+
+    // get the html from the template
+    var html;
+    try {
+        // This async call may fail.
+        html = await fetch(route.template).then((response) => response.text());
+    } catch (error) {
+        console.error('không load được template');
+        return false;
+    }
+
+    if (html) {
+        document.getElementById('main-content').innerHTML = html;
+    }
+
+    document.title = route.title ? route.title : PAGE_TITLE;
+
+    document
+        .querySelector('meta[name="keywords"]')
+        .setAttribute(
+            'content',
+            route.description ? route.description : PAGE_DESCRIPTION
+        );
+    if (route.method) {
+        route.method.call(null, _params);
+    }
+    return true;
+}
+
+//thực hiện 'function(s)' theo 'url' tương ứng
+//cùng với các tham số đã phân tích được
+//Ví dụ:
+//:     /$page/$pageid
+//:     /home/3434434
+//giá trị page=>home và pageid=>3434434
+
 const urlLocationHandler = async () => {
-    var location = window.location.pathname; // get the url path
-    // if the path length is 0, set it to primary page route
-    if (location.length == 0) {
+    var location = window.location.pathname;
+    var _params;
+    if (location.length === 0) {
         location = '/';
     }
-    //   location = localStorage();
-    // get the route object from the urlRoutes object
-    const route = urlRoutes[location] || urlRoutes['404'];
-    // get the html from the template
-    const html = await fetch(route.template).then((response) =>
-        response.text()
-    );
-    // set the content of the content div to the html
-    document.getElementById('main-content').innerHTML = html;
-    // set the title of the document to the title of the route
-    // document.title = route.title;
-    // set the description of the document to the description of the route
-    // document
-    //     .querySelector('meta[name="description"]')
-    //     .setAttribute('content', route.description);
-    if (route.method) {
-        route.method.call();
+    if (routeObj.currentPage !== location) {
+        routeObj.previousPage = routeObj.currentPage;
+        routeObj.currentPage = location;
+        // filter vì user có thể nhập nhầm "//"h
+
+        var urlParams = location.split('/').filter(function (h) {
+            return h.length > 0;
+        });
+
+        let listRoutes = routeObj.listRoutes;
+        if (urlParams.length > 1) {
+            for (const href in listRoutes) {
+                // '/' => ['',''] nên filter cho mất
+                let routeParams = href.split('/').filter(function (h) {
+                    return h.length > 0;
+                });
+                if (routeParams.length === urlParams.length) {
+                    _params = checkParams(urlParams, routeParams);
+                    console.log(_params);
+
+                    if (_params) {
+                        location = href;
+                        break;
+                    }
+                }
+            }
+        }
+
+        // xóa đi "/" ở đầu và cuối;
+        location = location.replace(/^\/+|\/+$/g, '');
+        const route = listRoutes[location] || listRoutes['404'];
+
+        return routeTo(route, _params);
+    } else {
+        // bật lên toast nếu cùng trang ?
+        return false;
     }
 };
 
@@ -48,20 +141,11 @@ window.addEventListener('popstate', (e) => {
 });
 window.route = urlRoute;
 
-// create document click that watches the nav links only
-// document.addEventListener('click', (e) => {
-//     const { target } = e;
-//     if (!target.matches()) {
-//         return;
-//     }
-//     e.preventDefault();
-//     urlRoute();
-// });
 customFuncs.$('.sidebar__nav a', (a) => {
     a.addEventListener('click', (e) => {
         e.preventDefault();
         urlRoute(e);
-        console.log(a);
+        //    console.log(a);
     });
 });
 // call the urlLocationHandler function to handle the initial url

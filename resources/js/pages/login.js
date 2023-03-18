@@ -17,7 +17,7 @@ export class Login {
             }
 
             axios
-                .post(currentURL, formData, {
+                .post(currentURL, JSON.stringify(formData), {
                     headers: {
                         Accept: 'application/vnd.api+json',
                         'Content-Type': 'application/json',
@@ -26,7 +26,11 @@ export class Login {
                 .then((res) => {
                     console.log(res);
                     //  console.log(res.data);
-                });
+                })
+                .catch((error) => console.log(error));
         });
+    }
+    static show({ id }) {
+        console.log(id);
     }
 }

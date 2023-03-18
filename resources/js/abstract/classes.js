@@ -4,8 +4,9 @@ export class Route {
         return this.urlRoutes;
     }
     addRoute(route, template, callback) {
+        template = template.replace(/^\/+|\/+$/g, '');
         this.urlRoutes[route] = {
-            template: template,
+            template: location.protocol + '//' + location.host + '/' + template,
             method: callback,
         };
     }
