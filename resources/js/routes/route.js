@@ -125,6 +125,7 @@ const urlLocationHandler = async () => {
 
         // xóa đi "/" ở đầu và cuối;
         location = location.replace(/^\/+|\/+$/g, '');
+        if (!location) location = '/';
         const route = listRoutes[location] || listRoutes['404'];
 
         return routeTo(route, _params);
