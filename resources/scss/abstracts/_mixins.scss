@@ -23,7 +23,6 @@
 }
 
 @mixin gridViewTemplateTwoCol($left, $right) {
-    padding-left: 50px;
     display: grid;
     grid-template-columns: $left $right;
     grid-template-areas: 'center right';
