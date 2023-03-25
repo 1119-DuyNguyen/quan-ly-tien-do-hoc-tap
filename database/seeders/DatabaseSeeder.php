@@ -3,7 +3,18 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+
+use App\Models\Khoa;
+use App\Models\Nganh;
+use App\Models\Users\TaiKhoan;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use App\Models\Authorization\Quyen;
+use Reliese\Database\Eloquent\Model;
+use App\Models\Authorization\ChucNang;
+use Symfony\Component\Process\Process;
+
 
 class DatabaseSeeder extends Seeder
 {
@@ -12,13 +23,21 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
+        DB::statement('SET FOREIGN_KEY_CHECKS=0');
+        //remove nào có khóa ngoại rồi mới tới mấy bảng không có làm ngược lại từ dưới lên trên cái base
 
-        \App\Models\User::factory()->create([
-            'name' => 'admin',
-            'email' => 'test@example.com',
-            //123456
-            'password' => '$2y$10$WAIS5MeldX9kPDSYSNGdieK9iXl9w9.H4jU8LDoaKerssq1038gmu',
-        ]);
+        Nganh::truncate();
+        Quyen::truncate();
+        TaiKhoan::truncate();
+        Khoa::truncate();
+
+
+        //base database
+        Khoa::factory()->count(1)->create();
+        Nganh::factory()->count(5)->create();
+        Quyen::factory()->count(4)->create();
+        TaiKhoan::factory()->count(4)->create();
+
+        // ChucNang::factory()->count(10)->create();
     }
 }

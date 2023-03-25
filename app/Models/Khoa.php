@@ -1,54 +1,43 @@
 <?php
 
-/**
- * Created by Reliese Model.
- */
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Collection;
+use App\Models\Nganh;
+use App\Models\KhoiKienThuc;
+use App\Models\Users\TaiKhoan;
+use App\Models\ChuongTrinhDaoTao;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-/**
- * Class Khoa
- * 
- * @property int $maKhoa
- * @property int $tenKhoa
- * 
- * @property Collection|CanBo[] $can_bos
- * @property Collection|Nganh[] $nganhs
- * @property Collection|SinhVien[] $sinh_viens
- *
- * @package App\Models
- */
+
 class Khoa extends Model
 {
 	protected $table = 'khoa';
-	protected $primaryKey = 'maKhoa';
-	public $incrementing = false;
-	public $timestamps = false;
-
-	protected $casts = [
-		'maKhoa' => 'int',
-		'tenKhoa' => 'int'
-	];
-
+	public $timestamps = true;
+	use HasFactory;
 	protected $fillable = [
-		'tenKhoa'
+		'ma_khoa',
+		'ten'
 	];
 
-	public function can_bos()
-	{
-		return $this->belongsToMany(CanBo::class, 'can_bo_khoa', 'maKhoa', 'maCB');
-	}
+	// public function chuong_trinh_dao_taos()
+	// {
+	// 	return $this->hasMany(ChuongTrinhDaoTao::class);
+	// }
 
-	public function nganhs()
-	{
-		return $this->hasMany(Nganh::class, 'maKhoa');
-	}
+	// public function khoi_kien_thucs()
+	// {
+	// 	return $this->hasMany(KhoiKienThuc::class);
+	// }
 
-	public function sinh_viens()
-	{
-		return $this->hasMany(SinhVien::class, 'maKhoa');
-	}
+	// public function nganhs()
+	// {
+	// 	return $this->hasMany(Nganh::class);
+	// }
+
+	// public function tai_khoans()
+	// {
+	// 	return $this->hasMany(TaiKhoan::class);
+	// }
 }

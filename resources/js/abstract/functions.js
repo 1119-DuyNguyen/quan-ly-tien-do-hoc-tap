@@ -31,3 +31,17 @@ customFuncs.randomColorItem = function (classSelector, colorArrayCss) {
         element.classList.add(`${color[random++ % 5]}`);
     });
 };
+customFuncs.detectWidth = function () {
+    return (
+        window.screen.width ||
+        window.innerWidth ||
+        window.document.documentElement.clientWidth ||
+        Math.min(
+            window.innerWidth,
+            window.document.documentElement.clientWidth
+        ) ||
+        window.innerWidth ||
+        window.document.documentElement.clientWidth ||
+        window.document.getElementsByTagName('body')[0].clientWidth
+    );
+};

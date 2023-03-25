@@ -27,10 +27,8 @@ final class ChungChiFactory extends Factory
     public function definition(): array
     {
         return [
-            'maCC' => fake()->randomNumber(),
-            'tenCC' => fake()->word,
-            'ghiChu' => fake()->text,
-            'mssv' => \App\Models\SinhVien::factory(),
+            'ten_chung_chi' => fake()->word,
+            'ghi_chu' => fake()->text,
         ];
     }
 }

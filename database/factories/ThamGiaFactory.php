@@ -27,8 +27,8 @@ final class ThamGiaFactory extends Factory
     public function definition(): array
     {
         return [
-            'mssv' => \App\Models\SinhVien::factory(),
-            'maLopHoc' => \App\Models\NhomHoc::factory(),
+            'nhom_hoc_id' => \App\Models\NhomHoc::factory(),
+            'sinh_vien_id' => \App\Models\Users\TaiKhoan::factory(),
         ];
     }
 }

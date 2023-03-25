@@ -27,15 +27,11 @@ final class HocPhanFactory extends Factory
     public function definition(): array
     {
         return [
-            'maHP' => fake()->randomNumber(),
-            'tenHP' => fake()->randomNumber(),
-            'soTC' => fake()->randomNumber(),
-            'soTietLT' => fake()->randomNumber(),
-            'batBuoc' => fake()->randomNumber(),
-            'tinhVaoTichLuy' => fake()->randomNumber(),
-            'soTietTH' => fake()->randomNumber(),
-            'ptKT' => fake()->randomNumber(),
-            'ptThi' => fake()->randomNumber(),
+            'ma_hoc_phan' => fake()->word,
+            'ten' => fake()->word,
+            'so_tin_chi' => fake()->boolean,
+            'phan_tram_giua_ki' => fake()->boolean,
+            'phan_tram_cuoi_ki' => fake()->boolean,
         ];
     }
 }

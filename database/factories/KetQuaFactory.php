@@ -27,15 +27,15 @@ final class KetQuaFactory extends Factory
     public function definition(): array
     {
         return [
-            'diemQuaTrinh' => fake()->randomFloat(),
-            'diemThi' => fake()->randomFloat(),
-            'TK_10' => fake()->randomFloat(),
-            'TK_CH' => fake()->word,
-            'TK_4' => fake()->randomFloat(),
-            'KQ' => fake()->word,
-            'thoiDiem' => fake()->date(),
-            'maHP' => \App\Models\HocPhan::factory(),
-            'mssv' => \App\Models\SinhVien::factory(),
+            'hoc_phan_id' => \App\Models\HocPhan::factory(),
+            'sinh_vien_id' => \App\Models\Users\TaiKhoan::factory(),
+            'diem_qua_trinh' => fake()->randomFloat(),
+            'diem_cuoi_ky' => fake()->randomFloat(),
+            'diem_tong_ket' => fake()->randomFloat(),
+            'create_at' => fake()->dateTime(),
+            'diem_he_4' => fake()->randomFloat(),
+            'loai_he_4' => fake()->word,
+            'qua_mon' => fake()->boolean,
         ];
     }
 }

@@ -27,11 +27,14 @@ final class NhomHocFactory extends Factory
     public function definition(): array
     {
         return [
-            'maNhomHoc' => fake()->randomNumber(),
-            'tenNhomHoc' => fake()->randomNumber(),
-            'soLuongSV' => fake()->randomNumber(),
-            'maHP' => \App\Models\HocPhan::factory(),
-            'maCB' => \App\Models\CanBo::factory(),
+            'id' => fake()->randomNumber(),
+            'so_luong_sinh_vien' => fake()->randomNumber(),
+            'stt_nhom' => fake()->word,
+            'nhom_thuc_hanh' => fake()->word,
+            'hoc_phan_id' => \App\Models\HocPhan::factory(),
+            'giang_vien_id' => \App\Models\Users\TaiKhoan::factory(),
+            'create_at' => fake()->dateTime(),
+            'updated_at' => fake()->dateTime(),
         ];
     }
 }

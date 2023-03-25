@@ -1,57 +1,36 @@
 <?php
 
-/**
- * Created by Reliese Model.
- */
+
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 
-/**
- * Class Nganh
- * 
- * @property int $maNganh
- * @property int $tenNganh
- * @property int $maKhoa
- * 
- * @property Khoa $khoa
- * @property Collection|ChuongTrinhDaoTao[] $chuong_trinh_dao_taos
- * @property Collection|SinhVien[] $sinh_viens
- *
- * @package App\Models
- */
+use App\Models\Khoa;
+use App\Models\NienKhoa;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 class Nganh extends Model
 {
 	protected $table = 'nganh';
-	protected $primaryKey = 'maNganh';
-	public $incrementing = false;
-	public $timestamps = false;
+	public $timestamps = true;
+	use HasFactory;
 
-	protected $casts = [
-		'maNganh' => 'int',
-		'tenNganh' => 'int',
-		'maKhoa' => 'int'
-	];
+
 
 	protected $fillable = [
-		'tenNganh',
-		'maKhoa'
+		'ma_nganh',
+		'ten',
+		'khoa_id'
 	];
 
 	public function khoa()
 	{
-		return $this->belongsTo(Khoa::class, 'maKhoa');
+		return $this->belongsTo(Khoa::class);
 	}
 
-	public function chuong_trinh_dao_taos()
-	{
-		return $this->hasMany(ChuongTrinhDaoTao::class, 'maNganh');
-	}
-
-	public function sinh_viens()
-	{
-		return $this->hasMany(SinhVien::class, 'maNganh');
-	}
+	// public function nien_khoas()
+	// {
+	// 	return $this->hasMany(NienKhoa::class);
+	// }
 }

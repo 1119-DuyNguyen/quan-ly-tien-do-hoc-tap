@@ -13,22 +13,24 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 final class KhoaFactory extends Factory
 {
     /**
-    * The name of the factory's corresponding model.
-    *
-    * @var string
-    */
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
     protected $model = Khoa::class;
 
     /**
-    * Define the model's default state.
-    *
-    * @return array
-    */
+     * Define the model's default state.
+     *
+     * @return array
+     */
     public function definition(): array
     {
+
+
         return [
-            'maKhoa' => fake()->randomNumber(),
-            'tenKhoa' => fake()->randomNumber(),
+            'ma_khoa' => fake()->unique()->text(20),
+            'ten' => $this->faker->randomElement(["Công nghệ thông tin", "Toán ứng dụng", "Mỹ thuật", "Tài chính kế toán"]),
         ];
     }
 }

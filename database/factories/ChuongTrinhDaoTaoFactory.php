@@ -27,13 +27,14 @@ final class ChuongTrinhDaoTaoFactory extends Factory
     public function definition(): array
     {
         return [
-            'maCTDT' => fake()->randomNumber(),
-            'tenCTDT' => fake()->randomNumber(),
-            'batDau' => fake()->randomNumber(),
-            'ketThuc' => fake()->randomNumber(),
-            'tongTC' => fake()->randomNumber(),
-            'thoiGian' => fake()->randomNumber(),
-            'maNganh' => \App\Models\Nganh::factory(),
+            'id' => fake()->randomNumber(),
+            'ten' => fake()->word,
+            'tong_tin_chi' => fake()->randomNumber(),
+            'thoi_gian_dao_tao' => fake()->randomFloat(),
+            'ctdt_cha_id' => \App\Models\ChuongTrinhDaoTao::factory(),
+            'chu_ky_id' => \App\Models\ChuKy::factory(),
+            'khoa_id' => \App\Models\Khoa::factory(),
+            'trinh_do_dao_tao' => fake()->word,
         ];
     }
 }

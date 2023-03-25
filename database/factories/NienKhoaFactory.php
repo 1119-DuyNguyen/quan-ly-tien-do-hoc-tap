@@ -27,9 +27,9 @@ final class NienKhoaFactory extends Factory
     public function definition(): array
     {
         return [
-            'batDau' => fake()->randomNumber(),
-            'maNienKhoa' => fake()->randomNumber(),
-            'ketThucDuKien' => fake()->randomNumber(),
+            'id' => fake()->randomNumber(),
+            'nganh_id' => \App\Models\Nganh::factory(),
+            'chuong_trinh_dao_tao_id' => \App\Models\ChuongTrinhDaoTao::factory(),
         ];
     }
 }

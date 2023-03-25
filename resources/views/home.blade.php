@@ -7,16 +7,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="">
     <title>Document</title>
-    <link rel="stylesheet" href="./css/vendor/fontawesome6/css/fontawesome.min.css" />
+    <link href="{{ asset('css/vendor/fontawesome6/css/fontawesome.min.css') }}" rel="stylesheet" />
     <!-- our project just needs Font Awesome Solid + Brands -->
-    <link href="./css/vendor/fontawesome6/css/fontawesome.css" rel="stylesheet" />
-    <link href="./css/vendor/fontawesome6/css/brands.css" rel="stylesheet" />
-    <link href="./css/vendor/fontawesome6/css/solid.css" rel="stylesheet" />
+    <link href="{{ asset('css/vendor/fontawesome6/css/fontawesome.css') }}" rel="stylesheet" />
+    <link href="{{ asset('css/vendor/fontawesome6/css/brands.css') }}" rel="stylesheet" />
+    <link href="{{ asset('css/vendor/fontawesome6/css/solid.css') }}" rel="stylesheet" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
+    <meta name="keywords" content="qltdht, quản lí tiến độ học tập">
     @vite([
     "resources/scss/style.scss",
-    "resources/js/app.js",])
+    "resources/js/app.js",
+    ])
 </head>
 
 <body>
@@ -74,7 +75,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="{{ url('/lop-hoc') }}" class="sidebar__nav__link">
+                    <a href="{{ url('/class') }}" class="sidebar__nav__link">
                         <i class="fa-solid fa-chalkboard icon"></i>
                         <span class="sidebar__nav__text"> Lớp học</span>
                     </a>
