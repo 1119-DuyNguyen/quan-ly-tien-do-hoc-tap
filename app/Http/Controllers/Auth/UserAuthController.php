@@ -2,14 +2,21 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\ApiController;
+
 use App\Models\User;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\LoginRequest;
 use Illuminate\Http\Request;
+use App\Http\Requests\LoginRequest;
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\ApiController;
 
 class UserAuthController extends ApiController
 {
+    // private $loginProxy;
+
+    // public function __construct(LoginProxy $loginProxy)
+    // {
+    //     $this->loginProxy = $loginProxy;
+    // }
     //
     // public function register(Request $request)
     // {
@@ -42,9 +49,16 @@ class UserAuthController extends ApiController
             /** @var \App\Models\User $user **/
             $user = auth()->user();
             $token = $user->createToken('LaravelAuthApp')->accessToken;
-            return response()->json(['token' => $token], 200);
+            return $this->success(['access_token' => $token, 'user' => auth()->user()], 200);
         } else {
-            return response()->json(['error' => 'Đăng nhập thất bại '], 401);
+            return $this->error(['error' => 'Đăng nhập thất bại '], 401);
         }
+    }
+    public function logout(Request $request)
+    {
+        $token = $request->user()->token();
+        $token->revoke();
+        $response = ['message' => 'Đăng xuất thành công'];
+        return $this->success($response, 200);
     }
 }
