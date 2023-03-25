@@ -16,7 +16,8 @@
     <meta name="keywords" content="qltdht, quản lí tiến độ học tập">
     @vite([
     "resources/scss/style.scss",
-    "resources/js/app.js",])
+    "resources/js/app.js",
+    ])
 </head>
 
 <body>
