@@ -1,13 +1,20 @@
 export class Route {
     urlRoutes = {};
+
     getUrlRoutes() {
         return this.urlRoutes;
     }
-    addRoute(route, template, callback) {
+    addRoute(route, callback, pageInfo = { title: '', keyWord: '' }, template) {
         template = template.replace(/^\/+|\/+$/g, '');
+
+        if (template) {
+            template = location.protocol + '//' + location.host + '/' + template;
+        }
+
         this.urlRoutes[route] = {
-            template: location.protocol + '//' + location.host + '/' + template,
+            template: template,
             method: callback,
+            pageInfo: pageInfo,
         };
     }
 }

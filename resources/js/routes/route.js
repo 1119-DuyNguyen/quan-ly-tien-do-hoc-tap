@@ -1,7 +1,7 @@
 import { routeList } from './route-list.js';
 const routeObj = {};
 const PAGE_TITLE = 'Quản lý tiến độ học tập';
-const PAGE_DESCRIPTION = 'Quản lý tiến độ, sgu';
+const PAGE_KEYWORD = 'Quản lý tiến độ, sgu';
 routeObj.listRoutes = routeList ? routeList : [];
 routeObj.currentPage = '';
 routeObj.previousPage = '';
@@ -28,7 +28,7 @@ function checkParams(urlParams, routeParams) {
     let paramObject = {};
     let lengthParams = urlParams.length;
     let matchUrl = 0;
-    console.log(urlParams, routeParams);
+    //  console.log(urlParams, routeParams);
     for (var i = 0; i < lengthParams; i++) {
         //:page => ['','page']
 
@@ -58,7 +58,9 @@ async function routeTo(route, _params) {
     var html;
     try {
         // This async call may fail.
-        html = await fetch(route.template).then((response) => response.text());
+        if (route.template) {
+            html = await fetch(route.template).then((response) => response.text());
+        }
     } catch (error) {
         console.error('không load được template');
         return false;
@@ -68,14 +70,11 @@ async function routeTo(route, _params) {
         document.getElementById('main-content').innerHTML = html;
     }
 
-    document.title = route.title ? route.title : PAGE_TITLE;
+    document.title = 'QLTDHT : ' + (route.pageInfo.title ? route.pageInfo.title : PAGE_TITLE);
 
     document
         .querySelector('meta[name="keywords"]')
-        .setAttribute(
-            'content',
-            route.description ? route.description : PAGE_DESCRIPTION
-        );
+        .setAttribute('content', route.pageInfo.keyWord ? route.pageInfo.keyWord : PAGE_KEYWORD);
     if (route.method) {
         route.method.call(null, _params);
     }
@@ -90,6 +89,9 @@ async function routeTo(route, _params) {
 //giá trị page=>home và pageid=>3434434
 
 const urlLocationHandler = async () => {
+    //lọc login
+
+    //
     var location = window.location.pathname;
     var _params;
     if (location.length === 0) {
