@@ -1,14 +1,14 @@
 <?php
 
+namespace App\Models\Users\Students\TrainingProgram\Subjects;
 
-namespace App\Models;
 
 
 use App\Models\Khoa;
-use App\Models\HocPhan;
-use App\Models\LoaiKienThuc;
-use App\Models\ChuongTrinhDaoTao;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Users\Students\TrainingProgram\Subjects\HocPhan;
+use App\Models\Users\Students\TrainingProgram\ChuongTrinhDaoTao;
+use App\Models\Users\Students\TrainingProgram\Subjects\LoaiKienThuc;
 
 
 class KhoiKienThuc extends Model

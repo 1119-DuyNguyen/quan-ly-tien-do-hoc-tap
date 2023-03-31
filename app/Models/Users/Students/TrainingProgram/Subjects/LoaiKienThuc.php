@@ -1,10 +1,11 @@
 <?php
 
 
-namespace App\Models;
+namespace App\Models\Users\Students\TrainingProgram\Subjects;
 
-use App\Models\KhoiKienThuc;
+
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Users\Students\TrainingProgram\Subjects\KhoiKienThuc;
 
 
 class LoaiKienThuc extends Model

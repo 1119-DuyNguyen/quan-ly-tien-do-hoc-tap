@@ -1,11 +1,12 @@
 <?php
 
+namespace App\Models\Users\Students\TrainingProgram\Subjects;
 
-namespace App\Models;
 
-use App\Models\ChuongTrinhDaoTao;
-use App\Models\HocPhanKhoiKienThuc;
+
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Users\Students\TrainingProgram\ChuongTrinhDaoTao;
+use App\Models\Users\Students\TrainingProgram\Subjects\HocPhanKhoiKienThuc;
 
 class HocKyGoiY extends Model
 {

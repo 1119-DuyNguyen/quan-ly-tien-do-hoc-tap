@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Models;
+namespace App\Models\Users\Students\TrainingProgram;
 
 
 use Illuminate\Database\Eloquent\Model;
@@ -9,11 +9,8 @@ use Illuminate\Database\Eloquent\Model;
 class BienChe extends Model
 {
 	protected $table = 'bien_che';
-	public $incrementing = false;
-	public $timestamps = false;
 
 	protected $casts = [
-		'id' => 'int',
 		'ngay_bat_dau' => 'date',
 		'ngay_ket_thuc' => 'date'
 	];
@@ -23,4 +20,8 @@ class BienChe extends Model
 		'ngay_bat_dau',
 		'ngay_ket_thuc'
 	];
+	public function ket_quas()
+	{
+		return $this->hasMany(KetQua::class);
+	}
 }

@@ -1,10 +1,10 @@
 <?php
 
 
-namespace App\Models;
+namespace App\Models\Users\Classes\Posts;
 
-use App\Models\BaiDang;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Users\Classes\Posts\BaiDang;
 
 
 class FileBaiDang extends Model

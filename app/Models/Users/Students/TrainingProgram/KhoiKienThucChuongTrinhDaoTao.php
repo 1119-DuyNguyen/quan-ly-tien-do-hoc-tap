@@ -1,11 +1,13 @@
 <?php
 
+namespace App\Models\Users\Students\TrainingProgram;
 
-namespace App\Models;
 
-use App\Models\KhoiKienThuc;
-use App\Models\ChuongTrinhDaoTao;
+
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Users\Students\TrainingProgram\ChuongTrinhDaoTao;
+use App\Models\Users\Students\TrainingProgram\Subjects\KhoiKienThuc;
 
 
 class KhoiKienThucChuongTrinhDaoTao extends Model
@@ -13,6 +15,7 @@ class KhoiKienThucChuongTrinhDaoTao extends Model
 	protected $table = 'khoi_kien_thuc_chuong_trinh_dao_tao';
 	public $incrementing = false;
 	public $timestamps = false;
+	use HasFactory;
 
 	protected $casts = [
 		'khoi_kien_thuc_id' => 'int',

@@ -1,10 +1,12 @@
 <?php
 
+namespace App\Models\Users\Students\TrainingProgram\Subjects;
 
-namespace App\Models;
-
-use App\Models\HocPhan;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Users\Students\TrainingProgram\Subjects\HocPhan;
+
+
+
 
 class DieuKienTienQuyet extends Model
 {

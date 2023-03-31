@@ -1,10 +1,11 @@
 <?php
 
+namespace App\Models\Users\Students;
 
-namespace App\Models;
 
-use App\Models\NhomHoc;
-use App\Models\Users\TaiKhoan;
+
+use App\Models\Users\Classes\NhomHoc;
+use App\Models\Authorization\TaiKhoan;
 use Illuminate\Database\Eloquent\Model;
 
 
@@ -19,7 +20,7 @@ class ThamGia extends Model
 		'sinh_vien_id' => 'int'
 	];
 
-	public function tai_khoan()
+	public function sinh_vien()
 	{
 		return $this->belongsTo(TaiKhoan::class, 'sinh_vien_id');
 	}

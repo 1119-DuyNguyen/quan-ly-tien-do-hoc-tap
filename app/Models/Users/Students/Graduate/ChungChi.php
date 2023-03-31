@@ -1,13 +1,14 @@
 <?php
 
+namespace App\Models\Users\Students\Graduate;
 
 
-namespace App\Models;
 
-use App\Models\ChuanDauRa;
-use App\Models\SinhVienChungChi;
+
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Collection;
+use App\Models\Users\Students\SinhVienChungChi;
+use App\Models\Users\Students\Graduate\ChuanDauRa;
+
 
 class ChungChi extends Model
 {

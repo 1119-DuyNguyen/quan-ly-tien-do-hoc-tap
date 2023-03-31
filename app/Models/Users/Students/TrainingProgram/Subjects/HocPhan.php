@@ -1,13 +1,14 @@
 <?php
 
+namespace App\Models\Users\Students\TrainingProgram\Subjects;
 
-namespace App\Models;
 
-use App\Models\KetQua;
-use App\Models\NhomHoc;
-use App\Models\KhoiKienThuc;
-use App\Models\DieuKienTienQuyet;
+
+use App\Models\Users\Classes\NhomHoc;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Users\Students\TrainingProgram\Subjects\KetQua;
+use App\Models\Users\Students\TrainingProgram\Subjects\KhoiKienThuc;
+use App\Models\Users\Students\TrainingProgram\Subjects\DieuKienTienQuyet;
 
 
 class HocPhan extends Model

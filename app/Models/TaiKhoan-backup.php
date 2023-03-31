@@ -16,12 +16,12 @@ class TaiKhoan extends Authenticatable
 {
 	protected $table = 'tai_khoan';
 	public $timestamps = true;
-	use HasFactory, Notifiable, hasApiTokens, AuthorizePermissions;
-	protected $casts = [
-		'create_at' => 'date',
-		'khoa_id' => 'int',
-		'lop_hoc_id' => 'int'
-	];
+	use HasFactory, Notifiable, hasApiTokens;
+	// protected $casts = [
+	// 	'create_at' => 'date',
+	// 	'khoa_id' => 'int',
+	// 	'lop_hoc_id' => 'int'
+	// ];
 
 	protected $fillable = [
 		'ten',
@@ -45,6 +45,22 @@ class TaiKhoan extends Authenticatable
 	// {
 	// 	return $this->hasMany(BinhLuan::class, 'nguoi_dung_id');
 	// }
+	/**
+	 * Get the password for the user.
+	 *
+	 * @return string
+	 */
+	public function getAuthPassword()
+	{
+		return $this->mat_khau;
+	}
 
-
+	// public function setPasswordAttribute($value)
+	// {
+	// 	$this->attributes['mat_khau'] = bcrypt($value);
+	// }
+	public function findForPassport(string $ten_dang_nhap): TaiKhoan
+	{
+		return $this->where('ten_dang_nhap', $ten_dang_nhap)->first();
+	}
 }

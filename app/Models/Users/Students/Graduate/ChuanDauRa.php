@@ -1,12 +1,11 @@
 <?php
 
+namespace App\Models\Users\Students\Graduate;
 
 
-namespace App\Models;
-
-use App\Models\ChungChi;
-use App\Models\ChuongTrinhDaoTao;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Users\Students\Graduate\ChungChi;
+use App\Models\Users\Students\TrainingProgram\ChuongTrinhDaoTao;
 
 class ChuanDauRa extends Model
 {

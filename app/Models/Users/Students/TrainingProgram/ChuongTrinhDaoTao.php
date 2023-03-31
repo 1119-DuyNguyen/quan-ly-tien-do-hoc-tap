@@ -1,44 +1,41 @@
 <?php
 
-
-
-namespace App\Models;
+namespace App\Models\Users\Students\TrainingProgram;
 
 use App\Models\Khoa;
-use App\Models\ChuKy;
-use App\Models\NienKhoa;
-use App\Models\HocKyGoiY;
-use App\Models\ChuanDauRa;
-use App\Models\KhoiKienThuc;
+use App\Models\Users\Students\NienKhoa;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Collection;
+use App\Models\Users\Students\Graduate\ChuanDauRa;
+use App\Models\Users\Students\TrainingProgram\ChuKy;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Users\Students\TrainingProgram\Subjects\HocKyGoiY;
+use App\Models\Users\Students\TrainingProgram\Subjects\KhoiKienThuc;
 
 
 class ChuongTrinhDaoTao extends Model
 {
 	protected $table = 'chuong_trinh_dao_tao';
-	public $incrementing = false;
-	public $timestamps = false;
+	use HasFactory;
+
 
 	protected $casts = [
-		'id' => 'int',
 		'tong_tin_chi' => 'int',
 		'thoi_gian_dao_tao' => 'float',
-		'ctdt_cha_id' => 'int',
 		'chu_ky_id' => 'int',
-		'khoa_id' => 'int'
+		'khoa_id' => 'int',
+		'ctdt_cha_id' => 'int'
 	];
 
 	protected $fillable = [
 		'ten',
 		'tong_tin_chi',
 		'thoi_gian_dao_tao',
-		'ctdt_cha_id',
 		'chu_ky_id',
 		'khoa_id',
-		'trinh_do_dao_tao'
+		'trinh_do_dao_tao',
+		'ma_chuong_trinh_dao_tao',
+		'ctdt_cha_id'
 	];
-
 	public function chu_ky()
 	{
 		return $this->belongsTo(ChuKy::class);
