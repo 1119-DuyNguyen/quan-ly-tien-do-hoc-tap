@@ -10,6 +10,16 @@ class ImportDataController extends ApiController
 {
     public function import(Request $request){
 
+        $valid = Validator::make(
+            [
+                'file' => $request->file(),
+                'extension' => strtolower($request->file()->getClientOriginalExtension())
+            ],
+            [
+                'file'
+            ]
+        )
+
 
         // Excel::import(new ImportKhoaExcel, $request->file);
         // return $this->success("Thêm data thành công");
