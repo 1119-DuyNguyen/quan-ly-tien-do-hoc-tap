@@ -6,6 +6,8 @@ namespace Database\Factories;
 
 use App\Models\Khoa;
 use App\Models\Nganh;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -27,11 +29,13 @@ final class NganhFactory extends Factory
      */
     public function definition(): array
     {
-
+        $ten = $this->faker->unique(false, 4)->randomElement(["Công nghệ thông tin", "Kỹ thuật phần mềm", "Hệ thống thông tin", "Khoa học máy tính"]);
+        $slug = Str::slug($ten);
+        $idKhoa = DB::table('khoa')->where('ten', "Công nghệ thông tin")->first()->id;
         return [
-            'ma_nganh' => fake()->unique()->text(20),
-            'ten' => fake()->unique(true)->randomElement(["hốt rác", "fuho", "ăn không ngồi rồi", "trăm măm"]),
-            'khoa_id' => Khoa::all()->random()->id,
+            'ma_nganh' => $slug,
+            'ten' => $ten,
+            'khoa_id' => $idKhoa
         ];
     }
 }

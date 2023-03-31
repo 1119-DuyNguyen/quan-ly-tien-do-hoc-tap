@@ -26,24 +26,9 @@ final class ChucNangFactory extends Factory
      */
     public function definition(): array
     {
-        // "create",
-        // "read",
-        // "update",
-        // "delete",
-        //restore
-        //force_delete
-        // $type = [
-        //     "Đọc",
-        //     "Ghi",
-        //     "Sửa",
-        //     "Xóa",
-        // ];
-        // $chucNang = ["Chương trình đào tạo", "Trang chủ", ""];
         return [
-            'ten' => fake()->word,
-            'ghi_chu' => fake()->text,
-            'create_at' => fake()->dateTime(),
-            'updated_at' => fake()->dateTime(),
+            'ten' => $this->faker->unique()->randomElement(['Lớp học', 'Chương trình đào tạo', 'Điểm']),
+            'ghi_chu' => fake()->realText(20),
         ];
     }
 }

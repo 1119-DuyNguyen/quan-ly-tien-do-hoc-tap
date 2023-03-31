@@ -26,12 +26,9 @@ final class QuyenFactory extends Factory
      */
     public function definition(): array
     {
-
-
         return [
-            'ten' => fake()->unique(true)->randomElement(['Sinh Viên', 'Giảng Viên', "Cố vấn học tập", "Quản trị viên"]),
-            'ghi_chu' => fake()->text(20),
-
+            'ten' => $this->faker->unique()->randomElement(['Sinh Viên', 'Giảng Viên', 'Cố vấn học tập', 'Quản trị viên', 'Trợ lý đào tạo']),
+            'ghi_chu' => fake()->realText(20),
         ];
     }
 }
