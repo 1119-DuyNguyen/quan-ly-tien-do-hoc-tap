@@ -28,7 +28,7 @@ final class KhoaFactory extends Factory
     public function definition(): array
     {
 
-        $ten = $this->faker->randomElement(["Công nghệ thông tin", "Toán ứng dụng", "Mỹ thuật", "Tài chính kế toán"]);
+        $ten = $this->faker->unique()->randomElement(["Công nghệ thông tin", "Toán ứng dụng", "Mỹ thuật", "Tài chính kế toán"]);
 
         return [
             'ma_khoa' => Str::slug($ten),

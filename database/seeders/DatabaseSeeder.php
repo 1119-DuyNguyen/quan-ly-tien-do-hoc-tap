@@ -78,7 +78,7 @@ class DatabaseSeeder extends Seeder
             QuyenSeeder::class,
         );
         $this->call(OauthClientsSeeder::class);
-        Khoa::factory(3)->create();
+        Khoa::factory(4)->create();
         Nganh::factory(3)->create();
         ChuKy::factory(4)->create();
         // ChucNang::factory()->count(10)->create();
