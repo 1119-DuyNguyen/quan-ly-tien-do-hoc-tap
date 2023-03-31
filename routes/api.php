@@ -4,7 +4,7 @@ use App\Http\Controllers\Auth\UserAuthController;
 use App\Http\Controllers\Test\TestApi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\ImportDataController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -28,3 +28,5 @@ Route::middleware('auth:api')->group(function () {
     //   Route::resource('posts', PostController::class);
     Route::apiResource('/test', TestApi::class);
 });
+
+Route::post('import-data',[ImportDataController::class, 'import']);
