@@ -1,4 +1,6 @@
 28-3:
     cập nhập lại quan hệ sv - tình trạng sv 1-n => 1 -1 
-    bảng kết quả và biên chế nối lại 1-n . 1 kết quả thuộc 1 biên chế
+    bảng kết quả và biên chế nối lại 1-n . 1 kết quả thuộc 1 biên chế, 1 biên chế có n kết quả
     thêm mã_ctdt vào bảng ctdt
+31-3:
+ đổi n-n user role thành 1-n . 1 user 1 role, 1 role nhiều user
