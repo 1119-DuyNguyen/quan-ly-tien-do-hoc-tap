@@ -1,0 +1,15 @@
+Gõ các câu lệnh sau 
+composer install ( install nha không phải update !!!)
+npm i
+php artisan passport:install
+// terminal sinh ra 2 keys thì vào .env thêm 4 dòng dưới
+
+
+PERSONAL_CLIENT_ID=1
+PERSONAL_CLIENT_SECRET=4OqzILCtAxBKwXZVOPEN9YHniO48iP0yVb5ZsAZI
+PASSWORD_CLIENT_ID=2 (  sau dòng "Password grant client created successfully")
+PASSWORD_CLIENT_SECRET=V0tVrqL8UrdYIX7yWqGVXweikXbeQFw12BiujVPz
+
+ php artisan config:clear
+ php artisan route:clear
+ 

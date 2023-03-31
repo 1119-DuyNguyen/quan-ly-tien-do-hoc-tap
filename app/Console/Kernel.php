@@ -13,6 +13,8 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         // $schedule->command('inspire')->hourly();
+        // xóa đi các key passport theo 1 lần hằng ngày vì delete phải build lại index
+        $schedule->command('passport:purge')->dailyAt('03:00');
     }
 
     /**
@@ -20,8 +22,7 @@ class Kernel extends ConsoleKernel
      */
     protected function commands(): void
     {
-        $this->load(__DIR__.'/Commands');
-
+        $this->load(__DIR__ . '/Commands');
         require base_path('routes/console.php');
     }
 }

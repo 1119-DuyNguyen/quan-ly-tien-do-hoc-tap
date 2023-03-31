@@ -10,12 +10,15 @@ const SIGN_VARIABLE_URL = '$';
  *
  * @param {String} href
  */
-function routeHref(href) {
+export function routeHref(href) {
     // window.history.pushState(state, unused, target link);
     window.history.pushState({}, '', href);
     urlLocationHandler();
 }
-
+export function routePreviousPage() {
+    window.history.pushState({}, '', routeObj.previousPage);
+    urlLocationHandler();
+}
 const urlRoute = (event) => {
     event = event || window.event;
     event.preventDefault();
@@ -40,7 +43,7 @@ function checkParams(urlParams, routeParams) {
             matchUrl++;
         }
     }
-    console.log(paramObject);
+    //  console.log(paramObject);
     if (matchUrl === lengthParams) {
         return paramObject;
     }

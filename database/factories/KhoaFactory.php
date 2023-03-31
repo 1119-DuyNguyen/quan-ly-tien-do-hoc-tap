@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Database\Factories;
 
 use App\Models\Khoa;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -27,10 +28,12 @@ final class KhoaFactory extends Factory
     public function definition(): array
     {
 
+        $ten = $this->faker->randomElement(["Công nghệ thông tin", "Toán ứng dụng", "Mỹ thuật", "Tài chính kế toán"]);
 
         return [
-            'ma_khoa' => fake()->unique()->text(20),
-            'ten' => $this->faker->randomElement(["Công nghệ thông tin", "Toán ứng dụng", "Mỹ thuật", "Tài chính kế toán"]),
+            'ma_khoa' => Str::slug($ten),
+            // 'ten' => $this->faker->unique()->randomElement(["Công nghệ thông tin", "Toán ứng dụng", "Mỹ thuật", "Tài chính kế toán"]),
+            'ten' =>  $ten,
         ];
     }
 }

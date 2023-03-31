@@ -1,0 +1,28 @@
+Status 	Code Meaning
+Quy tắc khi response
+
+201 Created: The request succeeded, and a new resource was created as a result(Post or Put if create new)
+204 No Content: request success but no returning content/json (Ex: logout)
+200: Các status code loại này có ý nghĩa rằng request được server nhận , hiểu và xử lý thành công.
+
+300: redirect
+
+401 	Unauthorized 	You are not logged in, e.g. using a valid access token
+403 	Forbidden 	You are authenticated but do not have access to what you are trying to do
+404 	Not found 	The resource you are requesting does not exist
+405 	Method not allowed 	The request type is not allowed, e.g. /users is a resource and POST /users is a valid action but PUT /users is not.
+422 	Unprocessable entity 	The request and the format is valid, however the request was unable to process. For instance when sent data does not pass validation tests.
+407     Proxy Authentication Required
+400     Bad request     này thiếu dữ liệu/ file quá dung lượng/ input sai/...
+
+500 	Server error 	An error occured on the server which was not the consumer's fault. 
+
+Ví dụ
+return $this->error(['error'=> "Xác thực request thất bại"],401)
+
+Trên là các lỗi request phổ biến giả dụ không nằm trong số đó thì tra đây 
+https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
+ rồi thêm vào file note này để biết
+
+
+
