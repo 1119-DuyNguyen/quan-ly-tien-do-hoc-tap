@@ -6,8 +6,41 @@
 
 import axios from 'axios';
 window.axios = axios;
+// setup request before send to server
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+window.axios.defaults.headers.post['Authorization'] = `Bearer ${getCookie('access_token')}`;
+console.log(getCookie('access_token'));
+// setup response parse
+// instance.interceptors.response.use((response) => {
+
+//     const {code, auto} = response.data
+//     if (code === 401) {
+//         if(auto === 'yes'){
+
+//             console.log('get new token using refresh token', getLocalRefreshToken())
+//             return refreshToken().then(rs => {
+//                 console.log('get token refreshToken>>', rs.data)
+//                 const { token } = rs.data
+//                 instance.setToken(token);
+//                 const config = response.config
+//                 config.headers\['x-access-token'\] = token
+//                 config.baseURL = 'http://localhost:3000/'
+//                 return instance(config)
+
+//             })
+//         }
+//     }
+//     return response
+// }, error => {
+//     console.warn('Error status', error.response.status)
+//     // return Promise.reject(error)
+//     if (error.response) {
+//         return parseError(error.response.data)
+//     } else {
+//         return Promise.reject(error)
+//     }
+// })
 // axios.defaults.headers.common['X-CSRF-TOKEN'] = document
 //     .querySelector('meta[name="csrf-token"]')
 //     .getAttribute('content');

@@ -16,8 +16,7 @@ class TestApi extends ApiController
     public function index()
     {
         //
-        $sv = User::all();
-        return   $this->success($sv, "123", 200);
+        return   $this->success("test sucess", 200);
     }
 
     /**
