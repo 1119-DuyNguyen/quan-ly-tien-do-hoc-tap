@@ -4,8 +4,6 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
-
-
 use App\Models\Khoa;
 use App\Models\Nganh;
 use Illuminate\Support\Str;
@@ -55,14 +53,16 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         DB::statement('SET FOREIGN_KEY_CHECKS=0');
-        //remove nào có khóa ngoại 
+        //remove nào có khóa ngoại
 
         // Nganh::truncate();
         // Quyen::truncate();
         // TaiKhoan::truncate();
         // Khoa::truncate();
 
-        $tableNames = Schema::getConnection()->getDoctrineSchemaManager()->listTableNames();
+        $tableNames = Schema::getConnection()
+            ->getDoctrineSchemaManager()
+            ->listTableNames();
         foreach ($tableNames as $name) {
             //no truncate oauth
             // if (str_contains($name, 'oauth')) {
@@ -74,30 +74,28 @@ class DatabaseSeeder extends Seeder
 
         //base database
 
-        $this->call(
-            QuyenSeeder::class,
-        );
+        $this->call(QuyenSeeder::class);
         $this->call(OauthClientsSeeder::class);
         Khoa::factory(4)->create();
         Nganh::factory(3)->create();
         ChuKy::factory(4)->create();
         // ChucNang::factory()->count(10)->create();
-        ChuongTrinhDaoTao::factory()->count(10)->create();
-        NienKhoa::factory()->count(10)->create();
+        ChuongTrinhDaoTao::factory()
+            ->count(10)
+            ->create();
+        NienKhoa::factory()
+            ->count(10)
+            ->create();
 
         // users
-        $this->call(
-            GVSeeder::class
-        );
-        $this->call(
-            CVHTSeeder::class
-        );
+        $this->call(GVSeeder::class);
+        $this->call(CVHTSeeder::class);
         $this->call(QTVSeeder::class);
-        $this->call(
-            TroLyDaoTaoSeeder::class
-        );
+        $this->call(TroLyDaoTaoSeeder::class);
 
-        LopHoc::factory()->count(5)->create();
+        LopHoc::factory()
+            ->count(5)
+            ->create();
         $this->call([SVSeeder::class]);
         // NhomHoc::factory()->count(10)->create();
         // BaiDang::factory()->count(10)->create();

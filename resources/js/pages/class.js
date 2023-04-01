@@ -1,11 +1,8 @@
-import { AbjustTab } from '../components/class/adjustTab.js';
-import { ToggleForm } from '../components/class/toggleForm.js';
+import { ColorClassItem } from '../components/class/colorClassItem.js';
 
 export class Class {
     static index() {
-        var adjustTab = new AbjustTab();
-        adjustTab.run();
-        var toggleForm = new ToggleForm();
-        toggleForm.run();
+        var colorClassItem = new ColorClassItem();
+        colorClassItem.run();
     }
 }
