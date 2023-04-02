@@ -97,7 +97,14 @@ class DatabaseSeeder extends Seeder
             ->count(5)
             ->create();
         $this->call([SVSeeder::class]);
-        // NhomHoc::factory()->count(10)->create();
+        $this->call([HocPhanSeeder::class]);
+        $this->call([NhomHocSeeder::class]);
+        // HocPhan::factory()
+        //     ->count(10)
+        //     ->create();
+        // NhomHoc::factory()
+        //     ->count(10)
+        //     ->create();
         // BaiDang::factory()->count(10)->create();
         // BinhLuan::factory()->count(10)->create();
         // FileBaiDang::factory()->count(10)->create();
@@ -114,7 +121,6 @@ class DatabaseSeeder extends Seeder
         // KhoiKienThucChuongTrinhDaoTao::factory()->count(10)->create();
         // DieuKienTienQuyet::factory()->count(10)->create();
         // HocKyGoiY::factory()->count(10)->create();
-        // HocPhan::factory()->count(10)->create();
         // HocPhanKhoiKienThuc::factory()->count(10)->create();
         // KetQua::factory()->count(10)->create();
         // KhoiKienThuc::factory()->count(10)->create();
