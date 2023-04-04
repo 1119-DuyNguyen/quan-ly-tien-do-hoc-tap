@@ -80,7 +80,7 @@ class LoginService
         $internalRequest = Request::create('/api/oauth/token', 'POST', $data);
         $response = app()->handle($internalRequest);
         if (!$response->isSuccessful()) {
-            // dd($response);
+             dd($response);
             return $this->error(['error' => "Máy chủ xác thực thất bại. Hãy thử lại sau ít phút"], 407);
         }
 

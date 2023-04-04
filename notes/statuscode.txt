@@ -18,7 +18,7 @@ Quy tắc khi response
 500 	Server error 	An error occured on the server which was not the consumer's fault. 
 
 Ví dụ
-return $this->error(['error'=> "Xác thực request thất bại"],401)
+return $this->error('',401,"Xác thực request thất bại")
 
 Trên là các lỗi request phổ biến giả dụ không nằm trong số đó thì tra đây 
 https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
