@@ -82,3 +82,17 @@
         }
     }
 }
+
+@media screen and (max-width: 360px) {
+    .graduate {
+        min-width: 16rem;   
+    }
+}
+
+@media screen and (min-width: 360px) and (max-width: 768px) {
+    .graduate {
+        min-width: 17.5rem;
+        width: 80vw;
+        max-width: 43rem;
+    }
+}
