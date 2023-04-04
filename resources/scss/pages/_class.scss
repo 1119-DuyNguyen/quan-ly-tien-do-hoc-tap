@@ -37,13 +37,15 @@
         justify-items: center;
         .class-item {
             position: relative;
-            max-width: 10rem;
+            max-width: 15rem;
             max-height: 14.6875rem;
             min-height: 10rem;
             display: inline-block;
             border-radius: 0.9375rem;
             text-align: center;
             margin: 5px;
+            width: 100%;
+            text-decoration: none;
 
             &:hover {
                 cursor: pointer;

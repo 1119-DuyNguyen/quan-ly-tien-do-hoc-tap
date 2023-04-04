@@ -1,7 +1,7 @@
 import { Route } from '../abstract/classes.js';
 import { DashBoard } from '../pages/dashboard.js';
-import { Group } from '../pages/group.js';
-import { Class } from '../pages/class';
+import { Group } from '../components/classroom/group/group.js';
+import { Classroom } from '../pages/classroom';
 import { Login } from '../pages/login.js';
 
 const route = new Route();
@@ -12,7 +12,8 @@ route.addRoute('404', '', { title: '404' }, 'templates/404.html');
 route.addRoute('info', '', {}, 'templates/info.html');
 route.addRoute('people', DashBoard.index, {}, 'templates/people.html');
 route.addRoute('popup', DashBoard.index, {}, 'templates/popup.html');
-route.addRoute('group', Group.index, { title: 'group' }, 'templates/group.html');
-route.addRoute('class', Class.index, { title: 'classroom' }, 'templates/class.html');
+route.addRoute('classroom', Classroom.index, { title: 'classroom' }, 'templates/class.html');
+route.addRoute('classroom/$id', Classroom.show, { title: 'classroom' }, 'templates/group.html');
+// route.addRoute('group', Group.index, { title: 'group' }, 'templates/group.html');
 
 export var routeList = route.getUrlRoutes();
