@@ -16,6 +16,8 @@
             margin: 1rem 0;
         }
         &__content {
+            width: inherit;
+            overflow-x: scroll;
             &--suggest {
                 table {
                     tbody {
@@ -32,6 +34,7 @@
                 }
             }
             table {
+                width: inherit;
                 background-color: #fff;
                 border-spacing: 0;
                 th, td {
@@ -45,6 +48,7 @@
                             border: none;
                             color: white;
                             th {
+                                white-space: nowrap;
                                 width: auto;
                                 padding: 0 .5rem;
                                 &:first-child {
