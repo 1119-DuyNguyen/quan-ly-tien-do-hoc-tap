@@ -15,7 +15,6 @@ export class Group {
      */
     constructor(element) {
         this.#container = element;
-        console.log(this.#container, element);
         //xử lý thao tác front-end
         var adjustTab = new AbjustTab();
         adjustTab.run();
@@ -27,7 +26,6 @@ export class Group {
         var groupData;
         let html = '';
         let data = await axios.get(Group.URL_GROUP + `/${id}`).then(function (response) {
-            console.log(response.data.data);
             return response.data.data;
         });
         groupData = data ? data : [];

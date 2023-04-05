@@ -40,4 +40,9 @@ class BaiDang extends Model
     {
         return $this->hasMany(FileBaiDang::class);
     }
+
+    public function bai_tap_sinh_vien()
+    {
+        return $this->hasOne(BaiTapSinhVien::class);
+    }
 }

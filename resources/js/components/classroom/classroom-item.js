@@ -59,12 +59,9 @@ export class ClassroomItem {
         classItems.forEach((element) => {
             element.addEventListener('click', (event) => {
                 let nhom_hoc = element.id.split('_');
-                console.log(nhom_hoc[2]);
                 event.preventDefault();
                 routeHref(event.currentTarget.href);
             });
         });
-
-        console.log(classItems);
     }
 }

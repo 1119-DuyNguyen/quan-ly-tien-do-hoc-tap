@@ -75,7 +75,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="{{ url('/class') }}" class="sidebar__nav__link">
+                    <a href="{{ url('/classroom') }}" class="sidebar__nav__link">
                         <i class="fa-solid fa-chalkboard icon"></i>
                         <span class="sidebar__nav__text"> Lớp học</span>
                     </a>

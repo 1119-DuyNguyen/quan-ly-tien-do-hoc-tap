@@ -18,7 +18,7 @@ class ClassController extends ApiController
     {
         $data = DB::table('nhom_hoc')
             ->join('tai_khoan', 'nhom_hoc.giang_vien_id', '=', 'tai_khoan.id')
-            ->where('tai_khoan.quyen_id', '=', '3') //là 2 mới đúng, dùng 3 vì nó trả về nhiều data thôi
+            ->where('tai_khoan.quyen_id', '=', '2')
             ->join('hoc_phan', 'hoc_phan.id', '=', 'nhom_hoc.hoc_phan_id')
             ->select('hoc_phan.ten as ten_hoc_phan', 'tai_khoan.ten as ten_giang_vien', 'nhom_hoc.id as nhom_hoc_id')
             ->get();
@@ -30,7 +30,7 @@ class ClassController extends ApiController
         $data = DB::table('nhom_hoc')
             ->where('nhom_hoc.id', '=', $id)
             ->join('tai_khoan', 'nhom_hoc.giang_vien_id', '=', 'tai_khoan.id')
-            ->where('tai_khoan.quyen_id', '=', '3') //là 2 mới đúng, dùng 3 vì nó trả về nhiều data thôi
+            ->where('tai_khoan.quyen_id', '=', '2')
             ->join('hoc_phan', 'hoc_phan.id', '=', 'nhom_hoc.hoc_phan_id')
             ->select(
                 'hoc_phan.ten as ten_hoc_phan',
