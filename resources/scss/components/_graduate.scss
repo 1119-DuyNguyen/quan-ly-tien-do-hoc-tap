@@ -85,6 +85,36 @@
             }
         }
     }
+    
+    &__more:hover ~ &__tooltip {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    &__tooltip {
+        transition: all .2s ease-in-out;
+        position: absolute;
+        opacity: 0;
+        visibility: hidden;
+        &__item {
+            position: relative;
+            padding: .5rem;
+            border-radius: 1rem;
+            background: #84D295;
+            color: white;
+            top: -6.5rem;
+            &::after {
+                content: '';
+                margin: .5rem 0 0 1rem;
+                display: block;
+                position: absolute;
+                border-left: 10px solid transparent;
+                border-right: 10px solid transparent;
+                
+                border-top: 10px solid #84D295;
+            }
+        }
+    }
 }
 
 @media screen and (max-width: 360px) {
