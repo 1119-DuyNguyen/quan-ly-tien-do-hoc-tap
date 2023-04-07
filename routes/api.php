@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\UserAuthController;
+use App\Http\Controllers\DataImportController;
 use App\Http\Controllers\Test\TestApi;
 use App\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Http\Request;
@@ -55,3 +56,7 @@ Route::group([
         ]);
     });
 });
+
+
+//Import data
+Route::post('import-data', DataImportController::class);
