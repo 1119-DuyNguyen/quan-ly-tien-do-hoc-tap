@@ -20,6 +20,13 @@ export class GraduateCrawler {
             renderHK(parseInt(bien_che_selector.value));
         })
 
+        /**
+         * Lấy thông tin từ compact hoc_phan
+         * @param {data[]} hoc_phan compact truyền vào
+         * @param {number} id mã học phần cần lấy
+         * @param {string} data nội dung cần lấy
+         * @returns giá trị cần lấy
+         */
         function getFromHocPhan(hoc_phan, id, data = 'ma_hoc_phan') {
             for (let i = 0; i < hoc_phan.length; i++) {
                 const hp = hoc_phan[i];
@@ -28,6 +35,10 @@ export class GraduateCrawler {
             }
         }
 
+        /**
+         * Hàm render dữ liệu từ server
+         * @param {number} id id của học kỳ cần render, mặc định là -1, ứng với mọi học kỳ
+         */
         function renderHK(id = -1) {
 
             id = (id === -1) ? "" : (isNaN(id) ? "" : "/"+id);
