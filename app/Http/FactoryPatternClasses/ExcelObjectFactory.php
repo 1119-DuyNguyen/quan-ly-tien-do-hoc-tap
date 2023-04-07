@@ -4,13 +4,13 @@ namespace App\Http\FactoryPatternClasses;
 
 class ExcelObjectFactory
 {
-    static function create($type){
-        switch ($type){
-            case 'giang-vien':
-                return
-            case ''
-        }
-    }
+    // static function create($type){
+    //     switch ($type){
+    //         case 'giang-vien':
+    //             return
+    //         case ''
+    //     }
+    // }
 
 
     function RowToModelGiangVien(){

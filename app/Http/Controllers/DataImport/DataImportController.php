@@ -1,58 +1,69 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\DataImport;
 
+use App\Http\Requests\DataImportRequest;
 use App\Imports\ImportExcel;
-use App\Models\Authorization\TaiKhoan;
 use Exception;
-use Illuminate\Http\Request;
+use App\Http\Controllers\ApiController;
 
 class DataImportController extends ApiController
 {
-    function __invoke(Request $request){
-        //Request validate
-        try {
-            $request->validate($this->rules());
-        }
-        catch (Exception $e){
-            return $this->error('Data request không đúng yêu cầu!', 500);
-        }
+    protected $header_row;
+    protected $start_row;
+    protected $rules;
+    protected $inputKey;
 
-        $inputGiangVien = json_decode($request->input('giang-vien'));
-        $inputHocPhan = json_decode($request->input('hoc-phan'));
+    function __invoke(DataImportRequest $request){
+        return [
+            [
+                'files' => 0,
+                'sheets' => [
+                    [
+                        'name' => 'HP-GV',
+                        'header-row' => 4
+                    ]
+                ]
+            ]
+        ];
 
+        // $request->validated();
 
         $mess = [];
-
         $fileUpload = $request->file('files');
+        $input = json_decode($request->input($this->inputKey));
 
         //Import Giang Vien
-        if($inputGiangVien != null){
-            foreach($inputGiangVien as $infoImport){
+        if($input != null){
+            foreach($input as $importInfo){
                 array_push($mess,$this
                 ->import(
-                    $this->RowToModelGiangVien(),
-                    $fileUpload[$infoImport->file],
-                    $infoImport->sheets,
-                    $this->RowRulesGiangVien(),
+                    $this->RowToModel(),
+                    $fileUpload[$importInfo->file],
+                    $importInfo->sheets,
+                    $this->RowRules(),
                     ImportExcel::class));
             }
         }
         return $mess;
     }
 
+    function RowRules(){
 
+    }
+
+    function RowToModel(){
+
+    }
 
     function import($model, $file_name, $sheetNames, $rules, $class){
-        $mess = [];
-        $err = false;
         $failures = [];
-
         try {
-            $HeaderRow = 4;
-            $StartRow = 0;
-            $Rules = [];
-            $importer = new $class($model, $HeaderRow, $sheetNames, $rules);
+            $importer = new $class(
+                                $model,
+                                $this->header_row,
+                                $sheetNames,
+                                $rules);
             // dd($importer->sheets());
             $importer->import($file_name);
             foreach ($importer->failures() as $fail){
@@ -70,19 +81,11 @@ class DataImportController extends ApiController
                 'mess' => $e->getMessage()
             ];
         }
-
         return [
             'err' => false,
             'failures' => $failures
         ];
 
-    }
-
-    function rules(){
-        return [
-            // 'files' => 'required',
-            // 'files.*' => 'required|mimes:xlx,xlsx,csv'
-        ];
     }
 
 }

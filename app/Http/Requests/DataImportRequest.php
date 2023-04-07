@@ -11,7 +11,7 @@ class DataImportRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,18 +22,17 @@ class DataImportRequest extends FormRequest
     public function rules(): array
     {
         return [
-            // 'files' => 'required',
-            // 'files.*' => 'required|mimes:xlx,xlsx,csv'
+            'files' => 'required',
+            'files.*' => 'required|mimes:xlx,xlsx,csv'
         ];
     }
 
     public function messages(): array
     {
         return [
-            'file.required' => 'Thiếu ',
-            'mk.required' => 'Chưa nhập mật khẩu',
-            'mk.min' => 'Password is too short',
-        ];
+            'file.required' => 'Thiếu file upload',
+            'file.*' => 'File upload phải có dạng xlx, xlsx, csv',
+       ];
     }
 
 }
