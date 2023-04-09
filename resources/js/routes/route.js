@@ -118,7 +118,7 @@ const urlLocationHandler = async () => {
                 });
                 if (routeParams.length === urlParams.length) {
                     _params = checkParams(urlParams, routeParams);
-                    console.log(_params);
+                    // console.log(_params);
 
                     if (_params) {
                         location = href;

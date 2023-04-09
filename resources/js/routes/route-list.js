@@ -2,6 +2,7 @@ import { Route } from '../abstract/classes.js';
 import { DashBoard } from '../pages/dashboard.js';
 import { Class } from '../pages/class.js';
 import { Login } from '../pages/login.js';
+import { Role } from '../pages/admin/role.js';
 
 const route = new Route();
 
@@ -12,5 +13,6 @@ route.addRoute('info', '', {}, 'templates/info.html');
 route.addRoute('people', DashBoard.index, {}, 'templates/people.html');
 route.addRoute('popup', DashBoard.index, {}, 'templates/popup.html');
 route.addRoute('class', Class.index, { title: 'classroom' }, 'templates/class.html');
+route.addRoute('admin/role', Role.index, { title: 'role' }, '');
 
 export var routeList = route.getUrlRoutes();

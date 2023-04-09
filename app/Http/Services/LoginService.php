@@ -38,7 +38,7 @@ class LoginService
             $data['username'] = $data['ten_dang_nhap'];
             return $this->proxy('password', $data);
         } else {
-            return $this->error(['error' => 'Tài khoản hoặc mật khẩu không đúng. Hãy thử lại '], 401);
+            return $this->error(null, 401, 'Tài khoản hoặc mật khẩu không đúng. Hãy thử lại ');
         }
     }
 

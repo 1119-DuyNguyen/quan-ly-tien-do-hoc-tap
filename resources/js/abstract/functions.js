@@ -80,3 +80,16 @@ window.getCookie = function (cname) {
 //         }
 //     }
 // }
+window.decodeHtml = function (html) {
+    return html.replace(
+        /[&<>'"]/g,
+        (tag) =>
+            ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                "'": '&#39;',
+                '"': '&quot;',
+            }[tag])
+    );
+};

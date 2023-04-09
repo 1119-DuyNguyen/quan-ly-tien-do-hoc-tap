@@ -74,9 +74,14 @@ class TaiKhoan extends Authenticatable
 
     public function quyen()
     {
-        return $this->belongsTo(Quyen::class);
+        return $this->belongsTo(Quyen::class, 'quyen_id');
     }
+    public function hasRole($role): bool
+    {
 
+
+        return $this->quyen()->where('ten', $role)->exists();
+    }
     /**
      *  config passport
      * 
