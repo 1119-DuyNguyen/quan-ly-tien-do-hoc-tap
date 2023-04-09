@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Users\Classes\Posts\BinhLuan;
 use App\Models\Users\Classes\Posts\FileBaiDang;
 
-class BaiTapSinhVien extends Model
+class BaiTapSinhVien extends BaiDang
 {
     protected $table = 'bai_tap_sinh_vien';
     public $timestamps = false;

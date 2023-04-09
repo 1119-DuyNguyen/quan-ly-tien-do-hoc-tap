@@ -1,6 +1,5 @@
 import { Route } from '../abstract/classes.js';
 import { DashBoard } from '../pages/dashboard.js';
-import { Group } from '../components/classroom/group/group.js';
 import { Classroom } from '../pages/classroom';
 import { Login } from '../pages/login.js';
 

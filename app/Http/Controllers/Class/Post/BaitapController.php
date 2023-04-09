@@ -9,17 +9,16 @@ use App\Http\Controllers\Controller;
 use App\Models\Users\Classes\NhomHoc;
 use App\Http\Controllers\ApiController;
 use App\Models\Users\Classes\Posts\BaiDang;
+use App\Models\Users\Classes\Posts\BaiTapSinhVien;
 
-class PostController extends ApiController
+class BaitapController extends ApiController
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $data = DB::table('bai_dang')
             ->join('tai_khoan', 'bai_dang.nguoi_dung_id', '=', 'tai_khoan.id')
             ->join('nhom_hoc', 'bai_dang.nhom_hoc_id', '=', 'nhom_hoc.id')
+            ->join('bai_tap_sinh_vien', 'bai_tap_sinh_vien.bai_tap_id', '=', 'bai_dang.id')
             ->select(
                 'bai_dang.id as bai_dang_id',
                 'tai_khoan.ten as ten_nguoi_dang',
@@ -27,11 +26,12 @@ class PostController extends ApiController
                 'bai_dang.noi_dung as noi_dung',
                 'bai_dang.created_at as created_at'
             )
-            ->where('bai_dang.loai_noi_dung', '=', '1')
+            ->where('bai_dang.loai_noi_dung', '=', '2')
             ->get();
         //return json_encode($data);
         return $this->success($data, 200, 'Success');
     }
+
     public function show(string $nhom_hoc_id)
     {
         $data = DB::table('bai_dang')
@@ -43,20 +43,17 @@ class PostController extends ApiController
                 'tai_khoan.ten as ten_nguoi_dang',
                 'bai_dang.tieu_de as tieu_de',
                 'bai_dang.noi_dung as noi_dung',
-                'bai_dang.created_at as created_at'
+                'bai_dang.created_at as created_at',
+                'bai_dang.ngay_ket_thuc as ngay_ket_thuc'
             )
-            ->where('bai_dang.loai_noi_dung', '=', '1')
+            ->where('bai_dang.loai_noi_dung', '=', '2')
             ->get();
         //return json_encode($data);
         return $this->success($data, 200, 'Success');
     }
+
     public function store(Request $request)
     {
-        // $request->validate([
-        //     'tieu_de' => 'required|max:255',
-        //     'noi_dung' => 'required',
-        // ]);
-
         return BaiDang::create($request->all());
     }
 

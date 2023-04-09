@@ -18,8 +18,10 @@ class NhomHocSeeder extends Seeder
     public function run(): void
     {
         //
-        for ($i = 0; $i < 10; ++$i) {
+        for ($i = 1; $i < 11; ++$i) {
             NhomHoc::create([
+                //không biết tại sao nhưng nếu id là 0,
+                // và không có id default thì seed lỗi
                 'id' => $i,
                 'so_luong_sinh_vien' => fake()->randomNumber(2),
                 'stt_nhom' => fake()->randomNumber(2),

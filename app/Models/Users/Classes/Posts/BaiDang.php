@@ -19,7 +19,15 @@ class BaiDang extends Model
         'nguoi_dung_id' => 'int',
     ];
 
-    protected $fillable = ['tieu_de', 'noi_dung', 'create_at', 'nhom_hoc_id', 'nguoi_dung_id'];
+    protected $fillable = [
+        'tieu_de',
+        'noi_dung',
+        'loai_noi_dung',
+        'create_at',
+        'nhom_hoc_id',
+        'nguoi_dung_id',
+        'ngay_ket_thuc',
+    ];
 
     public function tai_khoan()
     {

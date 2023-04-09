@@ -58,7 +58,6 @@ export class ClassroomItem {
         let classItems = document.querySelectorAll('.class-item');
         classItems.forEach((element) => {
             element.addEventListener('click', (event) => {
-                let nhom_hoc = element.id.split('_');
                 event.preventDefault();
                 routeHref(event.currentTarget.href);
             });

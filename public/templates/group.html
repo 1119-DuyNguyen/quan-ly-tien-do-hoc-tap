@@ -16,18 +16,28 @@
                     >
                         Thêm bài đăng mới
                     </button>
-                    <form class="new-post__form class-center-container__class-dashboard--new-post" action="#">
+                    <form
+                        class="new-post__form class-center-container__class-dashboard--new-post"
+                        id="class-center-container__class-dashboard--new-post"
+                        method="POST"
+                        enctype="multipart/form-data"
+                    >
                         <div class="new-post__form--container">
-                            <label for="fname">Tiêu đề:</label>
-                            <input type="text" class="new-post__tilte" name="fname" /><br />
+                            <label for="tieu_de">Tiêu đề:</label>
+                            <input type="text" class="new-post__tilte" name="tieu_de" onfocus="this.value=''" /><br />
                         </div>
                         <div class="new-post__form--container">
-                            <label for="lname">Nội dung:</label>
-                            <textarea type="text" class="new-post__form--container-content" name="lname"></textarea
+                            <label for="noi_dung">Nội dung:</label>
+                            <textarea
+                                type="text"
+                                class="new-post__form--container-content"
+                                name="noi_dung"
+                                onfocus="this.value=''"
+                            ></textarea
                             ><br />
                         </div>
 
-                        <input type="file" class="new-post__form--file-input" /><br />
+                        <input type="file" class="new-post__form--file-input" name="post_file" /><br />
                         <div class="new-post__form--submit">
                             <button class="new-post__form--submit-cancel class-dashboard-btn-cancel">Huỷ</button>
                             <input type="submit" value="Thêm bài viết mới" />
@@ -47,26 +57,37 @@
                     >
                         Thêm bài tập mới
                     </button>
-                    <form class="new-homework__form class-center-container__class-dashboard--new-homework" action="#">
+                    <form
+                        class="new-homework__form class-center-container__class-dashboard--new-homework"
+                        id="class-center-container__class-dashboard--new-homework"
+                        method="POST"
+                        enctype="multipart/form-data"
+                    >
                         <div class="new-homework__form--container">
-                            <label for="fname">Tiêu đề bài tập:</label>
-                            <input type="text" class="new-homework__tilte" name="fname" /><br />
+                            <label for="tieu_de">Tiêu đề bài tập:</label>
+                            <input
+                                type="text"
+                                class="new-homework__tilte"
+                                name="tieu_de"
+                                onfocus="this.value=''"
+                            /><br />
                         </div>
                         <div class="new-homework__form--container">
-                            <label for="fname">Điểm tối đa:</label>
-                            <input type="number" class="new-homework__score" name="fname" /><br />
+                            <label for="ngay_ket_thuc">Ngày hết hạn:</label>
+                            <input type="datetime-local" class="new-homework__date" onfocus="this.value=''" /><br />
                         </div>
+                        <!-- <div class="new-homework__form--container">
+                            <label for="ngay_ket_thuc">Giờ hết hạn:</label>
+                            <input type="time" class="new-homework__time" name="" /><br />
+                        </div> -->
                         <div class="new-homework__form--container">
-                            <label for="fname">Ngày hết hạn:</label>
-                            <input type="date" class="new-homework__date" name="fname" /><br />
-                        </div>
-                        <div class="new-homework__form--container">
-                            <label for="fname">Giờ hết hạn:</label>
-                            <input type="time" class="new-homework__time" name="fname" /><br />
-                        </div>
-                        <div class="new-homework__form--container">
-                            <label for="lname">Nội dung:</label>
-                            <textarea type="text" class="new-homework__form--container-content" name="lname"></textarea
+                            <label for="noi_dung">Nội dung:</label>
+                            <textarea
+                                type="text"
+                                class="new-homework__form--container-content"
+                                name="noi_dung"
+                                onfocus="this.value=''"
+                            ></textarea
                             ><br />
                         </div>
 
@@ -76,85 +97,61 @@
                             <input type="submit" value="Thêm bài viết mới" />
                         </div>
                     </form>
-                    <div class="task">
-                        <div class="task__container">
-                            <div class="task__author__avatar">
-                                <img src="/img/person.png" alt="" />
-                            </div>
-                            <div class="task__text">
-                                <div class="task__text-1st">
-                                    <div class="task__author__name">Nguyễn Thanh Duy</div>
-                                    <div class="task__content">đã đăng một bài tập mới: {Title}</div>
+                    <div class="task-container" id="task-container">
+                        <div class="task">
+                            <div class="task__container">
+                                <div class="task__author__avatar">
+                                    <img src="/img/person.png" alt="" />
                                 </div>
-                                <div class="task__text-2nd">
-                                    <div class="task__created-date">6 thg 2</div>
+                                <div class="task__text">
+                                    <div class="task__text-1st">
+                                        <div class="task__author__name">Nguyễn Thanh Duy</div>
+                                        <div class="task__content">đã đăng một bài tập mới: {Title}</div>
+                                    </div>
+                                    <div class="task__text-2nd">
+                                        <div class="task__created-date">6 thg 2</div>
+                                        -
+                                        <div class="task__deadline">hạn nộp 8 thg 2</div>
+                                    </div>
                                 </div>
+                                <div class="task__duration"><div>2d</div></div>
                             </div>
-                            <div class="task__duration"><div>2d</div></div>
-                        </div>
-                        <div class="task__action task__action--blue">
-                            <div>Xem thêm</div>
-                        </div>
-                        <div class="task__status task__status--green">
-                            <div class="task__status__text">Điểm: 10/10</div>
-                            <div class="task__status__icon">
-                                <img src="/img/check-green.png" alt="" />
+                            <div class="task__action task__action--green">
+                                <div>Nộp bài</div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="task">
-                        <div class="task__container">
-                            <div class="task__author__avatar">
-                                <img src="/img/person.png" alt="" />
-                            </div>
-                            <div class="task__text">
-                                <div class="task__text-1st">
-                                    <div class="task__author__name">Nguyễn Thanh Duy</div>
-                                    <div class="task__content">đã đăng một bài tập mới: {Title}</div>
-                                </div>
-                                <div class="task__text-2nd">
-                                    <div class="task__created-date">6 thg 2</div>
-                                    -
-                                    <div class="task__deadline">hạn nộp 8 thg 2</div>
+                            <div class="task__status task__status--red">
+                                <div class="task__status__text">Chưa hoàn thành</div>
+                                <div class="task__status__icon">
+                                    <img src="/img/clock.png" alt="" />
                                 </div>
                             </div>
-                            <div class="task__duration"><div>2d</div></div>
                         </div>
-                        <div class="task__action task__action--green">
-                            <div>Nộp bài</div>
-                        </div>
-                        <div class="task__status task__status--red">
-                            <div class="task__status__text">Chưa hoàn thành</div>
-                            <div class="task__status__icon">
-                                <img src="/img/clock.png" alt="" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="task">
-                        <div class="task__container">
-                            <div class="task__author__avatar">
-                                <img src="/img/person.png" alt="" />
-                            </div>
-                            <div class="task__text">
-                                <div class="task__text-1st">
-                                    <div class="task__author__name">Nguyễn Thanh Duy</div>
-                                    <div class="task__content">đã đăng một bài tập mới: {Title}</div>
+                        <div class="task">
+                            <div class="task__container">
+                                <div class="task__author__avatar">
+                                    <img src="/img/person.png" alt="" />
                                 </div>
-                                <div class="task__text-2nd">
-                                    <div class="task__created-date">6 thg 2</div>
-                                    -
-                                    <div class="task__deadline">hạn nộp 8 thg 2</div>
+                                <div class="task__text">
+                                    <div class="task__text-1st">
+                                        <div class="task__author__name">Nguyễn Thanh Duy</div>
+                                        <div class="task__content">đã đăng một bài tập mới: {Title}</div>
+                                    </div>
+                                    <div class="task__text-2nd">
+                                        <div class="task__created-date">6 thg 2</div>
+                                        -
+                                        <div class="task__deadline">hạn nộp 8 thg 2</div>
+                                    </div>
                                 </div>
+                                <div class="task__duration"><div>2d</div></div>
                             </div>
-                            <div class="task__duration"><div>2d</div></div>
-                        </div>
-                        <div class="task__action task__action--green">
-                            <div>Nộp bài</div>
-                        </div>
-                        <div class="task__status task__status--red">
-                            <div class="task__status__text">Chưa hoàn thành</div>
-                            <div class="task__status__icon">
-                                <img src="/img/clock.png" alt="" />
+                            <div class="task__action task__action--green">
+                                <div>Nộp bài</div>
+                            </div>
+                            <div class="task__status task__status--red">
+                                <div class="task__status__text">Chưa hoàn thành</div>
+                                <div class="task__status__icon">
+                                    <img src="/img/clock.png" alt="" />
+                                </div>
                             </div>
                         </div>
                     </div>

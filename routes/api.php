@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\UserAuthController;
 use App\Http\Controllers\Class\ClassController;
 use App\Http\Controllers\Class\Everyone\EveryoneController;
+use App\Http\Controllers\Class\Post\BaitapController;
 use App\Http\Controllers\Class\Post\PostController;
 use App\Http\Controllers\Test\TestApi;
 use App\Http\Middleware\VerifyCsrfToken;
@@ -32,10 +33,10 @@ Route::post('login/refresh', [UserAuthController::class, 'refresh']);
 
 Route::middleware('auth:api')->group(function () {
     Route::post('/logout', [UserAuthController::class, 'logout']);
-    //   Route::resource('posts', PostController::class);
     Route::apiResource('/test', TestApi::class);
     Route::apiResource('/classes', ClassController::class);
     Route::apiResource('/posts', PostController::class);
+    Route::apiResource('/exercises', BaitapController::class);
     Route::apiResource('/everyone', EveryoneController::class);
 });
 //oauth

@@ -101,6 +101,7 @@ class DatabaseSeeder extends Seeder
         $this->call([NhomHocSeeder::class]);
         $this->call([BaiDangSeeder::class]);
         $this->call([ThamGiaSeeder::class]);
+        $this->call([BaiTapSinhVienSeeder::class]);
         // HocPhan::factory()
         //     ->count(10)
         //     ->create();
