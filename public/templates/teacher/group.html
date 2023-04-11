@@ -43,6 +43,32 @@
                             <input type="submit" value="Thêm bài viết mới" />
                         </div>
                     </form>
+                    <!-- form edit bài đăng -->
+                    <form
+                        class="new-post__form class-center-container__class-dashboard--edit-post edit-post-modal"
+                        id="class-center-container__class-dashboard--edit-post"
+                        method="POST"
+                        enctype="multipart/form-data"
+                    >
+                        CHỈNH SỬA BÀI ĐĂNG
+                        <div class="new-post__form--container">
+                            <label for="tieu_de">Tiêu đề bài đăng:</label>
+                            <input type="text" class="new-homework__tilte" name="tieu_de" /><br />
+                        </div>
+                        <div class="new-post__form--container">
+                            <label for="noi_dung">Nội dung:</label>
+                            <textarea type="text" class="new-post__form--container-content" name="noi_dung"></textarea
+                            ><br />
+                        </div>
+
+                        <input type="file" class="new-homework__form--file-input" /><br />
+                        <div class="new-post__form--submit">
+                            <button class="new-post__form--submit-cancel class-dashboard-btn-cancel edit-form-cancel">
+                                Huỷ
+                            </button>
+                            <input type="submit" value="Cập nhật" />
+                        </div>
+                    </form>
                     <div
                         class="class-center-container__class-dashboard--post-feed"
                         id="class-center-container__class-dashboard--post-feed"
@@ -63,6 +89,7 @@
                         method="POST"
                         enctype="multipart/form-data"
                     >
+                        THÊM BÀI ĐĂNG MỚI
                         <div class="new-homework__form--container">
                             <label for="tieu_de">Tiêu đề bài tập:</label>
                             <input
@@ -97,11 +124,47 @@
                             <input type="submit" value="Thêm bài viết mới" />
                         </div>
                     </form>
+                    <!-- form edit bài đăng -->
+                    <form
+                        class="new-homework__form class-center-container__class-dashboard--edit-homework edit-post-modal"
+                        id="class-center-container__class-dashboard--edit-homework"
+                        method="POST"
+                        enctype="multipart/form-data"
+                    >
+                        CHỈNH SỬA BÀI ĐĂNG
+                        <div class="new-homework__form--container">
+                            <label for="tieu_de">Tiêu đề bài đăng:</label>
+                            <input type="text" class="new-homework__tilte" name="tieu_de" /><br />
+                        </div>
+                        <div class="new-homework__form--container">
+                            <label for="ngay_ket_thuc">Ngày hết hạn:</label>
+                            <input type="datetime-local" class="new-homework__date" /><br />
+                        </div>
+                        <div class="new-homework__form--container">
+                            <label for="noi_dung">Nội dung:</label>
+                            <textarea
+                                type="text"
+                                class="new-homework__form--container-content"
+                                name="noi_dung"
+                            ></textarea
+                            ><br />
+                        </div>
+
+                        <input type="file" class="new-homework__form--file-input" /><br />
+                        <div class="new-homework__form--submit">
+                            <button
+                                class="new-homework__form--submit-cancel class-dashboard-btn-cancel edit-form-cancel"
+                            >
+                                Huỷ
+                            </button>
+                            <input type="submit" value="Cập nhật" />
+                        </div>
+                    </form>
                     <div class="task-container" id="task-container">
                         <div class="task">
                             <div class="task__container">
                                 <div class="task__author__avatar">
-                                    <img src="/img/person.png" alt="" />
+                                    <img src="../../img/person.png" alt="" />
                                 </div>
                                 <div class="task__text">
                                     <div class="task__text-1st">
@@ -122,35 +185,7 @@
                             <div class="task__status task__status--red">
                                 <div class="task__status__text">Chưa hoàn thành</div>
                                 <div class="task__status__icon">
-                                    <img src="/img/clock.png" alt="" />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="task">
-                            <div class="task__container">
-                                <div class="task__author__avatar">
-                                    <img src="/img/person.png" alt="" />
-                                </div>
-                                <div class="task__text">
-                                    <div class="task__text-1st">
-                                        <div class="task__author__name">Nguyễn Thanh Duy</div>
-                                        <div class="task__content">đã đăng một bài tập mới: {Title}</div>
-                                    </div>
-                                    <div class="task__text-2nd">
-                                        <div class="task__created-date">6 thg 2</div>
-                                        -
-                                        <div class="task__deadline">hạn nộp 8 thg 2</div>
-                                    </div>
-                                </div>
-                                <div class="task__duration"><div>2d</div></div>
-                            </div>
-                            <div class="task__action task__action--green">
-                                <div>Nộp bài</div>
-                            </div>
-                            <div class="task__status task__status--red">
-                                <div class="task__status__text">Chưa hoàn thành</div>
-                                <div class="task__status__icon">
-                                    <img src="/img/clock.png" alt="" />
+                                    <img src="../../img/clock.png" alt="" />
                                 </div>
                             </div>
                         </div>
@@ -169,7 +204,7 @@
         <div class="exercise-container">
             <div class="exercise__header">
                 <h3 class="exercise__header--heading">
-                    <span>Bài tập</span><a href="#">xem thêm<img src="./img/next.png" /></a>
+                    <span>Bài tập</span><a href="#">xem thêm<img src="../../img/next.png" /></a>
                 </h3>
             </div>
             <div class="exercise__content">
@@ -180,7 +215,7 @@
                     <div class="exercise__content--item--time">Còn 1 ngày</div>
                     <div class="exercise__content--item--status">
                         <span>Chưa hoàn thành</span>
-                        <img src="../img/clock.png" />
+                        <img src="../../img/clock.png" />
                     </div>
                     <div class="exercise__content--item--option">Nộp bài</div>
                 </div>
@@ -191,7 +226,7 @@
                     <div class="exercise__content--item--time">Còn 1 ngày</div>
                     <div class="exercise__content--item--status">
                         <span>Chưa hoàn thành</span>
-                        <img src="../img/clock.png" />
+                        <img src="../../img/clock.png" />
                     </div>
                     <div class="exercise__content--item--option">Nộp bài</div>
                 </div>
@@ -202,7 +237,7 @@
                     <div class="exercise__content--item--time">Còn 1 ngày</div>
                     <div class="exercise__content--item--status">
                         <span>Chưa hoàn thành</span>
-                        <img src="../img/clock.png" />
+                        <img src="../../img/clock.png" />
                     </div>
                     <div class="exercise__content--item--option">Nộp bài</div>
                 </div>
@@ -211,19 +246,19 @@
         <div class="noti-container">
             <div class="noti__header">
                 <h3 class="noti__header--heading">
-                    <span>Thông báo</span><a href="#">xem thêm<img src="./img/next.png" /></a>
+                    <span>Thông báo</span><a href="#">xem thêm<img src="../../img/next.png" /></a>
                 </h3>
             </div>
             <div class="noti__content">
                 <div class="noti__content--item">
                     <div class="noti__content--item--container">
-                        <img src="../img/teacher.png" />
+                        <img src="../../img/teacher.png" />
                         <span>Thanh Duy vừa đăng một cái gì đó vào trong Lập trình web</span>
                     </div>
                 </div>
                 <div class="noti__content--item">
                     <div class="noti__content--item--container">
-                        <img src="../img/teacher.png" />
+                        <img src="../../img/teacher.png" />
                         <span>Thanh Duy vừa đăng một cái gì đó vào trong Lập trình web</span>
                     </div>
                 </div>

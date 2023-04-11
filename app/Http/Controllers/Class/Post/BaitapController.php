@@ -57,6 +57,15 @@ class BaitapController extends ApiController
         return BaiDang::create($request->all());
     }
 
+    public function update(Request $request, string $id)
+    {
+        return BaiDang::where('id', $id)->update([
+            'tieu_de' => $request->tieu_de,
+            'noi_dung' => $request->noi_dung,
+            'ngay_ket_thuc' => $request->ngay_ket_thuc,
+        ]);
+    }
+
     public function destroy(string $id)
     {
         return BaiDang::where('id', $id)->delete();

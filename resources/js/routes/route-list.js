@@ -11,8 +11,11 @@ route.addRoute('404', '', { title: '404' }, 'templates/404.html');
 route.addRoute('info', '', {}, 'templates/info.html');
 route.addRoute('people', DashBoard.index, {}, 'templates/people.html');
 route.addRoute('popup', DashBoard.index, {}, 'templates/popup.html');
-route.addRoute('classroom', Classroom.index, { title: 'classroom' }, 'templates/class.html');
-route.addRoute('classroom/$id', Classroom.show, { title: 'classroom' }, 'templates/group.html');
-// route.addRoute('group', Group.index, { title: 'group' }, 'templates/group.html');
+
+route.addRoute('teacher/classroom', Classroom.TeacherIndex, { title: 'classroom' }, 'templates/teacher/class.html');
+route.addRoute('teacher/classroom/$id', Classroom.TeacherShow, { title: 'classroom' }, 'templates/teacher/group.html');
+
+route.addRoute('student/classroom', Classroom.StudentIndex, { title: 'classroom' }, 'templates/student/class.html');
+route.addRoute('student/classroom/$id', Classroom.StudentShow, { title: 'classroom' }, 'templates/student/group.html');
 
 export var routeList = route.getUrlRoutes();

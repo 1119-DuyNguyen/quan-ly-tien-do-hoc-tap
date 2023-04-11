@@ -3,12 +3,13 @@ import axios from 'axios';
 export class BaiTap {
     static URL_POST = location.protocol + '//' + location.host + '/api/posts';
     static URL_EXCERCISE = location.protocol + '//' + location.host + '/api/exercises';
+    static _this = this;
     #container;
     constructor(element) {
         this.#container = element;
     }
 
-    async getBaiTapData(id) {
+    async getTeacherBaiTapData(id) {
         var BaiTapData;
         let html = '';
         let data = await axios.get(BaiTap.URL_EXCERCISE + `/${id}`).then(function (response) {
@@ -19,7 +20,7 @@ export class BaiTap {
             html += `<div class="task" id="bai_dang_${element.bai_dang_id}">
                         <div class="task__container">
                             <div class="task__author__avatar">
-                                <img src="/img/person.png" alt="" />
+                                <img src="../../img/person.png" alt="" />
                             </div>
                             <div class="task__text">
                                 <div class="task__text-1st">
@@ -46,18 +47,63 @@ export class BaiTap {
                         </div>
                         <div class="task__status task__status--green">
                             <div class="task__status__icon">
-                                <img src="/img/check-green.png" alt="" />
+                                <img src="../../img/check-green.png" alt="" />
                             </div>
                         </div>
                     </div>`;
         });
         this.#container.innerHTML = html;
         this.deleteBaiTap();
+        this.editBaiTap();
+    }
+
+    async getStudentBaiTapData(id) {
+        var BaiTapData;
+        let html = '';
+        let data = await axios.get(BaiTap.URL_EXCERCISE + `/${id}`).then(function (response) {
+            return response.data.data;
+        });
+        BaiTapData = data ? data : [];
+        BaiTapData.forEach((element, index) => {
+            html += `<div class="task" id="bai_dang_${element.bai_dang_id}">
+                        <div class="task__container">
+                            <div class="task__author__avatar">
+                                <img src="../../img/person.png" alt="" />
+                            </div>
+                            <div class="task__text">
+                                <div class="task__text-1st">
+                                    <div class="task__author__name">${element.ten_nguoi_dang}</div>
+                                    <div class="task__title">đã đăng một bài tập mới: ${element.tieu_de}</div>
+                                </div>
+                                <div class="task__text-2nd">
+                                    <div class="task__created-date">${element.created_at}</div>
+                                </div>
+                            </div>
+                            <div class="task__duration" style="width: fit-content; padding: 0px 5px;">${Math.round(
+                                Math.abs(new Date() - new Date(`${element.ngay_ket_thuc}`)) / 1000 / 60 / 60 / 24
+                            )}d<div>
+                            </div></div>
+                            
+                        </div>
+                        <div class="task__content">${element.noi_dung}</div>
+                        <div class="task__action task__action--blue">
+                            <div>Xem thêm</div>
+                        </div>
+                        <div class="task__status task__status--green">
+                            <div class="task__status__icon">
+                                <img src="../../img/check-green.png" alt="" />
+                            </div>
+                        </div>
+                    </div>`;
+        });
+        this.#container.innerHTML = html;
     }
 
     async addBaiTap(id) {
         const formData = new FormData(document.getElementById('class-center-container__class-dashboard--new-homework'));
-        let time = document.querySelector('.new-homework__date').value;
+        let time = document.querySelector(
+            '#class-center-container__class-dashboard--new-homework .new-homework__date'
+        ).value;
         time = time.toString().slice(0, 19).replace('T', ' ') + ':00';
 
         formData.append('loai_noi_dung', '2');
@@ -107,6 +153,60 @@ export class BaiTap {
                             alert('Có lỗi khi xoá bài, vui lòng liên hệ bộ phận kĩ thuật để được khắc phục');
                         });
                 }
+            });
+        });
+    }
+
+    editBaiTap() {
+        const editForm = document.getElementById('class-center-container__class-dashboard--edit-homework');
+
+        let taskEditBtn = document.querySelectorAll('.task-container .fa-pen-to-square');
+
+        taskEditBtn.forEach((element, index) => {
+            element.addEventListener('click', (e) => {
+                let bai_dang = element.parentElement.parentElement.id.split('_');
+
+                editForm.style.display = 'block';
+
+                const cancelEditBtn = document.querySelector('.edit-form-cancel');
+                cancelEditBtn.addEventListener('click', function (e) {
+                    editForm.style.display = 'none';
+                });
+
+                const tieu_de_edit = document.querySelector(
+                    '#class-center-container__class-dashboard--edit-homework .new-homework__date .new-homework__title'
+                );
+
+                editForm.addEventListener('submit', async function (e) {
+                    e.preventDefault();
+                    const formData = new FormData(
+                        document.getElementById('class-center-container__class-dashboard--edit-homework')
+                    );
+                    let time = document.querySelector(
+                        '#class-center-container__class-dashboard--edit-homework .new-homework__date'
+                    ).value;
+
+                    time = time.toString().slice(0, 19).replace('T', ' ') + ':00';
+
+                    formData.append('ngay_ket_thuc', time);
+                    formData.append('_method', 'put');
+
+                    await axios
+                        .put(BaiTap.URL_EXCERCISE + `/${bai_dang[2]}`, formData, {
+                            headers: {
+                                'Content-Type': 'multipart/form-data',
+                            },
+                        })
+                        .then(function (response) {
+                            alert('Cập nhật mới thành công');
+                            editForm.style.display = 'none';
+                            console.log(response);
+                        })
+                        .catch(function (error) {
+                            alert('Có lỗi khi cập nhật, vui lòng liên hệ bộ phận kĩ thuật để được khắc phục');
+                            console.log(error);
+                        });
+                });
             });
         });
     }

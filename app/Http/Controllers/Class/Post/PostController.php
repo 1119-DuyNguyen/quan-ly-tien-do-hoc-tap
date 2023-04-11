@@ -50,14 +50,18 @@ class PostController extends ApiController
         //return json_encode($data);
         return $this->success($data, 200, 'Success');
     }
+
     public function store(Request $request)
     {
-        // $request->validate([
-        //     'tieu_de' => 'required|max:255',
-        //     'noi_dung' => 'required',
-        // ]);
-
         return BaiDang::create($request->all());
+    }
+
+    public function update(Request $request, string $id)
+    {
+        return BaiDang::where('id', $id)->update([
+            'tieu_de' => $request->tieu_de,
+            'noi_dung' => $request->noi_dung,
+        ]);
     }
 
     public function destroy(string $id)

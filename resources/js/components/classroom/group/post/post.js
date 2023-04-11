@@ -7,7 +7,7 @@ export class Post {
         this.#container = element;
     }
 
-    async getPostData(id) {
+    async getTeacherPostData(id) {
         var postData;
         let html = '';
         let data = await axios.get(Post.URL_POST + `/${id}`).then(function (response) {
@@ -17,7 +17,7 @@ export class Post {
         postData.forEach((element, index) => {
             html += `<div class="feed-item" id="bai_dang_${element.bai_dang_id}">
                     <div class="feed-item__header">
-                        <img src="../img/icon.png" />
+                        <img src="../../img/icon.png" />
                         <div class="feed-item__header--text">
                             <strong>${element.ten_nguoi_dang} </strong>
                             <span>
@@ -34,7 +34,7 @@ export class Post {
                         <i class="fa-solid fa-trash-can" style="cursor: pointer"></i>
                     </div>
                     <form class="feed-item__comment">
-                        <img src="../img/icon.png" />
+                        <img src="../../img/icon.png" />
                         <input type="text" class="feed-item__comment--input" />
                         <input type="submit" class="feed-item__comment--btn" value="Bình luận" />
                     </form>
@@ -42,6 +42,39 @@ export class Post {
         });
         this.#container.innerHTML = html;
         this.deletePost();
+        this.editPost();
+    }
+
+    async getStudentPostData(id) {
+        var postData;
+        let html = '';
+        let data = await axios.get(Post.URL_POST + `/${id}`).then(function (response) {
+            return response.data.data;
+        });
+        postData = data ? data : [];
+        postData.forEach((element, index) => {
+            html += `<div class="feed-item" id="bai_dang_${element.bai_dang_id}">
+                    <div class="feed-item__header">
+                        <img src="../../img/icon.png" />
+                        <div class="feed-item__header--text">
+                            <strong>${element.ten_nguoi_dang} </strong>
+                            <span>
+                                đã thêm 1 bài đăng mới: ${element.tieu_de}
+                            </span>
+                            <div class="feed-item__header--text-time">${element.created_at}</div>
+                        </div>
+                    </div>
+                    <div class="feed-item__content">
+                        <div class="feed-item__content-1">${element.noi_dung}</div>
+                    </div>
+                    <form class="feed-item__comment">
+                        <img src="../../img/icon.png" />
+                        <input type="text" class="feed-item__comment--input" />
+                        <input type="submit" class="feed-item__comment--btn" value="Bình luận" />
+                    </form>
+                </div>`;
+        });
+        this.#container.innerHTML = html;
     }
 
     async addPost(id) {
@@ -96,5 +129,50 @@ export class Post {
         });
     }
 
-    editPost() {}
+    editPost() {
+        const editForm = document.getElementById('class-center-container__class-dashboard--edit-post');
+
+        let taskEditBtn = document.querySelectorAll('.feed-item .fa-pen-to-square');
+
+        taskEditBtn.forEach((element, index) => {
+            element.addEventListener('click', (e) => {
+                let bai_dang = element.parentElement.parentElement.id.split('_');
+
+                editForm.style.display = 'block';
+
+                const cancelEditBtn = document.querySelector('.edit-form-cancel');
+                cancelEditBtn.addEventListener('click', function (e) {
+                    editForm.style.display = 'none';
+                });
+
+                const tieu_de_edit = document.querySelector(
+                    '#class-center-container__class-dashboard--edit-homework .new-homework__date .new-homework__title'
+                );
+
+                editForm.addEventListener('submit', async function (e) {
+                    e.preventDefault();
+                    const formData = new FormData(
+                        document.getElementById('class-center-container__class-dashboard--edit-post')
+                    );
+                    formData.append('_method', 'put');
+
+                    await axios
+                        .put(Post.URL_POST + `/${bai_dang[2]}`, formData, {
+                            headers: {
+                                'Content-Type': 'multipart/form-data',
+                            },
+                        })
+                        .then(function (response) {
+                            alert('Cập nhật mới thành công');
+                            editForm.style.display = 'none';
+                            console.log(response);
+                        })
+                        .catch(function (error) {
+                            alert('Có lỗi khi cập nhật, vui lòng liên hệ bộ phận kĩ thuật để được khắc phục');
+                            console.log(error);
+                        });
+                });
+            });
+        });
+    }
 }

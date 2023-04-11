@@ -30,7 +30,7 @@ export class Everyone {
                 </div>
                 <div class="class-center-container__class-dashboard--everyone--teacher-member">
                     <div class="class-center-container__class-dashboard--everyone--teacher-member-item">
-                        <img src="../img/icon.png" />
+                        <img src="../../img/teacher.png" />
                         <span>${element.ten_giang_vien}</span>
                     </div>
                 </div>
@@ -57,7 +57,7 @@ export class Everyone {
             html += `
                 <div class="class-center-container__class-dashboard--everyone--student-member">
                     <div class="class-center-container__class-dashboard--everyone--student-member-item">
-                        <img src="../img/icon.png" />
+                        <img src="../../img/icon.png" />
                         <span>${element.ten}</span>
                     </div>
                 </div>
