@@ -2,10 +2,6 @@
 
 namespace App\Imports;
 
-// use App\Models\Authorization\Quyen;
-// use Illuminate\Support\Str;
-// use App\Models\Khoa;
-// use App\Models\Authorization\TaiKhoan;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\SkipsFailures;
@@ -25,23 +21,24 @@ class ImportExcel implements ToModel,WithHeadingRow,SkipsEmptyRows, WithMultiple
      * @return \Illuminate\Database\Eloquent\Model|null
      */
     use Importable, SkipsFailures;
-    private $heading_row = 0;
+    private $header_row = 0;
     private $start_row = 0;
     private $sheetNames;
     private $rules_row = [];
     private $toModel;
 
-    public function __construct($toModel, $headingRow, $sheetNames, $rules_row){
-        $this->heading_row = $headingRow;
+    public function __construct( $headerRow, $sheetNames, $rules_row,$toModel){
+        $this->header_row = $headerRow;
         // $this->start_row = $startRow;
         $this->rules_row = $rules_row;
         $this->sheetNames = $sheetNames;
         $this->toModel = $toModel;
+        // dd($this->toModel);
     }
 
     public function model(array $row)
     {
-        return $this->toModel($row);
+        return ($this->toModel)($row);
     }
 
     function sheets():array {
@@ -62,7 +59,7 @@ class ImportExcel implements ToModel,WithHeadingRow,SkipsEmptyRows, WithMultiple
 
     public function headingRow(): int
     {
-        return $this->heading_row;
+        return $this->header_row;
     }
 
     function rules(): array{
@@ -74,8 +71,4 @@ class ImportExcel implements ToModel,WithHeadingRow,SkipsEmptyRows, WithMultiple
     // function onFailure(Failure ...$failure){
     //     return $failure;
     // }
-
-    function onError(\Throwable $throwable){
-
-    }
 }

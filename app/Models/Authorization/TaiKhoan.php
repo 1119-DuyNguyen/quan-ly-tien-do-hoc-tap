@@ -5,6 +5,7 @@ namespace App\Models\Authorization;
 
 use Laravel\Passport\hasApiTokens;
 
+use App\Traits\AuthorizePermissions;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -12,7 +13,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class TaiKhoan extends Authenticatable
 {
     protected $table = 'tai_khoan';
-    use HasFactory, Notifiable, hasApiTokens;
+    public $timestamps = true;
+    use HasFactory, Notifiable, hasApiTokens, AuthorizePermissions;
     protected $casts = [
         'create_at' => 'date',
         'khoa_id' => 'int',
@@ -72,29 +74,8 @@ class TaiKhoan extends Authenticatable
         return $this->hasMany(BinhLuan::class);
     }
 
-    public function quyen()
+    public function quyens()
     {
-        return $this->belongsTo(Quyen::class);
-    }
-
-    /**
-     *  config passport
-     *
-     * @param string $username
-     *
-     * @return TaiKhoan
-     */
-    public function findForPassport(string $username): TaiKhoan
-    {
-        return $this->where('ten_dang_nhap', $username)->first();
-    }
-    /**
-     * Get the password for the user.
-     *
-     * @return string
-     */
-    public function getAuthPassword()
-    {
-        return $this->mat_khau;
+        return $this->belongsToMany(Quyen::class);
     }
 }

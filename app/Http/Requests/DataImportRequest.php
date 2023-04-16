@@ -22,16 +22,17 @@ class DataImportRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'files' => 'required',
-            'files.*' => 'required|mimes:xlx,xlsx,csv'
+            'files' => 'required|mimes:xlx,xlsx,csv',
+            // 'files.*' => 'required|,csv'
         ];
     }
 
     public function messages(): array
     {
         return [
-            'file.required' => 'Thiếu file upload',
-            'file.*' => 'File upload phải có dạng xlx, xlsx, csv',
+            '*' => 'Lỗi',
+            'files.required' => 'Thiếu file upload',
+            'files.mimes' => 'File upload phải có dạng xlx, xlsx, csv',
        ];
     }
 

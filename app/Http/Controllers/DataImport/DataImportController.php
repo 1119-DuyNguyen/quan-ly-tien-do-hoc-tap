@@ -2,70 +2,80 @@
 
 namespace App\Http\Controllers\DataImport;
 
-use App\Http\Requests\DataImportRequest;
 use App\Imports\ImportExcel;
 use Exception;
 use App\Http\Controllers\ApiController;
+use Illuminate\Http\Request;
 
 class DataImportController extends ApiController
 {
-    protected $header_row;
-    protected $start_row;
-    protected $rules;
-    protected $inputKey;
-
-    function __invoke(DataImportRequest $request){
-        return [
-            [
-                'files' => 0,
-                'sheets' => [
-                    [
-                        'name' => 'HP-GV',
-                        'header-row' => 4
-                    ]
-                ]
-            ]
-        ];
-
+    private $input;
+    private $files;
+    function __invoke(Request $request){
         // $request->validated();
+        // return [
+        //     [
+        //         'files' => 0,
+        //         'sheets' => [
+        //             [
+        //                 'name' => 'HP-GV',
+        //                 'header-row' => 4
+        //             ]
+        //         ]
+        //     ]
+        // ];
+        // dd($request->file());
 
+        $this->files = $request->file('files');
+
+        $this->input = $request->input();
+        // dd($this->input);
         $mess = [];
-        $fileUpload = $request->file('files');
-        $input = json_decode($request->input($this->inputKey));
+        //Import giangvien
+        // array_push($mess,
+        // $this->importEachType('giang-vien',
+        // new GiangVienImportInfo()));
 
+        //Import hocphan
+        array_push($mess,
+        $this->importEachType('hoc-phan',
+        new HocPhanImportInfo()));
+
+
+        return $mess;
+    }
+
+    function importEachType($inputKey, $info){
         //Import Giang Vien
+        $mess = [];
+        $input = json_decode($this->input[$inputKey]);
         if($input != null){
             foreach($input as $importInfo){
                 array_push($mess,$this
                 ->import(
-                    $this->RowToModel(),
-                    $fileUpload[$importInfo->file],
+                    $importInfo->header,
                     $importInfo->sheets,
-                    $this->RowRules(),
+                    $info,
+                    $this->files[$importInfo->file],
                     ImportExcel::class));
             }
         }
         return $mess;
     }
 
-    function RowRules(){
 
-    }
 
-    function RowToModel(){
-
-    }
-
-    function import($model, $file_name, $sheetNames, $rules, $class){
+    function import($header_row, $sheetNames, $info, $file, $class){
         $failures = [];
         try {
             $importer = new $class(
-                                $model,
-                                $this->header_row,
+                                $header_row,
                                 $sheetNames,
-                                $rules);
+                                $info->RowRules(),
+                                $info->RowToModel());
+            // Closure::bind($info->RowToModel(), null, $importer);
             // dd($importer->sheets());
-            $importer->import($file_name);
+            $importer->import($file);
             foreach ($importer->failures() as $fail){
                 array_push($failures, [
                     $fail->row(), // row that went wrong
