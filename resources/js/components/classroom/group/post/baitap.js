@@ -17,27 +17,31 @@ export class BaiTap {
         });
         BaiTapData = data ? data : [];
         BaiTapData.forEach((element, index) => {
-            html += `<div class="task" id="bai_dang_${element.bai_dang_id}">
+            html += `<div class="task" id="bai_dang_${decodeHtml(element.bai_dang_id)}">
                         <div class="task__container">
                             <div class="task__author__avatar">
                                 <img src="../../img/person.png" alt="" />
                             </div>
                             <div class="task__text">
                                 <div class="task__text-1st">
-                                    <div class="task__author__name">${element.ten_nguoi_dang}</div>
-                                    <div class="task__title">đã đăng một bài tập mới: ${element.tieu_de}</div>
+                                    <div class="task__author__name">${decodeHtml(element.ten_nguoi_dang)}</div>
+                                    <div class="task__title">đã đăng một bài tập mới: ${decodeHtml(
+                                        element.tieu_de
+                                    )}</div>
                                 </div>
                                 <div class="task__text-2nd">
-                                    <div class="task__created-date">${element.created_at}</div>
+                                    <div class="task__created-date">${decodeHtml(element.created_at)}</div>
                                 </div>
                             </div>
-                            <div class="task__duration" style="width: fit-content; padding: 0px 5px;">${Math.round(
-                                Math.abs(new Date() - new Date(`${element.ngay_ket_thuc}`)) / 1000 / 60 / 60 / 24
+                            <div class="task__duration" style="width: fit-content; padding: 0px 5px;">${decodeHtml(
+                                Math.round(
+                                    Math.abs(new Date() - new Date(`${element.ngay_ket_thuc}`)) / 1000 / 60 / 60 / 24
+                                )
                             )}d<div>
                             </div></div>
                             
                         </div>
-                        <div class="task__content">${element.noi_dung}</div>
+                        <div class="task__content">${decodeHtml(element.noi_dung)}</div>
                         <div class="feed-item-option" style="padding: 0 15px">
                             <i class="fa-solid fa-pen-to-square" style="cursor: pointer"></i>
                             <i class="fa-solid fa-trash-can" style="cursor: pointer"></i>
@@ -65,27 +69,31 @@ export class BaiTap {
         });
         BaiTapData = data ? data : [];
         BaiTapData.forEach((element, index) => {
-            html += `<div class="task" id="bai_dang_${element.bai_dang_id}">
+            html += `<div class="task" id="bai_dang_${decodeHtml(element.bai_dang_id)}">
                         <div class="task__container">
                             <div class="task__author__avatar">
                                 <img src="../../img/person.png" alt="" />
                             </div>
                             <div class="task__text">
                                 <div class="task__text-1st">
-                                    <div class="task__author__name">${element.ten_nguoi_dang}</div>
-                                    <div class="task__title">đã đăng một bài tập mới: ${element.tieu_de}</div>
+                                    <div class="task__author__name">${decodeHtml(element.ten_nguoi_dang)}</div>
+                                    <div class="task__title">đã đăng một bài tập mới: ${decodeHtml(
+                                        element.tieu_de
+                                    )}</div>
                                 </div>
                                 <div class="task__text-2nd">
-                                    <div class="task__created-date">${element.created_at}</div>
+                                    <div class="task__created-date">${decodeHtml(element.created_at)}</div>
                                 </div>
                             </div>
-                            <div class="task__duration" style="width: fit-content; padding: 0px 5px;">${Math.round(
-                                Math.abs(new Date() - new Date(`${element.ngay_ket_thuc}`)) / 1000 / 60 / 60 / 24
+                            <div class="task__duration" style="width: fit-content; padding: 0px 5px;">${decodeHtml(
+                                Math.round(
+                                    Math.abs(new Date() - new Date(`${element.ngay_ket_thuc}`)) / 1000 / 60 / 60 / 24
+                                )
                             )}d<div>
                             </div></div>
                             
                         </div>
-                        <div class="task__content">${element.noi_dung}</div>
+                        <div class="task__content">${decodeHtml(element.noi_dung)}</div>
                         <div class="task__action task__action--blue">
                             <div>Xem thêm</div>
                         </div>

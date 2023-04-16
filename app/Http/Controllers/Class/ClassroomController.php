@@ -9,7 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Users\Classes\NhomHoc;
 use App\Http\Controllers\ApiController;
 
-class ClassController extends ApiController
+class ClassroomController extends ApiController
 {
     /**
      * Display a listing of the resource.

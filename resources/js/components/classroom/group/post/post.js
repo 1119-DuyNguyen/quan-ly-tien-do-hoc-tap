@@ -15,19 +15,19 @@ export class Post {
         });
         postData = data ? data : [];
         postData.forEach((element, index) => {
-            html += `<div class="feed-item" id="bai_dang_${element.bai_dang_id}">
+            html += `<div class="feed-item" id="bai_dang_${decodeHtml(element.bai_dang_id)}">
                     <div class="feed-item__header">
                         <img src="../../img/icon.png" />
                         <div class="feed-item__header--text">
-                            <strong>${element.ten_nguoi_dang} </strong>
+                            <strong>${decodeHtml(element.ten_nguoi_dang)} </strong>
                             <span>
-                                đã thêm 1 bài đăng mới: ${element.tieu_de}
+                                đã thêm 1 bài đăng mới: ${decodeHtml(element.tieu_de)}
                             </span>
-                            <div class="feed-item__header--text-time">${element.created_at}</div>
+                            <div class="feed-item__header--text-time">${decodeHtml(element.created_at)}</div>
                         </div>
                     </div>
                     <div class="feed-item__content">
-                        <div class="feed-item__content-1">${element.noi_dung}</div>
+                        <div class="feed-item__content-1">${decodeHtml(element.noi_dung)}</div>
                     </div>
                     <div class="feed-item-option">
                         <i class="fa-solid fa-pen-to-square" style="cursor: pointer"></i>
@@ -53,19 +53,19 @@ export class Post {
         });
         postData = data ? data : [];
         postData.forEach((element, index) => {
-            html += `<div class="feed-item" id="bai_dang_${element.bai_dang_id}">
+            html += `<div class="feed-item" id="bai_dang_${decodeHtml(element.bai_dang_id)}">
                     <div class="feed-item__header">
                         <img src="../../img/icon.png" />
                         <div class="feed-item__header--text">
-                            <strong>${element.ten_nguoi_dang} </strong>
+                            <strong>${decodeHtml(element.ten_nguoi_dang)} </strong>
                             <span>
-                                đã thêm 1 bài đăng mới: ${element.tieu_de}
+                                đã thêm 1 bài đăng mới: ${decodeHtml(element.tieu_de)}
                             </span>
-                            <div class="feed-item__header--text-time">${element.created_at}</div>
+                            <div class="feed-item__header--text-time">${decodeHtml(element.created_at)}</div>
                         </div>
                     </div>
                     <div class="feed-item__content">
-                        <div class="feed-item__content-1">${element.noi_dung}</div>
+                        <div class="feed-item__content-1">${decodeHtml(element.noi_dung)}</div>
                     </div>
                     <form class="feed-item__comment">
                         <img src="../../img/icon.png" />

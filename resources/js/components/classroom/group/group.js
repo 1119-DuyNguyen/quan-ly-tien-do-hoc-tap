@@ -31,7 +31,9 @@ export class Group {
         groupData = data ? data : [];
         //foreach
         html += `
-                <div class="class-center-container__class-header--class-name">${groupData[0].ten_hoc_phan}</div>
+                <div class="class-center-container__class-header--class-name">${decodeHtml(
+                    groupData[0].ten_hoc_phan
+                )}</div>
                 <div
                     class="class-center-container__class-header--teacher-name class-center-container__class-header--sub-header"
                 >
@@ -40,12 +42,12 @@ export class Group {
                 <div
                     class="class-center-container__class-header--subject-code class-center-container__class-header--sub-header"
                 >
-                    <strong>Mã môn học: </strong>${groupData[0].ma_hoc_phan}
+                    <strong>Mã môn học: </strong>${decodeHtml(groupData[0].ma_hoc_phan)}
                 </div>
                 <div
                     class="class-center-container__class-header--class-group class-center-container__class-header--sub-header"
                 >
-                    <strong>Nhóm môn học: </strong>${groupData[0].stt_nhom}
+                    <strong>Nhóm môn học: </strong>${decodeHtml(groupData[0].stt_nhom)}
                 </div>
             `;
         this.#container.innerHTML = html;

@@ -1,4 +1,4 @@
-import axios from 'axios';
+// import axios from 'axios';
 
 export class Everyone {
     static URL_EVERYONE = location.protocol + '//' + location.host + '/api/everyone';
@@ -25,13 +25,13 @@ export class Everyone {
                         Giảng viên
                     </div>
                     <div class="class-center-container__class-dashboard--everyone--teacher-header-righttext">
-                        ${teacherData.length}
+                        ${decodeHtml(teacherData.length)}
                     </div>
                 </div>
                 <div class="class-center-container__class-dashboard--everyone--teacher-member">
                     <div class="class-center-container__class-dashboard--everyone--teacher-member-item">
                         <img src="../../img/teacher.png" />
-                        <span>${element.ten_giang_vien}</span>
+                        <span>${decodeHtml(element.ten_giang_vien)}</span>
                     </div>
                 </div>
             </div>`;
@@ -49,7 +49,7 @@ export class Everyone {
                         Sinh viên
                     </div>
                     <div class="class-center-container__class-dashboard--everyone--student-header-righttext">
-                        ${everyoneData.length}
+                        ${decodeHtml(everyoneData.length)}
                     </div>
                 </div>
         `;
@@ -58,7 +58,7 @@ export class Everyone {
                 <div class="class-center-container__class-dashboard--everyone--student-member">
                     <div class="class-center-container__class-dashboard--everyone--student-member-item">
                         <img src="../../img/icon.png" />
-                        <span>${element.ten}</span>
+                        <span>${decodeHtml(element.ten)}</span>
                     </div>
                 </div>
             </div>`;

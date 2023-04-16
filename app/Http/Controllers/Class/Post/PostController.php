@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Users\Classes\NhomHoc;
 use App\Http\Controllers\ApiController;
 use App\Models\Users\Classes\Posts\BaiDang;
+use PhpParser\Node\Stmt\TryCatch;
 
 class PostController extends ApiController
 {
@@ -51,21 +52,41 @@ class PostController extends ApiController
         return $this->success($data, 200, 'Success');
     }
 
-    public function store(Request $request)
+    public function store(Request $request, BaiDang $baiDang)
     {
-        return BaiDang::create($request->all());
+        try {
+            $baiDang->create($request->all());
+            return $this->success($baiDang, 201, 'Created');
+        } catch (Exception $e) {
+            //catch exception
+            echo 'Message: ' . $e->getMessage();
+            return $this->error(400, 'Lỗi server update không thành công');
+        }
     }
 
-    public function update(Request $request, string $id)
+    public function update(string $id, Request $request)
     {
-        return BaiDang::where('id', $id)->update([
-            'tieu_de' => $request->tieu_de,
-            'noi_dung' => $request->noi_dung,
-        ]);
+        $baiDang = BaiDang::find($id);
+        try {
+            $baiDang->update($request->all());
+            return $this->success($baiDang, 201, 'Updated');
+        } catch (Exception $e) {
+            //catch exception
+            echo 'Message: ' . $e->getMessage();
+            return $this->error(400, 'Lỗi server update không thành công');
+        }
     }
 
     public function destroy(string $id)
     {
-        return BaiDang::where('id', $id)->delete();
+        $baiDang = BaiDang::find($id);
+        try {
+            $baiDang->delete();
+            return $this->success(null, 204, 'Deleted');
+        } catch (Exception $e) {
+            //catch exception
+            echo 'Message: ' . $e->getMessage();
+            return $this->error(400, 'Lỗi server delete không thành công');
+        }
     }
 }

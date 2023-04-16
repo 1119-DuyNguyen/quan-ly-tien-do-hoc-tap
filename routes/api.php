@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\UserAuthController;
-use App\Http\Controllers\Class\ClassController;
+use App\Http\Controllers\Class\ClassroomController;
 use App\Http\Controllers\Class\Everyone\EveryoneController;
 use App\Http\Controllers\Class\Post\BaitapController;
 use App\Http\Controllers\Class\Post\PostController;
@@ -34,7 +34,7 @@ Route::post('login/refresh', [UserAuthController::class, 'refresh']);
 Route::middleware('auth:api')->group(function () {
     Route::post('/logout', [UserAuthController::class, 'logout']);
     Route::apiResource('/test', TestApi::class);
-    Route::apiResource('/classes', ClassController::class);
+    Route::apiResource('/classes', ClassroomController::class);
     Route::apiResource('/posts', PostController::class);
     Route::apiResource('/exercises', BaitapController::class);
     Route::apiResource('/everyone', EveryoneController::class);
