@@ -182,7 +182,7 @@
 
         &:hover {
             color: #0056b3;
-            text-decoration: underline;
+            //  text-decoration: underline;
             background-color: transparent;
             border-color: transparent;
         }
@@ -192,6 +192,7 @@
         //     border-color: transparent;
         //     box-shadow: none;
         // }
+
         &.disabled,
         &:disabled {
             color: #6c757d;

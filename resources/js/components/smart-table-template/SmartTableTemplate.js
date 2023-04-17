@@ -14,6 +14,7 @@ import { formatDate } from './helpers/date.js';
 //             }[tag])
 //     );
 // window.customElements.define('loader-component', LoaderComponent);
+
 export class SmartTableTemplate {
     #container;
     #content;
@@ -22,7 +23,7 @@ export class SmartTableTemplate {
     #body;
 
     #paginationService;
-
+    isFirstInit = false;
     /**
      * @var options Object
      * formatAttributeHeader : convert name json to format
@@ -44,20 +45,13 @@ export class SmartTableTemplate {
         let container = createElement('div', 'control-container');
         let containerBtns = createElement('div', 'control-btns');
         let addBtn = createElement(
-            'button',
+            'a',
             'btn btn--primary',
             '<i class="fa-solid fa-circle-plus" style="margin-right:8px"></i>Thêm'
         );
-        let addSection = createElement('div', 'add-section');
-        addSection.innerHTML = `
-        <form>
-
-        </form>
-        
-        `;
         containerBtns.appendChild(addBtn);
         container.appendChild(containerBtns);
-        container.appendChild(addSection);
+
         return container;
     }
     constructor(rootElement) {
@@ -79,12 +73,7 @@ export class SmartTableTemplate {
      * @returns
      */
     init(dataJson, option, paginationOption = {}) {
-        this.#content = createElement('table', 'table');
-        this.#header = createElement('thead', 'table-header');
-        this.#headerBtns = [];
-        this.#body = createElement('tbody', 'table-content');
         try {
-            this.#container.innerHTML = '';
             option = assignOption(this.#option, option);
             //header create edit delete
             //container
@@ -95,16 +84,26 @@ export class SmartTableTemplate {
             if (getArrayDepth(dataJson) > 2) {
                 throw new Error('Deep array muse be smaller than 2');
             }
-            if (option['edit']) {
+            if (!this.isFirstInit) {
                 //action;
-                this.#container.appendChild(this.createControlBtns());
+                if (option['edit']) {
+                    this.#container.appendChild(this.createControlBtns());
+                }
+                let containerTable = createElement('div', 'container-table');
+                this.#content = createElement('table', 'table');
+                containerTable.appendChild(this.#content);
+                this.#container.appendChild(containerTable);
+                this.isFirstInit = true;
+                if (option['pagination']) {
+                    this.handleCreatePagination(paginationOption);
+                }
+            } else {
+                this.#content.innerHTML = '';
             }
-
+            this.#header = createElement('thead', 'table-header');
+            this.#headerBtns = [];
+            this.#body = createElement('tbody', 'table-content');
             //content
-
-            let containerTable = createElement('div', 'container-table');
-            containerTable.appendChild(this.#content);
-            this.#container.appendChild(containerTable);
 
             let headers = getDataJsonKeys(dataJson);
             if (!headers) {
@@ -118,9 +117,6 @@ export class SmartTableTemplate {
                 throw new Error('Unvalid data');
             }
             this.#content.appendChild(this.#body);
-            if (option['pagination']) {
-                this.handleCreatePagination(paginationOption);
-            }
         } catch (err) {
             console.error(err);
         }
@@ -186,8 +182,13 @@ export class SmartTableTemplate {
                 if (options.minWidth) {
                     th.style.minWidth = options.minWidth;
                 }
+                if (options.width) {
+                    th.style.width = options.width;
+                }
                 if (options.title) {
                     title = options.title ? options.title : header;
+                }
+                if (options.ellipsis) {
                 }
             }
             btn.textContent = title;
@@ -218,18 +219,28 @@ export class SmartTableTemplate {
         objKeys.map((key) => {
             const cell = document.createElement('td');
             cell.setAttribute('data-attr', key);
+            let divContent = createElement('div');
+            cell.appendChild(divContent);
             //
             let type = '';
             let options = this.#option['formatAttributeHeader'][key];
             if (options) {
                 type = options.type ? options.type : type;
+                if (options.ellipsis) {
+                    if (options.width) {
+                        divContent.style.width = options.width;
+                    }
+                    divContent.style.whiteSpace = 'nowrap';
+                    divContent.style.overflow = 'hidden';
+                    divContent.style.textOverflow = 'ellipsis';
+                }
             }
             switch (type) {
                 case 'date':
-                    cell.innerHTML = formatDate(new Date(obj[key]));
+                    divContent.innerHTML = formatDate(new Date(obj[key]));
                     break;
                 default:
-                    cell.innerHTML = obj[key];
+                    divContent.innerHTML = obj[key];
             }
 
             row.appendChild(cell);
@@ -275,9 +286,13 @@ export class SmartTableTemplate {
     }
 
     /**
-     * generate new table with data from url and options
-     * @param {Element} element
+     * fetch data and render
      * @param {String} urlAPI
+     * @param {Object} option
+     * avaiable option: width, title, minWidth, maxWidth, ellipsis
+     * Want whiteSpace nowrap ?
+     * then @example{ellipsis:true}
+     *   dont set width
      * @returns
      */
     async fetchDataTable(urlAPI, option = {}) {
@@ -290,16 +305,24 @@ export class SmartTableTemplate {
         }
 
         urlAPI = url.href;
-
-        let jsonData = await fetch(urlAPI)
-            .then((res) => {
-                return res.json();
-            })
-            .catch((e) => {
-                return [];
+        let jsonData;
+        if (window.axios) {
+            jsonData = await axios.get(urlAPI).then((res) => {
+                return res.data;
             });
+        } else {
+            jsonData = await fetch(urlAPI)
+                .then((res) => {
+                    return res.json();
+                })
+                .catch((e) => {
+                    return [];
+                });
+        }
+
         if (jsonData) {
             option.urlAPI = urlAPI;
+            option = assignOption(this.#option, option);
             this.init(jsonData.data.dataObject, option, jsonData.data.paginationOption);
             return true;
         } else return false;

@@ -30,8 +30,11 @@ trait ApiResponser
             'message' => $message
         ], $code);
     }
-    protected function paginate($request, $table, $itemPerPage = 10)
+    protected function paginate($request, $table, $itemPerPage = 10, $step = 3)
     {
+        //$request->validate(['sort' => 'in:column1,column2']);
+        //if (Schema::hasColumn('users', $request->sort)) {
+
         $orderColumn = $request->input('order-column');
 
         if (!($orderColumn && Schema::hasColumn($table, $orderColumn))) {
@@ -54,7 +57,8 @@ trait ApiResponser
         return $this->success([
             'paginationOption' => [
                 'total' => $total,
-                'perPage' => $itemPerPage
+                'perPage' => $itemPerPage,
+                'step' => $step
             ],
             'dataObject' => $data,
 

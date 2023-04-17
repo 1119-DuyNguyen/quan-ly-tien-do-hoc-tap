@@ -1,3 +1,5 @@
+import { routeHref } from '../routes/route';
+
 export class Login {
     static ACCESS_TOKEN = 'access_token';
     static URL_LOGIN = location.protocol + '//' + location.host + '/api/login';
@@ -23,8 +25,11 @@ export class Login {
                 })
                 .then((res) => {
                     var data = res.data.data;
-                    setCookie(Login.ACCESS_TOKEN, data['access_token'], data['expires_in']);
-                    console.log(getCookie('access_token'));
+                    console.log(data);
+                    if (data && data.roleSlug) {
+                        window.localStorage.setItem('role', data.roleSlug);
+                        routeHref('/');
+                    }
                 })
                 .catch((error) => console.log(error));
         });

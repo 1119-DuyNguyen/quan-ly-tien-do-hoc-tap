@@ -14,24 +14,28 @@ export class Role {
 
         tableTem.fetchDataTable(Role.URL_ROLE, {
             formatAttributeHeader: {
-                id: {},
+                id: {
+                    width: '40px',
+                },
                 ten: {
                     title: 'Tên',
                     minWidth: '140px',
+                    ellipsis: true,
                 },
                 ghi_chu: {
                     title: 'Ghi chú',
-                    minWidth: '200px',
+                    width: '200px',
+                    ellipsis: true,
                 },
                 created_at: {
                     title: 'Ngày khởi tạo',
                     type: 'date',
-                    minWidth: '172px',
+                    ellipsis: true,
                 },
                 updated_at: {
                     title: 'Ngày cập nhập',
-                    minWidth: '172px',
                     type: 'date',
+                    ellipsis: true,
                 },
             },
             pagination: true,

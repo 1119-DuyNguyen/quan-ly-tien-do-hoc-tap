@@ -2,6 +2,7 @@ import { routeList } from './route-list.js';
 const routeObj = {};
 const PAGE_TITLE = 'Quản lý tiến độ học tập';
 const PAGE_KEYWORD = 'Quản lý tiến độ, sgu';
+const DOMAIN = location.protocol + '//' + location.host;
 routeObj.listRoutes = routeList ? routeList : [];
 routeObj.currentPage = '';
 routeObj.previousPage = '';
@@ -61,16 +62,24 @@ async function routeTo(route, _params) {
     var html;
     try {
         // This async call may fail.
+
         if (route.template) {
-            html = await fetch(route.template).then((response) => response.text());
+            if (window.axios) {
+                html = await fetch(route.template).then((response) => response.text());
+                //html = await axios.get(route.template).then((response) => response.data);
+            } else html = await fetch(route.template).then((response) => response.text());
         }
     } catch (error) {
-        console.error('không load được template');
+        console.error('không load được template', error);
         return false;
     }
 
     if (html) {
-        document.getElementById('main-content').innerHTML = html;
+        let rootEl = document.getElementById('main-content');
+        rootEl.innerHTML = '';
+        let briefContainer = generateBriefMap(rootEl);
+        if (briefContainer) rootEl.appendChild(briefContainer);
+        rootEl.insertAdjacentHTML('beforeend', html);
     }
 
     document.title = 'QLTDHT : ' + (route.pageInfo.title ? route.pageInfo.title : PAGE_TITLE);
@@ -90,13 +99,62 @@ async function routeTo(route, _params) {
 //:     /$page/$pageid
 //:     /home/3434434
 //giá trị page=>home và pageid=>3434434
+const generateBriefMap = (element) => {
+    let role = localStorage.getItem('role');
+    if (!role) return false;
+    let arrayPathname = window.location.pathname;
+    //lọc nếu không có brief map
+    arrayPathname = arrayPathname.split('/').filter(function (h) {
+        return h.length > 0;
+    });
+    let getHrefBrief = function (location, index) {
+        let href = '';
+        for (let i = 0; i < location.length; ++i) {
+            href += location[i] + '/';
+            if (index === i) break;
+        }
+        return href;
+    };
+    let containerLink = document.createElement('div');
+    containerLink.classList.add('container-link');
+    //sinh-vien/dashboard
+    for (let i = 0; i < arrayPathname.length; ++i) {
+        let a = document.createElement('a');
+        console.log(getHrefBrief(arrayPathname, arrayPathname[i]));
 
+        a.innerText = arrayPathname[i] + '/';
+        a.classList.add('btn');
+        if (i === arrayPathname.length - 1) {
+            a.classList.add('btn--link');
+            a.classList.add('disabled');
+        } else {
+            a.href = DOMAIN + '/' + getHrefBrief(arrayPathname, i);
+            a.addEventListener('click', routeHref);
+
+            a.classList.add('btn--link');
+        }
+        containerLink.append(a);
+    }
+    return containerLink;
+};
 const urlLocationHandler = async () => {
-    //lọc login
+    // lọc href
 
-    //
     var location = window.location.pathname;
+
     var _params;
+    //Kiểm tra đã đăng nhập chưa, tự thêm prefix
+    let role = localStorage.getItem('role');
+    if (role) {
+        location = role + '/' + location;
+        //  routeHref(reLocation.replace(/^\/+|\/+$/g, ''));
+    } else {
+        if (location !== '/') {
+            routeHref('/');
+
+            return;
+        }
+    }
     if (location.length === 0) {
         location = '/';
     }
@@ -122,15 +180,19 @@ const urlLocationHandler = async () => {
 
                     if (_params) {
                         location = href;
+
                         break;
                     }
                 }
             }
         }
+        location = location.replace(/^\/+|\/+$/g, '');
 
         // xóa đi "/" ở đầu và cuối;
-        location = location.replace(/^\/+|\/+$/g, '');
         if (!location) location = '/';
+        //addPrefix
+
+        //  console.log(location);
         const route = listRoutes[location] || listRoutes['404'];
 
         return routeTo(route, _params);

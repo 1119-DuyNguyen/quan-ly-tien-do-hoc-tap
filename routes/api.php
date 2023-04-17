@@ -29,13 +29,13 @@ use Illuminate\Support\Facades\Route;
 Route::post('login', [UserAuthController::class, 'login']);
 Route::post('login/refresh', [UserAuthController::class, 'refresh']);
 
+Route::apiResource('/test', TestApi::class);
 
 Route::middleware('auth:api')->group(function () {
     Route::post('/logout', [UserAuthController::class, 'logout']);
     //   Route::resource('posts', PostController::class);
     Route::middleware('role:Sinh Viên')->group(
         function () {
-            Route::apiResource('/test', TestApi::class);
         }
     );
     Route::middleware('role:Quản trị viên')->name('admin.')->prefix('/admin')->group(

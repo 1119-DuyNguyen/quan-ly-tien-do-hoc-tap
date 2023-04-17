@@ -22,7 +22,6 @@ export class PaginationService {
     constructor(container, smartTableTemplate, option = {}) {
         assignOption(this.option, option);
         this.option.totalPage = Math.round(this.option.total / this.option.perPage);
-
         if (this.option.totalPage >= 2) {
             // mặc định là append
             this.#pagination = createElement('ul', 'pagination');
@@ -110,7 +109,9 @@ export class PaginationService {
     nextPage() {
         let currentPage = Number.parseInt(this.currentPage) + 1;
         let page = currentPage > this.option['totalPage'] ? this.option['totalPage'] : currentPage;
-        this.updatePageUrl(page);
+        if (this.updatePageUrl(page)) {
+            this.#smartTableTemplateObject.reRenderTable();
+        }
 
         // pagePagination.Start();
     }
@@ -118,7 +119,10 @@ export class PaginationService {
         let currentPage = Number.parseInt(this.currentPage) - 1;
         let page = currentPage < 1 ? 1 : currentPage;
 
-        this.updatePageUrl(page);
+        if (this.updatePageUrl(page)) {
+            this.#smartTableTemplateObject.reRenderTable();
+        }
+
         // pagePagination.Start();
     }
     handleCreateBtns() {
