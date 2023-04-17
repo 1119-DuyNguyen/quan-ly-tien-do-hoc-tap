@@ -23,11 +23,11 @@
 <body>
     <!--Start side bar panel-->
     <aside class="main-sidebar" id="main-sidebar">
-        <div class="container">
+        {{-- <div class="container">
             <ul class="sidebar__nav">
                 <li>
                     <div class="sidebar__nav__static">
-                        <div class="sidebar__nav__img circular_image">
+                        <div class="sidebar__nav__img rectangle_image">
                             <img src="./img/icon.png" alt="" />
                         </div>
                         <div class="sidebar__nav__title">
@@ -87,7 +87,7 @@
                     </a>
                 </li>
             </ul>
-        </div>
+        </div> --}}
     </aside>
     <!--End side bar panel-->
     <div id="main-content">

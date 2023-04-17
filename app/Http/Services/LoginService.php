@@ -63,7 +63,7 @@ class LoginService
      * @param string $grantType  type of grant type should be proxied
      * @param array $data  data send to the server
      */
-    private function proxy($grantType, array $data = [], $scope)
+    private function proxy($grantType, array $data = [], $scope = '*')
     {
 
 

@@ -1,3 +1,4 @@
+import { Sidebar } from '../layouts/sidebar.js';
 import { routeList } from './route-list.js';
 const routeObj = {};
 const PAGE_TITLE = 'Quản lý tiến độ học tập';
@@ -20,7 +21,7 @@ export function routePreviousPage() {
     window.history.pushState({}, '', routeObj.previousPage);
     urlLocationHandler();
 }
-const urlRoute = (event) => {
+export const urlRoute = (event) => {
     event = event || window.event;
     event.preventDefault();
 
@@ -55,7 +56,7 @@ function checkParams(urlParams, routeParams) {
  * @param {Object} route { template, js}
  * @returns
  */
-async function routeTo(route, _params) {
+async function routeTo(route, _params, is404 = false) {
     //  const route = routingList[href] || routingList['404'];
 
     // get the html from the template
@@ -75,10 +76,31 @@ async function routeTo(route, _params) {
     }
 
     if (html) {
+        //loadMainSideBar
+        let role = localStorage.getItem('roleSlug');
+        let sidebarEl = document.getElementById('main-sidebar');
+
+        if (role) {
+            console.log(sidebarEl);
+            if (!sidebarEl.dataset.isInit) {
+                sidebarEl.style.visibility = 'visible';
+                sidebarEl.dataset.isInit = 'true';
+                console.log('here');
+                let sidebar = new Sidebar(sidebarEl);
+            }
+        } else {
+            sidebarEl.innerHTML = '';
+            sidebarEl.style.visibility = 'hidden';
+            sidebarEl.dataset.isInit = '';
+        }
+
         let rootEl = document.getElementById('main-content');
         rootEl.innerHTML = '';
-        let briefContainer = generateBriefMap(rootEl);
-        if (briefContainer) rootEl.appendChild(briefContainer);
+        if (!is404) {
+            let briefContainer = generateBriefMap(rootEl);
+            if (briefContainer) rootEl.appendChild(briefContainer);
+        }
+
         rootEl.insertAdjacentHTML('beforeend', html);
     }
 
@@ -100,7 +122,7 @@ async function routeTo(route, _params) {
 //:     /home/3434434
 //giá trị page=>home và pageid=>3434434
 const generateBriefMap = (element) => {
-    let role = localStorage.getItem('role');
+    let role = localStorage.getItem('roleSlug');
     if (!role) return false;
     let arrayPathname = window.location.pathname;
     //lọc nếu không có brief map
@@ -120,7 +142,6 @@ const generateBriefMap = (element) => {
     //sinh-vien/dashboard
     for (let i = 0; i < arrayPathname.length; ++i) {
         let a = document.createElement('a');
-        console.log(getHrefBrief(arrayPathname, arrayPathname[i]));
 
         a.innerText = arrayPathname[i] + '/';
         a.classList.add('btn');
@@ -129,7 +150,7 @@ const generateBriefMap = (element) => {
             a.classList.add('disabled');
         } else {
             a.href = DOMAIN + '/' + getHrefBrief(arrayPathname, i);
-            a.addEventListener('click', routeHref);
+            a.addEventListener('click', urlRoute);
 
             a.classList.add('btn--link');
         }
@@ -141,13 +162,21 @@ const urlLocationHandler = async () => {
     // lọc href
 
     var location = window.location.pathname;
-
     var _params;
     //Kiểm tra đã đăng nhập chưa, tự thêm prefix
-    let role = localStorage.getItem('role');
+    let role = localStorage.getItem('roleSlug');
+    location = location.replace(/\/{2,}/g, '/');
+
     if (role) {
-        location = role + '/' + location;
-        //  routeHref(reLocation.replace(/^\/+|\/+$/g, ''));
+        // xóa nơi nào có / lớn hơn 2 liên tục
+
+        if (!location || location === '/') {
+            //route mặc định
+            // location = role + '/dashboard';
+            routeHref(DOMAIN + '/dashboard');
+            return;
+        } else location = role + '/' + location;
+        //  routeHref(re);
     } else {
         if (location !== '/') {
             routeHref('/');
@@ -163,6 +192,11 @@ const urlLocationHandler = async () => {
         routeObj.currentPage = location;
         // filter vì user có thể nhập nhầm "//"h
 
+        // var urlParams = location.split('/').filter(function (h) {
+        //     return h.length > 0;
+        // });
+
+        // Đã xử lý từ regex ở trên
         var urlParams = location.split('/').filter(function (h) {
             return h.length > 0;
         });
@@ -186,16 +220,19 @@ const urlLocationHandler = async () => {
                 }
             }
         }
-        location = location.replace(/^\/+|\/+$/g, '');
-
         // xóa đi "/" ở đầu và cuối;
+        //  location = location.replace(/^\/+|\/+$/g, '');
+
         if (!location) location = '/';
         //addPrefix
 
         //  console.log(location);
         const route = listRoutes[location] || listRoutes['404'];
 
-        return routeTo(route, _params);
+        if (route === listRoutes['404']) {
+            // console.log(route);
+            return routeTo(route, _params, true);
+        } else return routeTo(route, _params);
     } else {
         // bật lên toast nếu cùng trang ?
         return false;

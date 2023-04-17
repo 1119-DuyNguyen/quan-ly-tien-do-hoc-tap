@@ -1,12 +1,12 @@
 import { Route } from '../abstract/classes.js';
 import { DashBoard } from '../pages/dashboard.js';
 import { Class } from '../pages/class.js';
-import { Login } from '../pages/login.js';
+import { Authentication } from '../pages/authentication.js';
 import { Role } from '../pages/admin/role.js';
 
 const route = new Route();
 
-route.addRoute('/', Login.index, { title: 'Login' }, 'templates/login.html');
+route.addRoute('/', Authentication.login, { title: 'Login' }, 'templates/login.html');
 route.addRoute('sinh-vien/dashboard', DashBoard.index, { title: 'DashBoard' }, 'templates/dashboard.html');
 route.addRoute('404', '', { title: '404' }, 'templates/404.html');
 route.addRoute('info', '', {}, 'templates/info.html');
