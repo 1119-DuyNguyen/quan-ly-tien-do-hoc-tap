@@ -6,12 +6,12 @@ use App\Models\Authorization\TaiKhoan;
 use App\Models\Users\Students\NienKhoa;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Users\Staffs\CoVanHocTap;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class LopHoc extends Model
 {
     protected $table = 'lop_hoc';
-    use HasFactory;
+    public $timestamps = false;
+
     protected $casts = [
         'nien_khoa_id' => 'int',
         'co_van_hoc_tap_id' => 'int',

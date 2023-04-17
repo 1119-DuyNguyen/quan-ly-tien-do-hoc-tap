@@ -9,8 +9,8 @@ window.axios = axios;
 // setup request before send to server
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-window.axios.defaults.headers.post['Authorization'] = `Bearer ${getCookie('access_token')}`;
-console.log(getCookie('access_token'));
+// window.axios.defaults.headers.post['Authorization'] = `Bearer ${getCookie('access_token')}`;
+
 // setup response parse
 // instance.interceptors.response.use((response) => {
 

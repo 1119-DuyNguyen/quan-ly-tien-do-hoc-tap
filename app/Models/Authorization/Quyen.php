@@ -27,9 +27,9 @@ class Quyen extends Model
     // 	return $this->belongsToMany(TaiKhoan::class);
     // }
 
-    public function tai_khoans()
+    public function tai_khoan()
     {
-        return $this->hasMany(TaiKhoan::class);
+        return $this->belongsToMany(TaiKhoan::class);
     }
 
     public function chuc_nang()

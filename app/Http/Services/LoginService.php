@@ -2,11 +2,12 @@
 
 namespace App\Http\Services;
 
+use Illuminate\Support\Str;
 use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 
 
@@ -36,9 +37,9 @@ class LoginService
             // vì passport cần username :)))
 
             $data['username'] = $data['ten_dang_nhap'];
-            return $this->proxy('password', $data);
+            return $this->proxy('password', $data, '*');
         } else {
-            return $this->error(['error' => 'Tài khoản hoặc mật khẩu không đúng. Hãy thử lại '], 401);
+            return $this->error(null, 401, 'Tài khoản hoặc mật khẩu không đúng. Hãy thử lại ');
         }
     }
 
@@ -62,7 +63,7 @@ class LoginService
      * @param string $grantType  type of grant type should be proxied
      * @param array $data  data send to the server
      */
-    private function proxy($grantType, array $data = [], $scope = '')
+    private function proxy($grantType, array $data = [], $scope = '*')
     {
 
 
@@ -73,6 +74,8 @@ class LoginService
         ]);
         if ($scope) {
             $data['scope'] = $scope;
+        } else {
+            $data['scope'] = '';
         }
         /*
             internal API request.
@@ -92,6 +95,8 @@ class LoginService
         $user = request()->user();
         return $this->success([
             'user' => $user['ten'],
+            'role' => $user->quyen->ten,
+            'roleSlug' => Str::slug($user->quyen->ten)
             // 'roles' => $user->quyens
         ], 200)->withCookie($cookieAcessToken)
             ->withCookie($cookieRefreshToken);

@@ -1,0 +1,147 @@
+.smart-table-template {
+    // margin: auto;
+    // min-height: 50vh;
+    // // overflow: auto;
+    width: 100%;
+    padding: 8px;
+    //set border table;
+    .container-table {
+        overflow-x: auto;
+    }
+    // table,
+    // th,
+    // td {
+    //     border: 1px solid #ddd;
+    // }
+    .control-container {
+        .control-btn {
+            padding: 8px 0;
+            text-align: left;
+            display: block;
+            button {
+                // width: 80px;
+                // font-size: 20px;
+                // height: 80px;
+                // padding: 0;
+            }
+        }
+        .add-section {
+            display: flex;
+            overflow-x: auto;
+        }
+    }
+
+    .table {
+        // box-sizing: border-box;
+        border-collapse: collapse;
+        width: 100%;
+        // overflow-x: auto;
+        overflow-x: scroll;
+        .table-header tr {
+            white-space: nowrap;
+
+            th {
+                font-weight: bold;
+                //   background-color: #eee;
+                background-color: inherit;
+                padding: 8px;
+                text-align: center;
+
+                button {
+                    font: inherit;
+                    cursor: pointer;
+                    position: relative;
+                    display: flex;
+                    background-color: inherit;
+                    border: none;
+                    text-align: left;
+                    width: 100%;
+                    padding: 8px;
+                    justify-content: center;
+                }
+                /* //Black right-Pointing Small Triangle */
+                button::after {
+                    //   position: absolute;
+                    padding: 0 4px;
+                    content: '\25B8';
+                    color: black;
+                }
+                /* //Black Up-Pointing Small Triangle */
+                button[data-dir='asc']::after {
+                    content: '\25b4';
+                }
+                /* //Black down-Pointing Small Triangle */
+
+                button[data-dir='desc']::after {
+                    content: '\25be';
+                }
+            }
+        }
+
+        .table-content tr {
+            td {
+                padding: 0.5rem 1rem;
+                text-align: left;
+            }
+            .group-action {
+                white-space: nowrap;
+                text-align: center;
+                .btn {
+                    margin-right: 8px;
+                }
+            }
+        }
+    }
+    .pagination {
+        display: flex;
+        justify-content: flex-end;
+        padding: 16px 0;
+        margin: 16px 0;
+        list-style-type: none;
+        text-align: center;
+
+        &__item {
+            margin-left: 4px;
+            display: inline;
+            & > * {
+                display: inline-block;
+                text-decoration: none;
+                width: 40px;
+                line-height: 35px;
+                margin: 8px 0;
+            }
+            &__link {
+                border: 1px solid #ddd;
+                font-size: 15px;
+                color: #999;
+                background-color: #fff;
+                &--disabled {
+                    // cursor: default;
+                    // text-decoration: none;
+                    // opacity: 0.4;
+                    pointer-events: none;
+                    color: #dbe3e8;
+                    cursor: default;
+                    border-color: #dbe3e8;
+                }
+                &.focus,
+                &:focus {
+                    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.5);
+                }
+                &:hover {
+                    cursor: pointer;
+                    color: #5488c7;
+                    border-color: #5488c7;
+                }
+                &--active {
+                    // border-color: #337ab7;
+                    // color: #fff;
+                    // background-color: #00a5f0;
+                    cursor: pointer;
+                    color: #5488c7;
+                    border-color: #5488c7;
+                }
+            }
+        }
+    }
+}
