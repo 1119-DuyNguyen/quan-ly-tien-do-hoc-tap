@@ -29,7 +29,7 @@ class DataImportController extends ApiController
         $this->files = $request->file('files');
 
         $this->input = $request->input();
-        // dd($this->input);
+        dd($this->files);
         $mess = [];
         // Import giangvien
         array_push($mess,
@@ -37,9 +37,9 @@ class DataImportController extends ApiController
         new GiangVienImportInfo()));
 
         //Import hocphan
-        // array_push($mess,
-        // $this->importEachType('hoc-phan',
-        // new HocPhanImportInfo()));
+        array_push($mess,
+        $this->importEachType('hoc-phan',
+        new HocPhanImportInfo()));
 
 
         return $mess;
