@@ -31,15 +31,15 @@ class DataImportController extends ApiController
         $this->input = $request->input();
         // dd($this->input);
         $mess = [];
-        //Import giangvien
-        // array_push($mess,
-        // $this->importEachType('giang-vien',
-        // new GiangVienImportInfo()));
+        // Import giangvien
+        array_push($mess,
+        $this->importEachType('giang-vien',
+        new GiangVienImportInfo()));
 
         //Import hocphan
-        array_push($mess,
-        $this->importEachType('hoc-phan',
-        new HocPhanImportInfo()));
+        // array_push($mess,
+        // $this->importEachType('hoc-phan',
+        // new HocPhanImportInfo()));
 
 
         return $mess;
@@ -51,6 +51,7 @@ class DataImportController extends ApiController
         $input = json_decode($this->input[$inputKey]);
         if($input != null){
             foreach($input as $importInfo){
+                // dd($importInfo->header);
                 array_push($mess,$this
                 ->import(
                     $importInfo->header,
