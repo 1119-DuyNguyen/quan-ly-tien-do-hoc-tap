@@ -5,7 +5,6 @@ namespace App\Models\Authorization;
 
 use Laravel\Passport\hasApiTokens;
 
-use App\Traits\AuthorizePermissions;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -13,15 +12,14 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class TaiKhoan extends Authenticatable
 {
     protected $table = 'tai_khoan';
-    public $timestamps = true;
-    use HasFactory, Notifiable, hasApiTokens, AuthorizePermissions;
+    use HasFactory, Notifiable, hasApiTokens;
     protected $casts = [
         'create_at' => 'date',
         'khoa_id' => 'int',
         'lop_hoc_id' => 'int',
     ];
 
-    protected $fillable = ['ten', 'ten_dang_nhap', 'mat_khau', 'khoa_id', 'lop_hoc_id', 'quyen_id'];
+    protected $fillable = ['ten', 'ten_dang_nhap', 'mat_khau', 'khoa_id', 'lop_hoc_id'];
 
     protected $hidden = ['remember_token', 'mat_khau'];
 
@@ -74,8 +72,34 @@ class TaiKhoan extends Authenticatable
         return $this->hasMany(BinhLuan::class);
     }
 
-    public function quyens()
+    public function quyen()
     {
-        return $this->belongsToMany(Quyen::class);
+        return $this->belongsTo(Quyen::class, 'quyen_id');
+    }
+    public function hasRole($role): bool
+    {
+
+
+        return $this->quyen()->where('ten', $role)->exists();
+    }
+    /**
+     *  config passport
+     * 
+     * @param string $username
+     * 
+     * @return TaiKhoan
+     */
+    public function findForPassport(string $username): TaiKhoan
+    {
+        return $this->where('ten_dang_nhap', $username)->first();
+    }
+    /**
+     * Get the password for the user.
+     *
+     * @return string
+     */
+    public function getAuthPassword()
+    {
+        return $this->mat_khau;
     }
 }
