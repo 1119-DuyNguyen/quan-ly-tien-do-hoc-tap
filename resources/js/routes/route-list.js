@@ -14,7 +14,7 @@ route.addRoute('people', DashBoard.index, {}, 'templates/people.html');
 route.addRoute('popup', DashBoard.index, {}, 'templates/popup.html');
 route.addRoute('class', Class.index, { title: 'classroom' }, 'templates/class.html');
 // Sinh vien
-route.addRoute('sinhvien/graduate', Graduate.index, { title: 'Tốt nghiệp' }, 'templates/gradute.html');
-route.addRoute('sinhvien/graduate/suggest', Graduate.none, { title: 'Gợi ý' }, 'templates/suggest_graduate.html');
+route.addRoute('sinh-vien/graduate', Graduate.index, { title: 'Tốt nghiệp' }, 'templates/gradute.html');
+route.addRoute('sinh-vien/graduate/suggest', Graduate.none, { title: 'Gợi ý' }, 'templates/suggest_graduate.html');
 
 export var routeList = route.getUrlRoutes();

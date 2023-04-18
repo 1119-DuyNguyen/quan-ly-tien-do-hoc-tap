@@ -73,6 +73,8 @@ class DatabaseSeeder extends Seeder
         DB::statement('SET FOREIGN_KEY_CHECKS=1');
 
         //base database
+        
+        //php arrtisan db:seed
 
         $this->call(
             QuyenSeeder::class,
