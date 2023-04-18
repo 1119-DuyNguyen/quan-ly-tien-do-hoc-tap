@@ -19,7 +19,7 @@ class TaiKhoan extends Authenticatable
         'lop_hoc_id' => 'int',
     ];
 
-    protected $fillable = ['ten', 'ten_dang_nhap', 'mat_khau', 'khoa_id', 'lop_hoc_id'];
+    protected $fillable = ['ten', 'ten_dang_nhap', 'mat_khau', 'khoa_id', 'lop_hoc_id', 'quyen_id'];
 
     protected $hidden = ['remember_token', 'mat_khau'];
 
@@ -84,9 +84,9 @@ class TaiKhoan extends Authenticatable
     }
     /**
      *  config passport
-     * 
+     *
      * @param string $username
-     * 
+     *
      * @return TaiKhoan
      */
     public function findForPassport(string $username): TaiKhoan
