@@ -36,4 +36,39 @@ trait ApiResponser
             $code
         );
     }
+    protected function paginate($request, $table, $itemPerPage = 10, $step = 3)
+    {
+        //$request->validate(['sort' => 'in:column1,column2']);
+        //if (Schema::hasColumn('users', $request->sort)) {
+
+        $orderColumn = $request->input('order-column');
+
+        if (!($orderColumn && Schema::hasColumn($table, $orderColumn))) {
+            $orderColumn = 'id';
+        }
+
+        $curPage =  $request->input('page');
+        if (!is_numeric($curPage)) {
+            $curPage = 1;
+        }
+        $dir = $request->input('dir');
+        if (!$dir || !($dir === 'asc' || $dir === 'desc')) {
+            $dir = 'asc';
+        }
+        $total = DB::table($table)->count();
+        $data = DB::table($table)
+            ->orderBy($orderColumn, $dir)
+            ->limit($itemPerPage)->offset(($curPage - 1) * $itemPerPage)
+            ->get();
+        return $this->success([
+            'paginationOption' => [
+                'total' => $total,
+                'perPage' => $itemPerPage,
+                'step' => $step
+            ],
+            'dataObject' => $data,
+
+        ]);
+        //return   ->paginate($perPage);
+    }
 }
