@@ -13,21 +13,21 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 final class HocPhanFactory extends Factory
 {
     /**
-    * The name of the factory's corresponding model.
-    *
-    * @var string
-    */
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
     protected $model = HocPhan::class;
 
     /**
-    * Define the model's default state.
-    *
-    * @return array
-    */
+     * Define the model's default state.
+     *
+     * @return array
+     */
     public function definition(): array
     {
         return [
-            'ma_hoc_phan' => fake()->word,
+            'ma_hoc_phan' => fake()->randomNumber(9),
             'ten' => fake()->word,
             'so_tin_chi' => fake()->boolean,
             'phan_tram_giua_ki' => fake()->boolean,
