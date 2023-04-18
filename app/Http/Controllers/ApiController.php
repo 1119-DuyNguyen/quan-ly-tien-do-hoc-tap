@@ -7,6 +7,6 @@ use Illuminate\Http\Request;
 
 class ApiController extends Controller
 {
-    // dùng mọi function của trait 
+    // dùng mọi function của trait
     use ApiResponser;
 }

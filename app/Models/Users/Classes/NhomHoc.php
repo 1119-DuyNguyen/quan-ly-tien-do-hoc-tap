@@ -2,7 +2,6 @@
 
 namespace App\Models\Users\Classes;
 
-
 use App\Models\Authorization\TaiKhoan;
 use App\Models\Users\Staffs\GiangVien;
 use App\Models\Users\Students\ThamGia;
@@ -10,8 +9,11 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Users\Classes\Posts\BaiDang;
 use App\Models\Users\Students\TrainingProgram\Subjects\HocPhan;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 class NhomHoc extends Model
 {
+    use HasFactory;
     protected $table = 'nhom_hoc';
     public $incrementing = false;
     public $timestamps = false;

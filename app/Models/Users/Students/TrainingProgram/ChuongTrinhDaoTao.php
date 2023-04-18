@@ -7,7 +7,6 @@ use App\Models\Users\Students\NienKhoa;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Users\Students\Graduate\ChuanDauRa;
 use App\Models\Users\Students\TrainingProgram\ChuKy;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Users\Students\TrainingProgram\Subjects\HocKyGoiY;
 use App\Models\Users\Students\TrainingProgram\Subjects\KhoiKienThuc;
 
@@ -15,7 +14,6 @@ use App\Models\Users\Students\TrainingProgram\Subjects\KhoiKienThuc;
 class ChuongTrinhDaoTao extends Model
 {
 	protected $table = 'chuong_trinh_dao_tao';
-	use HasFactory;
 
 
 	protected $casts = [

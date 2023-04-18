@@ -17,6 +17,7 @@ Quy tắc khi response
 
 500 	Server error 	An error occured on the server which was not the consumer's fault. 
 
+
 Ví dụ
 return $this->error('',401,"Xác thực request thất bại")
 

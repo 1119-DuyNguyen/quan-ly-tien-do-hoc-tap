@@ -1,0 +1,7 @@
+- Laravel không hỗ trợ 'Content-Type': 'multipart/form-data'
+nên để làm được việc đó, đọc link này để hiểu cách xử lý,
+kiểu gì anh em cũng gặp bệnh y chang t =)))
+
+- Bug xảy ra ở hàm addPost trong js/components/classroom/post/post.js
+
+https://stackoverflow.com/questions/54686218/laravel-vuejs-axios-put-request-formdata-is-empty

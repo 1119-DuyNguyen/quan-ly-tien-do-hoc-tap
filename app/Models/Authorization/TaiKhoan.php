@@ -2,7 +2,7 @@
 
 namespace App\Models\Authorization;
 
-
+use App\Models\Users\Classes\Posts\BaiTapSinhVien;
 use Laravel\Passport\hasApiTokens;
 
 use Illuminate\Notifications\Notifiable;
@@ -67,6 +67,11 @@ class TaiKhoan extends Authenticatable
         return $this->hasMany(BaiDang::class);
     }
 
+    public function bai_tap_sinh_viens()
+    {
+        return $this->hasMany(BaiTapSinhVien::class);
+    }
+
     public function binh_luans()
     {
         return $this->hasMany(BinhLuan::class);
@@ -74,14 +79,19 @@ class TaiKhoan extends Authenticatable
 
     public function quyen()
     {
-        return $this->belongsTo(Quyen::class);
+        return $this->belongsTo(Quyen::class, 'quyen_id');
     }
+    public function hasRole($role): bool
+    {
 
+
+        return $this->quyen()->where('ten', $role)->exists();
+    }
     /**
      *  config passport
-     * 
+     *
      * @param string $username
-     * 
+     *
      * @return TaiKhoan
      */
     public function findForPassport(string $username): TaiKhoan
