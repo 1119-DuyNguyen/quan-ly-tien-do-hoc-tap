@@ -13,10 +13,20 @@ route.addRoute('info', '', {}, 'templates/info.html');
 route.addRoute('people', DashBoard.index, {}, 'templates/people.html');
 route.addRoute('popup', DashBoard.index, {}, 'templates/popup.html');
 
-route.addRoute('teacher/classroom', ClassroomTeacher.index, { title: 'classroom' }, 'templates/teacher/class.html');
-route.addRoute('teacher/classroom/$id', ClassroomTeacher.show, { title: 'classroom' }, 'templates/teacher/group.html');
+route.addRoute('giang-vien/classroom', ClassroomTeacher.index, { title: 'Nhóm học' }, 'templates/teacher/class.html');
+route.addRoute(
+    'giang-vien/classroom/$id',
+    ClassroomTeacher.show,
+    { title: 'classroom' },
+    'templates/teacher/group.html'
+);
 
-route.addRoute('student/classroom', ClassroomStudent.index, { title: 'classroom' }, 'templates/student/class.html');
-route.addRoute('student/classroom/$id', ClassroomStudent.show, { title: 'classroom' }, 'templates/student/group.html');
+route.addRoute('sinh-vien/classroom', ClassroomStudent.index, { title: 'Nhóm học' }, 'templates/student/class.html');
+route.addRoute(
+    'sinh-vien/classroom/$id',
+    ClassroomStudent.show,
+    { title: 'classroom' },
+    'templates/student/group.html'
+);
 
 export var routeList = route.getUrlRoutes();
