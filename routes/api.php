@@ -1,10 +1,13 @@
 <?php
 
+use App\Http\Controllers\Admin\PermissionController;
+use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Auth\UserAuthController;
 use App\Http\Controllers\Class\ClassroomController;
 use App\Http\Controllers\Class\Everyone\EveryoneController;
 use App\Http\Controllers\Class\Post\BaitapController;
 use App\Http\Controllers\Class\Post\PostController;
+use App\Http\Controllers\DataImport\DataImportController;
 use App\Http\Controllers\Test\TestApi;
 use App\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Http\Request;
@@ -32,12 +35,13 @@ Route::post('login', [UserAuthController::class, 'login']);
 Route::post('login/refresh', [UserAuthController::class, 'refresh']);
 
 Route::middleware('auth:api')->group(function () {
-    Route::post('/logout', [UserAuthController::class, 'logout']);
-    Route::apiResource('/test', TestApi::class);
     Route::apiResource('/classes', ClassroomController::class);
     Route::apiResource('/posts', PostController::class);
     Route::apiResource('/exercises', BaitapController::class);
     Route::apiResource('/everyone', EveryoneController::class);
+    Route::post('/logout', [UserAuthController::class, 'logout']);
+    //   Route::resource('posts', PostController::class);
+    Route::apiResource('/test', TestApi::class);
 });
 //oauth
 Route::group(
@@ -64,3 +68,6 @@ Route::group(
         });
     }
 );
+
+//Import data
+Route::post('import-data', DataImportController::class);

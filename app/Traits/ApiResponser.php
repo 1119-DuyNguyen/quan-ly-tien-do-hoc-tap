@@ -2,6 +2,12 @@
 
 namespace App\Traits;
 
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
+use App\Http\Requests\PaginationRequest;
+use Illuminate\Pagination\LengthAwarePaginator;
+
 trait ApiResponser
 {
     //Khi tạo controller nhớ extends ApiController để dùng

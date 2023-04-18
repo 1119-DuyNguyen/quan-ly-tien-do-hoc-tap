@@ -15,4 +15,10 @@
 @use './pages/group';
 @use './pages/info';
 @use './pages/login';
+@use './pages/admin/role';
 @use './theme/darkMode';
+//component
+@use './components/container-link';
+@use './components/btn';
+@use './components/toast';
+@use './components/smart-table-template/smart-table.scss';

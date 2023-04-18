@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Test;
 
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\Controller;
+use App\Models\Authorization\TaiKhoan;
 use App\Models\SinhVien;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -16,7 +17,9 @@ class TestApi extends ApiController
     public function index()
     {
         //
-        return   $this->success("test sucess", 200);
+        $data = "test sucess";
+        $data = TaiKhoan::where('id', '1=1')->toSql();
+        return   $this->success($data, 200);
     }
 
     /**

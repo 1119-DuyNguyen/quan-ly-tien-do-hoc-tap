@@ -81,7 +81,15 @@ window.getCookie = function (cname) {
 //     }
 // }
 window.decodeHtml = function (html) {
-    var txt = document.createElement('textarea');
-    txt.innerHTML = html;
-    return txt.value;
+    return html.replace(
+        /[&<>'"]/g,
+        (tag) =>
+            ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                "'": '&#39;',
+                '"': '&quot;',
+            }[tag])
+    );
 };
