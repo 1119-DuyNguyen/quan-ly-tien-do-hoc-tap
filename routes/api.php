@@ -9,6 +9,7 @@ use App\Http\Controllers\Class\Post\BaitapController;
 use App\Http\Controllers\Class\Post\PostController;
 use App\Http\Controllers\DataImport\DataImportController;
 use App\Http\Controllers\Test\TestApi;
+use App\Http\Controllers\GraduateStudentController;
 use App\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -42,6 +43,7 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/logout', [UserAuthController::class, 'logout']);
     //   Route::resource('posts', PostController::class);
     Route::apiResource('/test', TestApi::class);
+    Route::apiResource('/graduate', GraduateStudentController::class);
 });
 //oauth
 Route::group(

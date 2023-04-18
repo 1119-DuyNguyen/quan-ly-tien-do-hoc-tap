@@ -1,5 +1,6 @@
 import { Route } from '../abstract/classes.js';
 import { DashBoard } from '../pages/dashboard.js';
+import { Graduate } from '../pages/graduate.js';
 import { Info } from '../pages/info.js';
 import { ClassroomStudent } from '../pages/classroom/classroomStudent.js';
 import { ClassroomTeacher } from '../pages/classroom/classroomTeacher.js';
@@ -17,6 +18,9 @@ route.addRoute('giang-vien/info', Info.index, {}, 'templates/info.html');
 
 route.addRoute('people', DashBoard.index, {}, 'templates/people.html');
 route.addRoute('popup', DashBoard.index, {}, 'templates/popup.html');
+// Sinh vien
+route.addRoute('sinh-vien/graduate', Graduate.index, { title: 'Tốt nghiệp' }, 'templates/gradute.html');
+route.addRoute('sinh-vien/graduate/suggest', Graduate.none, { title: 'Gợi ý' }, 'templates/suggest_graduate.html');
 
 route.addRoute('giang-vien/classroom', ClassroomTeacher.index, { title: 'Nhóm học' }, 'templates/teacher/class.html');
 route.addRoute(
