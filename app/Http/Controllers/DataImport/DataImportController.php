@@ -29,7 +29,7 @@ class DataImportController extends ApiController
         $this->files = $request->file('files');
 
         $this->input = $request->input();
-        dd($this->files);
+        // dd($this->files);
         $mess = [];
         // Import giangvien
         array_push($mess,
