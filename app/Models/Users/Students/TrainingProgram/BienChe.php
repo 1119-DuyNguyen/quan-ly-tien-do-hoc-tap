@@ -3,11 +3,12 @@
 
 namespace App\Models\Users\Students\TrainingProgram;
 
-
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class BienChe extends Model
 {
+	use HasFactory;
 	protected $table = 'bien_che';
 
 	protected $casts = [

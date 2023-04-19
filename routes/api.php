@@ -43,7 +43,14 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/logout', [UserAuthController::class, 'logout']);
     //   Route::resource('posts', PostController::class);
     Route::apiResource('/test', TestApi::class);
+
     Route::apiResource('/graduate', GraduateStudentController::class);
+    Route::middleware('role:Quản trị viên')->name('admin.')->prefix('/admin')->group(
+        function () {
+            Route::apiResource('/role', RoleController::class);
+            Route::apiResource('/permissions', PermissionController::class);
+        }
+    );
 });
 //oauth
 Route::group(

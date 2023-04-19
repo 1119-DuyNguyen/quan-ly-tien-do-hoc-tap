@@ -12,7 +12,7 @@ class GraduateStudentController extends ApiController
      */
     public function index(Request $request)
     {
-        $data = DB::table('ket_qua')->get()->where('sinh_vien_id', $request->user()->id);
+        $data = DB::table('ket_qua')->where('sinh_vien_id', $request->user()->id)->get();
 
         $ds_bien_che = DB::table('bien_che')->select('id', 'ten')->get();
         $ds_hoc_phan = DB::table('hoc_phan')->select('id', 'ma_hoc_phan', 'ten', 'so_tin_chi')->get();
@@ -39,7 +39,7 @@ class GraduateStudentController extends ApiController
      */
     public function show(Request $request, string $id)
     {
-        $data = DB::table('ket_qua')->get()->where('sinh_vien_id', $request->user()->id);
+        $data = DB::table('ket_qua')->where('sinh_vien_id', $request->user()->id)->get();
 
         $ds_bien_che = DB::table('bien_che')->select('id', 'ten')->where('id', $id)->get();
         $ds_hoc_phan = DB::table('hoc_phan')->select('id', 'ma_hoc_phan', 'ten', 'so_tin_chi')->get();

@@ -55,16 +55,10 @@ export class GraduateCrawler {
 
                 let graduate__container = document.querySelector('.graduate__container');
                 graduate__container.innerHTML = '';
-                let stt = 0, html, list = ``, stc_dat, tong_stc, tong_diem;
+                let stt = 0, found=0, html, list = ``, stc_dat, tong_stc, tong_diem;
                 
                 bien_che.forEach(hk => {
                     bien_che_option = document.createElement('option');
-                    
-                    if (!bien_che_list) {
-                        bien_che_option.text = hk.ten;
-                        bien_che_option.value = hk.id;
-                        bien_che_selector.add(bien_che_option);
-                    }
     
                     // Init
                     stt = 0;
@@ -72,9 +66,12 @@ export class GraduateCrawler {
                     tong_stc = 0;
                     tong_diem = 0;
                     list = ``;
+                    found = 0;
+
                     for (let i = 0; i < ket_qua.length; i++) {
                         const kq = ket_qua[i];
                         if (hk.id == kq.bien_che_id) {
+                            found = 1;
                             stt++;
                             list += `<tr>
                                 <td>${stt}</td>
@@ -102,31 +99,40 @@ export class GraduateCrawler {
                     }
 
                     tong_diem /= tong_stc;
-                    html = `<div class="graduate__item">
-                        <div class="graduate__item__title">
-                            ${hk.ten}
-                        </div>
-                        <div class="graduate__item__content">
-                            <table>
-                                <tr>
-                                    <th>STT</th>
-                                    <th>Mã học phần</th>
-                                    <th>Tên học phần</th>
-                                    <th>STC</th>
-                                    <th>Điểm</th>
-                                    <th>Điểm chữ</th>
-                                    <th>Kết quả</th>
-                                    <th>Chi tiết</th>
-                                </tr>
-                                ${list}
-                                <tr>
-                                    <td colspan="3">Số tín chỉ đạt (${stc_dat}) + Số tín chỉ chưa đạt (${tong_stc - stc_dat}) =</td>
-                                    <td>${tong_stc}</td>
-                                    <td colspan="5">Trung bình học kỳ: ${round(tong_diem, 2)}</td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>`;
+
+                    if (!bien_che_list && found) {
+                        bien_che_option.text = hk.ten;
+                        bien_che_option.value = hk.id;
+                        bien_che_selector.add(bien_che_option);
+                    }
+
+                    if (found != 0)
+                        html = `<div class="graduate__item">
+                            <div class="graduate__item__title">
+                                ${hk.ten}
+                            </div>
+                            <div class="graduate__item__content">
+                                <table>
+                                    <tr>
+                                        <th>STT</th>
+                                        <th>Mã học phần</th>
+                                        <th>Tên học phần</th>
+                                        <th>STC</th>
+                                        <th>Điểm</th>
+                                        <th>Điểm chữ</th>
+                                        <th>Kết quả</th>
+                                        <th>Chi tiết</th>
+                                    </tr>
+                                    ${list}
+                                    <tr>
+                                        <td colspan="3">Số tín chỉ đạt (${stc_dat}) + Số tín chỉ chưa đạt (${tong_stc - stc_dat}) =</td>
+                                        <td>${tong_stc}</td>
+                                        <td colspan="5">Trung bình học kỳ: ${round(tong_diem, 2)}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>`;
+                    else html = ""
     
                     graduate__container.innerHTML += html;
                 });

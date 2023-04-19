@@ -5,6 +5,7 @@ namespace App\Models\Users\Students;
 use App\Models\Nganh;
 use App\Models\Users\Students\LopHoc;
 use App\Models\Users\Students\TrainingProgram\ChuongTrinhDaoTao;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class NienKhoa extends Model
@@ -12,6 +13,8 @@ class NienKhoa extends Model
 	protected $table = 'nien_khoa';
 	public $incrementing = false;
 	public $timestamps = false;
+
+	use HasFactory;
 
 	protected $casts = [
 		'id' => 'int',
