@@ -9,12 +9,13 @@ use App\Models\Users\Students\Graduate\ChuanDauRa;
 use App\Models\Users\Students\TrainingProgram\ChuKy;
 use App\Models\Users\Students\TrainingProgram\Subjects\HocKyGoiY;
 use App\Models\Users\Students\TrainingProgram\Subjects\KhoiKienThuc;
-
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class ChuongTrinhDaoTao extends Model
 {
 	protected $table = 'chuong_trinh_dao_tao';
 
+	use HasFactory;
 
 	protected $casts = [
 		'tong_tin_chi' => 'int',

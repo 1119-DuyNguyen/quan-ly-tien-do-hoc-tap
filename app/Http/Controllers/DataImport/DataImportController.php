@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\DataImport;
 
-use App\Imports\ImportExcel;
+use App\Imports\ImportExcelToModel;
 use Exception;
 use App\Http\Controllers\ApiController;
 use Illuminate\Http\Request;
@@ -43,6 +43,9 @@ class DataImportController extends ApiController
         $this->importEachType('hoc-phan',
         new HocPhanImportInfo());
 
+        //Import khoi kien thuc
+        $this->importEachType('khoi-kien-thuc',
+        new KhoiKienThucImportInfo());
         return $this->mess;
     }
 
@@ -51,9 +54,11 @@ class DataImportController extends ApiController
     function importEachType($inputKey, $info){
         //Check valid input
 
-        if (!isset($this->input[$inputKey])) return;
+        if (!isset($this->input[$inputKey]))
+            return;
         $input = json_decode($this->input[$inputKey]);
-
+        if ($input == null)
+            $this->mess[$inputKey]['input-error'] = 'value input không phù hợp';
 
 
         $this->mess[$inputKey] = [];
@@ -61,34 +66,34 @@ class DataImportController extends ApiController
         if($input != null){
             foreach($input as $index=>$importInfo){
                 $this->mess[$inputKey][$index] = [
-                    'error' => false
+                    'input-error' => false
                 ];
 
                 if (!isset($importInfo->header)){
-                    $this->mess[$inputKey][$index]['header'] = false;
-                    $this->mess[$inputKey][$index]['error'] = true;
+                    // $this->mess[$inputKey][$index]['header'] = false;
+                    $this->mess[$inputKey][$index]['input-error'] = 'không tìm thấy value header';
                 }
 
                 if (!isset($importInfo->sheets)){
-                    $this->mess[$inputKey][$index]['sheets'] = false;
-                    $this->mess[$inputKey][$index]['error'] = true;
+                    // $this->mess[$inputKey][$index]['sheets'] = false;
+                    $this->mess[$inputKey][$index]['input-error'] = 'không tìm thấy value sheets';
 
                 }
                 if (!isset($importInfo->file)){
-                    $this->mess[$inputKey][$index]['file'] = false;
-                    $this->mess[$inputKey][$index]['error'] = true;
+                    // $this->mess[$inputKey][$index]['file'] = false;
+                    $this->mess[$inputKey][$index]['input-error'] = 'không tìm thấy value file';
 
                 }
 
-                if ($this->mess[$inputKey][$index]['error']) continue;
+                if ($this->mess[$inputKey][$index]['input-error'] != false) continue;
 
-                array_push($this->mess[$inputKey],$this
-                ->import(
+                $this->mess[$inputKey][$index]['file-import'] = $this->import(
                     $importInfo->header,
                     $importInfo->sheets,
                     $info,
                     $this->files[$importInfo->file],
-                    ImportExcel::class));
+                    ImportExcelToModel::class
+                );
             }
         }
     }

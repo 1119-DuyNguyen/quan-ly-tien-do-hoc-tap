@@ -2,10 +2,29 @@
 
 namespace App\Http\Controllers\DataImport;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 
-class KhoiKienThucImportInfo extends Controller
+class KhoiKienThucImportInfo extends ImportInfo
 {
-    //
+    // public $inputKey = "giang-vien";
+    public function RowToModel(){
+        return function ($row){
+
+
+
+        };
+    }
+
+    public function toModel($model, $row){
+        // dd($row);
+
+        $model->save();
+        return $model;
+    }
+
+    public function RowRules(){
+        return [
+
+        ];
+    }
+
 }

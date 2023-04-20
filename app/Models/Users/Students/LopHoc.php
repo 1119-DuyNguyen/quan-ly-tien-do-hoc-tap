@@ -6,9 +6,11 @@ use App\Models\Authorization\TaiKhoan;
 use App\Models\Users\Students\NienKhoa;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Users\Staffs\CoVanHocTap;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class LopHoc extends Model
 {
+    use HasFactory;
     protected $table = 'lop_hoc';
     public $timestamps = false;
 
