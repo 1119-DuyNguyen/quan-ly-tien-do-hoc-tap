@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
 use App\Models\Users\Students\TrainingProgram\ChuongTrinhDaoTao;
 
-
 class ChuKy extends Model
 {
 	protected $table = 'chu_ky';

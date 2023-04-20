@@ -4,8 +4,8 @@ import { Class } from '../pages/class.js';
 import { DashBoard } from '../pages/dashboard.js';
 import { Info } from '../pages/info.js';
 
-import { Authentication } from '../pages/authentication.js';
 import { Role } from '../pages/admin/role.js';
+import { Authentication } from '../pages/authentication.js';
 
 const route = new Route();
 
@@ -14,6 +14,7 @@ route.addRoute('sinh-vien/dashboard', DashBoard.index, { title: 'DashBoard' }, '
 route.addRoute('404', '', { title: '404' }, 'templates/404.html');
 route.addRoute('sinh-vien/info', Info.index, {}, 'templates/info.html');
 route.addRoute('giang-vien/info', Info.index, {}, 'templates/info.html');
+route.addRoute('qtv-sinhvien', '' , {}, 'templates/phongdaotao/sinhvien.html')
 
 route.addRoute('people', DashBoard.index, {}, 'templates/people.html');
 route.addRoute('popup', DashBoard.index, {}, 'templates/popup.html');

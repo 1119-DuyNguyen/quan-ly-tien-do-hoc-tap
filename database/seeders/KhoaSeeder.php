@@ -15,7 +15,7 @@ class KhoaSeeder extends Seeder
     public function run(): void
     {
         //
-        $khoaArr = ["Công nghệ thông tin", "Toán ứng dụng", "Mỹ thuật", "Tài chính kế toán"];
+        $khoaArr = ['Công nghệ thông tin', 'Toán ứng dụng', 'Mỹ thuật', 'Tài chính kế toán'];
         // for ($i = 0; $i < count($khoaArr) - 1; $i++) {
         //     Khoa::create(
         //         [

@@ -7,10 +7,12 @@ use Exception;
 use App\Http\Controllers\ApiController;
 use Illuminate\Http\Request;
 
+
 class DataImportController extends ApiController
 {
     private $input;
     private $files;
+    private $mess;
     function __invoke(Request $request){
         // $request->validated();
         // return [
@@ -29,30 +31,58 @@ class DataImportController extends ApiController
         $this->files = $request->file('files');
 
         $this->input = $request->input();
-        dd($this->files);
-        $mess = [];
+        // dd($this->files);
+
         // Import giangvien
-        array_push($mess,
+
         $this->importEachType('giang-vien',
-        new GiangVienImportInfo()));
+        new GiangVienImportInfo());
 
         //Import hocphan
-        array_push($mess,
+
         $this->importEachType('hoc-phan',
-        new HocPhanImportInfo()));
+        new HocPhanImportInfo());
 
-
-        return $mess;
+        return $this->mess;
     }
 
+
+
     function importEachType($inputKey, $info){
-        //Import Giang Vien
-        $mess = [];
+        //Check valid input
+
+        if (!isset($this->input[$inputKey])) return;
         $input = json_decode($this->input[$inputKey]);
+
+
+
+        $this->mess[$inputKey] = [];
+
         if($input != null){
-            foreach($input as $importInfo){
-                // dd($importInfo->header);
-                array_push($mess,$this
+            foreach($input as $index=>$importInfo){
+                $this->mess[$inputKey][$index] = [
+                    'error' => false
+                ];
+
+                if (!isset($importInfo->header)){
+                    $this->mess[$inputKey][$index]['header'] = false;
+                    $this->mess[$inputKey][$index]['error'] = true;
+                }
+
+                if (!isset($importInfo->sheets)){
+                    $this->mess[$inputKey][$index]['sheets'] = false;
+                    $this->mess[$inputKey][$index]['error'] = true;
+
+                }
+                if (!isset($importInfo->file)){
+                    $this->mess[$inputKey][$index]['file'] = false;
+                    $this->mess[$inputKey][$index]['error'] = true;
+
+                }
+
+                if ($this->mess[$inputKey][$index]['error']) continue;
+
+                array_push($this->mess[$inputKey],$this
                 ->import(
                     $importInfo->header,
                     $importInfo->sheets,
@@ -61,7 +91,6 @@ class DataImportController extends ApiController
                     ImportExcel::class));
             }
         }
-        return $mess;
     }
 
 
