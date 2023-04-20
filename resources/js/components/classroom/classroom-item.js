@@ -18,6 +18,7 @@ export class ClassroomItem {
         this.#container = element;
     }
     async getTeacherClassData() {
+        this.#container.innerHTML = `<loader-component></loader-component>`;
         var classData;
         let html = '';
         let data = await axios.get(ClassroomItem.URL_CLASSROOM).then(function (response) {
@@ -45,6 +46,7 @@ export class ClassroomItem {
     }
 
     async getStudentClassData() {
+        this.#container.innerHTML = `<loader-component></loader-component>`;
         var classData;
         let html = '';
         let data = await axios.get(ClassroomItem.URL_CLASSROOM).then(function (response) {

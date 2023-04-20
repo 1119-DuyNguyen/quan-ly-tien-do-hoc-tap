@@ -12,7 +12,7 @@ class BaiTapSinhVienSeeder extends Seeder
     public function run(): void
     {
         //
-        // //bai_tao_sinh_vien
+        // //bai_tap_sinh_vien
         for ($i = 0; $i < 5; $i++) {
             BaiTapSinhVien::create([
                 'bai_tap_id' => BaiDang::all()

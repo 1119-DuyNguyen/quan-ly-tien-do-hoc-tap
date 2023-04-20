@@ -29,7 +29,7 @@ class KetQuaSeeder extends Seeder
                     'diem_tong_ket' => fake()->randomFloat(2, 0, 10),
                     'diem_he_4' => fake()->randomFloat(0, 0, 4),
                     'qua_mon' => fake()->numberBetween(0, 1),
-                    'bien_che_id' => BienChe::all()->random()->id, 
+                    'bien_che_id' => BienChe::all()->random()->id,
                 ]);
             } catch (Exception $e) {
                 // nothing to do

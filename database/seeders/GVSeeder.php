@@ -25,7 +25,6 @@ class GVSeeder extends Seeder
                 'remember_token' => Str::random(10),
                 'khoa_id' => Khoa::all()->random()->id,
                 // 'lop_hoc_id' => fake()->randomNumber(),
-                'lop_hoc_id' => null,
                 'quyen_id' => 2,
             ]);
         }

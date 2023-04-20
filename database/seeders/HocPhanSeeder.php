@@ -16,9 +16,8 @@ class HocPhanSeeder extends Seeder
     public function run(): void
     {
         //
-        for ($i = 0; $i < 3; $i++) {
+        for ($i = 0; $i < 20; $i++) {
             HocPhan::create([
-                'ma_hoc_phan' => fake()->word,
                 'ten' => fake()->word,
                 'so_tin_chi' => fake()->numberBetween(1, 4),
                 'phan_tram_giua_ki' => 50,

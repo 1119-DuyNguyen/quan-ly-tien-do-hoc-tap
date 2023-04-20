@@ -73,21 +73,22 @@ class DatabaseSeeder extends Seeder
         DB::statement('SET FOREIGN_KEY_CHECKS=1');
 
         //base database
-        
+
         //php arrtisan db:seed
 
         $this->call(QuyenSeeder::class);
         $this->call(OauthClientsSeeder::class);
         Khoa::factory(4)->create();
         Nganh::factory(3)->create();
-        ChuKy::factory(4)->create();
+        // ChuKy::factory(4)->create();
+        //$this->call(ChuKySeeder::class);
         // ChucNang::factory()->count(10)->create();
-        ChuongTrinhDaoTao::factory()
-            ->count(10)
-            ->create();
-        NienKhoa::factory()
-            ->count(10)
-            ->create();
+        // ChuongTrinhDaoTao::factory()
+        //     ->count(10)
+        //     ->create();
+        // NienKhoa::factory()
+        //     ->count(10)
+        //     ->create();
 
         // users
         $this->call(GVSeeder::class);
@@ -95,19 +96,26 @@ class DatabaseSeeder extends Seeder
         $this->call(QTVSeeder::class);
         $this->call(TroLyDaoTaoSeeder::class);
 
-        LopHoc::factory()
-            ->count(5)
-            ->create();
+        // LopHoc::factory()
+        //     ->count(5)
+        //     ->create();
         $this->call([SVSeeder::class]);
         $this->call([HocPhanSeeder::class]);
         $this->call([NhomHocSeeder::class]);
-        // $this->call([BaiDangSeeder::class]);
+        $this->call([BaiDangSeeder::class]);
         $this->call([ThamGiaSeeder::class]);
-        // $this->call([BaiTapSinhVienSeeder::class]);
+        $this->call([BaiTapSinhVienSeeder::class]);
 
-        BienChe::factory()->count(10)->create();
-        $this->call(HocPhanSeeder::class);
-        $this->call(KetQuaSeeder::class);
+        // BienChe::factory()
+        //     ->count(10)
+        //     ->create();
+        //$this->call(KetQuaSeeder::class);
+
+        //$this->call([LoaiKienThucSeeder::class]);
+        //$this->call([KhoiKienThucSeeder::class]);
+
+        //$this->call([HPKTTBatBuocSeeder::class]);
+        //$this->call([HPKTTTuChonSeeder::class]);
 
         // HocPhan::factory()
         //     ->count(10)
@@ -133,8 +141,8 @@ class DatabaseSeeder extends Seeder
         // HocKyGoiY::factory()->count(10)->create();
         // HocPhanKhoiKienThuc::factory()->count(10)->create();
         // KetQua::factory()->count(10)->create();
-        // KhoiKienThuc::factory()->count(10)->create();
-        // LoaiKienThuc::factory()->count(10)->create();
+        // KhoiKienThuc::factory()->count(3)->create();
+        // LoaiKienThuc::factory()->count(3)->create();
 
         // ChucNang::factory()->count(10)->create();
     }
