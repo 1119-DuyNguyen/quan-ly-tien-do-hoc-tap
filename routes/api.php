@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Auth\UserAuthController;
+use App\Http\Controllers\Class\BaiTapSinhVienController;
 use App\Http\Controllers\Class\ClassroomController;
 use App\Http\Controllers\Class\Everyone\EveryoneController;
 use App\Http\Controllers\Class\Post\BaitapController;
@@ -39,18 +40,20 @@ Route::middleware('auth:api')->group(function () {
     Route::apiResource('/classes', ClassroomController::class);
     Route::apiResource('/posts', PostController::class);
     Route::apiResource('/exercises', BaitapController::class);
+    Route::apiResource('/bai-tap-sinh-vien', BaiTapSinhVienController::class);
     Route::apiResource('/everyone', EveryoneController::class);
     Route::post('/logout', [UserAuthController::class, 'logout']);
     //   Route::resource('posts', PostController::class);
     Route::apiResource('/test', TestApi::class);
 
     Route::apiResource('/graduate', GraduateStudentController::class);
-    Route::middleware('role:Quản trị viên')->name('admin.')->prefix('/admin')->group(
-        function () {
+    Route::middleware('role:Quản trị viên')
+        ->name('admin.')
+        ->prefix('/admin')
+        ->group(function () {
             Route::apiResource('/role', RoleController::class);
             Route::apiResource('/permissions', PermissionController::class);
-        }
-    );
+        });
 });
 //oauth
 Route::group(

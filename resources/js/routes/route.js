@@ -81,11 +81,11 @@ async function routeTo(route, _params, is404 = false) {
         let sidebarEl = document.getElementById('main-sidebar');
 
         if (role) {
-            console.log(sidebarEl);
+            //console.log(sidebarEl);
             if (!sidebarEl.dataset.isInit) {
                 sidebarEl.style.visibility = 'visible';
                 sidebarEl.dataset.isInit = 'true';
-                console.log('here');
+                //console.log('here');
                 let sidebar = new Sidebar(sidebarEl);
             }
         } else {
@@ -112,6 +112,8 @@ async function routeTo(route, _params, is404 = false) {
     if (route.method) {
         route.method.call(null, _params);
     }
+    window.scrollTo(0, 0);
+
     return true;
 }
 

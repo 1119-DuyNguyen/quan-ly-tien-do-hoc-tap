@@ -7,6 +7,7 @@ import { ClassroomTeacher } from '../pages/classroom/classroomTeacher.js';
 
 import { Authentication } from '../pages/authentication.js';
 import { Role } from '../pages/admin/role.js';
+import { HomeworkMark } from '../components/classroom/group/post/HomeworkMark.js';
 
 const route = new Route();
 
@@ -28,6 +29,12 @@ route.addRoute(
     ClassroomTeacher.show,
     { title: 'classroom' },
     'templates/teacher/group.html'
+);
+route.addRoute(
+    'giang-vien/classroom/bai-tap/$id',
+    HomeworkMark.index,
+    { title: 'Bài tập $id' },
+    'templates/teacher/homework.html'
 );
 
 route.addRoute('sinh-vien/classroom', ClassroomStudent.index, { title: 'Nhóm học' }, 'templates/student/class.html');

@@ -62,7 +62,7 @@ export class SmartTableTemplate {
             this.#container = createElement('div', 'smart-table-template');
             rootElement.appendChild(this.#container);
         } catch (e) {
-            console.error(err);
+            console.error(e);
             return;
         }
     }
