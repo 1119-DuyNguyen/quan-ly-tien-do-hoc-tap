@@ -6,7 +6,7 @@ export class Graduate {
         var graduate = new GraduateCrawler();
         graduate.run()
     }
-    static none() {
+    static suggest() {
         
     }
 }
