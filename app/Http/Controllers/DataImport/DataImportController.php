@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\DataImport;
 
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\ImportExcelToCollection;
 use App\Imports\ImportExcelToModel;
 use Exception;
 use App\Http\Controllers\ApiController;
@@ -33,20 +35,22 @@ class DataImportController extends ApiController
         $this->input = $request->input();
         // dd($this->files);
 
-        // Import giangvien
+        // // Import giangvien
 
-        $this->importEachType('giang-vien',
-        new GiangVienImportInfo());
+        // $this->importEachType('giang-vien',
+        // new GiangVienImportInfo());
 
-        //Import hocphan
+        // //Import hocphan
 
-        $this->importEachType('hoc-phan',
-        new HocPhanImportInfo());
+        // $this->importEachType('hoc-phan',
+        // new HocPhanImportInfo());
 
-        //Import khoi kien thuc
-        $this->importEachType('khoi-kien-thuc',
-        new KhoiKienThucImportInfo());
-        return $this->mess;
+        // //Import khoi kien thuc
+        // $this->importEachType('khoi-kien-thuc',
+        // new KhoiKienThucImportInfo());
+        // return $this->mess;
+
+        dd(Excel::import(new ImportExcelToCollection(0, ["CNTT-CLC-kehoachGV"], [], ''), $this->files[0]));
     }
 
 
