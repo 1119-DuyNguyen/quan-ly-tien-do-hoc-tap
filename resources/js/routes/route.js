@@ -60,7 +60,7 @@ async function routeTo(route, _params, is404 = false) {
     //  const route = routingList[href] || routingList['404'];
 
     // get the html from the template
-    var html;
+    let html;
     try {
         // This async call may fail.
 
@@ -74,26 +74,28 @@ async function routeTo(route, _params, is404 = false) {
         console.error('không load được template', error);
         return false;
     }
+    //loadMainSideBar
+    let role = localStorage.getItem('roleSlug');
+    let sidebarEl = document.getElementById('main-sidebar');
 
-    if (html) {
-        //loadMainSideBar
-        let role = localStorage.getItem('roleSlug');
-        let sidebarEl = document.getElementById('main-sidebar');
+    if (role) {
+        //console.log(sidebarEl);
+        if (!sidebarEl.dataset.isInit) {
+            // sidebarEl.style.visibility = 'visible';
+            sidebarEl.style.display = 'block';
 
-        if (role) {
-            console.log(sidebarEl);
-            if (!sidebarEl.dataset.isInit) {
-                sidebarEl.style.visibility = 'visible';
-                sidebarEl.dataset.isInit = 'true';
-                console.log('here');
-                let sidebar = new Sidebar(sidebarEl);
-            }
-        } else {
-            sidebarEl.innerHTML = '';
-            sidebarEl.style.visibility = 'hidden';
-            sidebarEl.dataset.isInit = '';
+            sidebarEl.dataset.isInit = 'true';
+            // console.log('here');
+            let sidebar = new Sidebar(sidebarEl);
         }
+    } else {
+        sidebarEl.innerHTML = '';
+        //sidebarEl.style.visibility = 'hidden';
+        sidebarEl.style.display = 'none';
 
+        sidebarEl.dataset.isInit = '';
+    }
+    if (html) {
         let rootEl = document.getElementById('main-content');
         rootEl.innerHTML = '';
         if (!is404) {
