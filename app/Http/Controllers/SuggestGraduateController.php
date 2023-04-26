@@ -182,6 +182,16 @@ class SuggestGraduateController extends ApiController
             $dshp = $dshp->unique();
         }
 
+        for($i = 0; $i <count($dshp); $i++) {
+            $hp = $dshp[$i];
+            $kq_tu_db = DB::table('hoc_phan')->where('id', $hp->hoc_phan_id)->get()[0];
+
+            $hp->ten = $kq_tu_db->ten;
+            $hp->so_tin_chi = $kq_tu_db->so_tin_chi;
+            $hp->phan_tram_giua_ki = $kq_tu_db->phan_tram_giua_ki;
+            $hp->phan_tram_cuoi_ki = $kq_tu_db->phan_tram_cuoi_ki;
+        }
+
         $object = (object) array(
             'goi_y' => $dshp,
             'hoc_ky_hien_tai' => $hk_hien_tai,
