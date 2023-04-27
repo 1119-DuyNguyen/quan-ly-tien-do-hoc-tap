@@ -68,7 +68,6 @@ window.axios.interceptors.response.use(
                 let response = error.response;
                 if (response.data.message)
                     toast({ title: '', message: response.data.message, type: 'error', duration: 3000 });
-                tu;
             }
 
             // axios.defaults.headers.common['Authorization'] = axios.getAccessToken();
