@@ -114,6 +114,7 @@ async function routeTo(route, _params, is404 = false) {
     if (route.method) {
         route.method.call(null, _params);
     }
+    window.scrollTo(0, 0);
     return true;
 }
 

@@ -1,7 +1,7 @@
 import { ClassroomItem } from '../../components/classroom/classroom-item';
 import { Everyone } from '../../components/classroom/group/everyone/everyone';
 import { Group } from '../../components/classroom/group/group';
-import { BaiTap } from '../../components/classroom/group/post/baitap';
+import { Homework } from '../../components/classroom/group/post/Homework';
 import { Post } from '../../components/classroom/group/post/post';
 
 export class ClassroomStudent {
@@ -24,7 +24,7 @@ export class ClassroomStudent {
 
         //Render bài tập
         let taskContainerContainer = document.getElementById('task-container');
-        let taskContainer = new BaiTap(taskContainerContainer);
+        let taskContainer = new Homework(taskContainerContainer);
         taskContainer.getStudentBaiTapData(id);
 
         //render danh sách thành viên của group page

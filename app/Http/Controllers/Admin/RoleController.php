@@ -19,7 +19,7 @@ class RoleController extends ApiController
         //$roles =  Quyen::WhereNotIn('ten', 'Quản trị viên')->get();
         // $roles =  Quyen::all();
 
-        return  $this->paginate($request, 'quyen', 2);
+        return $this->paginate($request, 'quyen', 1);
         // return  $this->success($roles, 200);
     }
 
