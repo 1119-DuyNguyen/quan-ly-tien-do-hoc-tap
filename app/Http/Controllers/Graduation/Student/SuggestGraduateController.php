@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Graduation\Student;
+
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\ApiController;
 
 class SuggestGraduateController extends ApiController
 {
@@ -38,11 +40,10 @@ class SuggestGraduateController extends ApiController
             $bien_che = $ds_bien_che[$i];
             $ngay_bat_dau = $bien_che->ngay_bat_dau;
             $ngay_ket_thuc = $bien_che->ngay_ket_thuc;
-            if ((strtotime($ngayHienTai) >= strtotime($ngay_bat_dau)) && (strtotime($ngayHienTai) <= strtotime($ngay_ket_thuc)))
-            {
+            if ((strtotime($ngayHienTai) >= strtotime($ngay_bat_dau)) && (strtotime($ngayHienTai) <= strtotime($ngay_ket_thuc))) {
                 $hk_hien_tai = $bien_che;
                 if ($i + 1 < count($ds_bien_che))
-                    $hk_ke_tiep = $ds_bien_che[$i+1];
+                    $hk_ke_tiep = $ds_bien_che[$i + 1];
                 break;
             }
         }
@@ -52,8 +53,7 @@ class SuggestGraduateController extends ApiController
         function find_closest($ds_bien_che, $date)
         {
             //$count = 0;
-            foreach($ds_bien_che as $bien_che)
-            {
+            foreach ($ds_bien_che as $bien_che) {
                 //$interval[$count] = abs(strtotime($date) - strtotime($day));
                 $interval[] = abs(strtotime($date) - strtotime($bien_che->ngay_bat_dau));
                 //$count++;
@@ -68,34 +68,32 @@ class SuggestGraduateController extends ApiController
         if ($hk_hien_tai == null) {
             $curr = find_closest($ds_bien_che, $ngayHienTai);
             $hk_hien_tai = $ds_bien_che[$curr];
-            if ($curr+1 < count($ds_bien_che))
-                $hk_ke_tiep = $ds_bien_che[$curr+1];
+            if ($curr + 1 < count($ds_bien_che))
+                $hk_ke_tiep = $ds_bien_che[$curr + 1];
         }
 
         $hk_chinh = false;
 
         if ($hk_hien_tai != null) {
             // xác định được học kỳ hiện tại
-            
+
             if ($hk_ke_tiep != null) {
-                
+
                 if ($hk_ke_tiep->ky_he == 0)
                     // hk chính
                     $hk_chinh = true;
                 else
                     // hk hè
                     $hk_chinh = false;
-                
             } else
                 $hk_chinh = true;
-
         } else {
             // kỳ kế là học kỳ chính
             $hk_chinh = true;
         }
 
         $ds_kq = DB::table('ket_qua')->where('sinh_vien_id', $request->user()->id)->get();
-        $GLOBALS['ds_kq'] = $ds_kq; 
+        $GLOBALS['ds_kq'] = $ds_kq;
 
         $filter_hp = function ($hp) {
             $ds_kq = $GLOBALS['ds_kq'];
@@ -107,10 +105,9 @@ class SuggestGraduateController extends ApiController
                 // nếu môn đã học rồi và đã qua môn
                 if ($hpkq->hoc_phan_id == $hp->hoc_phan_id && $hpkq->qua_mon == 1)
                     return false;
-                
+
                 if ($hpkq->hoc_phan_id == $hp->hoc_phan_id && $hpkq->qua_mon == 0)
                     $hp->qua_mon = 0;
-                
             }
             return true;
         };
@@ -120,7 +117,7 @@ class SuggestGraduateController extends ApiController
         if ($hk_chinh) {
             // kỳ kế tiếp là học kỳ chính
 
-            $ds_bien_che_theo_ngay_vao_hoc = count(DB::table('bien_che')->where('ngay_bat_dau', '>=', $thoi_gian_vao_hoc)->where('ngay_ket_thuc', '<=', $ngayHienTai, 'and')->where('ky_he', 0)->get())+1;
+            $ds_bien_che_theo_ngay_vao_hoc = count(DB::table('bien_che')->where('ngay_bat_dau', '>=', $thoi_gian_vao_hoc)->where('ngay_ket_thuc', '<=', $ngayHienTai, 'and')->where('ky_he', 0)->get()) + 1;
 
             $hk_ke = 0;
 
@@ -136,7 +133,7 @@ class SuggestGraduateController extends ApiController
             $dshp_goiy_bb = new Collection();
             $dshp_goiy_tuchon = new Collection();
 
-            foreach($ds_kkt as $kkt) {
+            foreach ($ds_kkt as $kkt) {
                 $dshp_goiy_bb_theokkt = DB::table('hoc_phan_kkt_bat_buoc')->where('khoi_kien_thuc_id', $kkt->id)->get();
                 $dshp_goiy_tuchon_theokkt = DB::table('hoc_phan_kkt_tu_chon')->where('khoi_kien_thuc_id', $kkt->id)->get();
 
@@ -163,7 +160,6 @@ class SuggestGraduateController extends ApiController
                 if (property_exists($hp, 'qua_mon'))
                     $dshp->add($hp);
             }
-
         } else {
             // kỳ kế tiếp là hk hè
             $kkt_gddc_id = DB::table('khoi_kien_thuc')->join('loai_kien_thuc', 'khoi_kien_thuc.loai_kien_thuc_id', '=', 'loai_kien_thuc.id')->where('chuong_trinh_dao_tao_id', $chtr_dao_tao_id)->get('khoi_kien_thuc.id')[0]->id;
@@ -178,7 +174,7 @@ class SuggestGraduateController extends ApiController
             $dshp = $dshp->unique();
         }
 
-        for($i = 0; $i <count($dshp); $i++) {
+        for ($i = 0; $i < count($dshp); $i++) {
             $hp = $dshp[$i];
             $kq_tu_db = DB::table('hoc_phan')->where('id', $hp->hoc_phan_id)->get()[0];
 
@@ -210,7 +206,6 @@ class SuggestGraduateController extends ApiController
      */
     public function show(Request $request, string $id)
     {
-        
     }
 
     /**

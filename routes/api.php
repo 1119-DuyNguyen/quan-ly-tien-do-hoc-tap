@@ -1,20 +1,19 @@
 <?php
 
-use App\Http\Controllers\Admin\PermissionController;
-use App\Http\Controllers\Admin\RoleController;
-use App\Http\Controllers\Auth\UserAuthController;
-use App\Http\Controllers\Class\BaiTapSinhVienController;
-use App\Http\Controllers\Class\ClassroomController;
-use App\Http\Controllers\Class\Everyone\EveryoneController;
-use App\Http\Controllers\Class\Post\BaitapController;
-use App\Http\Controllers\Class\Post\PostController;
-use App\Http\Controllers\DataImport\DataImportController;
-use App\Http\Controllers\Test\TestApi;
-use App\Http\Controllers\GraduateStudentController;
-use App\Http\Controllers\SuggestGraduateController;
-use App\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Test\TestApi;
+use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Auth\UserAuthController;
+use App\Http\Controllers\Class\ClassroomController;
+use App\Http\Controllers\Class\Post\PostController;
+use App\Http\Controllers\Admin\PermissionController;
+use App\Http\Controllers\Class\Post\BaitapController;
+use App\Http\Controllers\Class\BaiTapSinhVienController;
+use App\Http\Controllers\DataImport\DataImportController;
+use App\Http\Controllers\Class\Everyone\EveryoneController;
+use App\Http\Controllers\Graduation\Student\GraduateStudentController;
+use App\Http\Controllers\Graduation\Student\SuggestGraduateController;
 
 /*
 |--------------------------------------------------------------------------

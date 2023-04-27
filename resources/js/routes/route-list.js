@@ -1,6 +1,6 @@
 import { Route } from '../abstract/classes.js';
 import { DashBoard } from '../pages/dashboard.js';
-import { Graduate } from '../pages/graduate.js';
+import { Graduate } from '../pages/graduate/graduate.js';
 import { Info } from '../pages/info.js';
 import { ClassroomStudent } from '../pages/classroom/classroomStudent.js';
 import { ClassroomTeacher } from '../pages/classroom/classroomTeacher.js';

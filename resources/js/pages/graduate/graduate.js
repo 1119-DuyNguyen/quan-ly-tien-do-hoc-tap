@@ -1,17 +1,17 @@
-import GraduateCrawler from '../components/dashboard/graduateCrawler.js';
+import GraduateCrawler from '../../components/dashboard/graduateCrawler.js';
 let graduate = new GraduateCrawler();
 
 export class Graduate {
     static async index() {
         // import ''
 
-        let bien_che_selector = document.querySelector(".graduate__select");
+        let bien_che_selector = document.querySelector('.graduate__select');
         let graduate__container = document.querySelector('.graduate__container');
-        
-        bien_che_selector.addEventListener('change', async e => {
+
+        bien_che_selector.addEventListener('change', async (e) => {
             graduate__container.innerHTML = await graduate.renderHK(parseInt(bien_che_selector.value));
-        })
-        
+        });
+
         graduate.renderSelectHK(bien_che_selector);
         graduate__container.innerHTML = await graduate.renderHK(-1);
     }
@@ -20,13 +20,14 @@ export class Graduate {
         graduate__container[0].innerHTML = await graduate.renderHK(await graduate.returnHKHienTai(), 'suggest');
 
         if (graduate__container[0].innerHTML.length == 0) {
-            graduate__container[0].innerHTML = "<h3>Học kỳ này bạn không đăng ký học phần nào cả.</h3>"
+            graduate__container[0].innerHTML = '<h3>Học kỳ này bạn không đăng ký học phần nào cả.</h3>';
         }
 
         let goi_y_hoc_phanBtn = document.querySelector('#goi_y_hoc_phan');
-        let arr_kqdukien, kq_du_kien, check = true;
-        goi_y_hoc_phanBtn.addEventListener('click', async e => {
-
+        let arr_kqdukien,
+            kq_du_kien,
+            check = true;
+        goi_y_hoc_phanBtn.addEventListener('click', async (e) => {
             kq_du_kien = document.querySelectorAll('.ket_qua_du_kien');
             arr_kqdukien = [];
             check = true;
@@ -37,21 +38,20 @@ export class Graduate {
                 if (element.value.length == 0) {
                     check = false;
                     element.focus();
-                    alert("Chưa nhập điểm");
+                    alert('Chưa nhập điểm');
                     break;
                 }
 
                 if (isNaN(parseFloat(element.value))) {
                     check = false;
                     element.focus();
-                    alert("Điểm không hợp lệ");
+                    alert('Điểm không hợp lệ');
                     break;
                 }
 
                 if (parseFloat(element.value) >= 4.0) arr_kqdukien.push(parseInt(element.dataset.hpid));
             }
-            if (check)
-                graduate__container[1].innerHTML = await graduate.renderDSGoiY(arr_kqdukien);
+            if (check) graduate__container[1].innerHTML = await graduate.renderDSGoiY(arr_kqdukien);
         });
     }
 }
