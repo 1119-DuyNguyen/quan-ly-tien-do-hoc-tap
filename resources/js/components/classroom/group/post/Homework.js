@@ -1,8 +1,7 @@
-import axios from 'axios';
-
-export class BaiTap {
+export class Homework {
     static URL_POST = location.protocol + '//' + location.host + '/api/posts';
     static URL_EXCERCISE = location.protocol + '//' + location.host + '/api/exercises';
+    static URL_BAI_TAP_SINH_VIEN = location.protocol + '//' + location.host + '/api/bai-tap-sinh-vien';
     static _this = this;
     #container;
     constructor(element) {
@@ -12,7 +11,7 @@ export class BaiTap {
     async getTeacherBaiTapData(id) {
         var BaiTapData;
         let html = '';
-        let data = await axios.get(BaiTap.URL_EXCERCISE + `/${id}`).then(function (response) {
+        let data = await axios.get(Homework.URL_EXCERCISE + `/${id}`).then(function (response) {
             return response.data.data;
         });
         BaiTapData = data ? data : [];
@@ -47,7 +46,7 @@ export class BaiTap {
                             <i class="fa-solid fa-trash-can" style="cursor: pointer"></i>
                         </div>
                         <div class="task__action task__action--blue">
-                            <div>Xem thêm</div>
+                            <div>Xem chi tiết</div>
                         </div>
                         <div class="task__status task__status--green">
                             <div class="task__status__icon">
@@ -64,11 +63,23 @@ export class BaiTap {
     async getStudentBaiTapData(id) {
         var BaiTapData;
         let html = '';
-        let data = await axios.get(BaiTap.URL_EXCERCISE + `/${id}`).then(function (response) {
+        let data = await axios.get(Homework.URL_EXCERCISE + `/${id}`).then(function (response) {
             return response.data.data;
         });
         BaiTapData = data ? data : [];
-        BaiTapData.forEach((element, index) => {
+        BaiTapData.forEach(async (element, index) => {
+            // var fileHref;
+            // let fileLink = axios
+            //     .get(BaiTap.URL_BAI_TAP_SINH_VIEN + `/${element.bai_dang_id}`)
+            //     .then(function (response) {
+            //         return response.data;
+            //     })
+            //     .catch(function (err) {
+            //         console.log(err);
+            //     });
+            // fileHref = fileLink ? fileLink : 'a';
+            // console.log(fileHref);
+
             html += `<div class="task" id="bai_dang_${decodeHtml(element.bai_dang_id)}">
                         <div class="task__container">
                             <div class="task__author__avatar">
@@ -94,10 +105,33 @@ export class BaiTap {
                             
                         </div>
                         <div class="task__content">${decodeHtml(element.noi_dung)}</div>
+                        <div style="padding: 0.4rem; background-color: rgba(42, 131, 255, 0.3);">NỘP FILE BÀI TẬP
+                            <form 
+                                id="sinh_vien_nop_bai_tap_${decodeHtml(element.bai_dang_id)}"
+                                method="POST" 
+                                enctype="multipart/form-data"
+                            >
+                                <input
+                                    type="file"
+                                    class="new-homework__form--file-input"
+                                    id="sinh_vien_nop_bai_tap_${decodeHtml(element.bai_dang_id)}_files"
+                                    name="files"
+                                    multiple
+                                />
+                                <div class="new-homework__form--submit">
+                                    <input type="submit" value="Nộp" />
+                                    <button 
+                                        class="new-homework__form--submit-cancel" 
+                                        type="button"
+                                        id="sinh_vien_xoa_bai_tap_${decodeHtml(element.bai_dang_id)}"
+                                    >Xoá bài đã nộp</button>
+                                </div>
+                            </form>
+                        </div>
                         <div class="task__action task__action--blue">
                             <div>Xem thêm</div>
                         </div>
-                        <div class="task__status task__status--green">
+                        <div class="task__status task__status--green">Điểm
                             <div class="task__status__icon">
                                 <img src="../../img/check-green.png" alt="" />
                             </div>
@@ -105,6 +139,8 @@ export class BaiTap {
                     </div>`;
         });
         this.#container.innerHTML = html;
+        this.sinhVienNopBaiTap();
+        this.sinhVienXoaBaiTap();
     }
 
     async addBaiTap(id) {
@@ -114,6 +150,16 @@ export class BaiTap {
         ).value;
         time = time.toString().slice(0, 19).replace('T', ' ') + ':00';
 
+        var formDataFilesLength = document.getElementById(
+            'class-center-container__class-dashboard--edit-homework-files'
+        ).files.length;
+        for (var x = 0; x < formDataFilesLength; x++) {
+            formData.append(
+                'files[]',
+                document.getElementById('class-center-container__class-dashboard--edit-homework-files').files[x]
+            );
+        }
+
         formData.append('loai_noi_dung', '2');
         formData.append('nhom_hoc_id', id);
         formData.append('ngay_ket_thuc', time);
@@ -122,7 +168,7 @@ export class BaiTap {
 
         console.log(formData.get('ngay_ket_thuc'), time);
         await axios
-            .post(BaiTap.URL_EXCERCISE, formData, {
+            .post(Homework.URL_EXCERCISE, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
@@ -148,9 +194,10 @@ export class BaiTap {
                 let bai_dang = element.parentElement.parentElement.id.split('_');
                 if (confirm('Bạn có chắc muốn xoá bài viết này?')) {
                     axios
-                        .delete(BaiTap.URL_POST + `/${bai_dang[2]}`, {
+                        .delete(Homework.URL_POST + `/${bai_dang[2]}`, {
                             headers: {
-                                'Content-Type': 'multipart/form-data',
+                                Accept: 'application/vnd.api+json',
+                                'Content-Type': 'application/json',
                             },
                         })
                         .then(function (response) {
@@ -168,6 +215,16 @@ export class BaiTap {
     editBaiTap() {
         const editForm = document.getElementById('class-center-container__class-dashboard--edit-homework');
 
+        var formDataFilesLength = document.getElementById(
+            'class-center-container__class-dashboard--edit-homework-files'
+        ).files.length;
+        for (var x = 0; x < formDataFilesLength; x++) {
+            formData.append(
+                'files[]',
+                document.getElementById('class-center-container__class-dashboard--edit-homework-files').files[x]
+            );
+        }
+
         let taskEditBtn = document.querySelectorAll('.task-container .fa-pen-to-square');
 
         taskEditBtn.forEach((element, index) => {
@@ -180,11 +237,6 @@ export class BaiTap {
                 cancelEditBtn.addEventListener('click', function (e) {
                     editForm.style.display = 'none';
                 });
-
-                const tieu_de_edit = document.querySelector(
-                    '#class-center-container__class-dashboard--edit-homework .new-homework__date .new-homework__title'
-                );
-
                 editForm.addEventListener('submit', async function (e) {
                     e.preventDefault();
                     const formData = new FormData(
@@ -200,7 +252,7 @@ export class BaiTap {
                     formData.append('_method', 'put');
 
                     await axios
-                        .put(BaiTap.URL_EXCERCISE + `/${bai_dang[2]}`, formData, {
+                        .put(Homework.URL_EXCERCISE + `/${bai_dang[2]}`, formData, {
                             headers: {
                                 'Content-Type': 'multipart/form-data',
                             },
@@ -215,6 +267,72 @@ export class BaiTap {
                             console.log(error);
                         });
                 });
+            });
+        });
+    }
+
+    sinhVienNopBaiTap() {
+        const baiTap = document.querySelectorAll('.class-center-container__class-dashboard--homework .task');
+        baiTap.forEach((element, index) => {
+            let bai_tap_id = element.id.split('_');
+            const formNopBaiTap = document.querySelector(`#sinh_vien_nop_bai_tap_${bai_tap_id[2]}`);
+
+            //nộp bài tập
+            formNopBaiTap.addEventListener('submit', async function (e) {
+                e.preventDefault();
+                const formNopBaiData = new FormData(document.getElementById(`sinh_vien_nop_bai_tap_${bai_tap_id[2]}`));
+                var formDataFilesLength = document.getElementById(`sinh_vien_nop_bai_tap_${bai_tap_id[2]}_files`).files
+                    .length;
+
+                if (formDataFilesLength > 1) {
+                    alert('Chỉ cho phép nộp 1 file cho một bài tập!');
+                } else {
+                    formNopBaiData.append('bai_tap_id', bai_tap_id[2]);
+
+                    await axios
+                        .post(Homework.URL_BAI_TAP_SINH_VIEN, formNopBaiData, {
+                            headers: {
+                                'Content-Type': 'multipart/form-data',
+                            },
+                        })
+                        .then(function (response) {
+                            alert('Nộp bài tập mới thành công');
+                            console.log(response);
+                        })
+                        .catch(function (error) {
+                            alert('Có lỗi khi nộp bài, vui lòng liên hệ bộ phận kĩ thuật để được khắc phục');
+                            console.log(error);
+                        });
+                }
+            });
+
+            //xoá bài tập
+        });
+    }
+
+    sinhVienXoaBaiTap() {
+        const xoaBaiTapBtns = document.querySelectorAll(
+            '.class-center-container__class-dashboard--homework .new-homework__form--submit-cancel'
+        );
+        xoaBaiTapBtns.forEach((element, index) => {
+            element.addEventListener('click', () => {
+                let bai_tap_id = element.id.split('_');
+                if (confirm('Bạn có chắc muốn xoá bài nộp?')) {
+                    axios
+                        .delete(Homework.URL_BAI_TAP_SINH_VIEN + `/${bai_tap_id[5]}`, {
+                            headers: {
+                                'Content-Type': 'multipart/form-data',
+                            },
+                        })
+                        .then(function (response) {
+                            alert('Xoá bài tập thành công');
+                            console.log(response);
+                        })
+                        .catch(function (error) {
+                            alert('Có lỗi khi xoá bài, vui lòng liên hệ bộ phận kĩ thuật để được khắc phục');
+                            console.log(error);
+                        });
+                }
             });
         });
     }

@@ -10,6 +10,8 @@
 @use './layouts/header';
 @use './layouts/main-content';
 @use './layouts/footer';
+@use './layouts/toast';
+
 @use './pages/dash-board';
 @use './pages/class';
 @use './pages/group';
@@ -20,5 +22,4 @@
 //component
 @use './components/container-link';
 @use './components/btn';
-@use './components/toast';
 @use './components/smart-table-template/smart-table.scss';

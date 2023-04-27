@@ -1,5 +1,3 @@
-import axios from 'axios';
-
 export class Post {
     static URL_POST = location.protocol + '//' + location.host + '/api/posts';
     #container;
@@ -80,10 +78,20 @@ export class Post {
     async addPost(id) {
         const formData = new FormData(document.getElementById('class-center-container__class-dashboard--new-post'));
 
+        var formDataFilesLength = document.getElementById('class-center-container__class-dashboard--new-post-files')
+            .files.length;
+        for (var x = 0; x < formDataFilesLength; x++) {
+            formData.append(
+                'files[]',
+                document.getElementById('class-center-container__class-dashboard--new-post-files').files[x]
+            );
+        }
+
         formData.append('loai_noi_dung', '1');
         formData.append('nhom_hoc_id', id);
         //cái này fix lại sau khi có auth
         formData.append('nguoi_dung_id', id);
+
         console.log(formData);
 
         await axios
@@ -115,7 +123,7 @@ export class Post {
                     axios
                         .delete(Post.URL_POST + `/${bai_dang[2]}`, {
                             headers: {
-                                'Content-Type': 'multipart/form-data',
+                                'Content-Type': 'application/json',
                             },
                         })
                         .then(function (response) {
@@ -132,6 +140,15 @@ export class Post {
 
     editPost() {
         const editForm = document.getElementById('class-center-container__class-dashboard--edit-post');
+
+        var formDataFilesLength = document.getElementById('class-center-container__class-dashboard--edit-post-files')
+            .files.length;
+        for (var x = 0; x < formDataFilesLength; x++) {
+            formData.append(
+                'files[]',
+                document.getElementById('class-center-container__class-dashboard--edit-post-files').files[x]
+            );
+        }
 
         let taskEditBtn = document.querySelectorAll('.feed-item .fa-pen-to-square');
 
@@ -160,7 +177,7 @@ export class Post {
                     await axios
                         .put(Post.URL_POST + `/${bai_dang[2]}`, formData, {
                             headers: {
-                                'Content-Type': 'multipart/form-data',
+                                'Content-Type': 'application/json',
                             },
                         })
                         .then(function (response) {

@@ -1,8 +1,9 @@
-import { routeHref } from '../routes/route';
+import { routeHref } from '../routes/route.js';
 
 export class Authentication {
     static ACCESS_TOKEN = 'access_token';
     static URL_LOGIN = location.protocol + '//' + location.host + '/api/login';
+    static URL_LOGIN_REFRESH = location.protocol + '//' + location.host + '/api/login/refresh';
     static URL_LOGOUT = location.protocol + '//' + location.host + '/api/logout';
     static login() {
         var form = document.getElementById('login-form');
@@ -26,16 +27,63 @@ export class Authentication {
                 })
                 .then((res) => {
                     var data = res.data.data;
-                    console.log(data);
-                    if (data && data.roleSlug) {
+                    //    console.log(data);
+                    if (data) {
                         window.localStorage.setItem('roleSlug', data.roleSlug);
                         window.localStorage.setItem('role', data.role);
                         window.localStorage.setItem('user', data.user);
-                        routeHref('/');
-                    }
+                        window.localStorage.setItem('accessToken', data.accessToken);
+                        window.localStorage.setItem('expireToken', data.expireToken);
+
+                        window.axios.defaults.headers.common['Authorization'] = `Bearer ${
+                            localStorage.getItem('accessToken') ?? ''
+                        }`;
+                    } else throw 'Lỗi máy chủ';
                 })
-                .catch((error) => console.log(error));
+                .catch((error) => {
+                    window.localStorage.removeItem('roleSlug');
+                    window.localStorage.removeItem('role');
+                    window.localStorage.removeItem('user');
+                    window.localStorage.removeItem('accessToken');
+                    window.localStorage.removeItem('expireToken');
+                    //alert('Đăng nhập thất bại thử lại sau ít phút');
+
+                    //console.log(error.response.data);
+                })
+                .finally(() => {
+                    routeHref('/');
+                });
         });
+    }
+    static refreshToken() {
+        return axios
+            .post(Authentication.URL_LOGIN_REFRESH, null, {
+                headers: {
+                    Accept: 'application/vnd.api+json',
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then((res) => {
+                var data = res.data.data;
+                //    console.log(data);
+                if (data) {
+                    window.localStorage.setItem('accessToken', data.accessToken);
+                    window.localStorage.setItem('expireToken', data.expireToken);
+
+                    window.axios.defaults.headers.common['Authorization'] = axios.getAccessToken();
+                }
+                return true;
+            })
+            .catch((error) => {
+                window.localStorage.removeItem('roleSlug');
+                window.localStorage.removeItem('role');
+                window.localStorage.removeItem('user');
+                window.localStorage.removeItem('accessToken');
+                window.localStorage.removeItem('expireToken');
+                //routeHref('/');
+                // console.log(error.response.data)
+                return false;
+            });
     }
     static logout(event) {
         event.preventDefault();
@@ -50,10 +98,16 @@ export class Authentication {
                 window.localStorage.removeItem('roleSlug');
                 window.localStorage.removeItem('role');
                 window.localStorage.removeItem('user');
-
+                window.localStorage.removeItem('accessToken');
+                window.localStorage.removeItem('expireToken');
+                window.axios.defaults.headers.common['Authorization'] = axios.getAccessToken();
                 routeHref('/');
             })
-            .catch((error) => console.log(error));
+            .catch((error) => {
+                alert('Đăng xuất thất bại thử lại sau ít phút');
+
+                console.log(error.response.data);
+            });
     }
     // static show({ id }) {
     //     console.log(id);

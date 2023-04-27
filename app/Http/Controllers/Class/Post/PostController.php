@@ -3,13 +3,16 @@
 namespace App\Http\Controllers\Class\Post;
 
 use App\Models\User;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use PhpParser\Node\Stmt\TryCatch;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\Users\Classes\NhomHoc;
 use App\Http\Controllers\ApiController;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Users\Classes\Posts\BaiDang;
-use PhpParser\Node\Stmt\TryCatch;
+use App\Models\Users\Classes\Posts\FileBaiDang;
 
 class PostController extends ApiController
 {
@@ -56,6 +59,17 @@ class PostController extends ApiController
     {
         try {
             $baiDang->create($request->all());
+            if ($request->hasFile('files')) {
+                foreach ($request->file('files') as $file) {
+                    $name = time() . rand(1, 100) . Str::random(40) . '.' . $file->extension();
+                    Storage::putFileAs('files', $file, $name);
+
+                    $fileData['bai_dang_id'] = DB::table('bai_dang')->max('id');
+                    $fileData['link'] = 'files/' . $name;
+
+                    FileBaiDang::create($fileData);
+                }
+            }
             return $this->success($baiDang, 201, 'Created');
         } catch (Exception $e) {
             //catch exception
@@ -68,6 +82,17 @@ class PostController extends ApiController
     {
         $baiDang = BaiDang::find($id);
         try {
+            if ($request->hasFile('files')) {
+                foreach ($request->file('files') as $file) {
+                    $name = time() . rand(1, 100) . Str::random(40) . '.' . $file->extension();
+                    Storage::putFileAs('files', $file, $name);
+
+                    $fileData['bai_dang_id'] = $id;
+                    $fileData['link'] = 'files/' . $name;
+
+                    FileBaiDang::where('bai_dang_id', $id)->update($fileData);
+                }
+            }
             $baiDang->update($request->all());
             return $this->success($baiDang, 201, 'Updated');
         } catch (Exception $e) {

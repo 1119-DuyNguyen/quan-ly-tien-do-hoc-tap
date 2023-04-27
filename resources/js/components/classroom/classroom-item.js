@@ -2,8 +2,7 @@ import { routeHref } from '../../routes/route';
 
 export class ClassroomItem {
     static URL_CLASSROOM = location.protocol + '//' + location.host + '/api/classes';
-    static URL_LINK_TO_GROUP_TEACHER = location.protocol + '//' + location.host + '/teacher/classroom';
-    static URL_LINK_TO_GROUP_STUDENT = location.protocol + '//' + location.host + '/student/classroom';
+    static URL_LINK_TO_GROUP = location.protocol + '//' + location.host + '/classroom';
     #container;
     createElement(type = 'div', className = '') {
         let element = document.createElement(type);
@@ -28,7 +27,7 @@ export class ClassroomItem {
         classData.forEach((element, index) => {
             html += `
                 <a href="${
-                    ClassroomItem.URL_LINK_TO_GROUP_TEACHER + `/${element.nhom_hoc_id}`
+                    ClassroomItem.URL_LINK_TO_GROUP + `/${element.nhom_hoc_id}`
                 }" class="class-item" id="nhom_hoc_${element.nhom_hoc_id}">
                     <div class="class-item__text">
                         <h3>${element.ten_hoc_phan}</h3>
@@ -56,7 +55,7 @@ export class ClassroomItem {
         classData.forEach((element, index) => {
             html += `
                 <a href="${
-                    ClassroomItem.URL_LINK_TO_GROUP_STUDENT + `/${element.nhom_hoc_id}`
+                    ClassroomItem.URL_LINK_TO_GROUP + `/${element.nhom_hoc_id}`
                 }" class="class-item" id="nhom_hoc_${element.nhom_hoc_id}">
                     <div class="class-item__text">
                         <h3>${element.ten_hoc_phan}</h3>

@@ -7,6 +7,7 @@ import { ClassroomTeacher } from '../pages/classroom/classroomTeacher.js';
 
 import { Authentication } from '../pages/authentication.js';
 import { Role } from '../pages/admin/role.js';
+import { HomeworkMark } from '../components/classroom/group/post/HomeworkMark.js';
 
 const route = new Route();
 
@@ -29,6 +30,12 @@ route.addRoute(
     { title: 'classroom' },
     'templates/teacher/group.html'
 );
+route.addRoute(
+    'giang-vien/classroom/bai-tap/$id',
+    HomeworkMark.index,
+    { title: 'Bài tập $id' },
+    'templates/teacher/homework.html'
+);
 
 route.addRoute('sinh-vien/classroom', ClassroomStudent.index, { title: 'Nhóm học' }, 'templates/student/class.html');
 route.addRoute(
@@ -37,6 +44,6 @@ route.addRoute(
     { title: 'classroom' },
     'templates/student/group.html'
 );
-route.addRoute('admin/role', Role.index, { title: 'role' }, '');
+route.addRoute('quan-tri-vien/role', Role.index, { title: 'role' }, '');
 
 export var routeList = route.getUrlRoutes();

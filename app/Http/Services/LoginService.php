@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cookie;
 
 
@@ -37,7 +38,7 @@ class LoginService
             // vì passport cần username :)))
 
             $data['username'] = $data['ten_dang_nhap'];
-            return $this->proxy('password', $data, '*');
+            return $this->proxy('password', $data, 'Đăng nhập thành công', '*');
         } else {
             return $this->error(null, 401, 'Tài khoản hoặc mật khẩu không đúng. Hãy thử lại ');
         }
@@ -48,13 +49,20 @@ class LoginService
      */
     public function attemptRefresh()
     {
-
+        //chceck expire token
         $refreshToken = Cookie::get(self::REFRESH_TOKEN);
-        $refreshToken = '';
-
+        // $response = Http::asForm()->post(request()->getHttpHost() . '/api/oauth/token', [
+        //     'grant_type' => 'refresh_token',
+        //     'refresh_token' => $refreshToken,
+        //     'client_id'     => env('PASSWORD_CLIENT_ID', '2'),
+        //     'client_secret' => env('PASSWORD_CLIENT_SECRET', 'U8JUFnmp4fy0P0Sy8lZlHALDdb2V5xKcYR1z7wbT'),
+        //     'scope' => '',
+        // ]);
+        // return $response->json();
         return $this->proxy('refresh_token', [
-            'refresh_token' => $refreshToken
-        ]);
+            'refresh_token' => $refreshToken,
+            'scope' => ''
+        ], '');
     }
 
     /**
@@ -63,7 +71,7 @@ class LoginService
      * @param string $grantType  type of grant type should be proxied
      * @param array $data  data send to the server
      */
-    private function proxy($grantType, array $data = [], $scope = '*')
+    private function proxy($grantType, array $data = [], $message = '', $scope = '')
     {
 
 
@@ -77,29 +85,50 @@ class LoginService
         } else {
             $data['scope'] = '';
         }
+
         /*
             internal API request.
         */
         $internalRequest = Request::create('/api/oauth/token', 'POST', $data);
         $response = app()->handle($internalRequest);
         if (!$response->isSuccessful()) {
-             dd($response);
-            return $this->error(['error' => "Máy chủ xác thực thất bại. Hãy thử lại sau ít phút"], 407);
+            dd($response);
+            return $this->error('', 407, "Máy chủ xác thực thất bại. Hãy thử lại sau ít phút");
         }
 
         $data = json_decode($response->getContent(), true);
         // Create a refresh token cookie
         //10 ngày
-        $cookieAcessToken = $this->getDetailCookies(self::ACCESS_TOKEN, $data['access_token'], $data['expires_in']);
-        $cookieRefreshToken = $this->getDetailCookies(self::REFRESH_TOKEN, $data['refresh_token'], 864000);
-        $user = request()->user();
-        return $this->success([
-            'user' => $user['ten'],
-            'role' => $user->quyen->ten,
-            'roleSlug' => Str::slug($user->quyen->ten)
-            // 'roles' => $user->quyens
-        ], 200)->withCookie($cookieAcessToken)
-            ->withCookie($cookieRefreshToken);
+        // $cookieAcessToken = $this->getDetailCookies(self::ACCESS_TOKEN, $data['access_token'], $data['expires_in']);
+
+        switch ($grantType) {
+            case 'password':
+                $cookieRefreshToken = $this->getDetailCookies(self::REFRESH_TOKEN, $data['refresh_token'], strtotime(now()->addDay(10)->toDateString()));
+                $user = request()->user();
+                return $this->success([
+                    'user' => $user['ten'],
+                    'role' => $user->quyen->ten,
+                    'accessToken' => $data['access_token'],
+                    'expireToken' => $data['expires_in'],
+                    'roleSlug' => Str::slug($user->quyen->ten)
+                    // 'roles' => $user->quyens
+                ], 200, $message)->withCookie($cookieRefreshToken);
+                break;
+            case 'refresh_token':
+                $cookieRefreshToken = $this->getDetailCookies(self::REFRESH_TOKEN, $data['refresh_token'], strtotime(now()->addDay(10)->toDateString()));
+
+                return $this->success([
+                    'accessToken' => $data['access_token'],
+                    'expireToken' => $data['expires_in'],
+                    // 'roles' => $user->quyens
+                ], 200, $message)->withCookie($cookieRefreshToken);
+                break;
+            default:
+                return $this->error(['error' => "Máy chủ xác thực thất bại. Hãy thử lại sau ít phút"], 407);
+                # code...
+                break;
+        }
+
         // return $this->success([
         //     'user' => $user,
         //     'roles' => $user->quyens
@@ -125,7 +154,7 @@ class LoginService
             //  true, // for production
             null, // for localhost
             true,
-            'lax',
+            'strict',
         );
         // return [
         //     'name' => $name,
@@ -143,7 +172,7 @@ class LoginService
     public function logout()
     {
         $cookieRefresh = Cookie::forget(Self::REFRESH_TOKEN);
-        $cookieAccess = Cookie::forget(Self::REFRESH_TOKEN);
+        // $cookieAccess = Cookie::forget(Self::REFRESH_TOKEN);
         /** @var \App\Models\Authorization\TaiKhoan $user **/
         $user = auth()->user();
 
@@ -158,9 +187,9 @@ class LoginService
         $accessToken->revoke();
         //  dd(Cookie::get(self::REFRESH_TOKEN));
 
-        return $this->success('Đăng xuất thành công', 204)->withCookie(
+        return $this->success('', 200, 'Đăng xuất thành công')->withCookie(
             $cookieRefresh,
-            $cookieAccess
+            // $cookieAccess
         );
     }
     public function username()
