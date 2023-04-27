@@ -11,6 +11,7 @@ use App\Http\Controllers\Class\Post\PostController;
 use App\Http\Controllers\DataImport\DataImportController;
 use App\Http\Controllers\Test\TestApi;
 use App\Http\Controllers\GraduateStudentController;
+use App\Http\Controllers\SuggestGraduateController;
 use App\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -47,10 +48,13 @@ Route::middleware('auth:api')->group(function () {
     Route::apiResource('/test', TestApi::class);
 
     Route::apiResource('/graduate', GraduateStudentController::class);
+    Route::apiResource('/suggestion', SuggestGraduateController::class);
+
     Route::middleware('role:Quản trị viên')
         ->name('admin.')
         ->prefix('/admin')
         ->group(function () {
+
             Route::apiResource('/role', RoleController::class);
             Route::apiResource('/permissions', PermissionController::class);
         });

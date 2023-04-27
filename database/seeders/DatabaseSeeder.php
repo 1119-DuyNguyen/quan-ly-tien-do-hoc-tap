@@ -81,11 +81,9 @@ class DatabaseSeeder extends Seeder
         Khoa::factory(4)->create();
         Nganh::factory(3)->create();
         // ChuKy::factory(4)->create();
-        //$this->call(ChuKySeeder::class);
+        $this->call(ChuKySeeder::class);
         // ChucNang::factory()->count(10)->create();
-        // ChuongTrinhDaoTao::factory()
-        //     ->count(10)
-        //     ->create();
+        $this->call(ChuongTrinhDaoTaoSeeder::class);
         // NienKhoa::factory()
         //     ->count(10)
         //     ->create();
@@ -109,13 +107,16 @@ class DatabaseSeeder extends Seeder
         // BienChe::factory()
         //     ->count(10)
         //     ->create();
-        //$this->call(KetQuaSeeder::class);
+        $this->call(KetQuaSeeder::class);
 
-        //$this->call([LoaiKienThucSeeder::class]);
-        //$this->call([KhoiKienThucSeeder::class]);
+        $this->call([LoaiKienThucSeeder::class]);
+        $this->call([KhoiKienThucSeeder::class]);
 
-        //$this->call([HPKTTBatBuocSeeder::class]);
-        //$this->call([HPKTTTuChonSeeder::class]);
+        $this->call([HPKTTBatBuocSeeder::class]);
+        $this->call([HPKTTTuChonSeeder::class]);
+
+        // DB::statement("INSERT INTO `tinh_trang_sinh_vien` (`id`, `so_lan_canh_cao`, `da_tot_nghiep`, `moc_thoi_gian_id`, `buoc_thoi_hoc`, `updated_at`, `created_at`, `sinh_vien_id`, `ly_do_buoc_thoi_hoc`, `lop_hoc_id`, `khoi_kien_thuc_id`) VALUES
+        // (1, 0, 0, NULL, NULL, '2023-04-19 23:55:31', '2023-04-19 23:55:31', 63, NULL, 1, 4);");
 
         // HocPhan::factory()
         //     ->count(10)
