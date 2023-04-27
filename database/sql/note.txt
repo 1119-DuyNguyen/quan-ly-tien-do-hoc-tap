@@ -6,3 +6,35 @@
     đổi n-n user role thành 1-n . 1 user 1 role, 1 role nhiều user
 4-5:
     thêm loại bài tập vào bảng bai_dang. 1 là post 2 là bài tập
+17-4: 
+    thêm vào tài khoản trường email, ngày sinh, số điện thoại
+19-4:
+    thêm vào học phần trường co_tinh_vao_tin_chi với default = 1 nghĩa là sẽ tính, nếu set là 0 thì không tính
+20-4-2023 : đại cập nhập lần 2
+    Xóa hết trigger liên quan số tín chỉ, số lượng thành viên ( viết lại sau - cập nhập số tín chỉ , số lượng , tạm thời để mặc định là 0 )
+    chương trình đào tạo :
+        bỏ mã chương trình đào tạo 
+        sửa từ chương trình đào tạo -> khoa_id thành ngành_id, bỏ mã chương trình đào tạo
+        lớp học thuộc về 1 chương trình đào tạo
+    sinh viên:
+        chuyển trường lop_hoc_id bảng tai_khoan sang tinh_trang_sinh_vien, 
+        thêm vào trường khối kiến thức để xác định xem loại chuyên ngành mà sv chọn
+    đổi tên bảng moc_thoi_gian -> moc_thoi_gian_tot_nghiep
+    khối kiến thức
+        Bóc tách quan hệ kế thừa khối kiến thức thành 2 loại : bắt buộc và tự chọn
+        quy ước loại khối kiến thức : 
+            1 . giáo dục đại cương
+            2. cơ sở ngành
+            3. chuyên ngành
+    thêm học phần tương đương vào bảng học phần
+    fix lại data type ví dụ nvarchar(50) -> 255 hoặc thành text, small int, int
+    
+Tổng kết đạt được 20-4
+=> giúp cắt bỏ data thừa hoặc kiểu dữ liệu không hợp và giải quyết vấn đề import ctdt
+
+    vài fix nhỏ 20-4- 5h chiều : 
+        Lớp học thêm ngày bắt đầu ngày kết thúc
+        Biên chế thêm trường ky_he mặc định = 0 
+22-4-2022:
+    Thêm dai_cuong vào loại kiến thức để biết khối kiến thức nào là đại cương
+    chuyển bảng kết quả điểm mặc định =0 thành null

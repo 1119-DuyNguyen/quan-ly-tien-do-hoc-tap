@@ -44,6 +44,6 @@ route.addRoute(
     { title: 'classroom' },
     'templates/student/group.html'
 );
-route.addRoute('admin/role', Role.index, { title: 'role' }, '');
+route.addRoute('quan-tri-vien/role', Role.index, { title: 'role' }, '');
 
 export var routeList = route.getUrlRoutes();

@@ -1,23 +1,30 @@
 #toast {
-    max-width: 100%;
     position: fixed;
     z-index: 30;
     top: 32px;
-    right: 32px;
+    right: 0;
     width: 400px;
+    padding: 0 8px;
     color: black;
+    // - cho cái sidebar
+    max-width: calc(100% - 50px);
+    margin-left: 50px;
 }
 
 .toast {
+    width: 100%;
     flex: 1;
     display: flex;
-    border-radius: 2px;
+    border-radius: 4px;
     background-color: #fff;
-    border-left: 4px solid;
-    padding: 20px 0;
+    border-left: 8px solid;
+    padding: 8px 0;
     box-shadow: 0 5px 8px rgba(0, 0, 0, 0.8);
-    width: 400px;
-    margin-left: 32px;
+    width: 100%;
+    max-width: calc(100%);
+    margin-left: 8px;
+    margin-bottom: 16px;
+    align-items: center;
 }
 .toast__icon {
     font-size: 24px;
@@ -28,12 +35,15 @@
 }
 
 .toast__body {
-    flex-grow: 1;
+    // flex-grow: 1;
+    font-weight: 300 !important;
 }
-// .toast__title {
-// }
-// .toast__message {
-// }
+.toast__title {
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+.toast__message {
+}
 .toast__close {
     font-size: 20px;
     color: rgba(0, 0, 0, 3);
@@ -73,6 +83,18 @@
     to {
         opacity: 1;
         transform: translateX(0);
+    }
+}
+@keyframes slideDown {
+    0% {
+        opacity: 0;
+
+        transform: translateY(-40px);
+    }
+    100% {
+        opacity: 1;
+
+        transform: translateY(0);
     }
 }
 @keyframes fadeOut {

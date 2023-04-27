@@ -93,7 +93,7 @@
     <div id="main-content">
 
     </div>
-
+    <div id="toast"></div>
     {{-- <script src="./js/header.js"></script>
     <script src="./js/components/schedule-chart.js"></script>
     <script src="./js/adjustProcessLayout.js"></script>
