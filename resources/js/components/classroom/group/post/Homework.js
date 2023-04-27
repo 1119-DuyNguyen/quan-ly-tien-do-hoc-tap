@@ -1,5 +1,3 @@
-import axios from 'axios';
-
 export class Homework {
     static URL_POST = location.protocol + '//' + location.host + '/api/posts';
     static URL_EXCERCISE = location.protocol + '//' + location.host + '/api/exercises';

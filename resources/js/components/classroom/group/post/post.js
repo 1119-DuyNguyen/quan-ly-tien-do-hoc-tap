@@ -1,5 +1,3 @@
-import axios from 'axios';
-
 export class Post {
     static URL_POST = location.protocol + '//' + location.host + '/api/posts';
     #container;
