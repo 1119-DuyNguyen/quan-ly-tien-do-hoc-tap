@@ -20,8 +20,11 @@ function round(num, decimalPlaces = 0) {
 function getFromHocPhan(hoc_phan, id, data = 'ma_hoc_phan') {
     for (let i = 0; i < hoc_phan.length; i++) {
         const hp = hoc_phan[i];
-        if (hp.id === id)
+        if (hp.id === id) {
+            if (typeof hp[data] == "undefined")
+                return "Chưa xác định";
             return hp[data];
+        }
     }
 }
 
@@ -64,7 +67,7 @@ export default class GraduateCrawler {
      * Hàm render dữ liệu từ server
      * @param {number} id id của học kỳ cần render, mặc định là -1, ứng với mọi học kỳ
      */
-    renderHK(id = -1) {
+    renderHK(id = -1, type = 'kq') {
 
         id = (id === -1) ? "" : (isNaN(id) ? "" : "/"+id);
 
@@ -88,33 +91,65 @@ export default class GraduateCrawler {
                 list = ``;
                 found = 0;
 
-                for (let i = 0; i < ket_qua.length; i++) {
-                    const kq = ket_qua[i];
-                    if (hk.id == kq.bien_che_id) {
-                        found = 1;
-                        stt++;
-                        list += `<tr>
-                            <td>${stt}</td>
-                            <td>${getFromHocPhan(hoc_phan, kq.hoc_phan_id)}</td>
-                            <td>${getFromHocPhan(hoc_phan, kq.hoc_phan_id, 'ten')}</td>
-                            <td>${getFromHocPhan(hoc_phan, kq.hoc_phan_id, 'so_tin_chi')}</td>
-                            <td>${kq.diem_tong_ket}</td>
-                            <td>${kq.loai_he_4}</td>
-                            <td>${(kq.qua_mon == 1) ? 'Đạt' : 'X' }</td>
-                            <td>
-                                <a href="#" class="graduate__more">Chi tiết</a>
-                                <div class="graduate__tooltip">
-                                    <div class="graduate__tooltip__item">
-                                        Giữa kỳ: ${kq.diem_qua_trinh} <br>
-                                        Cuối kỳ: ${kq.diem_cuoi_ky}
+                if (type == 'suggest') {
+                    for (let i = 0; i < ket_qua.length; i++) {
+                        const kq = ket_qua[i];
+                        if (hk.id == kq.bien_che_id) {
+                            found = 1;
+                            stt++;
+                            list += `<tr>
+                                <td>${stt}</td>
+                                <td>${getFromHocPhan(hoc_phan, kq.hoc_phan_id)}</td>
+                                <td>${getFromHocPhan(hoc_phan, kq.hoc_phan_id, 'ten')}</td>
+                                <td>${getFromHocPhan(hoc_phan, kq.hoc_phan_id, 'so_tin_chi')}</td>
+                                <td>${(kq.diem_tong_ket == null) ? `<input style="width: 45px" data-hpid="${kq.hoc_phan_id}" class="ket_qua_du_kien">` : kq.diem_tong_ket}</td>
+                                <td>${(kq.loai_he_4 == null) ? "" : kq.loai_he_4}</td>
+                                <td>${(kq.qua_mon == 1) ? 'Đạt' : 'X' }</td>
+                                <td>
+                                    <a href="#" class="graduate__more">Chi tiết</a>
+                                    <div class="graduate__tooltip">
+                                        <div class="graduate__tooltip__item">
+                                            Giữa kỳ: ${(kq.diem_qua_trinh == null) ? "" : kq.diem_qua_trinh} <br>
+                                            Cuối kỳ: ${(kq.diem_cuoi_ky == null) ? "" : kq.diem_cuoi_ky}
+                                        </div>
                                     </div>
-                                </div>
-                            </td>
-                        </tr>`
-                        if (kq.qua_mon == 1) stc_dat += parseInt(getFromHocPhan(hoc_phan, kq.hoc_phan_id, 'so_tin_chi'));
-                        tong_stc += parseInt(getFromHocPhan(hoc_phan, kq.hoc_phan_id, 'so_tin_chi'));
-
-                        tong_diem += parseFloat(kq.diem_tong_ket * getFromHocPhan(hoc_phan, kq.hoc_phan_id, 'so_tin_chi'));
+                                </td>
+                            </tr>`
+                            if (kq.qua_mon == 1) stc_dat += parseInt(getFromHocPhan(hoc_phan, kq.hoc_phan_id, 'so_tin_chi'));
+                            tong_stc += parseInt(getFromHocPhan(hoc_phan, kq.hoc_phan_id, 'so_tin_chi'));
+    
+                            tong_diem += parseFloat(kq.diem_tong_ket * getFromHocPhan(hoc_phan, kq.hoc_phan_id, 'so_tin_chi'));
+                        }
+                    }
+                } else {
+                    for (let i = 0; i < ket_qua.length; i++) {
+                        const kq = ket_qua[i];
+                        if (hk.id == kq.bien_che_id) {
+                            found = 1;
+                            stt++;
+                            list += `<tr>
+                                <td>${stt}</td>
+                                <td>${getFromHocPhan(hoc_phan, kq.hoc_phan_id)}</td>
+                                <td>${getFromHocPhan(hoc_phan, kq.hoc_phan_id, 'ten')}</td>
+                                <td>${getFromHocPhan(hoc_phan, kq.hoc_phan_id, 'so_tin_chi')}</td>
+                                <td>${(kq.diem_tong_ket == null) ? "" : kq.diem_tong_ket}</td>
+                                <td>${(kq.loai_he_4 == null) ? "" : kq.loai_he_4}</td>
+                                <td>${(kq.qua_mon == 1) ? 'Đạt' : 'X' }</td>
+                                <td>
+                                    <a href="#" class="graduate__more">Chi tiết</a>
+                                    <div class="graduate__tooltip">
+                                        <div class="graduate__tooltip__item">
+                                            Giữa kỳ: ${(kq.diem_qua_trinh == null) ? "" : kq.diem_qua_trinh} <br>
+                                            Cuối kỳ: ${(kq.diem_cuoi_ky == null) ? "" : kq.diem_cuoi_ky}
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>`
+                            if (kq.qua_mon == 1) stc_dat += parseInt(getFromHocPhan(hoc_phan, kq.hoc_phan_id, 'so_tin_chi'));
+                            tong_stc += parseInt(getFromHocPhan(hoc_phan, kq.hoc_phan_id, 'so_tin_chi'));
+    
+                            tong_diem += parseFloat(kq.diem_tong_ket * getFromHocPhan(hoc_phan, kq.hoc_phan_id, 'so_tin_chi'));
+                        }
                     }
                 }
 
@@ -151,12 +186,16 @@ export default class GraduateCrawler {
                 htmlReturn += html;
             });
 
+            if (type == 'suggest') {
+                htmlReturn += "<div style='text-align: center'><button class='btn btn--primary' style='margin-top: 1rem;' id='goi_y_hoc_phan'>Gợi ý học phần học kỳ kế</button></div>";
+            }
+
             return htmlReturn;
 
         })
     }
 
-    renderDSGoiY() {
+    renderDSGoiY(dsmon_da_pass = []) {
         return axios.get(GraduateCrawler.URL_SUGGEST)
         .then(function (response) {
             let data = response.data.data;
@@ -165,19 +204,32 @@ export default class GraduateCrawler {
 
             let stt = 0;
             let list = ``;
+            let check;
 
             for (let i = 0; i < ds_goi_y.length; i++) {
                 const kq = ds_goi_y[i];
-                stt++;
-                list += `<tr>
-                    <td>${stt}</td>
-                    <td>${kq.hoc_phan_id}</td>
-                    <td>${kq.ten}</td>
-                    <td>${kq.so_tin_chi}</td>
-                    <td>
-                        <a href="#" class="graduate__more">Chi tiết</a>
-                    </td>
-                </tr>`
+
+                check = false;
+                for (let i = 0; i < dsmon_da_pass.length; i++) {
+                    const mon_da_pass = dsmon_da_pass[i];
+                    if (mon_da_pass == kq.hoc_phan_id) {
+                        check = true;
+                        break;
+                    }
+                }
+
+                if (!check) {
+                    stt++;
+                    list += `<tr>
+                        <td>${stt}</td>
+                        <td>${kq.hoc_phan_id}</td>
+                        <td>${kq.ten}</td>
+                        <td>${kq.so_tin_chi}</td>
+                        <td>
+                            <a href="#" class="graduate__more">Chi tiết</a>
+                        </td>
+                    </tr>`
+                }
             }
 
             let html = `<div class="graduate__item">

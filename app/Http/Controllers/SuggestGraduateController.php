@@ -23,8 +23,6 @@ class SuggestGraduateController extends ApiController
         $chtr_dao_tao_id = DB::table('lop_hoc')->where('id', $lop_hoc_id)->get('chuong_trinh_dao_tao_id')[0]->chuong_trinh_dao_tao_id;
         $thoi_gian_vao_hoc = DB::table('lop_hoc')->where('id', $lop_hoc_id)->get('thoi_gian_vao_hoc')[0]->thoi_gian_vao_hoc;
 
-        $ds_khoi_kt = DB::table('khoi_kien_thuc')->where('chuong_trinh_dao_tao_id', $chtr_dao_tao_id)->get('id');
-
         $ds_bien_che = DB::table('bien_che')->get();
 
         $ngayHienTai = date('Y-m-d h:i:s');
@@ -168,9 +166,7 @@ class SuggestGraduateController extends ApiController
 
         } else {
             // kỳ kế tiếp là hk hè
-            $lkt_gddc_id = DB::table('loai_kien_thuc')->where('dai_cuong', 1)->get('id')[0]->id;
-
-            $kkt_gddc_id = DB::table('khoi_kien_thuc')->where('loai_kien_thuc_id', $lkt_gddc_id, 'and')->where('chuong_trinh_dao_tao_id', $chtr_dao_tao_id)->get('id')[0]->id;
+            $kkt_gddc_id = DB::table('khoi_kien_thuc')->join('loai_kien_thuc', 'khoi_kien_thuc.loai_kien_thuc_id', '=', 'loai_kien_thuc.id')->where('chuong_trinh_dao_tao_id', $chtr_dao_tao_id)->get('khoi_kien_thuc.id')[0]->id;
 
             $dshp_bb = DB::table('hoc_phan_kkt_bat_buoc')->where('khoi_kien_thuc_id', $kkt_gddc_id)->get('hoc_phan_id');
             $dshp_tuchon = DB::table('hoc_phan_kkt_tu_chon')->where('khoi_kien_thuc_id', $kkt_gddc_id)->get('hoc_phan_id');
