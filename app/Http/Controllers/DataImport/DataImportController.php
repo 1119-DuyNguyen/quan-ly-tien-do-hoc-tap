@@ -50,7 +50,7 @@ class DataImportController extends ApiController
         // new KhoiKienThucImportInfo());
         // return $this->mess;
 
-        dd(Excel::import(new ImportExcelToCollection(0, ["CNTT-CLC-kehoachGV"], [], ''), $this->files[0]));
+        Excel::import(new ImportExcelToCollection(0, ["CNTT-CLC-kehoachGV"], [], ''), $this->files[0]);
     }
 
 
