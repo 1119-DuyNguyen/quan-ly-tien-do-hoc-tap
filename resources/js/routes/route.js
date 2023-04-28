@@ -112,7 +112,11 @@ async function routeTo(route, _params, is404 = false) {
         .querySelector('meta[name="keywords"]')
         .setAttribute('content', route.pageInfo.keyWord ? route.pageInfo.keyWord : PAGE_KEYWORD);
     if (route.method) {
-        route.method.call(null, _params);
+        try {
+            route.method.call(null, _params);
+        } catch (error) {
+            console.error(error);
+        }
     }
     window.scrollTo(0, 0);
     return true;

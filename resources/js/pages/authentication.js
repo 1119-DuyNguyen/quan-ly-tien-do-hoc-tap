@@ -56,34 +56,12 @@ export class Authentication {
         });
     }
     static refreshToken() {
-        return axios
-            .post(Authentication.URL_LOGIN_REFRESH, null, {
-                headers: {
-                    Accept: 'application/vnd.api+json',
-                    'Content-Type': 'application/json',
-                },
-            })
-            .then((res) => {
-                var data = res.data.data;
-                //    console.log(data);
-                if (data) {
-                    window.localStorage.setItem('accessToken', data.accessToken);
-                    window.localStorage.setItem('expireToken', data.expireToken);
-
-                    window.axios.defaults.headers.common['Authorization'] = axios.getAccessToken();
-                }
-                return true;
-            })
-            .catch((error) => {
-                window.localStorage.removeItem('roleSlug');
-                window.localStorage.removeItem('role');
-                window.localStorage.removeItem('user');
-                window.localStorage.removeItem('accessToken');
-                window.localStorage.removeItem('expireToken');
-                //routeHref('/');
-                // console.log(error.response.data)
-                return false;
-            });
+        return axios.post(Authentication.URL_LOGIN_REFRESH, null, {
+            headers: {
+                Accept: 'application/vnd.api+json',
+                'Content-Type': 'application/json',
+            },
+        });
     }
     static logout(event) {
         event.preventDefault();

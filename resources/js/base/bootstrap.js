@@ -22,25 +22,29 @@ window.axios.getAccessToken = function () {
 };
 
 // setup request before send to server
-
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 window.axios.defaults.headers.common['Authorization'] = axios.getAccessToken();
 // Gửi có cookie
 axios.defaults.withCredentials = true;
 
-//cau hinh axios
-// const instance = axios.create({
-//     baseURL: location.protocol + '//' + location.host,
-//     timeout: 300000,
-//     headers: {
-//         'Content-Type': 'application/json',
-//     },
-// });
-
-//console.log(`Bearer ${localStorage.getItem('accessToken') ?? ''}`);
-// setup response parse
-
 // Response interceptor for API calls
+let isRefreshing = false;
+let failedQueue = []; // promise array
+//https://stackoverflow.com/questions/57890667/axios-interceptor-refresh-token-for-multiple-requests
+// queue lại nếu như thằng chạy vô đầu không thành công => báo lỗi đỏ lòm
+const processQueue = (error, token) => {
+    failedQueue.forEach((prom) => {
+        if (error) {
+            // console.log('hiii');
+            prom.reject(error);
+        } else {
+            prom.resolve(token);
+        }
+    });
+
+    failedQueue = [];
+};
+
 window.axios.interceptors.response.use(
     (response) => {
         //  console.log('hi', response.data);
@@ -49,32 +53,117 @@ window.axios.interceptors.response.use(
             toast({ title: '', message: response.data.message, type: 'success', duration: 3000 });
         return response;
     },
-    async function (error) {
+    function (error) {
         const originalRequest = error.config;
-
+        if (error.response.status === 400) {
+            let response400 = error.response;
+            if (response400.data.message)
+                toast({ title: '', message: response400.data.message, type: 'error', duration: 3000 });
+            return Promise.reject(error);
+        }
         //unauthorization
-        if (error.response.status === 401 && !originalRequest._retry) {
-            // console.log(error);
-            const isRefreshSuccess = await Authentication.refreshToken();
-            // console.log(isRefreshSuccess);
-            if (isRefreshSuccess) {
-                // thử request lại
-                //console.log('hi');
-                originalRequest._retry = true;
-                originalRequest.headers['Authorization'] = axios.getAccessToken();
-
-                return window.axios.request(originalRequest);
-            } else {
-                let response = error.response;
-                if (response.data.message)
-                    toast({ title: '', message: response.data.message, type: 'error', duration: 3000 });
+        else if (error.response.status === 401 && !originalRequest._retry) {
+            if (isRefreshing) {
+                return new Promise(function (resolve, reject) {
+                    failedQueue.push({ resolve, reject });
+                })
+                    .then((token) => {
+                        originalRequest.headers['Authorization'] = 'Bearer ' + token;
+                        return axios(originalRequest);
+                    })
+                    .catch((err) => {
+                        return Promise.reject(err);
+                    });
             }
+            originalRequest._retry = true;
+            isRefreshing = true;
+            // console.log(error);
+
+            return new Promise(function (resolve, reject) {
+                Authentication.refreshToken()
+                    .then((res) => {
+                        var data = res.data.data;
+                        //    console.log(data);
+                        window.localStorage.setItem('accessToken', data.accessToken);
+                        window.localStorage.setItem('expireToken', data.expireToken);
+
+                        window.axios.defaults.headers.common['Authorization'] = 'Bearer ' + data.accessToken;
+                        originalRequest.headers['Authorization'] = 'Bearer ' + data.accessToken;
+
+                        processQueue(null, data.accessToken);
+                        resolve(axios(originalRequest));
+                    })
+                    .catch((err) => {
+                        processQueue(err, null);
+                        toast({ title: 'phiên đăng nhập quá hạn', type: 'info', duration: 3000 });
+                        window.localStorage.removeItem('roleSlug');
+                        window.localStorage.removeItem('role');
+                        window.localStorage.removeItem('user');
+                        window.localStorage.removeItem('accessToken');
+                        window.localStorage.removeItem('expireToken');
+                        reject(err);
+                    })
+                    .finally(() => {
+                        //console.log(isRefreshing);
+                        isRefreshing = false;
+                    });
+            });
+            // const isRefreshSuccess = await ;
+            // console.log(isRefreshSuccess);
+
+            // if (isRefreshSuccess) {
+            //     // thử request lại
+            //     //console.log('hi');
+            //     originalRequest._retry = true;
+            //     originalRequest.headers['Authorization'] = axios.getAccessToken();
+
+            //     return axios(originalRequest);
+            // } else {
+            //     let response = error.response;
+            //     if (response.data.message)
+            //         toast({ title: '', message: response.data.message, type: 'error', duration: 3000 });
+            // }
 
             // axios.defaults.headers.common['Authorization'] = axios.getAccessToken();
         }
         return Promise.reject(error);
     }
 );
+// window.axios.interceptors.response.use(
+//     (response) => {
+//         //  console.log('hi', response.data);
+
+//         if (response.data.message)
+//             toast({ title: '', message: response.data.message, type: 'success', duration: 3000 });
+//         return response;
+//     },
+//     async function (error) {
+//         const originalRequest = error.config;
+
+//         //unauthorization
+//         if (error.response.status === 401 && !originalRequest._retry) {
+//             // console.log(error);
+//             const isRefreshSuccess = await Authentication.refreshToken();
+//             console.log(isRefreshSuccess);
+
+//             if (isRefreshSuccess) {
+//                 // thử request lại
+//                 //console.log('hi');
+//                 originalRequest._retry = true;
+//                 originalRequest.headers['Authorization'] = axios.getAccessToken();
+
+//                 return axios(originalRequest);
+//             } else {
+//                 let response = error.response;
+//                 if (response.data.message)
+//                     toast({ title: '', message: response.data.message, type: 'error', duration: 3000 });
+//             }
+
+//             // axios.defaults.headers.common['Authorization'] = axios.getAccessToken();
+//         }
+//         return Promise.reject(error);
+//     }
+// );
 // axios.defaults.headers.common['X-CSRF-TOKEN'] = document
 //     .querySelector('meta[name="csrf-token"]')
 //     .getAttribute('content');

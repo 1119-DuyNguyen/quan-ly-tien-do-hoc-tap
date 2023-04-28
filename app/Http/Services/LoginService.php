@@ -40,7 +40,7 @@ class LoginService
             $data['username'] = $data['ten_dang_nhap'];
             return $this->proxy('password', $data, 'Đăng nhập thành công', '*');
         } else {
-            return $this->error(null, 401, 'Tài khoản hoặc mật khẩu không đúng. Hãy thử lại ');
+            return $this->error(null, 400, 'Tài khoản hoặc mật khẩu không đúng. Hãy thử lại ');
         }
     }
 
