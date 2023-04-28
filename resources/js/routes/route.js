@@ -186,8 +186,8 @@ const urlLocationHandler = async () => {
         //  routeHref(re);
     } else {
         if (location !== '/') {
+            // location = '/';
             routeHref('/');
-
             return;
         }
     }

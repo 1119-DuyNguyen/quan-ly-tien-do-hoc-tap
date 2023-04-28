@@ -5,27 +5,51 @@ import { routeHref, urlRoute } from '../routes/route';
 
 let navPage = {
     dashboard: {
-        role: ['sinh-vien', 'giang-vien', 'quan-tri-vien'],
+        role: ['sinh-vien', 'quan-tri-vien'],
         icon: 'fa-solid fa-house icon',
-        text: 'Trang chủ ',
+        text: 'Trang chủ',
     },
+    // chart: {
+    //     role: ['quan-tri-vien'],
+    //     icon: 'fa-solid fa-chart-simple icon',
+    //     text: 'Thống kê',
+    // },
     info: {
-        role: ['sinh-vien', 'giang-vien', 'quan-tri-vien'],
-        icon: 'fa-regular fa-user icon',
-        text: 'Thông tin',
+        // role: ['sinh-vien', 'giang-vien', 'quan-tri-vien', 'co-van-hoc-tap'],
+        role: ['*'],
+        icon: 'fa-regular fa-address-card icon',
+        text: 'Thông tin cá nhân',
     },
-    chart: {
+    graduate: {
+        // role: ['sinh-vien', 'giang-vien', 'quan-tri-vien', 'co-van-hoc-tap'],
+        role: ['sinh-vien', 'quan-tri-vien', 'co-van-hoc-tap'],
+        icon: 'fa-regular fa-user-graduate icon',
+        text: 'Tiến độ tốt nghiệp',
+    },
+    program: {
+        // role: ['sinh-vien', 'giang-vien', 'quan-tri-vien', 'co-van-hoc-tap'],
         role: ['quan-tri-vien'],
-        icon: 'fa-solid fa-chart-simple icon',
-        text: 'Thống kê',
+        icon: 'fa-regular fa-school icon',
+        text: 'Chương trình đào tạo',
     },
+
     classroom: {
         role: ['sinh-vien', 'giang-vien', 'quan-tri-vien'],
         icon: 'fa-solid fa-chalkboard icon',
         text: 'Lớp học',
     },
+    // role: {
+    //     role: ['quan-tri-vien'],
+    //     icon: 'fa-solid fa-building-shield icon',
+    //     text: 'Quyền',
+    // },
+    account: {
+        role: ['quan-tri-vien'],
+        icon: 'fa-regular fa-user icon',
+        text: 'Tài khoản',
+    },
     logout: {
-        role: ['sinh-vien', 'giang-vien', 'quan-tri-vien'],
+        role: ['*'],
         icon: 'fa-solid fa-arrow-right-from-bracket icon',
         text: 'Đăng xuất',
     },
@@ -36,7 +60,7 @@ function createParams() {
     for (let key in navPage) {
         let nav = navPage[key];
         //  console.log(nav, nav.role.includes(roleUser), roleUser);
-        if (nav.role.includes(roleUser)) {
+        if (nav.role.includes(roleUser) || nav.role.includes('*')) {
             let param = { href: key, icon: nav.icon, text: nav.text };
             params.push(param);
         }
@@ -185,8 +209,11 @@ export class Sidebar {
                     var link = slider.querySelector('.sidebar__nav__link.hover');
                     if (link) {
                         removeActiveNavs();
-
-                        routeHref(link.href);
+                        if (link.href) {
+                            console.log('h');
+                            console.log(link.href);
+                            routeHref(link.href);
+                        } else Authentication.logout(e);
                     }
                 });
             });
