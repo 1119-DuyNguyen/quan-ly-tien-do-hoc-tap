@@ -32,7 +32,7 @@ class ImportExcelToCollection implements ToCollection,SkipsEmptyRows, WithMultip
     // private $Loai_KKTS = [];
     private $stage = 0;
 
-    private $ten_KKT;
+    private $ten_KKT = null;
     private $KKT_count = -1;
     private $KKTList= [];
     private $ten_loai;
@@ -55,184 +55,139 @@ class ImportExcelToCollection implements ToCollection,SkipsEmptyRows, WithMultip
 
 
 
-    public function getValueFromKeyStr($str, $key){
+    public function setValueFromKeyStr(&$value , $str, $key){
         $key_pos = strpos($str, $key);
-        if ($key_pos === 0){
-            $value = substr($str, strlen($key), strlen($str) - strlen($key));
+        if ($key_pos !== false){
+            $value = substr($str, $key_pos + strlen($key), strlen($str) - ($key_pos + strlen($key)));
+            return true;
             // dd($value);
-            return $value;
         }
-
+        return false;
     }
 
     public function getFloatFromStr($str){
-        return (float) filter_var($str, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+        // dd($str);
+        $rs = (float) filter_var($str, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+        if ($rs !== 0.0){
+            // dd($rs);
+            return $rs;
+        }
+        return false;
     }
 
     public function checkTrueAndSet($values, &$set){
         // return $values;
         foreach ($values as $index=>$value){
             // dd($index, $value);
-            if ($value === false || !isset($value))
+            if ($value === false)
                 $rs[$index] = $value;
         }
         if (isset($rs)) return false;
         $set = $values;
         return true;
-        // return true;
     }
 
-    public function setIfNotSet($value, &$set){
-        if (!isset($set) && isset($value)){
-            $set = $value;
-            return true;
-        }
-        return isset($set);
-        // return false;
-    }
 
-    public function checkValue(&$value, $str, $key){
-        if (
-            !$this->setIfNotSet(
-                $this->getValueFromKeyStr(
-                    $str,
-                    $key
-                ),
-                $value
-            )
-        ) return false;
-        return true;
-    }
 
-    public function stageNext($stage = null){
-        if ($stage == null)
-            $stage = $this->stage;
-        switch ($stage){
-            case 0:
-                break;
-            case 1:
-                $dai_cuong = 0;
-                if ($this->loai_count == -1)
-                    $dai_cuong = 1;
-                array_push($this->loaiList,[
-                    'ten' => $this->ten_loai,
-                    'dai_cuong' => $dai_cuong
-                ]);
-                $this->loai_count++;
-                break;
-            case 2:
-                array_push($this->KKTList, [
-                    'ten' => $this->ten_KKT,
-                    'loai_kien_thuc_id' => $this->loai_count
-                ]);
-                $this->KKT_count++;
-                $this->isTuChon = false;
-                break;
-            case 3:
-                $this->KKTList[$this->KKT_count]['tu_chon'] = $this->TuChon;
-                $this->KKTList[$this->KKT_count]['bat_buoc'] = $this->BatBuoc;
-                $this->stage--;
-                break;
-        }
-        $this->stage++;
-    }
+
+
 
     public function collection(\Illuminate\Support\Collection $rows){
-        // dd($rows);
-        // $isCTDT = false;
-        // $isKhoiKienThuc = false;
-        // $isBatBuoc = false;
-        foreach($rows as $row){
 
-            // if ($this->stage == 3){
-            //     if ($row[0][0] == '*')
-            //     $isBatBuoc = true;
+        // $test = 'abc';
+        // $test = $this->getValueFromKeyStr('abc', 'd');
+        // dd($test);
+        $nganh_dao_tao = false;
+        $ma_nganh = false;
+        $trinh_do_dao_tao = false;
+        $thoi_gian_dao_tao = false;
+        $tmp = null;
+        foreach ($rows as $row){
 
-            //     if ($row[0][0] == '/'){
-            //         $this->stageNext();
-            //         $this->stage = 1;
-            //         break;
-            //     }
-            //     if ($row[0][0] == '#'){
-            //         $this->stageNext();
-            //         $this->stage = 2;
-            //     }
-            // }
+            if ($this->CTDT == null){
+
+                $this->setValueFromKeyStr($nganh_dao_tao, $row[0], 'Ngành đào tạo: ');
+
+                $this->setValueFromKeyStr($ma_nganh, $row[0], 'Mã ngành: ');
+
+                $this->setValueFromKeyStr($trinh_do_dao_tao, $row[0], 'Trình độ đào tạo: ');
+
+                $this->setValueFromKeyStr($thoi_gian_dao_tao, $row[0], 'Thời gian đào tạo: ');
+                if ($thoi_gian_dao_tao != false)
+                    // dd($time_dt);
+                    $thoi_gian_dao_tao = $this->getFloatFromStr($thoi_gian_dao_tao);
 
 
-            switch ($this->stage){
-                case 0: //CTDT
-                    $this->setIfNotSet(
-                        $this->getValueFromKeyStr($row[0], 'Ngành đào tạo: '),
-                        $ndt
-                    );
-
-                    $this->setIfNotSet(
-                        $this->getValueFromKeyStr($row[0], 'Mã ngành: '),
-                        $id_dt
-                    );
-
-                    $this->setIfNotSet(
-                        $this->getValueFromKeyStr($row[0], 'Trình độ đào tạo: '),
-                        $tddt
-                    );
-
-                    if ($this->getValueFromKeyStr($row[0], 'Thời gian đào tạo: ') !== 0.0)
-                        $this->setIfNotSet(
-                            $this->getValueFromKeyStr($row[0], 'Thời gian đào tạo: '),
-                            $time_dt
-                        );
-
-                    if ($this->checkTrueAndSet([$ndt, $id_dt, $tddt, $time_dt], $this->CTDT))
-                        $this->stage ++;
-                case 1: // Loai kien thuc
-                    if ($this->checkValue(
-                        $this->ten_loai,
-                        $row[0],
-                        '/'
-                    ))
-                        $this->stageNext();
-                    else break;
-                case 2: // Khoi kien thuc
-                    if ($row[0][0] === '*'){
-                        $this->ten_KKT = $this->ten_loai;
-                        $this->stageNext();
-                    }else{
-                        
-                    }
-                    if (!$this->checkValue(
-                        $ten_KKT,
-                        $row[0],
-                        '#'
-                    )){
-                        $this->stageNext();
-                    }
-                case 3:
-                    if (!$this->isTuChon){
-                        array_push($this->BatBuoc, $this->getHP($row));
-                    }else{
-                        array_push($this->TuChon, $this->getHP($row));
-                    }
-                    $this->stage = 1;
+                if (!$this->checkTrueAndSet([$nganh_dao_tao, $ma_nganh, $trinh_do_dao_tao, $thoi_gian_dao_tao], $this->CTDT))
+                    continue;
             }
+
+
+            // dd($this->CTDT);
+            //Loai
+            if ($this->setValueFromKeyStr($this->ten_loai, $row[0], '/')){
+                $this->ten_KKT = null;
+                // $this->isTuChon = true;
+                continue;
+            };
+            // if (!isset($this->ten_loai))
+            //     continue;
+
+            if ($this->setValueFromKeyStr($this->ten_KKT, $row[0], '#'))
+                continue;
+
+            if ($this->ten_KKT == null){
+                if ($this->setValueFromKeyStr($tmp, $row[0], '*'))
+                    $this->ten_KKT = $this->ten_loai;
+                continue;
+            }
+
+            if ($this->setValueFromKeyStr($tmp, $row[0], '*')) {
+                // $this->isTuChon = !$this->isTuChon;
+                continue;
+            }
+            if (!isset($this->CTDT[$this->ten_loai][$this->ten_KKT])){
+                // $this->CTDT[$this->ten_loai] = [];
+                // $this->CTDT[$this->ten_loai][$this->ten_KKT] = [];
+                $this->CTDT[$this->ten_loai][$this->ten_KKT]['Bat-buoc'] = [];
+                $this->CTDT[$this->ten_loai][$this->ten_KKT]['Tu-chon'] = [];
+                // dd([$this->ten_loai, $this->ten_KKT]);
+            }
+            // dd($this->getHP($row), $row);
+            if (strpos($tmp, 'tự chọn') !== false){
+                array_push($this->CTDT[$this->ten_loai][$this->ten_KKT]['Tu-chon'], $this->getHP($row));
+                // dd($this->CTDT[$this->ten_loai][$this->ten_KKT]['Tu-chon'], $this->getHP($row));
+            }else
+                array_push($this->CTDT[$this->ten_loai][$this->ten_KKT]['Bat-buoc'], $this->getHP($row));
 
         }
 
-        dd($this->loaiList, $this->KKTList);
+        dd($this->CTDT);
+        // ##Kết quả nằm ở đây: Mỗi 1 phần tử trong key 'Tu-chon' hoặc 'Bat-buoc' sẽ là 1 mảng có 2 phần tử,
+        // pt1 là model học phần
+        // pt2 là model mảng chứa các số từ 1 - 9 ứng với học kì gợi ý là học kì mấy, ex: [1,3,4] thì hk 1 và 3 và 4 là hk gợi ý
 
+        // dd($this->ten_loai);
+        if (!isset($this->CTDT))
+            return [
+                'err' => true,
+                'mess' => 'Thiếu hoặc sai thông tin chương trình đào tạo'
+            ];
     }
 
     function getGoiY($row){
+        $rs = [];
         for ($i = 4; $i <= 12; $i++){
             if (strpos($row[$i], 'x') === false) continue;
-            array_push($rs, [$row, 'hoc_ky_goi_y' => $i - 3]);
+            array_push($rs, $i - 3);
         }
         return $rs;
     }
 
     function checkValidRowHP($values){
         foreach($values as $value){
-            if (isset($value) || trim($value) === '')
+            if (!isset($value) || trim($value) === '')
+                // dd('test');
                 return false;
         }
         return true;
@@ -242,16 +197,17 @@ class ImportExcelToCollection implements ToCollection,SkipsEmptyRows, WithMultip
         if (!$this->checkValidRowHP([$row[1], $row[2], $row[3]]))
             return null;
         $rs = HocPhan::where('id', $row[1])->first();
-        if ($rs != null){
+        if ($rs == null){
             $rs = new HocPhan();
         }
-
         $rs->id = $row[1];
         $rs->ten = $row[2];
         $rs->so_tin_chi = $row[3];
         $rs->hoc_phan_tuong_duong_id = $row[13];
+
         // dd($rs);
-        return $this->getGoiY($rs);
+        return [$rs->ten, $this->getGoiY($row)];
+        // ##ĐÁNH DẤU CHO TEAM: đổi $rs->ten thành $rs để trả về model (->ten) để dễ nhìn kết quả thôi
     }
 
     function sheets():array {
