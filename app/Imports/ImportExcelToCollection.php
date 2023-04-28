@@ -197,6 +197,8 @@ class ImportExcelToCollection implements ToCollection,SkipsEmptyRows, WithMultip
                     if ($row[0][0] === '*'){
                         $this->ten_KKT = $this->ten_loai;
                         $this->stageNext();
+                    }else{
+                        
                     }
                     if (!$this->checkValue(
                         $ten_KKT,
