@@ -7,6 +7,7 @@
 import axiosLibrary from 'axios';
 import { Authentication } from '../pages/authentication.js';
 import { toast } from '../components/helper/toast.js';
+import { routeHref } from '../routes/route.js';
 //window.axios = axios;
 window.axios = axiosLibrary.create({
     baseURL: location.protocol + '//' + location.host,
@@ -95,12 +96,13 @@ window.axios.interceptors.response.use(
                     })
                     .catch((err) => {
                         processQueue(err, null);
-                        toast({ title: 'phiên đăng nhập quá hạn', type: 'info', duration: 3000 });
+                        toast({ title: 'phiên đăng nhập quá hạn', type: 'info', duration: 4000 });
                         window.localStorage.removeItem('roleSlug');
                         window.localStorage.removeItem('role');
                         window.localStorage.removeItem('user');
                         window.localStorage.removeItem('accessToken');
                         window.localStorage.removeItem('expireToken');
+                        routeHref('/');
                         reject(err);
                     })
                     .finally(() => {

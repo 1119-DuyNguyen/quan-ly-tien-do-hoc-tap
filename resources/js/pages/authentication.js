@@ -1,3 +1,4 @@
+import { toast } from '../components/helper/toast.js';
 import { routeHref } from '../routes/route.js';
 
 export class Authentication {
@@ -82,7 +83,7 @@ export class Authentication {
                 routeHref('/');
             })
             .catch((error) => {
-                alert('Đăng xuất thất bại thử lại sau ít phút');
+                toast({ message: 'Đăng xuất thất bại thử lại sau ít phút', type: 'error', duration: 4000 });
 
                 console.log(error.response.data);
             });
