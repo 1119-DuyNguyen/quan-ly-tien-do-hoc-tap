@@ -2,7 +2,10 @@
 
 namespace App\Imports;
 
+use App\Models\Nganh;
+use App\Models\Users\Students\TrainingProgram\ChuongTrinhDaoTao;
 use App\Models\Users\Students\TrainingProgram\Subjects\KhoiKienThuc;
+use App\Models\Users\Students\TrainingProgram\Subjects\LoaiKienThuc;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\SkipsFailures;
@@ -13,6 +16,7 @@ use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 use Maatwebsite\Excel\Concerns\WithStartRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
 use App\Models\Users\Students\TrainingProgram\Subjects\HocPhan;
+use DB;
 
 class ImportExcelToCollection implements ToCollection,SkipsEmptyRows, WithMultipleSheets, SkipsUnknownSheets, WithStartRow, WithValidation, SkipsOnFailure
 {
@@ -173,6 +177,41 @@ class ImportExcelToCollection implements ToCollection,SkipsEmptyRows, WithMultip
                 'err' => true,
                 'mess' => 'Thiếu hoặc sai thông tin chương trình đào tạo'
             ];
+
+        $nganh = Nganh::where('ten', )
+
+        $ctdt = new ChuongTrinhDaoTao([
+            'id' => $this->CTDT[1],
+            'ten' => $this->CTDT[0],
+            'trinh_do_dao_tao' => $this->CTDT[2],
+            'thoi_gian_dao_tao' => $this->CTDT[3]
+        ]);
+
+        dd($ctdt->save());
+
+        foreach($this->CTDT as $key=>$value){
+            if (gettype($key) == 'integer') continue;
+            // dd(DB::insert('insert into loai_kien_thuc (ten, dai_cuong) values (?, ?)',[$key, strpos($key, 'đại cương') !== false ? 1 : 0]));
+
+            // dd(DB::table('loai_kien_thuc')->insert([
+            //     'ten' => $key,
+            //     'dai_cuong' => strpos($key, 'đại cương') !== false ? 1 : 0
+            // ]));
+
+
+
+            // DB:insert('inser into khoi_kien_thuc (id, ten, ')
+
+            foreach($value['Bat-buoc'] as $hp){
+                $hp[0]->save();
+                foreach($hp[0] as $hk){
+                    // DB::insert('insert into hoc_phan_kkt_bat_buoc (hoc_phan_id, hoc_ky_goi_y, khoi_kien_thuc_id) values (?, ?, ?)',
+                    // [$hp[0]->id, $hk, $])
+                }
+            }
+        }
+
+
     }
 
     function getGoiY($row){

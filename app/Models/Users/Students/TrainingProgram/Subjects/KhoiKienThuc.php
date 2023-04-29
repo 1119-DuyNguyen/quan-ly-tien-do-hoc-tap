@@ -18,15 +18,23 @@ class KhoiKienThuc extends Model
 
 	protected $casts = [
 		'so_tin_chi' => 'int',
-		'khoa_id' => 'int',
-		'loai_kien_thuc_id' => 'int'
+		'id' => 'int',
+		'loai_kien_thuc_id' => 'int',
+        'tong_tin_chi_kkt_tu_chon' => 'int',
+        'tong_tin_chi_kkt_bat_buoc' => 'int',
+        'chuong_trinh_dao_tao_id' => 'int'
 	];
 
+	// protected $fillable = [
+	// 	'ten',
+	// 	'so_tin_chi',
+	// 	'khoa_id',
+	// 	'loai_kien_thuc_id'
+	// ];
 	protected $fillable = [
 		'ten',
-		'so_tin_chi',
-		'khoa_id',
-		'loai_kien_thuc_id'
+        'loai_kien_thuc_id',
+        'chuong_trinh_dao_tao_id'
 	];
 
 	public function khoa()

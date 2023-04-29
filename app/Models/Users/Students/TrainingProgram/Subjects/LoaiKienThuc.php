@@ -14,7 +14,8 @@ class LoaiKienThuc extends Model
 	public $timestamps = false;
 
 	protected $fillable = [
-		'ten'
+		'ten',
+        'dai_cuong'
 	];
 
 	public function khoi_kien_thucs()
