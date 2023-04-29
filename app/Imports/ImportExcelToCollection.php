@@ -105,6 +105,7 @@ class ImportExcelToCollection implements ToCollection,SkipsEmptyRows, WithMultip
         $ma_nganh = false;
         $trinh_do_dao_tao = false;
         $thoi_gian_dao_tao = false;
+        $chu_ky = false;
         $tmp = null;
         foreach ($rows as $row){
 
@@ -118,11 +119,12 @@ class ImportExcelToCollection implements ToCollection,SkipsEmptyRows, WithMultip
 
                 $this->setValueFromKeyStr($thoi_gian_dao_tao, $row[0], 'Thời gian đào tạo: ');
                 if ($thoi_gian_dao_tao != false)
-                    // dd($time_dt);
-                    $thoi_gian_dao_tao = $this->getFloatFromStr($thoi_gian_dao_tao);
+                // dd($time_dt);
+                $thoi_gian_dao_tao = $this->getFloatFromStr($thoi_gian_dao_tao);
 
+                $this->setValueFromKeyStr($chu_ky, $row[0], 'Chu kỳ: ');
 
-                if (!$this->checkTrueAndSet([$nganh_dao_tao, $ma_nganh, $trinh_do_dao_tao, $thoi_gian_dao_tao], $this->CTDT))
+                if (!$this->checkTrueAndSet([$nganh_dao_tao, $ma_nganh, $trinh_do_dao_tao, $thoi_gian_dao_tao, $chu_ky], $this->CTDT))
                     continue;
             }
 
@@ -166,7 +168,7 @@ class ImportExcelToCollection implements ToCollection,SkipsEmptyRows, WithMultip
 
         }
 
-        dd($this->CTDT);
+        // dd($this->CTDT);
         // ##Kết quả nằm ở đây: Mỗi 1 phần tử trong key 'Tu-chon' hoặc 'Bat-buoc' sẽ là 1 mảng có 2 phần tử,
         // pt1 là model học phần
         // pt2 là model mảng chứa các số từ 1 - 9 ứng với học kì gợi ý là học kì mấy, ex: [1,3,4] thì hk 1 và 3 và 4 là hk gợi ý
@@ -178,7 +180,9 @@ class ImportExcelToCollection implements ToCollection,SkipsEmptyRows, WithMultip
                 'mess' => 'Thiếu hoặc sai thông tin chương trình đào tạo'
             ];
 
-        $nganh = Nganh::where('ten', )
+        $nganh = new Nganh([
+
+        ]);
 
         $ctdt = new ChuongTrinhDaoTao([
             'id' => $this->CTDT[1],
