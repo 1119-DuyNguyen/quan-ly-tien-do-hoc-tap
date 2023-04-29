@@ -7,6 +7,7 @@ import { ClassroomTeacher } from '../pages/classroom/classroomTeacher.js';
 
 import { Authentication } from '../pages/authentication.js';
 import { Role } from '../pages/admin/role.js';
+import { Analytics } from '../pages/admin/analytics.js';
 import { HomeworkMark } from '../components/classroom/group/post/HomeworkMark.js';
 
 const route = new Route();
@@ -45,5 +46,6 @@ route.addRoute(
 );
 
 route.addRoute('quan-tri-vien/role', Role.index, { title: 'role' }, '');
+route.addRoute('quan-tri-vien/dashboard', Analytics.index, { title: 'role' }, 'templates/admin/dashboard.html');
 
 export var routeList = route.getUrlRoutes();

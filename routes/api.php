@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AnalyticsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Test\TestApi;
@@ -54,6 +55,7 @@ Route::middleware('auth:api')->group(function () {
         ->prefix('/admin')
         ->group(function () {
 
+            Route::apiResource('/analytics', AnalyticsController::class);
             Route::apiResource('/role', RoleController::class);
             Route::apiResource('/permissions', PermissionController::class);
         });

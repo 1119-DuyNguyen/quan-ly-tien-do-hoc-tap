@@ -1,0 +1,43 @@
+@use '../../abstract';
+
+.analytics {
+    &__container {
+        display: grid;
+        width: inherit;
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(2, 1fr);
+        grid-column-gap: 6rem;
+        grid-row-gap: 2rem;
+        padding: 6rem;
+        padding-top: 2rem;
+    }
+    &__item {
+        background-color: white;
+        border-radius: 1rem;
+        padding: 3rem;
+        &--red {
+            background-color: #ff7782;
+            color: white;
+        }
+        &--green {
+            background-color: #84d295;
+            color: white;
+        }
+        &--orange {
+            background-color: #ffbb55;
+            color: white;
+        }
+        &--blue {
+            background-color: #45bfff;
+            color: white;
+        }
+    }
+    &__select__container {
+        width: 100%;
+        text-align: center;
+        margin-top: -2rem;
+        select {
+            padding: 1rem .5rem;
+        }
+    }
+}

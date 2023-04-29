@@ -115,8 +115,9 @@ class DatabaseSeeder extends Seeder
         $this->call([HPKTTBatBuocSeeder::class]);
         $this->call([HPKTTTuChonSeeder::class]);
 
-        // DB::statement("INSERT INTO `tinh_trang_sinh_vien` (`id`, `so_lan_canh_cao`, `da_tot_nghiep`, `moc_thoi_gian_id`, `buoc_thoi_hoc`, `updated_at`, `created_at`, `sinh_vien_id`, `ly_do_buoc_thoi_hoc`, `lop_hoc_id`, `khoi_kien_thuc_id`) VALUES
-        // (1, 0, 0, NULL, NULL, '2023-04-19 23:55:31', '2023-04-19 23:55:31', 63, NULL, 1, 4);");
+        DB::statement("INSERT INTO `lop_hoc` (`co_van_hoc_tap_id`, `ten_lop`, `ma_lop`, `id`, `updated_at`, `created_at`, `chuong_trinh_dao_tao_id`, `thoi_gian_vao_hoc`, `thoi_gian_ket_thuc`) VALUES ('31', 'lorem', NULL, NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '1', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);");
+        DB::statement("INSERT INTO `tinh_trang_sinh_vien` (`id`, `so_lan_canh_cao`, `da_tot_nghiep`, `moc_thoi_gian_id`, `buoc_thoi_hoc`, `updated_at`, `created_at`, `sinh_vien_id`, `ly_do_buoc_thoi_hoc`, `lop_hoc_id`, `khoi_kien_thuc_id`) VALUES
+        (1, 0, 0, NULL, NULL, '2023-04-19 23:55:31', '2023-04-19 23:55:31', 63, NULL, 1, 4);");
 
         // HocPhan::factory()
         //     ->count(10)
