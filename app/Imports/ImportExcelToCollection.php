@@ -222,6 +222,7 @@ class ImportExcelToCollection implements ToCollection,SkipsEmptyRows, WithMultip
             'chu_ky_id' => $chu_kyModel->id
         ]);
 
+        // dd($this->CTDT);
 
         foreach($this->CTDT as $key=>$value){
             if (gettype($key) == 'integer') continue;
@@ -241,7 +242,16 @@ class ImportExcelToCollection implements ToCollection,SkipsEmptyRows, WithMultip
             $value = array_pop($value);
 
             // dd($ctdt->id, $loai_kt->id);
+            if ($value['Bat-buoc'] != null)
             foreach($value['Bat-buoc'] as $hp){
+                if ($hp == null) dd($value);
+                if ($hp[1] == null)
+                    $bat_buoc = HocPhanKKTBatBuoc::create([
+                        'hoc_phan_id' => $hp[0]->id,
+                        'hoc_ky_goi_y' => -1,
+                        'khoi_kien_thuc_id' => $kkt->id
+                    ]);
+                else
                 foreach($hp[1] as $hk){
                     // dd($hp[0]);
                     $bat_buoc = HocPhanKKTBatBuoc::create([
@@ -249,11 +259,20 @@ class ImportExcelToCollection implements ToCollection,SkipsEmptyRows, WithMultip
                         'hoc_ky_goi_y' => $hk,
                         'khoi_kien_thuc_id' => $kkt->id
                     ]);
-                    dd($bat_buoc);
+                    // dd($bat_buoc);
                 }
             }
+            // if ($value['Tu-chon'] != null)
             foreach($value['Tu-chon'] as $hp){
+                if ($hp[1] == null)
+                    $bat_buoc = HocPhanKKTBatBuoc::create([
+                        'hoc_phan_id' => $hp[0]->id,
+                        'hoc_ky_goi_y' => -1,
+                        'khoi_kien_thuc_id' => $kkt->id
+                    ]);
+                else
                 foreach($hp[1] as $hk){
+
                     $tu_chon = HocPhanKKTTuChon::create([
                         'hoc_phan_id' => $hp[0]->id,
                         'hoc_ky_goi_y' => $hk,
@@ -263,7 +282,7 @@ class ImportExcelToCollection implements ToCollection,SkipsEmptyRows, WithMultip
             }
         }
 
-        dd ('test');
+        // dd ('test');
 
     }
 
@@ -290,11 +309,14 @@ class ImportExcelToCollection implements ToCollection,SkipsEmptyRows, WithMultip
             return null;
         $rs = HocPhan::where('id', $row[1])->first();
         if ($rs == null){
+            $hoc_phan_tuong_duong = HocPhan::where('ma_hoc_phan', $row[13])->first();
+            if ($hoc_phan_tuong_duong != null)
+                $hoc_phan_tuong_duong = $hoc_phan_tuong_duong->id;
             $rs = HocPhan::create([
-                'id' => $row[1],
+                'ma_hoc_phan' => $row[1],
                 'ten' => $row[2],
                 'so_tin_chi' => $row[3],
-                'hoc_phan_tuong_duong_id' => trim($row[13]) == '' ? null : $row[13],
+                'hoc_phan_tuong_duong_id' =>  $hoc_phan_tuong_duong,
                 'phan_tram_giua_ki' => 0,
                 'phan_tram_cuoi_ki' => 0,
                 'co_tinh_tich_luy' => 0

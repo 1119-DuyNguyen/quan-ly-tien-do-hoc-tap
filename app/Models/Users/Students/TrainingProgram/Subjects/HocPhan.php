@@ -25,7 +25,7 @@ class HocPhan extends Model
     ];
 
     protected $fillable = [
-        'id',
+        'ma_hoc_phan',
         'ten',
         'so_tin_chi',
         'phan_tram_giua_ki',
