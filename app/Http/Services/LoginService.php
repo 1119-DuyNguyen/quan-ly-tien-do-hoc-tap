@@ -154,6 +154,7 @@ class LoginService
             //  true, // for production
             null, // for localhost
             true,
+            false,
             'strict',
         );
         // return [
@@ -165,6 +166,7 @@ class LoginService
         //     // 'secure' => true, // for production
         //     'secure' => null, // for localhost
         //     'httponly' => true,
+        //        'raw'=>false
         //     'samesite' => 'lax',
         // ];
     }
