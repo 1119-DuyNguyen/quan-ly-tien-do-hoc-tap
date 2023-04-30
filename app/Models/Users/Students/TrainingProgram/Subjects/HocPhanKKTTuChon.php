@@ -8,9 +8,9 @@ use App\Models\Users\Students\TrainingProgram\Subjects\HocKyGoiY;
 use App\Models\Users\Students\TrainingProgram\Subjects\KhoiKienThuc;
 
 
-class HocPhanKhoiKienThuc extends Model
+class HocPhanKKTTuChon extends Model
 {
-	protected $table = 'hoc_phan_khoi_kkt_tu_chon';
+	protected $table = 'hoc_phan_kkt_tu_chon';
 	public $timestamps = false;
 
 	protected $casts = [

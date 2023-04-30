@@ -2,10 +2,16 @@
 
 namespace App\Imports;
 
+use App\Models\Khoa;
 use App\Models\Nganh;
+use App\Models\Users\Students\TrainingProgram\ChuKy;
 use App\Models\Users\Students\TrainingProgram\ChuongTrinhDaoTao;
+use App\Models\Users\Students\TrainingProgram\Subjects\HocPhanKKTBatBuoc;
+use App\Models\Users\Students\TrainingProgram\Subjects\HocPhanKKTTuChon;
 use App\Models\Users\Students\TrainingProgram\Subjects\KhoiKienThuc;
 use App\Models\Users\Students\TrainingProgram\Subjects\LoaiKienThuc;
+use App\Models\Users\Students\TrainingProgram\Subjects\HocPhan;
+use App\Models\Users\Students\TrainingProgram\Subjects\HocPhansss;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\SkipsFailures;
@@ -15,8 +21,7 @@ use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 use Maatwebsite\Excel\Concerns\WithStartRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
-use App\Models\Users\Students\TrainingProgram\Subjects\HocPhan;
-use DB;
+use Str;
 
 class ImportExcelToCollection implements ToCollection,SkipsEmptyRows, WithMultipleSheets, SkipsUnknownSheets, WithStartRow, WithValidation, SkipsOnFailure
 {
@@ -92,7 +97,9 @@ class ImportExcelToCollection implements ToCollection,SkipsEmptyRows, WithMultip
     }
 
 
+    // public function collection(\Illuminate\Support\Collection $row){
 
+    // }
 
 
 
@@ -103,6 +110,7 @@ class ImportExcelToCollection implements ToCollection,SkipsEmptyRows, WithMultip
         // dd($test);
         $nganh_dao_tao = false;
         $ma_nganh = false;
+        $khoa = false;
         $trinh_do_dao_tao = false;
         $thoi_gian_dao_tao = false;
         $chu_ky = false;
@@ -115,6 +123,8 @@ class ImportExcelToCollection implements ToCollection,SkipsEmptyRows, WithMultip
 
                 $this->setValueFromKeyStr($ma_nganh, $row[0], 'Mã ngành: ');
 
+                $this->setValueFromKeyStr($khoa, $row[0], 'Khoa: ');
+
                 $this->setValueFromKeyStr($trinh_do_dao_tao, $row[0], 'Trình độ đào tạo: ');
 
                 $this->setValueFromKeyStr($thoi_gian_dao_tao, $row[0], 'Thời gian đào tạo: ');
@@ -124,8 +134,12 @@ class ImportExcelToCollection implements ToCollection,SkipsEmptyRows, WithMultip
 
                 $this->setValueFromKeyStr($chu_ky, $row[0], 'Chu kỳ: ');
 
-                if (!$this->checkTrueAndSet([$nganh_dao_tao, $ma_nganh, $trinh_do_dao_tao, $thoi_gian_dao_tao, $chu_ky], $this->CTDT))
+                if (!$this->checkTrueAndSet([$nganh_dao_tao, $khoa, $ma_nganh, $trinh_do_dao_tao, $thoi_gian_dao_tao, $chu_ky], $this->CTDT))
                     continue;
+                else {
+                    $nam_bd = intval(explode('-', $chu_ky)[0]);
+                    $nam_kt = intval(explode('-', $chu_ky)[1]);
+                }
             }
 
 
@@ -139,8 +153,10 @@ class ImportExcelToCollection implements ToCollection,SkipsEmptyRows, WithMultip
             // if (!isset($this->ten_loai))
             //     continue;
 
-            if ($this->setValueFromKeyStr($this->ten_KKT, $row[0], '#'))
+            if ($this->setValueFromKeyStr($this->ten_KKT, $row[0], '#')){
+                $tmp = '';
                 continue;
+            }
 
             if ($this->ten_KKT == null){
                 if ($this->setValueFromKeyStr($tmp, $row[0], '*'))
@@ -160,11 +176,11 @@ class ImportExcelToCollection implements ToCollection,SkipsEmptyRows, WithMultip
                 // dd([$this->ten_loai, $this->ten_KKT]);
             }
             // dd($this->getHP($row), $row);
-            if (strpos($tmp, 'tự chọn') !== false){
-                array_push($this->CTDT[$this->ten_loai][$this->ten_KKT]['Tu-chon'], $this->getHP($row));
+            if (strpos($tmp, 'tự chọn') === false){
+                array_push($this->CTDT[$this->ten_loai][$this->ten_KKT]['Bat-buoc'], $this->getHP($row));
                 // dd($this->CTDT[$this->ten_loai][$this->ten_KKT]['Tu-chon'], $this->getHP($row));
             }else
-                array_push($this->CTDT[$this->ten_loai][$this->ten_KKT]['Bat-buoc'], $this->getHP($row));
+                array_push($this->CTDT[$this->ten_loai][$this->ten_KKT]['Tu-chon'], $this->getHP($row));
 
         }
 
@@ -180,41 +196,74 @@ class ImportExcelToCollection implements ToCollection,SkipsEmptyRows, WithMultip
                 'mess' => 'Thiếu hoặc sai thông tin chương trình đào tạo'
             ];
 
-        $nganh = new Nganh([
+        $nganh = Nganh::where('ma_nganh', $ma_nganh)->first();
+        if ($nganh == null)
+            $nganh = Nganh::create([
+                'ma_nganh' => $ma_nganh,
+                'ten' => $nganh_dao_tao,
+                'khoa_id' => Khoa::where('ma_khoa', Str::slug($khoa, '-'))->first()->id
+            ]);
+        // $nganh->save();
+        // dd($nganh);
 
+        $chu_kyModel = ChuKy::where('nam_bat_dau', $nam_bd)->where('nam_ket_thuc', $nam_kt)->first();
+        if ($chu_kyModel == null)
+            $chu_kyModel = ChuKy::create([
+                'nam_bat_dau' => $nam_bd,
+                'nam_ket_thuc' => $nam_kt,
+                'ten' => $chu_ky
+            ]);
+
+        $ctdt = ChuongTrinhDaoTao::create([
+            'ten' => 'Chương trình đào tạo '.$nganh_dao_tao.' chu kỳ '.$chu_ky,
+            'trinh_do_dao_tao' => $trinh_do_dao_tao,
+            'thoi_gian_dao_tao' => $thoi_gian_dao_tao,
+            'nganh_id' => $nganh->id,
+            'chu_ky_id' => $chu_kyModel->id
         ]);
 
-        $ctdt = new ChuongTrinhDaoTao([
-            'id' => $this->CTDT[1],
-            'ten' => $this->CTDT[0],
-            'trinh_do_dao_tao' => $this->CTDT[2],
-            'thoi_gian_dao_tao' => $this->CTDT[3]
-        ]);
-
-        dd($ctdt->save());
 
         foreach($this->CTDT as $key=>$value){
             if (gettype($key) == 'integer') continue;
-            // dd(DB::insert('insert into loai_kien_thuc (ten, dai_cuong) values (?, ?)',[$key, strpos($key, 'đại cương') !== false ? 1 : 0]));
 
-            // dd(DB::table('loai_kien_thuc')->insert([
-            //     'ten' => $key,
-            //     'dai_cuong' => strpos($key, 'đại cương') !== false ? 1 : 0
-            // ]));
+            $loai_kt = LoaiKienThuc::create([
+                'ten' => $key,
+                'dai_cuong' => strpos($key, 'đại cương') !== false ? 1 : 0
+            ]);
 
+            // dd(key($value));
 
+            $kkt = KhoiKienThuc::create([
+                'ten' => key($value),
+                'loai_kien_thuc_id' => $loai_kt->id,
+                'chuong_trinh_dao_tao_id' => $ctdt->id
+            ]);
+            $value = array_pop($value);
 
-            // DB:insert('inser into khoi_kien_thuc (id, ten, ')
-
+            // dd($ctdt->id, $loai_kt->id);
             foreach($value['Bat-buoc'] as $hp){
-                $hp[0]->save();
-                foreach($hp[0] as $hk){
-                    // DB::insert('insert into hoc_phan_kkt_bat_buoc (hoc_phan_id, hoc_ky_goi_y, khoi_kien_thuc_id) values (?, ?, ?)',
-                    // [$hp[0]->id, $hk, $])
+                foreach($hp[1] as $hk){
+                    // dd($hp[0]);
+                    $bat_buoc = HocPhanKKTBatBuoc::create([
+                        'hoc_phan_id' => $hp[0]->id,
+                        'hoc_ky_goi_y' => $hk,
+                        'khoi_kien_thuc_id' => $kkt->id
+                    ]);
+                    dd($bat_buoc);
+                }
+            }
+            foreach($value['Tu-chon'] as $hp){
+                foreach($hp[1] as $hk){
+                    $tu_chon = HocPhanKKTTuChon::create([
+                        'hoc_phan_id' => $hp[0]->id,
+                        'hoc_ky_goi_y' => $hk,
+                        'khoi_kien_thuc_id' => $kkt->id
+                    ]);
                 }
             }
         }
 
+        dd ('test');
 
     }
 
@@ -241,15 +290,23 @@ class ImportExcelToCollection implements ToCollection,SkipsEmptyRows, WithMultip
             return null;
         $rs = HocPhan::where('id', $row[1])->first();
         if ($rs == null){
-            $rs = new HocPhan();
+            $rs = HocPhan::create([
+                'id' => $row[1],
+                'ten' => $row[2],
+                'so_tin_chi' => $row[3],
+                'hoc_phan_tuong_duong_id' => trim($row[13]) == '' ? null : $row[13],
+                'phan_tram_giua_ki' => 0,
+                'phan_tram_cuoi_ki' => 0,
+                'co_tinh_tich_luy' => 0
+            ]);
         }
-        $rs->id = $row[1];
-        $rs->ten = $row[2];
-        $rs->so_tin_chi = $row[3];
-        $rs->hoc_phan_tuong_duong_id = $row[13];
+        // $rs->id = $row[1];
+        // $rs->ten = $row[2];
+        // $rs->so_tin_chi = $row[3];
+        // $rs->hoc_phan_tuong_duong_id = $row[13];
 
         // dd($rs);
-        return [$rs->ten, $this->getGoiY($row)];
+        return [$rs, $this->getGoiY($row)];
         // ##ĐÁNH DẤU CHO TEAM: đổi $rs->ten thành $rs để trả về model (->ten) để dễ nhìn kết quả thôi
     }
 
