@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\UserAuthController;
 use App\Http\Controllers\Class\ClassroomController;
 use App\Http\Controllers\Class\Post\PostController;
 use App\Http\Controllers\Admin\PermissionController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Class\Post\BaitapController;
 use App\Http\Controllers\Class\BaiTapSinhVienController;
 use App\Http\Controllers\DataImport\DataImportController;
@@ -55,6 +56,7 @@ Route::middleware('auth:api')->group(function () {
         ->group(function () {
 
             Route::apiResource('/role', RoleController::class);
+            Route::apiResource('/user', UserController::class);
             Route::apiResource('/permissions', PermissionController::class);
         });
 });

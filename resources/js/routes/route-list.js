@@ -8,6 +8,7 @@ import { ClassroomTeacher } from '../pages/classroom/classroomTeacher.js';
 import { Authentication } from '../pages/authentication.js';
 import { Role } from '../pages/admin/role.js';
 import { HomeworkMark } from '../components/classroom/group/post/HomeworkMark.js';
+import { User } from '../pages/admin/User.js';
 
 const route = new Route();
 
@@ -45,5 +46,5 @@ route.addRoute(
 );
 
 route.addRoute('quan-tri-vien/role', Role.index, { title: 'role' }, '');
-
+route.addRoute('quan-tri-vien/user', User.index, { title: 'role' }, '');
 export var routeList = route.getUrlRoutes();

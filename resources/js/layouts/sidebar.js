@@ -43,7 +43,7 @@ let navPage = {
     //     icon: 'fa-solid fa-building-shield icon',
     //     text: 'Quyền',
     // },
-    account: {
+    user: {
         role: ['quan-tri-vien'],
         icon: 'fa-regular fa-user icon',
         text: 'Tài khoản',

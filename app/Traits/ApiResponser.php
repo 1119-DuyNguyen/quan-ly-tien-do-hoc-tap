@@ -2,11 +2,16 @@
 
 namespace App\Traits;
 
+use ReflectionClass;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Maatwebsite\Excel\Concerns\ToArray;
 use App\Http\Requests\PaginationRequest;
+use App\Http\Resources\Admin\RoleResource;
+use App\Http\Resources\Admin\RoleCollection;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 trait ApiResponser
 {
@@ -36,7 +41,7 @@ trait ApiResponser
             $code
         );
     }
-    protected function paginate($request, $table, $itemPerPage = 10, $step = 3, $orderColumnDefault = 'id')
+    protected function paginate($request, $table, String $jsonResource = '', $itemPerPage = 10, $step = 3, $orderColumnDefault = 'id')
     {
         //$request->validate(['sort' => 'in:column1,column2']);
         //if (Schema::hasColumn('users', $request->sort)) {
@@ -61,13 +66,71 @@ trait ApiResponser
             ->limit($itemPerPage)
             ->offset(($curPage - 1) * $itemPerPage)
             ->get();
+        //dd($jsonResource . "::collection");
+        if (isset($jsonResource)) {
+            $r = new ReflectionClass($jsonResource);
+
+            $data = $data->map(function ($item) use ($r) {
+                return  $r->newInstanceArgs([$item]);
+            });
+        }
+
         return $this->success([
             'paginationOption' => [
                 'total' => $total,
                 'perPage' => $itemPerPage,
                 'step' => $step,
             ],
-            'dataObject' => $data,
+            'dataObject' => $data
+            //call_user_func($jsonResource . "::collection", $data),
+        ]);
+        //return   ->paginate($perPage);
+    }
+    /**
+     * @param mixed $request
+     * @param mixed $builderTableJoin DB::table('abc')->join(...)
+     * @param mixed $jsonResource
+     * @param int $itemPerPage
+     * @param int $step
+     * 
+     * @return [type]
+     */
+    protected function paginateMultipleTable($request, $builderTableJoin,  $jsonResource, $itemPerPage = 10, $step = 3)
+    {
+        //$request->validate(['sort' => 'in:column1,column2']);
+        //if (Schema::hasColumn('users', $request->sort)) {
+        $curPage = $request->input('page');
+        if (!is_numeric($curPage)) {
+            $curPage = 1;
+        }
+        $dir = $request->input('dir');
+        if (!$dir || !($dir === 'asc' || $dir === 'desc')) {
+            $dir = 'asc';
+        }
+        $i = 0;
+
+        $total = $builderTableJoin->count();
+        $data = $builderTableJoin
+            ->limit($itemPerPage)
+            ->offset(($curPage - 1) * $itemPerPage)
+            ->get();
+        //dd($jsonResource . "::collection");
+        if (isset($jsonResource)) {
+            $r = new ReflectionClass($jsonResource);
+
+            $data = $data->map(function ($item) use ($r) {
+                return  $r->newInstanceArgs([$item]);
+            });
+        }
+
+        return $this->success([
+            'paginationOption' => [
+                'total' => $total,
+                'perPage' => $itemPerPage,
+                'step' => $step,
+            ],
+            'dataObject' => $data
+            //call_user_func($jsonResource . "::collection", $data),
         ]);
         //return   ->paginate($perPage);
     }

@@ -1,7 +1,7 @@
 import { SmartTableTemplate } from '../../components/smart-table-template/SmartTableTemplate';
 
-export class Role {
-    static URL_ROLE = location.protocol + '//' + location.host + '/api/admin/role';
+export class User {
+    static URL_USER = location.protocol + '//' + location.host + '/api/admin/user';
     static index() {
         // let smartTable = new SmartTableTemplate();
         //helper function
@@ -12,17 +12,12 @@ export class Role {
         rootElement.appendChild(roleContainer);
         let tableTem = new SmartTableTemplate(roleContainer);
 
-        tableTem.fetchDataTable(Role.URL_ROLE, {
+        tableTem.fetchDataTable(User.URL_USER, {
             formatAttributeHeader: {
                 id: {
                     width: '40px',
                 },
                 ten: {
-                    title: 'Tên',
-                    minWidth: '140px',
-                    ellipsis: true,
-                },
-                ten_slug: {
                     title: 'Tên',
                     minWidth: '140px',
                     ellipsis: true,
