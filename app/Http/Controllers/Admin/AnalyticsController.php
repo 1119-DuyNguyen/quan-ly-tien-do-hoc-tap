@@ -167,7 +167,7 @@ class AnalyticsController extends ApiController
             $object->dot = getNumOfSinhVien($khoa_id, "khoa");
         }
         
-        return $this->success($object, 200, "success");
+        return $this->success($object, 200, "");
     }
 
     /**
