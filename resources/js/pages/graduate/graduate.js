@@ -30,6 +30,7 @@ export class Graduate {
         let arr_kqdukien,
             kq_du_kien,
             check = true;
+            
         goi_y_hoc_phanBtn.addEventListener('click', async (e) => {
             kq_du_kien = document.querySelectorAll('.ket_qua_du_kien');
             arr_kqdukien = [];
@@ -54,7 +55,9 @@ export class Graduate {
 
                 if (parseFloat(element.value) >= 4.0) arr_kqdukien.push(parseInt(element.dataset.hpid));
             }
-            if (check) graduate__container[1].innerHTML = await graduate.renderDSGoiY(arr_kqdukien);
+            if (check) graduate__container[2].innerHTML = await graduate.renderDSGoiY(arr_kqdukien);
+
+            graduate.paginatorAction(arr_kqdukien, graduate__container[2]);
         });
     }
 }

@@ -195,48 +195,50 @@ export default class GraduateCrawler {
         })
     }
 
-    renderDSGoiY(dsmon_da_pass = []) {
+    listMHChon = []
+
+    static async returnDSMH(dsmon_da_pass = []) {
         return axios.get(GraduateCrawler.URL_SUGGEST)
-        .then(function (response) {
+        .then((response) => {
             let data = response.data.data;
 
             let ds_goi_y = data.goi_y;
 
-            let stt = 0;
-            let list = ``;
-            let check;
+            ds_goi_y = ds_goi_y.filter(monTrongDS => {
+                return !(dsmon_da_pass.indexOf(monTrongDS.hoc_phan_id) > -1);
+            })
+            
+            return ds_goi_y;
+        })
+    }
 
-            for (let i = 0; i < ds_goi_y.length; i++) {
-                const kq = ds_goi_y[i];
+    async renderDSMHchon(dsmon_da_pass = [], dsmon_da_chon = []) {
+        let list = ``;
+        let ds_goi_y = await GraduateCrawler.returnDSMH(dsmon_da_pass); // lọc theo ds đã chọn
+        
+        ds_goi_y = ds_goi_y.filter(hp => {
+            return (dsmon_da_chon.indexOf(hp.hoc_phan_id) > -1);
+        })
 
-                check = false;
-                for (let i = 0; i < dsmon_da_pass.length; i++) {
-                    const mon_da_pass = dsmon_da_pass[i];
-                    if (mon_da_pass == kq.hoc_phan_id) {
-                        check = true;
-                        break;
-                    }
-                }
+        for (let i = 0; i < ds_goi_y.length; i++) {
+            const kq = ds_goi_y[i];
+            list += `<tr>
+                <td>${kq.hoc_phan_id}</td>
+                <td>${kq.ten}</td>
+                <td>${kq.so_tin_chi}</td>
+            </tr>`
+        }
 
-                if (!check) {
-                    stt++;
-                    list += `<tr>
-                        <td>${stt}</td>
-                        <td>${kq.hoc_phan_id}</td>
-                        <td>${kq.ten}</td>
-                        <td>${kq.so_tin_chi}</td>
-                    </tr>`
-                }
-            }
-
-            let html = `<div class="graduate__item">
+        let html = ``;
+        
+        if (list.length > 0)
+            html = `<div class="graduate__item">
                 <div class="graduate__item__title">
-                    Danh sách môn học gợi ý cho kỳ kế
+                    Danh sách môn học gợi ý đã chọn
                 </div>
                 <div class="graduate__item__content">
                     <table>
                         <tr>
-                            <th>STT</th>
                             <th>Mã học phần</th>
                             <th>Tên học phần</th>
                             <th>STC</th>
@@ -245,9 +247,119 @@ export default class GraduateCrawler {
                     </table>
                 </div>
             </div>`;
-                
 
-            return html;
+        document.querySelector("#graduate__selected_list").innerHTML = html;
+    }
+
+    async renderDSGoiY(dsmon_da_pass = [], page = 1) {
+        let ds_goi_y = await GraduateCrawler.returnDSMH(dsmon_da_pass);
+
+        page = (page == -1) ? 1 : page;
+
+        let list = ``;
+        let itemsPerPage = 10;
+        
+        let totalPages = Math.ceil(ds_goi_y.length / itemsPerPage);
+        let selectPage = `<select id='select_mhgoiy'>`;
+        selectPage += `<option value='-1' disabled selected>Chọn trang</option>`;
+        for (let i = 0; i < totalPages; i++) {
+            if (page == i+1)
+                selectPage += `<option value='${i+1}' selected>${i+1}</option>`;
+            else
+                selectPage += `<option value='${i+1}'>${i+1}</option>`;
+        }
+        selectPage += `</select>`;
+
+        let start = (page - 1) * 10;
+        let end = (start + itemsPerPage > ds_goi_y.length) ? ds_goi_y.length : start + itemsPerPage;
+        let next_page = end < ds_goi_y.length;
+        let prev_page = start - itemsPerPage >= 0;
+
+        for (let i = start; i < end; i++) {
+            const kq = ds_goi_y[i];
+
+            list += `<tr>
+                <td><input type='checkbox' class='chon_mh_goiy' data-hpid='${kq.hoc_phan_id}' ${(this.listMHChon.indexOf(kq.hoc_phan_id) > -1) ? 'checked' : '' }></td>
+                <td>${kq.hoc_phan_id}</td>
+                <td>${kq.ten}</td>
+                <td>${kq.so_tin_chi}</td>
+            </tr>`
+        }
+
+        let html = ``;
+        
+        if (list.length > 0)
+            html = `<div class="graduate__item">
+                <div class="graduate__item__title">
+                    Danh sách môn học gợi ý cho kỳ kế
+                </div>
+                <div class="graduate__item__content">
+                    <table>
+                        <tr>
+                            <th></th>
+                            <th>Mã học phần</th>
+                            <th>Tên học phần</th>
+                            <th>STC</th>
+                        </tr>
+                        ${list}
+                    </table>
+                    <div class="graduate__button__container">
+                    ${(prev_page) ? "<button class='btn btn--success' id='prev_mhgoiy' data-page='"+parseInt(page-1)+"'>Trang trước</button>" : '<div></div>'}
+                    ${selectPage}
+                    ${(next_page) ? "<button class='btn btn--success' id='next_mhgoiy' data-page='"+parseInt(page+1)+"'>Trang kế</button>" : '<div></div>'}
+                    </div>
+                </div>
+            </div>
+            <div>
+                <button class='btn btn--primary' id='xac_nhan_mh_goiy' style='margin: .5rem 0'>Xác nhận</button>
+            </div>`;
+
+        return html;
+    }
+
+    paginatorAction(arr_kqdukien = [], elementToInner) {
+        
+        let btn_trang_truoc = document.querySelector("#prev_mhgoiy");
+
+        if (btn_trang_truoc !== null) {
+            btn_trang_truoc.addEventListener('click', async () => {
+                elementToInner.innerHTML = await this.renderDSGoiY(arr_kqdukien, parseInt(btn_trang_truoc.dataset.page));
+                this.paginatorAction(arr_kqdukien, elementToInner); // gọi lại để set tiếp
+            })
+        }
+
+        let btn_trang_ke = document.querySelector("#next_mhgoiy");
+
+        if (btn_trang_ke !== null) {
+            btn_trang_ke.addEventListener('click', async () => {
+                elementToInner.innerHTML = await this.renderDSGoiY(arr_kqdukien, parseInt(btn_trang_ke.dataset.page));
+                this.paginatorAction(arr_kqdukien, elementToInner); // gọi lại để set tiếp
+            })
+        }
+
+        let select_mhgoiy = document.querySelector("#select_mhgoiy");
+        
+        if (select_mhgoiy !== null) {
+            select_mhgoiy.addEventListener('change', async () => {
+                elementToInner.innerHTML = await this.renderDSGoiY(arr_kqdukien, parseInt(select_mhgoiy.value));
+                this.paginatorAction(arr_kqdukien, elementToInner); // gọi lại để set tiếp
+            })
+        }
+
+        let xacNhanBtn = document.querySelector("#xac_nhan_mh_goiy");
+        let chon_mh_goiy = document.querySelectorAll(".chon_mh_goiy");
+        
+        xacNhanBtn.addEventListener('click', () => {
+            this.renderDSMHchon(arr_kqdukien, this.listMHChon);
+        })
+
+        chon_mh_goiy.forEach(elem => {
+            elem.addEventListener('click', () => {
+                if (elem.checked) 
+                    this.listMHChon.push(parseInt(elem.dataset.hpid));
+                else
+                    this.listMHChon.splice(this.listMHChon.indexOf(elem.dataset.hpid), 1);
+            })
         })
     }
 }
