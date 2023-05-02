@@ -7,21 +7,18 @@ use App\Models\Users\Students\TrainingProgram\Subjects\LoaiKienThuc;
 use App\Models\Users\Students\TrainingProgram\Subjects\HocPhanKKTTuChon;
 use App\Models\Users\Students\TrainingProgram\Subjects\HocPhanKKTBatBuoc;
 use App\Models\Users\Students\TrainingProgram\Subjects\KhoiKienThuc;
-
-class KhoiKienThucImportInfo
+use App\Models\Users\Students\TrainingProgram\Subjects\HocPhan;
+use App\Models\Users\Students\TrainingProgram\ChuKy;
+use App\Models\Nganh;
+use App\Models\Khoa;
+use Illuminate\Database\QueryException;
+use Str;
+class KhoiKienThucImportInfo extends ImportInfo
 {
-
-    // private $loai_kien_thuc = 0;
-    // private $tu_chon = false;
-    // private $ctdt = false;
-    // private $
-
-    function collection(){
-
+    public function ImportType():int{
+        return 1;
     }
-
-    // public $inputKey = "giang-vien";
-    public function RowsToCollection(){
+    public function RowToData(){
         // return $collection;
         return function ($rows){
         $nganh_dao_tao = false;
@@ -32,30 +29,33 @@ class KhoiKienThucImportInfo
         $chu_ky = false;
         $tong_tin_chi = false;
         $tmp = null;
-        $data = null;
-        try {
+        $firstData = [
+            'check' => false,
+            'data' => []
+        ];
+        // dd($rows);
+        // try {
             foreach ($rows as $row){
 
-                if ($data == null){
+                if (!$firstData['check']){
 
-                    $setValueFromKeyStr($nganh_dao_tao, $row[0], 'Ngành đào tạo: ');
+                    $this->setValueFromKeyStr($nganh_dao_tao, $row[0], 'Ngành đào tạo: ');
 
-                    $setValueFromKeyStr($ma_nganh, $row[0], 'Mã ngành: ');
+                    $this->setValueFromKeyStr($ma_nganh, $row[0], 'Mã ngành: ');
 
-                    $setValueFromKeyStr($khoa, $row[0], 'Khoa: ');
+                    $this->setValueFromKeyStr($khoa, $row[0], 'Khoa: ');
 
-                    $setValueFromKeyStr($trinh_do_dao_tao, $row[0], 'Trình độ đào tạo: ');
+                    $this->setValueFromKeyStr($trinh_do_dao_tao, $row[0], 'Trình độ đào tạo: ');
 
-                    $setValueFromKeyStr($tong_tin_chi, $row[0], 'Tín chỉ tối thiểu: ');
+                    $this->setValueFromKeyStr($tong_tin_chi, $row[0], 'Tín chỉ tối thiểu: ');
 
-                    $setValueFromKeyStr($thoi_gian_dao_tao, $row[0], 'Thời gian đào tạo: ');
+                    $this->setValueFromKeyStr($thoi_gian_dao_tao, $row[0], 'Thời gian đào tạo: ');
                     if ($thoi_gian_dao_tao != false)
-                    // dd($time_dt);
-                    $thoi_gian_dao_tao = $getFloatFromStr($thoi_gian_dao_tao);
+                        $thoi_gian_dao_tao = $this->getFloatFromStr($thoi_gian_dao_tao);
 
-                    $setValueFromKeyStr($chu_ky, $row[0], 'Chu kỳ: ');
+                    $this->setValueFromKeyStr($chu_ky, $row[0], 'Chu kỳ: ');
 
-                    if (!$checkTrueAndSet([$nganh_dao_tao, $khoa, $ma_nganh, $trinh_do_dao_tao, $thoi_gian_dao_tao, $chu_ky, $tong_tin_chi], $CTDT))
+                    if (!$this->checkTrueAndSet([$nganh_dao_tao, $khoa, $ma_nganh, $trinh_do_dao_tao, $thoi_gian_dao_tao, $chu_ky, $tong_tin_chi], $firstData))
                         continue;
                     else {
                         $nam_bd = intval(explode('-', $chu_ky)[0]);
@@ -64,9 +64,8 @@ class KhoiKienThucImportInfo
                 }
 
 
-                // dd($CTDT);
                 //Loai
-                if ($setValueFromKeyStr($ten_loai, $row[0], '/')){
+                if ($this->setValueFromKeyStr($ten_loai, $row[0], '/')){
                     $ten_KKT = null;
                     // $isTuChon = true;
                     continue;
@@ -74,18 +73,18 @@ class KhoiKienThucImportInfo
                 // if (!isset($ten_loai))
                 //     continue;
 
-                if ($setValueFromKeyStr($ten_KKT, $row[0], '#')){
+                if ($this->setValueFromKeyStr($ten_KKT, $row[0], '#')){
                     $tmp = '';
                     continue;
                 }
 
                 if ($ten_KKT == null){
-                    if ($setValueFromKeyStr($tmp, $row[0], '*'))
+                    if ($this->setValueFromKeyStr($tmp, $row[0], '*'))
                         $ten_KKT = $ten_loai;
                     continue;
                 }
 
-                if ($setValueFromKeyStr($tmp, $row[0], '*')) {
+                if ($this->setValueFromKeyStr($tmp, $row[0], '*')) {
                     // $isTuChon = !$isTuChon;
                     continue;
                 }
@@ -98,10 +97,10 @@ class KhoiKienThucImportInfo
                 }
                 // dd($getHP($row), $row);
                 if (strpos($tmp, 'tự chọn') === false){
-                    array_push($CTDT[$ten_loai][$ten_KKT]['Bat-buoc'], $getHP($row));
+                    array_push($CTDT[$ten_loai][$ten_KKT]['Bat-buoc'], $this->getHP($row));
                     // dd($CTDT[$ten_loai][$ten_KKT]['Tu-chon'], $getHP($row));
                 }else
-                    array_push($CTDT[$ten_loai][$ten_KKT]['Tu-chon'], $getHP($row));
+                    array_push($CTDT[$ten_loai][$ten_KKT]['Tu-chon'], $this->getHP($row));
 
             }
 
@@ -217,11 +216,58 @@ class KhoiKienThucImportInfo
                     }
                 }
             }
-        }catch (QueryException $e){
-            $err = true;
-            $mess = $e;
-        }
+        // }catch (QueryException $e){
+        //     $this->err = true;
+        //     $this->mess = $e;
+        // }
         };
+    }
+
+    function checkValidRowHP($values){
+        foreach($values as $value){
+            if (!isset($value) || trim($value) === '')
+                // dd('test');
+                return false;
+        }
+        return true;
+    }
+
+    function getGoiY($row){
+        $rs = [];
+        for ($i = 4; $i <= 12; $i++){
+            if (strpos($row[$i], 'x') === false) continue;
+            array_push($rs, $i - 3);
+        }
+        return $rs;
+    }
+
+    function getHP($row){
+        if (!$this->checkValidRowHP([$row[1], $row[2], $row[3]]))
+            return null;
+        // $rs = HocPhan::where('ma_hoc_phan', $row[1])->first();
+        // if ($rs == null){
+            $hoc_phan_tuong_duong = HocPhan::where('ma_hoc_phan', $row[13])->first();
+            if ($hoc_phan_tuong_duong != null)
+                $hoc_phan_tuong_duong = $hoc_phan_tuong_duong->id;
+            $rs = HocPhan::updateOrCreate([
+                'ma_hoc_phan' => $row[1],
+            ],[
+                'ten' => $row[2],
+                'so_tin_chi' => $row[3],
+                'hoc_phan_tuong_duong_id' =>  $hoc_phan_tuong_duong,
+                'phan_tram_giua_ki' => 0,
+                'phan_tram_cuoi_ki' => 0,
+                'co_tinh_tich_luy' => 0
+            ]);
+        // }
+        // $rs->id = $row[1];
+        // $rs->ten = $row[2];
+        // $rs->so_tin_chi = $row[3];
+        // $rs->hoc_phan_tuong_duong_id = $row[13];
+
+        // dd($rs);
+        return [$rs, $this->getGoiY($row)];
+        // ##ĐÁNH DẤU CHO TEAM: đổi $rs->ten thành $rs để trả về model (->ten) để dễ nhìn kết quả thôi
     }
 
     public function getFloatFromStr($str){
@@ -252,7 +298,8 @@ class KhoiKienThucImportInfo
                 $rs[$index] = $value;
         }
         if (isset($rs)) return false;
-        $set = $values;
+        $set['data'] = $values;
+        $set['check'] = true;
         return true;
     }
 

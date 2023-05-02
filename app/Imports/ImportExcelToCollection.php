@@ -37,34 +37,38 @@ class ImportExcelToCollection implements ToCollection,SkipsEmptyRows, WithMultip
     private $start_row = 0;
     private $sheetNames;
     private $rules_row = [];
-    private $toModel;
+    // private $toModel;
+    private $toCollection;
+    // private $CTDT;
+    // // private $Loai_KKTS = [];
+    // private $stage = 0;
 
-    private $CTDT;
-    // private $Loai_KKTS = [];
-    private $stage = 0;
+    // private $ten_KKT = null;
+    // private $KKT_count = -1;
+    // private $KKTList= [];
+    // private $ten_loai;
+    // private $loai_count = -1;
+    // private $loaiList = [];
 
-    private $ten_KKT = null;
-    private $KKT_count = -1;
-    private $KKTList= [];
-    private $ten_loai;
-    private $loai_count = -1;
-    private $loaiList = [];
+    // private $BatBuoc = [];
+    // private $TuChon = [];
+    // private $isTuChon = false;
 
-    private $BatBuoc = [];
-    private $TuChon = [];
-    private $isTuChon = false;
+
+    // private $
 
     private $mess = [];
     private $err = false;
 
-    public function __construct( $headerRow, $sheetNames, $rules_row,$toModel){
+    public function __construct( $headerRow, $sheetNames, $rules_row, $toCollection){
         $this->header_row = $headerRow;
         // $this->start_row = $startRow;
         $this->rules_row = $rules_row;
         $this->sheetNames = $sheetNames;
-        $this->toModel = $toModel;
+        $this->toCollection = $toCollection;
         // dd($this->toModel);
     }
+
 
 
 
@@ -105,9 +109,11 @@ class ImportExcelToCollection implements ToCollection,SkipsEmptyRows, WithMultip
 
     // }
 
-
-
     public function collection(\Illuminate\Support\Collection $rows){
+        ($this->toCollection)($rows);
+    }
+
+    public function collection1(\Illuminate\Support\Collection $rows){
         $nganh_dao_tao = false;
         $ma_nganh = false;
         $khoa = false;
@@ -390,7 +396,5 @@ class ImportExcelToCollection implements ToCollection,SkipsEmptyRows, WithMultip
         }
     }
 
-    // function onFailure(Failure ...$failure){
-    //     return $failure;
-    // }
+
 }

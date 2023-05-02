@@ -7,7 +7,8 @@ use Illuminate\Http\Request;
 
 abstract class ImportInfo
 {
-    abstract public function RowToModel();
+    abstract public function ImportType():int;
+    abstract public function RowToData();
 
     abstract public function RowRules();
 

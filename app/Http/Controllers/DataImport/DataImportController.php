@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\DataImport;
 
+use App\Exports\ExportExtelFromCollection;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\ImportExcelToCollection;
 use App\Imports\ImportExcelToModel;
 use Exception;
 use App\Http\Controllers\ApiController;
 use Illuminate\Http\Request;
-
+use App\Models\Users\Students\TrainingProgram\Subjects\HocPhan;
 
 class DataImportController extends ApiController
 {
@@ -50,13 +51,19 @@ class DataImportController extends ApiController
         // new KhoiKienThucImportInfo());
         // return $this->mess;
 
-        Excel::import(new ImportExcelToCollection(0, ["CNTT-CLC-kehoachGV"], [], ''), $this->files[0])-;
-        return $this->success('ok');
+        // Excel::import(new ImportExcelToCollection(0, ["CNTT-CLC-kehoachGV"], [], ''), $this->files[0])-;
+        // return $this->success('ok');
+        // dd($this->files);
+        // Excel::import(new ImportExcelToCollection(0, ["CNTT-CLC-kehoachGV"], [], (new KhoiKienThucImportInfo)->RowToData()), $this->files[0]);
+
+        $this->importEachType('ctdt', new KhoiKienThucImportInfo(), 1);
+        // return $this->mess;
+        return Excel::download(new ExportExtelFromCollection(HocPhan::class), 'test.xlsx');
     }
 
 
 
-    function importEachType($inputKey, $info){
+    function importEachType($inputKey, $info, $importType = 0){
         //Check valid input
 
         if (!isset($this->input[$inputKey]))
@@ -97,7 +104,7 @@ class DataImportController extends ApiController
                     $importInfo->sheets,
                     $info,
                     $this->files[$importInfo->file],
-                    ImportExcelToModel::class
+                    $importType == 0 ? ImportExcelToModel::class : ImportExcelToCollection::class
                 );
             }
         }
@@ -112,10 +119,11 @@ class DataImportController extends ApiController
                                 $header_row,
                                 $sheetNames,
                                 $info->RowRules(),
-                                $info->RowToModel());
+                                $info->RowToData());
             // Closure::bind($info->RowToModel(), null, $importer);
-            // dd($importer->sheets());
+            // dd($importer);
             $importer->import($file);
+            if ($importer->failures() != null)
             foreach ($importer->failures() as $fail){
                 array_push($failures, [
                     $fail->row(), // row that went wrong

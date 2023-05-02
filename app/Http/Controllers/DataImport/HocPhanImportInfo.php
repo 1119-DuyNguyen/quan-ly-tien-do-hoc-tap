@@ -7,7 +7,10 @@ use App\Models\Users\Students\TrainingProgram\Subjects\HocPhan;
 class HocPhanImportInfo extends ImportInfo
 {
     // public $inputKey = "giang-vien";
-    public function RowToModel(){
+    public function ImportType():int{
+        return 0;
+    }
+    public function RowToData(){
         return function ($row){
             $model = HocPhan::where('id', $row['mahp'])->first();
             // dd($model);

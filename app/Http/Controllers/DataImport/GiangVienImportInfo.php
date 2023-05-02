@@ -10,7 +10,7 @@ use Str;
 class GiangVienImportInfo extends ImportInfo
 {
     // public $inputKey = "giang-vien";
-    public function RowToModel(){
+    public function RowToData(){
         return function ($row){
             return new TaiKhoan(
                 [
@@ -33,6 +33,10 @@ class GiangVienImportInfo extends ImportInfo
             'tengv' => 'required',
             'macb' => 'required|int|unique:App\Models\Authorization\TaiKhoan,ten_dang_nhap'
         ];
+    }
+
+    public function ImportType():int{
+        return 0;
     }
 
 }
