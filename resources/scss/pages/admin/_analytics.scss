@@ -35,7 +35,6 @@
     &__select__container {
         width: 100%;
         text-align: center;
-        margin-top: -2rem;
         select {
             padding: 1rem .5rem;
         }
@@ -63,6 +62,9 @@
                 display: block;
                 margin: 0 auto;
                 margin-bottom: 1rem;
+            }
+            select, button {
+                width: 80%;
             }
         }
     }
