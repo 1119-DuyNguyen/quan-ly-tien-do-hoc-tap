@@ -12,6 +12,8 @@ use App\Models\Users\Students\TrainingProgram\Subjects\KhoiKienThuc;
 use App\Models\Users\Students\TrainingProgram\Subjects\LoaiKienThuc;
 use App\Models\Users\Students\TrainingProgram\Subjects\HocPhan;
 use App\Models\Users\Students\TrainingProgram\Subjects\HocPhansss;
+use Exception;
+use Illuminate\Database\QueryException;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\SkipsFailures;
@@ -52,6 +54,8 @@ class ImportExcelToCollection implements ToCollection,SkipsEmptyRows, WithMultip
     private $TuChon = [];
     private $isTuChon = false;
 
+    private $mess = [];
+    private $err = false;
 
     public function __construct( $headerRow, $sheetNames, $rules_row,$toModel){
         $this->header_row = $headerRow;
@@ -104,186 +108,205 @@ class ImportExcelToCollection implements ToCollection,SkipsEmptyRows, WithMultip
 
 
     public function collection(\Illuminate\Support\Collection $rows){
-
-        // $test = 'abc';
-        // $test = $this->getValueFromKeyStr('abc', 'd');
-        // dd($test);
         $nganh_dao_tao = false;
         $ma_nganh = false;
         $khoa = false;
         $trinh_do_dao_tao = false;
         $thoi_gian_dao_tao = false;
         $chu_ky = false;
+        $tong_tin_chi = false;
         $tmp = null;
-        foreach ($rows as $row){
 
-            if ($this->CTDT == null){
+        try {
+            foreach ($rows as $row){
 
-                $this->setValueFromKeyStr($nganh_dao_tao, $row[0], 'Ngành đào tạo: ');
+                if ($this->CTDT == null){
 
-                $this->setValueFromKeyStr($ma_nganh, $row[0], 'Mã ngành: ');
+                    $this->setValueFromKeyStr($nganh_dao_tao, $row[0], 'Ngành đào tạo: ');
 
-                $this->setValueFromKeyStr($khoa, $row[0], 'Khoa: ');
+                    $this->setValueFromKeyStr($ma_nganh, $row[0], 'Mã ngành: ');
 
-                $this->setValueFromKeyStr($trinh_do_dao_tao, $row[0], 'Trình độ đào tạo: ');
+                    $this->setValueFromKeyStr($khoa, $row[0], 'Khoa: ');
 
-                $this->setValueFromKeyStr($thoi_gian_dao_tao, $row[0], 'Thời gian đào tạo: ');
-                if ($thoi_gian_dao_tao != false)
-                // dd($time_dt);
-                $thoi_gian_dao_tao = $this->getFloatFromStr($thoi_gian_dao_tao);
+                    $this->setValueFromKeyStr($trinh_do_dao_tao, $row[0], 'Trình độ đào tạo: ');
 
-                $this->setValueFromKeyStr($chu_ky, $row[0], 'Chu kỳ: ');
+                    $this->setValueFromKeyStr($tong_tin_chi, $row[0], 'Tín chỉ tối thiểu: ');
 
-                if (!$this->checkTrueAndSet([$nganh_dao_tao, $khoa, $ma_nganh, $trinh_do_dao_tao, $thoi_gian_dao_tao, $chu_ky], $this->CTDT))
-                    continue;
-                else {
-                    $nam_bd = intval(explode('-', $chu_ky)[0]);
-                    $nam_kt = intval(explode('-', $chu_ky)[1]);
+                    $this->setValueFromKeyStr($thoi_gian_dao_tao, $row[0], 'Thời gian đào tạo: ');
+                    if ($thoi_gian_dao_tao != false)
+                    // dd($time_dt);
+                    $thoi_gian_dao_tao = $this->getFloatFromStr($thoi_gian_dao_tao);
+
+                    $this->setValueFromKeyStr($chu_ky, $row[0], 'Chu kỳ: ');
+
+                    if (!$this->checkTrueAndSet([$nganh_dao_tao, $khoa, $ma_nganh, $trinh_do_dao_tao, $thoi_gian_dao_tao, $chu_ky, $tong_tin_chi], $this->CTDT))
+                        continue;
+                    else {
+                        $nam_bd = intval(explode('-', $chu_ky)[0]);
+                        $nam_kt = intval(explode('-', $chu_ky)[1]);
+                    }
                 }
+
+
+                // dd($this->CTDT);
+                //Loai
+                if ($this->setValueFromKeyStr($this->ten_loai, $row[0], '/')){
+                    $this->ten_KKT = null;
+                    // $this->isTuChon = true;
+                    continue;
+                };
+                // if (!isset($this->ten_loai))
+                //     continue;
+
+                if ($this->setValueFromKeyStr($this->ten_KKT, $row[0], '#')){
+                    $tmp = '';
+                    continue;
+                }
+
+                if ($this->ten_KKT == null){
+                    if ($this->setValueFromKeyStr($tmp, $row[0], '*'))
+                        $this->ten_KKT = $this->ten_loai;
+                    continue;
+                }
+
+                if ($this->setValueFromKeyStr($tmp, $row[0], '*')) {
+                    // $this->isTuChon = !$this->isTuChon;
+                    continue;
+                }
+                if (!isset($this->CTDT[$this->ten_loai][$this->ten_KKT])){
+                    // $this->CTDT[$this->ten_loai] = [];
+                    // $this->CTDT[$this->ten_loai][$this->ten_KKT] = [];
+                    $this->CTDT[$this->ten_loai][$this->ten_KKT]['Bat-buoc'] = [];
+                    $this->CTDT[$this->ten_loai][$this->ten_KKT]['Tu-chon'] = [];
+                    // dd([$this->ten_loai, $this->ten_KKT]);
+                }
+                // dd($this->getHP($row), $row);
+                if (strpos($tmp, 'tự chọn') === false){
+                    array_push($this->CTDT[$this->ten_loai][$this->ten_KKT]['Bat-buoc'], $this->getHP($row));
+                    // dd($this->CTDT[$this->ten_loai][$this->ten_KKT]['Tu-chon'], $this->getHP($row));
+                }else
+                    array_push($this->CTDT[$this->ten_loai][$this->ten_KKT]['Tu-chon'], $this->getHP($row));
+
             }
 
+            // dd(intval($tong_tin_chi));
+            // ##Kết quả nằm ở đây: Mỗi 1 phần tử trong key 'Tu-chon' hoặc 'Bat-buoc' sẽ là 1 mảng có 2 phần tử,
+            // pt1 là model học phần
+            // pt2 là model mảng chứa các số từ 1 - 9 ứng với học kì gợi ý là học kì mấy, ex: [1,3,4] thì hk 1 và 3 và 4 là hk gợi ý
 
-            // dd($this->CTDT);
-            //Loai
-            if ($this->setValueFromKeyStr($this->ten_loai, $row[0], '/')){
-                $this->ten_KKT = null;
-                // $this->isTuChon = true;
-                continue;
-            };
-            // if (!isset($this->ten_loai))
-            //     continue;
+            // dd($this->ten_loai);
+            if (!isset($this->CTDT))
+                return [
+                    'err' => true,
+                    'mess' => 'Thiếu hoặc sai thông tin chương trình đào tạo'
+                ];
 
-            if ($this->setValueFromKeyStr($this->ten_KKT, $row[0], '#')){
-                $tmp = '';
-                continue;
-            }
+            // $nganh = Nganh::where('ma_nganh', $ma_nganh)->first();
+            // if ($nganh == null)
+                $nganh = Nganh::updateOrCreate([
+                    'ma_nganh' => $ma_nganh,
+                ],
+                [
+                    'ten' => $nganh_dao_tao,
+                    'khoa_id' => Khoa::firstOrCreate([
+                        'ma_khoa' => Str::slug($khoa, '-')
+                    ],
+                    [
+                        'ten' => $khoa
+                    ])->id
+                ]);
+            // $nganh->save();
+            // dd($nganh);
 
-            if ($this->ten_KKT == null){
-                if ($this->setValueFromKeyStr($tmp, $row[0], '*'))
-                    $this->ten_KKT = $this->ten_loai;
-                continue;
-            }
-
-            if ($this->setValueFromKeyStr($tmp, $row[0], '*')) {
-                // $this->isTuChon = !$this->isTuChon;
-                continue;
-            }
-            if (!isset($this->CTDT[$this->ten_loai][$this->ten_KKT])){
-                // $this->CTDT[$this->ten_loai] = [];
-                // $this->CTDT[$this->ten_loai][$this->ten_KKT] = [];
-                $this->CTDT[$this->ten_loai][$this->ten_KKT]['Bat-buoc'] = [];
-                $this->CTDT[$this->ten_loai][$this->ten_KKT]['Tu-chon'] = [];
-                // dd([$this->ten_loai, $this->ten_KKT]);
-            }
-            // dd($this->getHP($row), $row);
-            if (strpos($tmp, 'tự chọn') === false){
-                array_push($this->CTDT[$this->ten_loai][$this->ten_KKT]['Bat-buoc'], $this->getHP($row));
-                // dd($this->CTDT[$this->ten_loai][$this->ten_KKT]['Tu-chon'], $this->getHP($row));
-            }else
-                array_push($this->CTDT[$this->ten_loai][$this->ten_KKT]['Tu-chon'], $this->getHP($row));
-
-        }
-
-        // dd($this->CTDT);
-        // ##Kết quả nằm ở đây: Mỗi 1 phần tử trong key 'Tu-chon' hoặc 'Bat-buoc' sẽ là 1 mảng có 2 phần tử,
-        // pt1 là model học phần
-        // pt2 là model mảng chứa các số từ 1 - 9 ứng với học kì gợi ý là học kì mấy, ex: [1,3,4] thì hk 1 và 3 và 4 là hk gợi ý
-
-        // dd($this->ten_loai);
-        if (!isset($this->CTDT))
-            return [
-                'err' => true,
-                'mess' => 'Thiếu hoặc sai thông tin chương trình đào tạo'
-            ];
-
-        $nganh = Nganh::where('ma_nganh', $ma_nganh)->first();
-        if ($nganh == null)
-            $nganh = Nganh::create([
-                'ma_nganh' => $ma_nganh,
-                'ten' => $nganh_dao_tao,
-                'khoa_id' => Khoa::where('ma_khoa', Str::slug($khoa, '-'))->first()->id
-            ]);
-        // $nganh->save();
-        // dd($nganh);
-
-        $chu_kyModel = ChuKy::where('nam_bat_dau', $nam_bd)->where('nam_ket_thuc', $nam_kt)->first();
-        if ($chu_kyModel == null)
-            $chu_kyModel = ChuKy::create([
+            // $chu_kyModel = ChuKy::where('nam_bat_dau', $nam_bd)->where('nam_ket_thuc', $nam_kt)->first();
+            $chu_kyModel = ChuKy::updateOrCreate([
                 'nam_bat_dau' => $nam_bd,
                 'nam_ket_thuc' => $nam_kt,
+            ],
+            [
                 'ten' => $chu_ky
             ]);
-
-        $ctdt = ChuongTrinhDaoTao::create([
-            'ten' => 'Chương trình đào tạo '.$nganh_dao_tao.' chu kỳ '.$chu_ky,
-            'trinh_do_dao_tao' => $trinh_do_dao_tao,
-            'thoi_gian_dao_tao' => $thoi_gian_dao_tao,
-            'nganh_id' => $nganh->id,
-            'chu_ky_id' => $chu_kyModel->id
-        ]);
-
-        // dd($this->CTDT);
-
-        foreach($this->CTDT as $key=>$value){
-            if (gettype($key) == 'integer') continue;
-
-            $loai_kt = LoaiKienThuc::create([
-                'ten' => $key,
-                'dai_cuong' => strpos($key, 'đại cương') !== false ? 1 : 0
+            // dd(intval($tong_tin_chi));
+            $ctdt = ChuongTrinhDaoTao::updateOrCreate([
+                'ten' => 'Chương trình đào tạo '.$nganh_dao_tao.' chu kỳ '.$chu_ky,
+                'chu_ky_id' => $chu_kyModel->id,
+            ],
+            [
+                'trinh_do_dao_tao' => $trinh_do_dao_tao,
+                'thoi_gian_dao_tao' => $thoi_gian_dao_tao,
+                'nganh_id' => $nganh->id,
+                'tong_tin_chi' => intval($tong_tin_chi)
             ]);
 
-            // dd(key($value));
+            // dd($this->CTDT);
 
-            $kkt = KhoiKienThuc::create([
-                'ten' => key($value),
-                'loai_kien_thuc_id' => $loai_kt->id,
-                'chuong_trinh_dao_tao_id' => $ctdt->id
-            ]);
-            $value = array_pop($value);
+            foreach($this->CTDT as $key=>$value){
+                if (gettype($key) == 'integer') continue;
+                $value = array_pop($value);
 
-            // dd($ctdt->id, $loai_kt->id);
-            if ($value['Bat-buoc'] != null)
-            foreach($value['Bat-buoc'] as $hp){
-                if ($hp == null) dd($value);
-                if ($hp[1] == null)
-                    $bat_buoc = HocPhanKKTBatBuoc::create([
-                        'hoc_phan_id' => $hp[0]->id,
-                        'hoc_ky_goi_y' => -1,
-                        'khoi_kien_thuc_id' => $kkt->id
-                    ]);
-                else
-                foreach($hp[1] as $hk){
-                    // dd($hp[0]);
-                    $bat_buoc = HocPhanKKTBatBuoc::create([
-                        'hoc_phan_id' => $hp[0]->id,
-                        'hoc_ky_goi_y' => $hk,
-                        'khoi_kien_thuc_id' => $kkt->id
-                    ]);
-                    // dd($bat_buoc);
+                $loai_kt = LoaiKienThuc::updateOrCreate([
+                    'ten' => $key,
+                ],[
+                    'dai_cuong' => strpos($key, 'đại cương') !== false ? 1 : 0
+
+                ]);
+
+                // dd(key($value));
+
+                $kkt = KhoiKienThuc::updateOrCreate([
+                    'loai_kien_thuc_id' => $loai_kt->id,
+                    'chuong_trinh_dao_tao_id' => $ctdt->id
+                ],[
+                    'ten' => key($value),
+                ]);
+                HocPhanKKTBatBuoc::where('khoi_kien_thuc_id', $kkt->id)->delete();
+                HocPhanKKTTuChon::where('khoi_kien_thuc_id', $kkt->id)->delete();
+
+                // dd($ctdt->id, $loai_kt->id);
+                // if ($value['Bat-buoc'] != null)
+                foreach($value['Bat-buoc'] as $hp){
+                    if ($hp[1] == null)
+                        HocPhanKKTBatBuoc::create([
+                            'hoc_phan_id' => $hp[0]->id,
+                            'hoc_ky_goi_y' => -1,
+                            'khoi_kien_thuc_id' => $kkt->id
+                        ]);
+                    else
+                    foreach($hp[1] as $hk){
+                        // dd($hp[0]);
+                        HocPhanKKTBatBuoc::create([
+                            'hoc_phan_id' => $hp[0]->id,
+                            'hoc_ky_goi_y' => $hk,
+                            'khoi_kien_thuc_id' => $kkt->id
+                        ]);
+                        // dd($bat_buoc);
+                    }
+                }
+                // if ($value['Tu-chon'] != null)
+                foreach($value['Tu-chon'] as $hp){
+                    if ($hp[1] == null)
+                        HocPhanKKTTuChon::create([
+                            'hoc_phan_id' => $hp[0]->id,
+                            'hoc_ky_goi_y' => -1,
+                            'khoi_kien_thuc_id' => $kkt->id
+                        ]);
+                    else
+                    foreach($hp[1] as $hk){
+
+                        HocPhanKKTTuChon::create([
+                            'hoc_phan_id' => $hp[0]->id,
+                            'hoc_ky_goi_y' => $hk,
+                            'khoi_kien_thuc_id' => $kkt->id
+                        ]);
+                    }
                 }
             }
-            // if ($value['Tu-chon'] != null)
-            foreach($value['Tu-chon'] as $hp){
-                if ($hp[1] == null)
-                    $bat_buoc = HocPhanKKTBatBuoc::create([
-                        'hoc_phan_id' => $hp[0]->id,
-                        'hoc_ky_goi_y' => -1,
-                        'khoi_kien_thuc_id' => $kkt->id
-                    ]);
-                else
-                foreach($hp[1] as $hk){
-
-                    $tu_chon = HocPhanKKTTuChon::create([
-                        'hoc_phan_id' => $hp[0]->id,
-                        'hoc_ky_goi_y' => $hk,
-                        'khoi_kien_thuc_id' => $kkt->id
-                    ]);
-                }
-            }
+        }catch (QueryException $e){
+            $this->err = true;
+            $this->mess = $e;
         }
 
         // dd ('test');
-
     }
 
     function getGoiY($row){
@@ -307,13 +330,14 @@ class ImportExcelToCollection implements ToCollection,SkipsEmptyRows, WithMultip
     function getHP($row){
         if (!$this->checkValidRowHP([$row[1], $row[2], $row[3]]))
             return null;
-        $rs = HocPhan::where('id', $row[1])->first();
-        if ($rs == null){
+        // $rs = HocPhan::where('ma_hoc_phan', $row[1])->first();
+        // if ($rs == null){
             $hoc_phan_tuong_duong = HocPhan::where('ma_hoc_phan', $row[13])->first();
             if ($hoc_phan_tuong_duong != null)
                 $hoc_phan_tuong_duong = $hoc_phan_tuong_duong->id;
-            $rs = HocPhan::create([
+            $rs = HocPhan::updateOrCreate([
                 'ma_hoc_phan' => $row[1],
+            ],[
                 'ten' => $row[2],
                 'so_tin_chi' => $row[3],
                 'hoc_phan_tuong_duong_id' =>  $hoc_phan_tuong_duong,
@@ -321,7 +345,7 @@ class ImportExcelToCollection implements ToCollection,SkipsEmptyRows, WithMultip
                 'phan_tram_cuoi_ki' => 0,
                 'co_tinh_tich_luy' => 0
             ]);
-        }
+        // }
         // $rs->id = $row[1];
         // $rs->ten = $row[2];
         // $rs->so_tin_chi = $row[3];
@@ -358,6 +382,13 @@ class ImportExcelToCollection implements ToCollection,SkipsEmptyRows, WithMultip
         return $this->rules_row;
     }
 
+    public function getResult(){
+        if ($this->err){
+            return $this->mess;
+        }else{
+            return 1;
+        }
+    }
 
     // function onFailure(Failure ...$failure){
     //     return $failure;
