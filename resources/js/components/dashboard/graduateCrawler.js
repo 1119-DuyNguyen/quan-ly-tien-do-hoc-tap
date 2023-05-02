@@ -225,9 +225,6 @@ export default class GraduateCrawler {
                         <td>${kq.hoc_phan_id}</td>
                         <td>${kq.ten}</td>
                         <td>${kq.so_tin_chi}</td>
-                        <td>
-                            <a href="#" class="graduate__more">Chi tiết</a>
-                        </td>
                     </tr>`
                 }
             }
@@ -243,7 +240,6 @@ export default class GraduateCrawler {
                             <th>Mã học phần</th>
                             <th>Tên học phần</th>
                             <th>STC</th>
-                            <th>Chi tiết</th>
                         </tr>
                         ${list}
                     </table>
