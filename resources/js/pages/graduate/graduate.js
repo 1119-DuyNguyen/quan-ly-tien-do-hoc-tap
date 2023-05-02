@@ -57,6 +57,10 @@ export class Graduate {
             }
             if (check) graduate__container[2].innerHTML = await graduate.renderDSGoiY(arr_kqdukien);
 
+            if (graduate.getLocalStorage('listMHChon').length > 0) {
+                graduate.renderDSMHchon(arr_kqdukien, graduate.listMHChon);
+            }
+
             graduate.paginatorAction(arr_kqdukien, graduate__container[2]);
         });
     }

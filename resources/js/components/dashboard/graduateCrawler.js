@@ -1,3 +1,4 @@
+import { toast } from "../helper/toast";
 
 /**
  * Round half up ('round half towards positive infinity')
@@ -32,12 +33,30 @@ export default class GraduateCrawler {
     static URL_REQ = location.protocol + '//' + location.host + '/api/graduate';
     static URL_SUGGEST = location.protocol + '//' + location.host + '/api/suggestion';
 
+    saveLocalStorage(keyName, value) {
+        window.localStorage.setItem(keyName, JSON.stringify(value));
+    }
+
+    getLocalStorage(keyName) {
+        if (window.localStorage.getItem(keyName) === null)
+            this.saveLocalStorage(keyName, []);
+
+        return JSON.parse(window.localStorage.getItem(keyName));
+    }
+
     returnHKHienTai() {
         return axios.get(GraduateCrawler.URL_SUGGEST)
         .then(function (response) {
             let data = response.data.data;
 
             return data.hoc_ky_hien_tai.id;
+        }).catch(err => {
+            toast({
+                title: "",
+                message: err.data.message,
+                type: 'error',
+                duration: 3000
+            })
         })
     }
 
@@ -58,8 +77,13 @@ export default class GraduateCrawler {
                 selector.add(bien_che_option);
             });
 
-        }).catch(function (err) {
-            console.error(err);
+        }).catch(err => {
+            toast({
+                title: "",
+                message: err.data.message,
+                type: 'error',
+                duration: 3000
+            })
         })
     }
 
@@ -192,10 +216,17 @@ export default class GraduateCrawler {
 
             return htmlReturn;
 
+        }).catch(err => {
+            toast({
+                title: "",
+                message: err.data.message,
+                type: 'error',
+                duration: 3000
+            })
         })
     }
 
-    listMHChon = []
+    listMHChon = this.getLocalStorage('listMHChon');
 
     static async returnDSMH(dsmon_da_pass = []) {
         return axios.get(GraduateCrawler.URL_SUGGEST)
@@ -209,6 +240,13 @@ export default class GraduateCrawler {
             })
             
             return ds_goi_y;
+        }).catch(err => {
+            toast({
+                title: "",
+                message: err.data.message,
+                type: 'error',
+                duration: 3000
+            })
         })
     }
 
@@ -274,6 +312,8 @@ export default class GraduateCrawler {
         let end = (start + itemsPerPage > ds_goi_y.length) ? ds_goi_y.length : start + itemsPerPage;
         let next_page = end < ds_goi_y.length;
         let prev_page = start - itemsPerPage >= 0;
+
+        this.listMHChon = this.getLocalStorage("listMHChon");
 
         for (let i = start; i < end; i++) {
             const kq = ds_goi_y[i];
@@ -350,15 +390,20 @@ export default class GraduateCrawler {
         let chon_mh_goiy = document.querySelectorAll(".chon_mh_goiy");
         
         xacNhanBtn.addEventListener('click', () => {
+            this.listMHChon = this.getLocalStorage('listMHChon');
+
             this.renderDSMHchon(arr_kqdukien, this.listMHChon);
         })
 
         chon_mh_goiy.forEach(elem => {
             elem.addEventListener('click', () => {
+
                 if (elem.checked) 
                     this.listMHChon.push(parseInt(elem.dataset.hpid));
                 else
                     this.listMHChon.splice(this.listMHChon.indexOf(elem.dataset.hpid), 1);
+
+                this.saveLocalStorage('listMHChon', this.listMHChon);
             })
         })
     }
