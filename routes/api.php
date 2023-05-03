@@ -11,8 +11,10 @@ use App\Http\Controllers\Class\Post\PostController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Class\Post\BaitapController;
 use App\Http\Controllers\Class\BaiTapSinhVienController;
+use App\Http\Controllers\Class\ChamDiemController;
 use App\Http\Controllers\DataImport\DataImportController;
 use App\Http\Controllers\Class\Everyone\EveryoneController;
+use App\Http\Controllers\Class\ThamGiaController;
 use App\Http\Controllers\Graduation\Student\GraduateStudentController;
 use App\Http\Controllers\Graduation\Student\SuggestGraduateController;
 
@@ -42,6 +44,8 @@ Route::middleware('auth:api')->group(function () {
     Route::apiResource('/posts', PostController::class);
     Route::apiResource('/exercises', BaitapController::class);
     Route::apiResource('/bai-tap-sinh-vien', BaiTapSinhVienController::class);
+    Route::apiResource('/tham-gia-nhom-hoc', ThamGiaController::class);
+    Route::apiResource('/cham-diem', ChamDiemController::class);
     Route::apiResource('/everyone', EveryoneController::class);
     Route::post('/logout', [UserAuthController::class, 'logout']);
     //   Route::resource('posts', PostController::class);
