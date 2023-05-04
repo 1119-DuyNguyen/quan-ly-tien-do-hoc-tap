@@ -4,12 +4,13 @@ namespace App\Http\Controllers\DataImportInfo;
 use App\Models\Authorization\Quyen;
 use App\Models\Authorization\TaiKhoan;
 use App\Models\Users\Students\LopHoc;
+use App\Models\Users\Students\TinhTrangSinhVien;
 class SinhVienImportInfo extends ImportInfo
 {
     public $type = 'row';
     public function RowToData(){
         return function($row){
-            TaiKhoan::firstOrNew([
+            $tk = TaiKhoan::updateOrCreate([
                 'ten_dang_nhap' => $row['ma_sinh_vien'],
             ],[
                 'ten' => $row['ho_lot'].' '.$row['ten'],
@@ -17,12 +18,18 @@ class SinhVienImportInfo extends ImportInfo
                 'quyen_id' => Quyen::where('ten', 'Sinh viên')->first()->id,
                 'email' => $row['email'],
                 'sdt' => $row['dt_lien_lac'],
-                'ngay_sinh' => null,
-                'khoa_id' => null,
             ]);
 
-            LopHoc::firstOrNew([
+            $lh = LopHoc::updateOrCreate([
+                'ma_lop' => $row['ma_lop']
+            ],[
+                'ten_lop' => $row['ten_lop'],
+            ]);
 
+            TinhTrangSinhVien::updateOrCreate([
+                'sinh_vien_id' => $tk->id
+            ],[
+                'lop_hoc_id' => $lh->id
             ]);
 
         };

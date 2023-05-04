@@ -10,13 +10,14 @@ class HocPhanImportInfo extends ImportInfo
 
     public function RowToData(){
         return function ($row){
-            return HocPhan::updateOrNew([
+            return HocPhan::updateOrCreate([
                 'ma_hoc_phan' => $row['mahp']
             ],[
                 'ten' => $row['tenhp'],
                 'so_tin_chi' => $row['so_tin_chi'],
-                'phan_tram_giua_ki' => $row['phan_tram_giua_ki'],
-                'phan_tram_cuoi_ki' => $row['phan_tram_cuoi_ki'],
+                'phan_tram_giua_ki' => $row['he_so_giua_ki'],
+                'phan_tram_cuoi_ki' => $row['he_so_cuoi_ki'],
+                'co_tinh_tich_luy' => intval($row['tich_luy'])
             ]);
 
         };
@@ -26,7 +27,10 @@ class HocPhanImportInfo extends ImportInfo
         return [
             'mahp' => 'required|int',
             'tenhp' => 'required',
-            'so_tin_chi' => 'int'
+            'so_tin_chi' => 'int',
+            'he_so_giua_ki' => 'int',
+            'he_so_cuoi_ki' => 'int',
+            'tich_luy' => 'int'
         ];
     }
 

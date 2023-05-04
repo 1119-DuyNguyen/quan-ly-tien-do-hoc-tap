@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\DataImportInfo\GiangVienImportInfo;
 use App\Http\Controllers\DataImportInfo\HocPhanImportInfo;
+use App\Http\Controllers\DataImportInfo\KhoaImportInfo;
 use App\Http\Controllers\DataImportInfo\KhoiKienThucImportInfo;
-use App\Http\Controllers\DataImportInfo\SinhVienImportInfo;
+use App\Http\Controllers\DataImportInfo\NganhImportInfo;
+       use App\Http\Controllers\DataImportInfo\SinhVienImportInfo;
 
+use App\Models\Nganh;
 use Exception;
 use App\Http\Controllers\ApiController;
 use Illuminate\Http\Request;
@@ -23,6 +26,11 @@ class DataImportController extends ApiController
 
         $this->input = $request->input();
 
+        // dd($this->files);
+
+        $this->importEachType('khoa', new KhoaImportInfo());
+
+        $this->importEachType('nganh', new NganhImportInfo());
 
         $this->importEachType('giang-vien', new GiangVienImportInfo());
 
@@ -45,8 +53,11 @@ class DataImportController extends ApiController
         if (!isset($this->input[$inputKey]))
             return;
         $input = json_decode($this->input[$inputKey]);
-        if ($input == null)
-            $this->res[$inputKey]['input-error'] = 'value input không phù hợp';
+        if ($input == null){
+            $this->res[$inputKey]['success'] = false;
+            $this->res[$inputKey]['msg'] = 'value input không phù hợp';
+            return ;
+        }
 
 
         $this->res[$inputKey] = [];
@@ -99,7 +110,7 @@ class DataImportController extends ApiController
                                 $sheetNames,
                                 $info->RowRules(),
                                 $info->RowToData());
-
+            // ##
             // dd(Excel::toArray($importer, $file));
 
             $importer->import($file);
@@ -122,7 +133,8 @@ class DataImportController extends ApiController
         }
         return [
             'err' => false,
-            'res' => $failures
+            // 'res' => $failures
+            'res' => []
         ];
 
     }

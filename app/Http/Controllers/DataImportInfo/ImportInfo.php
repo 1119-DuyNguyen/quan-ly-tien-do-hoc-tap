@@ -20,5 +20,24 @@ abstract class ImportInfo
         }
     }
 
-    // abstract public function RowToCollection();
+    // public $type = 'row';
+    // public $type = 'all';
+
+    // public function RowToData(){
+    //     return function ($row){
+
+    //     };
+    // }
+
+    // public function RowToData(){
+    //     return function ($rows){
+
+    //     };
+    // }
+
+    // public function RowRules(){
+    //     return [
+
+    //     ];
+    // }
 }

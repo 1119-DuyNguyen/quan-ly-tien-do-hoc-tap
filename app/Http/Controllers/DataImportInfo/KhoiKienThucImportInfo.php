@@ -122,7 +122,7 @@ class KhoiKienThucImportInfo extends ImportInfo
                 ],
                 [
                     'ten' => $nganh_dao_tao,
-                    'khoa_id' => Khoa::firstOrCreate([
+                    'khoa_id' => Khoa::updateOrCreate([
                         'ma_khoa' => Str::slug($khoa, '-')
                     ],
                     [
