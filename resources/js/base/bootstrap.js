@@ -56,7 +56,6 @@ window.axios.interceptors.response.use(
     },
     function (error) {
         const originalRequest = error.config;
-        console.log(error);
         if (!error.response) {
             toast({
                 title: 'Gửi yêu cầu lên máy chủ thất bại',

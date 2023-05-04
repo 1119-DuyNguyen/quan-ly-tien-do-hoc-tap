@@ -7,60 +7,61 @@ function getParent(element, selector) {
         element = element.parentElement;
     }
 }
+const validatorRules = {
+    required: function (value) {
+        if (typeof value == 'string') return value.trim() ? undefined : 'Vui lòng nhập trường này';
+        else {
+            return value ? undefined : 'Vui lòng nhập trường này';
+        }
+    },
+    email: function (value) {
+        var regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+        return regex.test(value) ? undefined : 'vui lòng nhập lại email';
+    },
+    min: function (min) {
+        return function (value) {
+            return value.length >= min ? undefined : `vui lòng nhập tối thiểu ${min} ký tự`;
+        };
+    },
+    max: function (max) {
+        return function (value) {
+            return value.length >= max ? undefined : `vui lòng nhập tối đa ${max} ký tự`;
+        };
+    },
+    phone: function (value) {
+        //10 so
+        var regex = /^[0-9]{10}$/g;
+        return regex.test(value) ? undefined : 'Số điện thoại không hợp lệ';
+    },
+    password: function (value) {
+        if (value.length >= 6) {
+            curPassword = value;
+            return undefined;
+        } else return `Mật khẩu phải tối thiểu 6 ký tự `;
+    },
+    repeatPassword: function (nameInput) {
+        //console.log(`[name="${nameInput}]`);
+        let input = formElement.querySelector(`[name="${nameInput}"]`);
+        return function (value) {
+            //console.log(input.value, value);
+            return value === input.value ? undefined : `Mật khẩu nhập lại không đúng`;
+        };
+    },
 
+    file: function (value) {},
+};
 export function Validator(formSelector, { formGroup, errorSelector } = {}) {
     if (!formGroup) formGroup = '.form-group';
     if (!errorSelector) errorSelector = '.form-message'; // thẻ span
     var _this = this; // object Validator
     var rulesCollector = {};
     var formElement = document.querySelector(formSelector);
-    const validatorRules = {
-        required: function (value) {
-            if (typeof value == 'string') return value.trim() ? undefined : 'Vui lòng nhập trường này';
-            else {
-                return value ? undefined : 'Vui lòng nhập trường này';
-            }
-        },
-        email: function (value) {
-            var regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-            return regex.test(value) ? undefined : 'vui lòng nhập lại email';
-        },
-        min: function (min) {
-            return function (value) {
-                return value.length >= min ? undefined : `vui lòng nhập tối thiểu ${min} ký tự`;
-            };
-        },
-        max: function (max) {
-            return function (value) {
-                return value.length >= max ? undefined : `vui lòng nhập tối đa ${max} ký tự`;
-            };
-        },
-        phone: function (value) {
-            //10 so
-            var regex = /^[0-9]{10}$/g;
-            return regex.test(value) ? undefined : 'Số điện thoại không hợp lệ';
-        },
-        password: function (value) {
-            if (value.length >= 6) {
-                curPassword = value;
-                return undefined;
-            } else return `Mật khẩu phải tối thiểu 6 ký tự `;
-        },
-        repeatPassword: function (nameInput) {
-            //console.log(`[name="${nameInput}]`);
-            let input = formElement.querySelector(`[name="${nameInput}"]`);
-            return function (value) {
-                //console.log(input.value, value);
-                return value === input.value ? undefined : `Mật khẩu nhập lại không đúng`;
-            };
-        },
-        file: function (value) {},
-    };
+
     function addErrorMessage(inputElement, errorMessage) {
         var parent = getParent(inputElement, formGroup);
         if (parent) {
             //thẻ span
-            formMessage = parent.querySelector(errorSelector);
+            let formMessage = parent.querySelector(errorSelector);
             if (!formMessage) {
                 formMessage = document.createElement('span');
                 formMessage.classList.add(errorSelector.replace('.', ''));
@@ -75,7 +76,7 @@ export function Validator(formSelector, { formGroup, errorSelector } = {}) {
         var parent = getParent(inputElement, formGroup);
         if (parent) {
             //thẻ span
-            formMessage = parent.querySelector(errorSelector);
+            let formMessage = parent.querySelector(errorSelector);
             if (formMessage) formMessage.innerHTML = '';
             //invalid vào div -> nhìn giống lỗi
             parent.classList.remove('invalid');
@@ -107,6 +108,8 @@ export function Validator(formSelector, { formGroup, errorSelector } = {}) {
                 removeErrorMessage(e.target);
             };
         }
+        var validateRule;
+
         for (var rule of rules) {
             var ruleInfo;
             //rule min:6
@@ -114,7 +117,8 @@ export function Validator(formSelector, { formGroup, errorSelector } = {}) {
                 ruleInfo = rule.split(':');
                 rule = ruleInfo[0];
             }
-            validateRule = validatorRules[rule];
+            if (validatorRules[rule]) validateRule = validatorRules[rule];
+            else continue;
             if (ruleInfo) {
                 validateRule = validateRule(ruleInfo[1]);
             }

@@ -17,15 +17,15 @@ class UserResource extends JsonResource
         return [
             "id" => $this->id,
             "ten" => $this->ten,
-            "ten_dang_nhap" => $this->ten_dang_nhap,
-            "updated_at" => $this->updated_at,
-            "created_at" => $this->created_at,
+            "tai_khoan" => $this->ten_dang_nhap,
             "email" => $this->email,
             "sdt" => $this->sdt,
-            "ngay_sinh" => $this->ngay_sinh,
             "gioi_tinh" => $this->gioi_tinh ? "Nam" : "Nữ",
-            "ten_khoa" => $this->ten_khoa,
-            "ten_quyen" => $this->ten_quyen
+            "ngay_sinh" => $this->ngay_sinh,
+            "khoa" => $this->ten_khoa,
+            "quyen" => $this->ten_quyen,
+            "updated_at" => $this->updated_at,
+            "created_at" => $this->created_at,
         ];
     }
 }

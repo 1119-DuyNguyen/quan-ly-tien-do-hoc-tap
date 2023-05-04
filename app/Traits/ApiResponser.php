@@ -41,17 +41,28 @@ trait ApiResponser
             $code
         );
     }
-    protected function paginate($request, $table, String $jsonResource = '', $itemPerPage = 10, $step = 3, $orderColumnDefault = 'id')
+    protected function paginate($request, $table,  $jsonResource, $orderColumnValid = ['id'], $itemPerPage = 10, $step = 3)
     {
         //$request->validate(['sort' => 'in:column1,column2']);
         //if (Schema::hasColumn('users', $request->sort)) {
 
         $orderColumn = $request->input('order-column');
 
-        if (!($orderColumn && Schema::hasColumn($table, $orderColumn))) {
-            $orderColumn = $orderColumnDefault;
-        }
+        if (isset($orderColumn)) {
+            $isAcceptValue = false;
+            foreach ($orderColumnValid as $value) {
+                if ($orderColumn == $value) {
+                    $isAcceptValue = true;
+                    break;
+                }
+            }
 
+            if (!$isAcceptValue) {
+                $orderColumn = $orderColumnValid[0] ?? 'id';
+            }
+        } else {
+            $orderColumn = $orderColumnValid[0] ?? 'id';
+        }
         $curPage = $request->input('page');
         if (!is_numeric($curPage)) {
             $curPage = 1;
@@ -86,6 +97,9 @@ trait ApiResponser
         ]);
         //return   ->paginate($perPage);
     }
+    protected function getAll()
+    {
+    }
     /**
      * @param mixed $request
      * @param mixed $builderTableJoin DB::table('abc')->join(...)
@@ -95,7 +109,7 @@ trait ApiResponser
      * 
      * @return [type]
      */
-    protected function paginateMultipleTable($request, $builderTableJoin,  $jsonResource, $itemPerPage = 10, $step = 3)
+    protected function paginateMultipleTable($request, $builderTableJoin,  $jsonResource, $orderColumnValid = ['id'], $itemPerPage = 10, $step = 3)
     {
         //$request->validate(['sort' => 'in:column1,column2']);
         //if (Schema::hasColumn('users', $request->sort)) {
@@ -107,13 +121,31 @@ trait ApiResponser
         if (!$dir || !($dir === 'asc' || $dir === 'desc')) {
             $dir = 'asc';
         }
-        $i = 0;
+        $orderColumn = $request->input('order-column');
+
+        if (isset($orderColumn)) {
+            $isAcceptValue = false;
+            foreach ($orderColumnValid as $value) {
+                if ($orderColumn == $value) {
+                    $isAcceptValue = true;
+                    break;
+                }
+            }
+
+            if (!$isAcceptValue) {
+                $orderColumn = $orderColumnValid[0] ?? 'id';
+            }
+        } else {
+            $orderColumn = $orderColumnValid[0] ?? 'id';
+        }
 
         $total = $builderTableJoin->count();
         $data = $builderTableJoin
+            ->orderBy($orderColumn, $dir)
             ->limit($itemPerPage)
             ->offset(($curPage - 1) * $itemPerPage)
             ->get();
+
         //dd($jsonResource . "::collection");
         if (isset($jsonResource)) {
             $r = new ReflectionClass($jsonResource);

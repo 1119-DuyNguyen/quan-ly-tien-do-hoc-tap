@@ -5,7 +5,7 @@ namespace App\Http\Resources\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class RoleResource extends JsonResource
+class ProgramResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,8 +17,11 @@ class RoleResource extends JsonResource
         return [
             'id' => $this->id,
             'ten' => $this->ten,
-            'ten_slug' => $this->ten_slug,
-            'ghi_chu' => $this->ten_slug,
+            'tong_tin_chi' => $this->tong_tin_chi,
+            'thoi_gian_dao_tao' => $this->thoi_gian_dao_tao,
+            'trinh_do_dao_tao' => $this->trinh_do_dao_tao,
+            'ten_nganh' => $this->ten_nganh,
+            'ten_chu_ky' => $this->ten_chu_ky,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at
         ];

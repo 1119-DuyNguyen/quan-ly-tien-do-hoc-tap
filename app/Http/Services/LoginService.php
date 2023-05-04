@@ -49,16 +49,9 @@ class LoginService
      */
     public function attemptRefresh()
     {
-        //chceck expire token
+
         $refreshToken = Cookie::get(self::REFRESH_TOKEN);
-        // $response = Http::asForm()->post(request()->getHttpHost() . '/api/oauth/token', [
-        //     'grant_type' => 'refresh_token',
-        //     'refresh_token' => $refreshToken,
-        //     'client_id'     => env('PASSWORD_CLIENT_ID', '2'),
-        //     'client_secret' => env('PASSWORD_CLIENT_SECRET', 'U8JUFnmp4fy0P0Sy8lZlHALDdb2V5xKcYR1z7wbT'),
-        //     'scope' => '',
-        // ]);
-        // return $response->json();
+
         return $this->proxy('refresh_token', [
             'refresh_token' => $refreshToken,
             'scope' => ''
@@ -92,8 +85,9 @@ class LoginService
         $internalRequest = Request::create('/api/oauth/token', 'POST', $data);
         $response = app()->handle($internalRequest);
         if (!$response->isSuccessful()) {
-            dd($response);
-            return $this->error('', 407, "Máy chủ xác thực thất bại. Hãy thử lại sau ít phút");
+            // dd($response);
+            $cookieRefresh = Cookie::forget(Self::REFRESH_TOKEN);
+            return $this->error('', 407, "Máy chủ xác thực thất bại.")->withCookie($cookieRefresh);
         }
 
         $data = json_decode($response->getContent(), true);

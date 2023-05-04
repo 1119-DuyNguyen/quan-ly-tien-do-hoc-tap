@@ -23,6 +23,7 @@ use App\Models\Users\Students\NienKhoa;
 use App\Models\Users\Students\SinhVien;
 use App\Models\Users\Staffs\CoVanHocTap;
 use App\Models\Users\Staffs\QuanTriVien;
+use Database\Seeders\QuyenChucNangSeeder;
 use App\Models\Users\Students\MocThoiGian;
 use App\Models\Users\Classes\Posts\BaiDang;
 use App\Models\Users\Classes\Posts\BinhLuan;
@@ -77,6 +78,10 @@ class DatabaseSeeder extends Seeder
         //php arrtisan db:seed
 
         $this->call(QuyenSeeder::class);
+        $this->call(ChucNangSeeder::class);
+        $this->call(QuyenChucNangSeeder::class);
+
+
         $this->call(OauthClientsSeeder::class);
         Khoa::factory(4)->create();
         Nganh::factory(3)->create();

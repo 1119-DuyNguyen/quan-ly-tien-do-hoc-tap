@@ -7,6 +7,8 @@
 
 //import file scss của m vào dưới
 @use './layouts/aside';
+@use './layouts/container-page';
+
 @use './layouts/header';
 @use './layouts/main-content';
 @use './layouts/footer';
@@ -23,3 +25,6 @@
 @use './components/container-link';
 @use './components/btn';
 @use './components/smart-table-template/smart-table.scss';
+@use './components/helper/alert-component';
+@use './components/helper/confirm-component';
+@use './components/helper/validator';

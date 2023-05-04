@@ -16,13 +16,15 @@ export class User {
             formatAttributeHeader: {
                 id: {
                     width: '40px',
+                    sort: true,
                 },
                 ten: {
                     title: 'Tên',
                     minWidth: '140px',
                     ellipsis: true,
+                    sort: true,
                 },
-                ghi_chu: {
+                tai_khoan: {
                     title: 'Ghi chú',
                     width: '200px',
                     ellipsis: true,
@@ -36,6 +38,25 @@ export class User {
                     title: 'Ngày cập nhập',
                     type: 'date',
                     ellipsis: true,
+                },
+                sdt: {
+                    title: 'Số điện thoại',
+                },
+                ngay_sinh: {
+                    title: 'Ngày sinh',
+                    type: 'date',
+                },
+                gioi_tinh: {
+                    title: 'Giới tính',
+                    oneLine: true,
+                },
+                khoa: {
+                    title: 'Khoa',
+                    minWidth: '140px',
+                },
+                quyen: {
+                    title: 'Quyền',
+                    minWidth: '200px',
                 },
             },
             pagination: true,

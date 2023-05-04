@@ -1,4 +1,5 @@
-import { Sidebar } from '../layouts/sidebar.js';
+import { header } from '../layouts/header.js';
+import { Sidebar, convertHrefToText } from '../layouts/sidebar.js';
 import { routeList } from './route-list.js';
 const routeObj = {};
 const PAGE_TITLE = 'Quản lý tiến độ học tập';
@@ -56,9 +57,11 @@ function checkParams(urlParams, routeParams) {
  * @param {Object} route { template, js}
  * @returns
  */
+let sidebar;
 async function routeTo(route, _params, is404 = false) {
     //  const route = routingList[href] || routingList['404'];
-
+    let rootEl = document.getElementById('main-content');
+    rootEl.innerHTML = '<loader-component></loader-component>';
     // get the html from the template
     let html;
     try {
@@ -74,35 +77,37 @@ async function routeTo(route, _params, is404 = false) {
         console.error('không load được template', error);
         return false;
     }
-    //loadMainSideBar
     let role = localStorage.getItem('roleSlug');
     let sidebarEl = document.getElementById('main-sidebar');
-
+    header.bind();
     if (role) {
-        //console.log(sidebarEl);
+        //loadMainSideBar
         if (!sidebarEl.dataset.isInit) {
             // sidebarEl.style.visibility = 'visible';
-            sidebarEl.style.display = 'block';
+            // sidebarEl.style.display = 'block';
 
             sidebarEl.dataset.isInit = 'true';
             // console.log('here');
-            let sidebar = new Sidebar(sidebarEl);
+            sidebar = new Sidebar(sidebarEl);
         }
+        //console.log(sidebarEl);
     } else {
-        sidebarEl.innerHTML = '';
-        //sidebarEl.style.visibility = 'hidden';
-        sidebarEl.style.display = 'none';
+        if (sidebar) {
+            sidebar.resetSideBar();
+        }
+        // sidebarEl.innerHTML = '';
+        // //sidebarEl.style.visibility = 'hidden';
+        // // sidebarEl.style.display = 'none';
 
-        sidebarEl.dataset.isInit = '';
+        // sidebarEl.dataset.isInit = '';
     }
+    rootEl.innerHTML = '';
+
     if (html) {
-        let rootEl = document.getElementById('main-content');
-        rootEl.innerHTML = '';
         if (!is404) {
             let briefContainer = generateBriefMap(rootEl);
             if (briefContainer) rootEl.appendChild(briefContainer);
         }
-
         rootEl.insertAdjacentHTML('beforeend', html);
     }
 
@@ -150,7 +155,7 @@ const generateBriefMap = (element) => {
     for (let i = 0; i < arrayPathname.length; ++i) {
         let a = document.createElement('a');
 
-        a.innerText = arrayPathname[i] + '/';
+        a.innerText = convertHrefToText(arrayPathname[i]) + '/';
         a.classList.add('btn');
         if (i === arrayPathname.length - 1) {
             a.classList.add('btn--link');
@@ -263,4 +268,5 @@ customFuncs.$('.sidebar__nav a', (a) => {
 // call the urlLocationHandler function to handle the initial url
 window.addEventListener('DOMContentLoaded', () => {
     urlLocationHandler();
+    document.getElementById('container-page').classList.remove('hide');
 });
