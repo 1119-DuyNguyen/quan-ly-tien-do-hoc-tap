@@ -14,6 +14,9 @@ export class Graduate {
 
         graduate.renderSelectHK(bien_che_selector);
         graduate__container.innerHTML = await graduate.renderHK(-1);
+
+        let CURRENT_DOMAIN = location.protocol + '//' + location.host + '/' +'graduate/suggest';
+        document.querySelector("#graduate__suggest__link").href = CURRENT_DOMAIN;
     }
     static async suggest() {
         let graduate__container = document.querySelectorAll('.graduate__container');
@@ -27,6 +30,7 @@ export class Graduate {
         let arr_kqdukien,
             kq_du_kien,
             check = true;
+            
         goi_y_hoc_phanBtn.addEventListener('click', async (e) => {
             kq_du_kien = document.querySelectorAll('.ket_qua_du_kien');
             arr_kqdukien = [];
@@ -51,7 +55,13 @@ export class Graduate {
 
                 if (parseFloat(element.value) >= 4.0) arr_kqdukien.push(parseInt(element.dataset.hpid));
             }
-            if (check) graduate__container[1].innerHTML = await graduate.renderDSGoiY(arr_kqdukien);
+            if (check) graduate__container[2].innerHTML = await graduate.renderDSGoiY(arr_kqdukien);
+
+            if (graduate.getLocalStorage('listMHChon').length > 0) {
+                graduate.renderDSMHchon(arr_kqdukien, graduate.listMHChon);
+            }
+
+            graduate.paginatorAction(arr_kqdukien, graduate__container[2]);
         });
     }
 }

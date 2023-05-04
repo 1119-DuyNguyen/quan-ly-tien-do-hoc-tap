@@ -190,7 +190,7 @@ class SuggestGraduateController extends ApiController
             'hoc_ky_ke_la_hk_chinh' => $hk_chinh
         );
 
-        return $this->success($object, 200, 'success');
+        return $this->success($object, 200);
     }
 
     /**

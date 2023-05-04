@@ -7,6 +7,7 @@ import { ClassroomTeacher } from '../pages/classroom/classroomTeacher.js';
 
 import { Authentication } from '../pages/authentication.js';
 import { Role } from '../pages/admin/role.js';
+import { Analytics } from '../pages/admin/analytics.js';
 import { HomeworkMark } from '../components/classroom/group/post/HomeworkMark.js';
 import { User } from '../pages/admin/User.js';
 import { Program } from '../pages/admin/program.js';
@@ -46,8 +47,12 @@ route.addRoute(
     'templates/teacher/homework.html'
 );
 
+
+route.addRoute('quan-tri-vien/dashboard', Analytics.index, { title: 'role' }, 'templates/admin/dashboard.html');
+
 route.addRoute('quan-tri-vien/program', Program.index, { title: 'Chương trình đào tạo' }, '');
 route.addRoute('quan-tri-vien/program/$id', Program.edit, { title: 'Chương trình đào tạo' }, '');
+
 
 route.addRoute('quan-tri-vien/role', Role.index, { title: 'Quyền' }, '');
 route.addRoute('quan-tri-vien/role/edit', Role.edit, { title: 'Quyền' }, 'templates/admin/role-edit.html');

@@ -26,7 +26,7 @@ class GraduateStudentController extends ApiController
             'ket_qua' => $data
         ];
 
-        return $this->success($result, 200, 'success');
+        return $this->success($result, 200);
     }
 
     /**
@@ -53,7 +53,7 @@ class GraduateStudentController extends ApiController
             'ket_qua' => $data
         ];
 
-        return $this->success($result, 200, 'success');
+        return $this->success($result, 200);
     }
 
     /**
