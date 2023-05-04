@@ -120,19 +120,19 @@ class DatabaseSeeder extends Seeder
         $this->call([HPKTTBatBuocSeeder::class]);
         $this->call([HPKTTTuChonSeeder::class]);
 
-        DB::statement("INSERT INTO `lop_hoc` (`co_van_hoc_tap_id`, `ten_lop`, `ma_lop`, `id`, `updated_at`, `created_at`, `chuong_trinh_dao_tao_id`, `thoi_gian_vao_hoc`, `thoi_gian_ket_thuc`) VALUES ('31', 'lorem', NULL, NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '1', '2021-09-15 00:00:00', CURRENT_TIMESTAMP);");
-        
+        DB::statement("INSERT INTO `lop_hoc` (`co_van_hoc_tap_id`, `ten_lop`, `ma_lop`, `id`, `updated_at`, `created_at`, `chuong_trinh_dao_tao_id`, `thoi_gian_vao_hoc`, `thoi_gian_ket_thuc`) VALUES ('31', 'lorem', 'DCT1211', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '1', '2021-09-15 00:00:00', CURRENT_TIMESTAMP);");
+
         DB::statement("INSERT INTO `moc_thoi_gian_tot_nghiep` (`id`, `nam`, `dot`, `ten`, `updated_at`, `created_at`) VALUES (NULL, '2023', '1', 'Xét tốt nghiệp đợt 1 - 2023', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)");
         DB::statement("INSERT INTO `moc_thoi_gian_tot_nghiep` (`id`, `nam`, `dot`, `ten`, `updated_at`, `created_at`) VALUES (NULL, '2023', '2', 'Xét tốt nghiệp đợt 2 - 2023', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)");
         DB::statement("INSERT INTO `moc_thoi_gian_tot_nghiep` (`id`, `nam`, `dot`, `ten`, `updated_at`, `created_at`) VALUES (NULL, '2023', '3', 'Xét tốt nghiệp đợt 3 - 2023', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)");
         DB::statement("INSERT INTO `moc_thoi_gian_tot_nghiep` (`id`, `nam`, `dot`, `ten`, `updated_at`, `created_at`) VALUES (NULL, '2023', '4', 'Xét tốt nghiệp đợt 4 - 2023', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)");
 
-        for ($i=63; $i < 163; $i++) { 
+        for ($i = 63; $i < 163; $i++) {
             DB::statement("INSERT INTO `tinh_trang_sinh_vien` (`so_lan_canh_cao`, `da_tot_nghiep`, `moc_thoi_gian_id`, `buoc_thoi_hoc`, `updated_at`, `created_at`, `sinh_vien_id`, `ly_do_buoc_thoi_hoc`, `lop_hoc_id`, `khoi_kien_thuc_id`) VALUES
-            (0, ".fake()->numberBetween(0,1).", ".fake()->numberBetween(1,4).", NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, $i, NULL, 1, 4);");
+            (0, " . fake()->numberBetween(0, 1) . ", " . fake()->numberBetween(1, 4) . ", NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, $i, NULL, 1, 4);");
         }
 
-        
+
 
         // HocPhan::factory()
         //     ->count(10)
