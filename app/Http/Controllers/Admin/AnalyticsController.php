@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\ApiController;
 use App\Http\Requests\PaginationRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class AnalyticsController extends ApiController
@@ -50,55 +51,36 @@ class AnalyticsController extends ApiController
         $ds_khoa = DB::table("khoa")->get();
         $ds_nganh = DB::table("nganh")->get();
 
-        function getNumOfSinhVien(int $tieu_chi_id = -1, string $type = "") {
+        function getData($type, $tieu_chi_id, $moc_thoi_gian) {
+            $sv_tre_han = 0;
+            $sv_tong = 0;
+            $sv_da_tot_nghiep = 0;
+            $sv_bi_canh_cao = 0;
+            $sv_bi_bth = 0;
 
-            switch ($type) {
-                case 'khoa':
-                    $type = "khoa_id";
+            $dssv = array();
+            foreach ($GLOBALS['dssv'] as $sv) {
+                if ($type != "") {
+                    
+                    // get theo ngành || khoa
+                    if ($sv->{$type} == $tieu_chi_id) array_push($dssv, $sv);
+                    
+
+                } else {
+                    // get theo mốc thời gian
+                    $dssv = $GLOBALS['dssv'];
                     break;
-                case 'nganh':
-                    $type = "nganh_id";
-                    break;
-                
-                default:
-                    $type = "";
-                    break;
+                }
             }
 
-            $obj = array();
-            foreach ($GLOBALS['ds_moc_thoi_gian'] as $moc_thoi_gian) {
-                $sv_tre_han = 0;
-                $sv_tong = 0;
-                $sv_da_tot_nghiep = 0;
-                $sv_bi_canh_cao = 0;
-                $sv_bi_bth = 0;
-
-                $dssv = array();
-                foreach ($GLOBALS['dssv'] as $sv) {
-                    if ($type != "") {
-                        
-                        // get theo ngành || khoa
-                        if ($sv->{$type} == $tieu_chi_id) array_push($dssv, $sv);
-                        
-
-                    } else {
-                        // get theo mốc thời gian
-                        $dssv = $GLOBALS['dssv'];
-                        break;
-                    }
-                }
-
-                foreach ($dssv as $sv) {
-                    $sv_tong++;
+            $stc = 0;
+            foreach ($dssv as $sv) {
+                $sv_tong++;
+                
+                if ($type != 'lop_hoc_id') {
                     if ($sv->nam_ket_thuc < $moc_thoi_gian->nam && $sv->da_tot_nghiep == "0")
                         $sv_tre_han++;
 
-                    if ($sv->buoc_thoi_hoc == "1")
-                        $sv_bi_bth++;
-
-                    if ($sv->so_lan_canh_cao > 0)
-                        $sv_bi_canh_cao++;
-                        
                     if ($sv->da_tot_nghiep == "1") {
                         if ($sv->moc_thoi_gian_id == $moc_thoi_gian->id) {
                             $sv_da_tot_nghiep++;
@@ -107,14 +89,69 @@ class AnalyticsController extends ApiController
                     }
                 }
 
-                $obj[$moc_thoi_gian->id] = array(
-                    "tong_sv" => $sv_tong,
-                    "sv_tot_nghiep" => $sv_da_tot_nghiep,
-                    "sv_chua_tot_nghiep" => $sv_tong - $sv_da_tot_nghiep,
-                    "sv_tre_han" => $sv_tre_han,
-                    "sv_bi_canh_cao" => $sv_bi_canh_cao,
-                    "sv_bi_bth" => $sv_bi_bth,
-                );
+                if ($sv->buoc_thoi_hoc == "1")
+                    $sv_bi_bth++;
+
+                if ($sv->so_lan_canh_cao > 0)
+                    $sv_bi_canh_cao++;
+
+                if ($type == 'lop_hoc_id') {
+
+                    if ($sv->thoi_gian_ket_thuc < date("Y-m-d H:i:s"))
+                        $sv_tre_han++;
+
+                    $ds_hp = DB::table("ket_qua")
+                    ->join("hoc_phan", 'ket_qua.hoc_phan_id', '=', 'hoc_phan.id')
+                    ->where('sinh_vien_id', '=', $sv->sinh_vien_id)->get(array('so_tin_chi', 'co_tinh_tich_luy', 'qua_mon'));
+
+                    foreach($ds_hp as $hp) {
+                        if ($hp->qua_mon == 1 && $hp->co_tinh_tich_luy == 1) 
+                            $stc += $hp->so_tin_chi;
+                    }
+                }
+            }
+
+            $stc_trung_binh = ceil($stc / $sv_tong);
+
+            $arr = array(
+                "tong_sv" => $sv_tong,
+                "sv_tot_nghiep" => $sv_da_tot_nghiep,
+                "sv_chua_tot_nghiep" => $sv_tong - $sv_da_tot_nghiep,
+                "sv_tre_han" => $sv_tre_han,
+                "sv_bi_canh_cao" => $sv_bi_canh_cao,
+                "sv_bi_bth" => $sv_bi_bth,
+                "stc_trung_binh" => $stc_trung_binh,
+                "sv_dat_dk_tot_nghiep" => 0
+            );
+
+            return $arr;
+        }
+
+        function getNumOfSinhVien(int $tieu_chi_id, string $type) {
+            switch ($type) {
+                case 'khoa':
+                    $type = "khoa_id";
+                    break;
+                case 'nganh':
+                    $type = "nganh_id";
+                    break;
+                case 'lop':
+                    $type = "lop_hoc_id";
+                    break;
+                
+                default:
+                    $type = "";
+                    break;
+            }
+
+            $obj = array();
+
+            if ($type == 'lop_hoc_id') {
+                $obj = getData($type, $tieu_chi_id, null);
+            } else {
+                foreach ($GLOBALS['ds_moc_thoi_gian'] as $moc_thoi_gian) {
+                    $obj[$moc_thoi_gian->id] = getData($type, $tieu_chi_id, $moc_thoi_gian);
+                }
             }
 
             return $obj;
@@ -128,7 +165,7 @@ class AnalyticsController extends ApiController
             "sv_bi_canh_cao" => $so_sv_bi_canh_cao,
             "sv_bi_bth" => $so_sv_bi_bth,
             "moc_thoi_gian_tot_nghiep" => $ds_moc_thoi_gian,
-            "dot" => (object) getNumOfSinhVien(),
+            "dot" => (object) getNumOfSinhVien(-1, ""),
             "khoa" => (object) $ds_khoa,
             "nganh" => (object) $ds_nganh,
         );
@@ -165,6 +202,16 @@ class AnalyticsController extends ApiController
             }
 
             $object->dot = getNumOfSinhVien($khoa_id, "khoa");
+        } else if ($request->input("lop") !== null) {
+            $lop_str = $request->input("lop");
+
+            $lop_list = DB::table("lop_hoc")->where('ma_lop', 'LIKE', "%$lop_str%")->get(array('ma_lop','id'));
+            $tt_lop_list = new Collection();
+            foreach($lop_list as $lop) {
+                $tt_lop_list->add(getNumOfSinhVien($lop->id, "lop"));
+            }
+
+            return $this->success($tt_lop_list, 200, "");
         }
         
         return $this->success($object, 200, "");
