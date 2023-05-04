@@ -1,6 +1,9 @@
 import { assignOption, createElement, getArrayDepth, getDataJsonKeys, sortDataWithParam } from './helpers/helper.js';
 import { PaginationService } from './services/PaginationService.js';
 import { formatDate } from './helpers/date.js';
+import { routeHref } from '../../routes/route.js';
+import { ConfirmComponent } from '../helper/confirm-component.js';
+import { toast } from '../helper/toast.js';
 // const decodeHtml = (str) =>
 //     str.replace(
 //         /[&<>'"]/g,
@@ -49,12 +52,24 @@ export class SmartTableTemplate {
             'btn btn--primary',
             '<i class="fa-solid fa-circle-plus" style="margin-right:8px"></i>Thêm'
         );
+        addBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            routeHref(location.protocol + '//' + location.host + location.pathname + '/edit');
+        });
         containerBtns.appendChild(addBtn);
         container.appendChild(containerBtns);
 
         return container;
     }
-    constructor(rootElement) {
+    constructor(
+        rootElement,
+        selectList = {
+            select1: {
+                textDefault: '',
+                urlOptionList: '',
+            },
+        }
+    ) {
         try {
             if (!rootElement) {
                 throw 'Element is not valid';
@@ -122,7 +137,7 @@ export class SmartTableTemplate {
         }
     }
     handleCreatePagination(paginationOption) {
-        this.#paginationService = new PaginationService(this.#container, this, paginationOption);
+        this.#paginationService = new PaginationService(this.#container, this.reRenderTable, paginationOption);
 
         this.#paginationService.renderPagination();
     }
@@ -143,38 +158,20 @@ export class SmartTableTemplate {
         const url = new URL(window.location.href);
         let currentKey = url.searchParams.get('order-column') ?? 'id';
         let dir = url.searchParams.get('dir') ?? '';
+        if (this.#option['edit']) {
+            // header show/update/ delete button
+            let actionTitle = createElement('th', 'btns-action');
+            actionTitle.textContent = 'Hành động';
+            trHeader.appendChild(actionTitle);
+        }
         headers.forEach((header) => {
             let th = createElement('th');
             let btn = createElement('button');
-            btn.dataset.key = header;
-            if (header === currentKey) {
-                if (dir == 'desc') {
-                    btn.setAttribute('data-dir', 'asc');
-                }
-                if (dir == 'asc') {
-                    btn.setAttribute('data-dir', 'desc');
-                }
-            }
-            btn.addEventListener('click', (e) => {
-                //reset btn
-                this.#headerBtns.map((button) => {
-                    if (button !== e.target) {
-                        button.removeAttribute('data-dir');
-                    }
-                });
-                let data;
-                if (e.target.getAttribute('data-dir') == 'desc') {
-                    addDirAndSortColumnParameter('desc', e.target.dataset.key);
-                    e.target.setAttribute('data-dir', 'asc');
-                } else {
-                    addDirAndSortColumnParameter('asc', e.target.dataset.key);
 
-                    e.target.setAttribute('data-dir', 'desc');
-                }
-                this.reRenderTable();
-            });
             let title = header;
             let options = this.#option['formatAttributeHeader'][header];
+            let iconHeader = '';
+
             if (options) {
                 if (options.max) {
                     th.style.minWidth = options.width;
@@ -190,20 +187,45 @@ export class SmartTableTemplate {
                 }
                 if (options.ellipsis) {
                 }
+                if (options.sort) {
+                    th.classList.add('sort');
+                    btn.dataset.key = header;
+                    if (header === currentKey) {
+                        if (dir == 'desc') {
+                            btn.setAttribute('data-dir', 'asc');
+                        }
+                        if (dir == 'asc') {
+                            btn.setAttribute('data-dir', 'desc');
+                        }
+                    }
+                    btn.addEventListener('click', (e) => {
+                        //reset btn
+                        this.#headerBtns.map((button) => {
+                            if (button !== e.target) {
+                                button.removeAttribute('data-dir');
+                            }
+                        });
+                        let data;
+                        if (e.target.getAttribute('data-dir') == 'desc') {
+                            addDirAndSortColumnParameter('desc', e.target.dataset.key);
+                            e.target.setAttribute('data-dir', 'asc');
+                        } else {
+                            addDirAndSortColumnParameter('asc', e.target.dataset.key);
+
+                            e.target.setAttribute('data-dir', 'desc');
+                        }
+                        this.reRenderTable();
+                    });
+                }
             }
-            btn.textContent = title;
+            btn.textContent = title + iconHeader;
+
             this.#headerBtns.push(btn);
             th.appendChild(btn);
             trHeader.appendChild(th);
         });
         // render checkbox, action
 
-        if (this.#option['edit']) {
-            // header show/update/ delete button
-            let actionTitle = createElement('th', 'btns-action');
-            actionTitle.textContent = 'Hành động';
-            trHeader.appendChild(actionTitle);
-        }
         return trHeader;
     }
     /**
@@ -213,7 +235,58 @@ export class SmartTableTemplate {
      */
     #createRowBasedObject(obj) {
         const row = document.createElement('tr');
-
+        // render checkbox, action
+        if (this.#option['edit']) {
+            //show/update/ delete button
+            let btnActions = createElement('td', 'group-action');
+            let showBtn = createElement('button', 'btn btn--primary', '<i class="fa-regular fa-eye"></i>');
+            showBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.preventDefault();
+                let rowId = row.querySelector('[data-attr="id"] ');
+                if (rowId) {
+                    routeHref(
+                        location.protocol +
+                            '//' +
+                            location.host +
+                            location.pathname +
+                            '/' +
+                            rowId.getAttribute('data-content')
+                    );
+                }
+            });
+            let deleteBtn = createElement('button', 'btn btn--danger', '<i class="fa-regular fa-trash-can"></i>');
+            deleteBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                let rowId = row.querySelector('[data-attr="id"]');
+                if (rowId) {
+                    try {
+                        new ConfirmComponent({
+                            questionText: 'Bạn có chắc chắn muốn xóa không ?',
+                            trueButtonText: 'Có',
+                            falseButtonText: 'Không',
+                        }).then((data) => {
+                            if (data)
+                                axios
+                                    .delete(this.#option.urlAPI + '/' + rowId.getAttribute('data-content'))
+                                    .then((res) => row.remove());
+                        });
+                    } catch (e) {
+                        console.error(e);
+                        toast({
+                            title: 'Thao tác xóa thất bại',
+                            message: 'Vui lòng thử lại sau ít phút',
+                            duration: 4000,
+                            type: 'error',
+                        });
+                    }
+                }
+                console.log('here', rowId);
+            });
+            btnActions.appendChild(showBtn);
+            btnActions.appendChild(deleteBtn);
+            row.appendChild(btnActions);
+        }
         //render data and assign key
         const objKeys = Object.keys(obj);
         objKeys.map((key) => {
@@ -234,6 +307,9 @@ export class SmartTableTemplate {
                     divContent.style.overflow = 'hidden';
                     divContent.style.textOverflow = 'ellipsis';
                 }
+                if (options.oneLine) {
+                    divContent.style.whiteSpace = 'nowrap';
+                }
             }
             switch (type) {
                 case 'date':
@@ -242,20 +318,11 @@ export class SmartTableTemplate {
                 default:
                     divContent.innerHTML = obj[key];
             }
+            cell.setAttribute('data-content', divContent.innerHTML);
 
             row.appendChild(cell);
         });
 
-        // render checkbox, action
-        if (this.#option['edit']) {
-            //show/update/ delete button
-            let btnActions = createElement('td', 'group-action');
-            let showBtn = createElement('button', 'btn btn--primary', 'i');
-            let deleteBtn = createElement('button', 'btn btn--danger', 'x');
-            btnActions.appendChild(showBtn);
-            btnActions.appendChild(deleteBtn);
-            row.appendChild(btnActions);
-        }
         return row;
     }
     /**

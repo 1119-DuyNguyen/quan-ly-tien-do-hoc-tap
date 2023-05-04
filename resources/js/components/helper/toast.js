@@ -1,5 +1,5 @@
 export function toast(
-    { title = '', message = '', type = '', duration = '' },
+    { title = '', message = '', type = '', duration = 3000 },
     animationAppear = 'slideDown',
     animationDissapear = 'fadeOut'
 ) {
@@ -7,13 +7,24 @@ export function toast(
     const toastList = document.getElementById('toast');
     if (toastList) {
         const icons = {
-            success: 'icon-checkbox-checked',
-            warning: 'icon-notification',
-            info: 'icon-info',
-            error: 'icon-cancel-circle',
+            success: '',
+            warning: '',
+            info: '',
+            error: '',
+            //circular icon
+            // success: 'fa-solid fa-circle-check',
+            // warning: 'fa-solid fa-triangle-exclamation',
+            // info: 'fa-solid fa-circle-info',
+            // error: 'fa-solid fa-circle-xmark',
+            // normal icon
+            // success: 'fa-solid fa-check',
+            // warning: 'fa-solid fa-exclamation',
+            // info: 'fa-solid fa-info',
+            // error: 'fa-solid fa-xmark',
         };
         const icon = icons[type];
         const delay = duration / 1000;
+        //const delay = 600000;
         var toast = document.createElement('div');
 
         toast.style.animation = `${animationAppear} ease 0.3s, ${animationDissapear} linear ${delay}s forwards`;

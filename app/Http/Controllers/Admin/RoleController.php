@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\ApiController;
 use App\Http\Requests\PaginationRequest;
 use App\Http\Requests\RoleRequest;
+use App\Http\Resources\Admin\RoleResource;
 use App\Models\Authorization\Quyen;
 use Illuminate\Http\Request;
 
@@ -19,7 +20,7 @@ class RoleController extends ApiController
         //$roles =  Quyen::WhereNotIn('ten', 'Quản trị viên')->get();
         // $roles =  Quyen::all();
 
-        return $this->paginate($request, 'quyen', 1);
+        return $this->paginate($request, 'quyen', RoleResource::class, ['id', 'ten'], 5);
         // return  $this->success($roles, 200);
     }
 

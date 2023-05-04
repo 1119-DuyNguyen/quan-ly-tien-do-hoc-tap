@@ -22,7 +22,7 @@
 
 <body>
     <!--Start side bar panel-->
-    <aside class="main-sidebar" id="main-sidebar">
+    <aside class="main-sidebar hide" id="main-sidebar">
         {{-- <div class="container">
             <ul class="sidebar__nav">
                 <li>
@@ -89,10 +89,33 @@
             </ul>
         </div> --}}
     </aside>
-    <!--End side bar panel-->
-    <div id="main-content">
 
+    <div id="container-page" class="container-page hide">
+        <div class="header-nav" id='header-nav'>
+            <ul class="nav-container">
+                <li class="nav-item">
+
+                    <a class="nav-link btn-control-sidebar" id='btn-control-sidebar'>&#9776; </a>
+
+                </li>
+                <li class="nav-item">
+                    <div class="nav-link">
+
+                        <i class="fa-regular fa-bell"></i>
+                        <span class="badge">3</span>
+                    </div>
+                </li>
+                <li class="nav-item"></li>
+                <li class="nav-item"></li>
+                <li class="nav-item"></li>
+            </ul>
+        </div>
+        <!--End side bar panel-->
+        <div id="main-content">
+            <loader-component></loader-component>
+        </div>
     </div>
+
     <div id="toast"></div>
     {{-- <script src="./js/header.js"></script>
     <script src="./js/components/schedule-chart.js"></script>

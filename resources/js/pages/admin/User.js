@@ -1,9 +1,7 @@
-import { Validator } from '../../components/helper/Validator';
-import { alertComponent } from '../../components/helper/alert-component';
 import { SmartTableTemplate } from '../../components/smart-table-template/SmartTableTemplate';
 
-export class Role {
-    static URL_ROLE = location.protocol + '//' + location.host + '/api/admin/role';
+export class User {
+    static URL_USER = location.protocol + '//' + location.host + '/api/admin/user';
     static index() {
         // let smartTable = new SmartTableTemplate();
         //helper function
@@ -14,7 +12,7 @@ export class Role {
         rootElement.appendChild(roleContainer);
         let tableTem = new SmartTableTemplate(roleContainer);
 
-        tableTem.fetchDataTable(Role.URL_ROLE, {
+        tableTem.fetchDataTable(User.URL_USER, {
             formatAttributeHeader: {
                 id: {
                     width: '40px',
@@ -23,15 +21,10 @@ export class Role {
                 ten: {
                     title: 'Tên',
                     minWidth: '140px',
-                    oneLine: true,
+                    ellipsis: true,
                     sort: true,
                 },
-                ten_slug: {
-                    title: 'Slug',
-                    minWidth: '140px',
-                    oneLine: true,
-                },
-                ghi_chu: {
+                tai_khoan: {
                     title: 'Ghi chú',
                     width: '200px',
                     ellipsis: true,
@@ -46,6 +39,25 @@ export class Role {
                     type: 'date',
                     ellipsis: true,
                 },
+                sdt: {
+                    title: 'Số điện thoại',
+                },
+                ngay_sinh: {
+                    title: 'Ngày sinh',
+                    type: 'date',
+                },
+                gioi_tinh: {
+                    title: 'Giới tính',
+                    oneLine: true,
+                },
+                khoa: {
+                    title: 'Khoa',
+                    minWidth: '140px',
+                },
+                quyen: {
+                    title: 'Quyền',
+                    minWidth: '200px',
+                },
             },
             pagination: true,
             edit: true,
@@ -57,19 +69,6 @@ export class Role {
         //     pagination: true,
         //     edit: true,
         // });
-    }
-    static edit() {
-        try {
-            let rootElement = document.getElementById('main-content');
-
-            let formValid = new Validator('#role-form');
-            formValid.onSubmit = (data) => {
-                console.log(data);
-            };
-        } catch (err) {
-            console.log(err);
-            alertComponent('Đã xảy ra lỗi khi khởi tạo biểu mẫu', 'Hãy thử làm mới trang');
-        }
     }
     // static show({ id }) {
     //     console.log(id);

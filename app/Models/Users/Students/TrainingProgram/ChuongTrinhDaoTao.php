@@ -67,7 +67,7 @@ class ChuongTrinhDaoTao extends Model
 
 	public function khoi_kien_thucs()
 	{
-		return $this->belongsToMany(KhoiKienThuc::class, 'khoi_kien_thuc_chuong_trinh_dao_tao');
+		return $this->hasMany(KhoiKienThuc::class, 'khoi_kien_thuc_chuong_trinh_dao_tao');
 	}
 
 	public function nien_khoas()

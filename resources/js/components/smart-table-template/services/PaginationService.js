@@ -12,14 +12,13 @@ export class PaginationService {
     #pagination;
     #container;
     #btnsHtml = '';
-
-    #smartTableTemplateObject;
+    #reRenderTableCallBack;
     /**
      * create pagination element
      * @param {Element} container
      * @param {boolean} isAppend
      */
-    constructor(container, smartTableTemplate, option = {}) {
+    constructor(container, reRenderTableCallBack, option = {}) {
         assignOption(this.option, option);
         this.option.totalPage = Math.round(this.option.total / this.option.perPage);
         if (this.option.totalPage >= 2) {
@@ -27,8 +26,7 @@ export class PaginationService {
             this.#pagination = createElement('ul', 'pagination');
             container.appendChild(this.#pagination);
 
-            this.#smartTableTemplateObject =
-                smartTableTemplate instanceof SmartTableTemplate ? smartTableTemplate : undefined;
+            this.#reRenderTableCallBack = reRenderTableCallBack;
             let liPrev = createElement('li', 'pagination__item');
             let prevBtn = createElement('a', 'pagination__item__link', '&#8592;');
             prevBtn.addEventListener('click', this.prevPage.bind(this));
@@ -60,7 +58,7 @@ export class PaginationService {
         } else return '1';
     }
     async renderPagination() {
-        if (!this.#smartTableTemplateObject) {
+        if (!this.#reRenderTableCallBack) {
             return false;
         }
         this.handleCreateBtns();
@@ -110,7 +108,7 @@ export class PaginationService {
         let currentPage = Number.parseInt(this.currentPage) + 1;
         let page = currentPage > this.option['totalPage'] ? this.option['totalPage'] : currentPage;
         if (this.updatePageUrl(page)) {
-            this.#smartTableTemplateObject.reRenderTable();
+            this.#reRenderTableCallBack();
         }
 
         // pagePagination.Start();
@@ -120,7 +118,7 @@ export class PaginationService {
         let page = currentPage < 1 ? 1 : currentPage;
 
         if (this.updatePageUrl(page)) {
-            this.#smartTableTemplateObject.reRenderTable();
+            this.#reRenderTableCallBack();
         }
 
         // pagePagination.Start();
@@ -208,7 +206,7 @@ export class PaginationService {
                 (e) => {
                     //Kiểm tra xem có khác page hiện tại không
                     if (this.updatePageUrl(e.currentTarget.dataset.page)) {
-                        this.#smartTableTemplateObject.reRenderTable();
+                        this.#reRenderTableCallBack();
                     }
                 },
                 false

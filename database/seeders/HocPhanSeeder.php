@@ -20,6 +20,7 @@ class HocPhanSeeder extends Seeder
             HocPhan::create([
                 'ten' => fake()->word,
                 'so_tin_chi' => fake()->numberBetween(1, 4),
+                'ma_hoc_phan' => $i,
                 'phan_tram_giua_ki' => 50,
                 'phan_tram_cuoi_ki' => 50,
                 'updated_at' => fake()->dateTime(),

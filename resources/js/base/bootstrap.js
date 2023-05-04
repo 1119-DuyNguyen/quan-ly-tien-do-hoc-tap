@@ -7,6 +7,7 @@
 import axiosLibrary from 'axios';
 import { Authentication } from '../pages/authentication.js';
 import { toast } from '../components/helper/toast.js';
+import { routeHref } from '../routes/route.js';
 //window.axios = axios;
 window.axios = axiosLibrary.create({
     baseURL: location.protocol + '//' + location.host,
@@ -55,6 +56,31 @@ window.axios.interceptors.response.use(
     },
     function (error) {
         const originalRequest = error.config;
+        if (!error.response) {
+            toast({
+                title: 'Gửi yêu cầu lên máy chủ thất bại',
+                message: 'Hãy thử lại sau vài phút ',
+                type: 'error',
+                duration: 5000,
+            });
+            return Promise.reject(error);
+        }
+        if (error.response.status === 500) {
+            let response500 = error.response;
+            let mes500 = '';
+            if (response500.data.message) mes500 += response500.data.message;
+            if (!mes500) {
+                mes500 = 'Hãy thử lại sau vài phút ';
+            }
+            toast({
+                title: 'Máy chủ đang bận',
+                message: mes500,
+                type: 'error',
+                duration: 5000,
+            });
+            return Promise.reject(error);
+        }
+
         if (error.response.status === 400) {
             let response400 = error.response;
             if (response400.data.message)
@@ -93,15 +119,20 @@ window.axios.interceptors.response.use(
                         processQueue(null, data.accessToken);
                         resolve(axios(originalRequest));
                     })
-                    .catch((err) => {
-                        processQueue(err, null);
-                        toast({ title: 'phiên đăng nhập quá hạn', type: 'info', duration: 3000 });
-                        window.localStorage.removeItem('roleSlug');
-                        window.localStorage.removeItem('role');
-                        window.localStorage.removeItem('user');
-                        window.localStorage.removeItem('accessToken');
-                        window.localStorage.removeItem('expireToken');
-                        reject(err);
+                    .catch((error) => {
+                        if (error.response) {
+                            if (error.response.status == 407) {
+                                toast({ title: 'phiên đăng nhập quá hạn', type: 'info', duration: 4000 });
+                                window.localStorage.removeItem('roleSlug');
+                                window.localStorage.removeItem('role');
+                                window.localStorage.removeItem('user');
+                                window.localStorage.removeItem('accessToken');
+                                window.localStorage.removeItem('expireToken');
+                                routeHref('/');
+                            }
+                        }
+                        processQueue(error, null);
+                        reject(error);
                     })
                     .finally(() => {
                         //console.log(isRefreshing);

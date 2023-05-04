@@ -2,19 +2,25 @@ import { Validator } from '../../components/helper/Validator';
 import { alertComponent } from '../../components/helper/alert-component';
 import { SmartTableTemplate } from '../../components/smart-table-template/SmartTableTemplate';
 
-export class Role {
-    static URL_ROLE = location.protocol + '//' + location.host + '/api/admin/role';
+export class Program {
+    static URL_Program = location.protocol + '//' + location.host + '/api/admin/program';
     static index() {
         // let smartTable = new SmartTableTemplate();
         //helper function
 
         let rootElement = document.getElementById('main-content');
-        let roleContainer = document.createElement('div');
-        roleContainer.classList.add('role-container');
-        rootElement.appendChild(roleContainer);
-        let tableTem = new SmartTableTemplate(roleContainer);
+        let programContainer = document.createElement('div');
+        programContainer.classList.add('program-container');
+        rootElement.appendChild(programContainer);
+        let tableTem = new SmartTableTemplate(programContainer, {
+            khoa: {
+                textDefault: 'Chọn khoa',
+                urlOptionList: 'Chọn chu kỳ',
+            },
+            chu_ky: {},
+        });
 
-        tableTem.fetchDataTable(Role.URL_ROLE, {
+        tableTem.fetchDataTable(Program.URL_Program, {
             formatAttributeHeader: {
                 id: {
                     width: '40px',
@@ -22,29 +28,40 @@ export class Role {
                 },
                 ten: {
                     title: 'Tên',
-                    minWidth: '140px',
-                    oneLine: true,
+                    minWidth: '300px',
                     sort: true,
                 },
-                ten_slug: {
-                    title: 'Slug',
-                    minWidth: '140px',
+                tong_tin_chi: {
+                    title: 'Tổng tín chỉ',
+                    minWidth: '50px',
                     oneLine: true,
                 },
-                ghi_chu: {
-                    title: 'Ghi chú',
-                    width: '200px',
-                    ellipsis: true,
+                thoi_gian_dao_tao: {
+                    title: 'Thời gian đào tạo',
+                    oneLine: true,
                 },
+                trinh_do_dao_tao: {
+                    title: 'Trình độ đào tạo',
+                    oneLine: true,
+                },
+                ten_nganh: {
+                    title: 'Tên ngành',
+                    oneLine: true,
+                },
+                ten_chu_ky: {
+                    title: 'Tên chu kỳ',
+                    oneLine: true,
+                },
+
                 created_at: {
                     title: 'Ngày khởi tạo',
                     type: 'date',
-                    ellipsis: true,
+                    oneLine: true,
                 },
                 updated_at: {
                     title: 'Ngày cập nhập',
                     type: 'date',
-                    ellipsis: true,
+                    oneLine: true,
                 },
             },
             pagination: true,

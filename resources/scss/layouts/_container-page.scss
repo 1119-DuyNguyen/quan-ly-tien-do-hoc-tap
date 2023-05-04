@@ -1,0 +1,9 @@
+.container-page {
+    padding: 0 1.25rem;
+    transition: 0.2s;
+    &.hide {
+        display: none;
+    }
+    background-color: #f7fafb;
+    height: 100vh;
+}
