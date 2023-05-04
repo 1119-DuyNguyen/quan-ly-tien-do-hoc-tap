@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\DataImport;
+namespace App\Http\Controllers\DataImportInfo;
 
 use App\Models\Users\Students\TrainingProgram\ChuongTrinhDaoTao;
 use App\Models\Users\Students\TrainingProgram\Subjects\LoaiKienThuc;
@@ -11,13 +11,12 @@ use App\Models\Users\Students\TrainingProgram\Subjects\HocPhan;
 use App\Models\Users\Students\TrainingProgram\ChuKy;
 use App\Models\Nganh;
 use App\Models\Khoa;
-use Illuminate\Database\QueryException;
 use Str;
 class KhoiKienThucImportInfo extends ImportInfo
 {
-    public function ImportType():int{
-        return 1;
-    }
+
+    public $type = 'all';
+
     public function RowToData(){
         // return $collection;
         return function ($rows){

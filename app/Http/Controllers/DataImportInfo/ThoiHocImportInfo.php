@@ -1,15 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\DataImport;
+namespace App\Http\Controllers\DataImportInfo;
 
 use App\Models\Users\Students\TrainingProgram\Subjects\HocPhan;
 // use App\Http\Controllers\DataImport\ImportInfo;
 class ThoiHocImportInfo extends ImportInfo
 {
     // public $inputKey = "giang-vien";
-    public function ImportType():int{
-        return 0;
-    }
+    public $type = 'row';
+
     public function RowToData(){
         return function ($row){
             return [

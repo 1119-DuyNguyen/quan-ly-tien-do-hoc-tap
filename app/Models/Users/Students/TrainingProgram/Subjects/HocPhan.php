@@ -16,7 +16,6 @@ class HocPhan extends Model
     public $timestamps = false;
 
     protected $casts = [
-        'id' => 'int',
         'so_tin_chi' => 'int',
         'phan_tram_giua_ki' => 'int',
         'phan_tram_cuoi_ki' => 'int',
@@ -25,13 +24,7 @@ class HocPhan extends Model
     ];
 
     protected $fillable = [
-        'ma_hoc_phan',
-        'ten',
-        'so_tin_chi',
-        'phan_tram_giua_ki',
-        'phan_tram_cuoi_ki',
-        'co_tinh_tich_luy',
-        'hoc_phan_tuong_duong_id'
+        'ten', 'so_tin_chi', 'phan_tram_giua_ki', 'phan_tram_cuoi_ki', 'co_tinh_tich_luy', 'hoc_phan_tuong_duong_id', 'ma_hoc_phan'
     ];
 
     public function dieu_kien_tien_quyets()
