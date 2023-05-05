@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Class\Post;
 
 use App\Models\User;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Events\AnythingBePosted;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\Users\Classes\NhomHoc;
@@ -12,7 +14,6 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\Users\Classes\Posts\BaiDang;
 use App\Models\Users\Classes\Posts\FileBaiDang;
 use App\Models\Users\Classes\Posts\BaiTapSinhVien;
-use Illuminate\Support\Str;
 
 class BaitapController extends ApiController
 {
@@ -57,8 +58,9 @@ class BaitapController extends ApiController
 
     public function store(Request $request, BaiDang $baiDang)
     {
+        $baiDang = $request->all();
+        broadcast(new AnythingBePosted($request->user(), $baiDang));
         try {
-            $baiDang->create($request->all());
             if ($request->hasFile('files')) {
                 foreach ($request->file('files') as $file) {
                     $name = time() . rand(1, 100) . Str::random(40) . '.' . $file->extension();
@@ -70,7 +72,8 @@ class BaitapController extends ApiController
                     FileBaiDang::create($fileData);
                 }
             }
-            return $this->success($baiDang, 201, 'Created');
+            BaiDang::create($request->all());
+            return $this->success($baiDang, 201, 'Đã đăng bài tập');
         } catch (Exception $e) {
             //catch exception
             echo 'Message: ' . $e->getMessage();
@@ -94,7 +97,7 @@ class BaitapController extends ApiController
                 }
             }
             $baiDang->update($request->all());
-            return $this->success($baiDang, 201, 'Updated');
+            return $this->success($baiDang, 201, 'Đã cập nhật bài tập');
         } catch (Exception $e) {
             //catch exception
             echo 'Message: ' . $e->getMessage();
@@ -107,7 +110,7 @@ class BaitapController extends ApiController
         $baiDang = BaiDang::find($id);
         try {
             $baiDang->delete();
-            return $this->success(null, 204, 'Deleted');
+            return $this->success(null, 204, 'Đã xoá bài tập');
         } catch (Exception $e) {
             //catch exception
             echo 'Message: ' . $e->getMessage();

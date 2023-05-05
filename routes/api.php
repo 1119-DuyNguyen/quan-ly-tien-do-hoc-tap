@@ -1,16 +1,17 @@
 <?php
 
-use App\Http\Controllers\Admin\AnalyticsController;
 use Illuminate\Http\Request;
+use App\Events\AnythingBePosted;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Test\TestApi;
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\ProgramController;
 use App\Http\Controllers\Auth\UserAuthController;
+use App\Http\Controllers\Admin\AnalyticsController;
 use App\Http\Controllers\Class\ClassroomController;
 use App\Http\Controllers\Class\Post\PostController;
 use App\Http\Controllers\Admin\PermissionController;
-use App\Http\Controllers\Admin\ProgramController;
-use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Class\Post\BaitapController;
 use App\Http\Controllers\Class\BaiTapSinhVienController;
 use App\Http\Controllers\DataImport\DataImportController;
@@ -56,7 +57,6 @@ Route::middleware('auth:api')->group(function () {
         ->name('admin.')
         ->prefix('/admin')
         ->group(function () {
-
             Route::apiResource('/analytics', AnalyticsController::class);
             Route::apiResource('/role', RoleController::class);
             Route::apiResource('/user', UserController::class);
@@ -68,7 +68,6 @@ Route::middleware('auth:api')->group(function () {
         });
 });
 Route::get('/permissions/all', [PermissionController::class, 'all']);
-
 
 Route::apiResource('/role', RoleController::class);
 Route::apiResource('/user', UserController::class);
