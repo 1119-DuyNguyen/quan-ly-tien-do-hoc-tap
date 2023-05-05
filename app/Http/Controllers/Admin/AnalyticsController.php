@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\ApiController;
+use App\Http\Controllers\Graduation\Student\SemesterController;
 use App\Http\Requests\PaginationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -212,6 +213,63 @@ class AnalyticsController extends ApiController
             }
 
             return $this->success($tt_lop_list, 200, "");
+        } else if ($request->input("sv") !== null) {
+            $search_sv_txt = $request->input("sv");
+
+            $hk_hien_tai = (new SemesterController())->index($request)->original['data']['hk_hien_tai'];
+
+            $result = DB::table('tai_khoan')
+            ->where('ten_dang_nhap', 'LIKE', "%$search_sv_txt%")
+            ->get(array('id', 
+                        'ten', 
+                        'ten_dang_nhap',
+                        'email',
+                        'sdt',
+                        'ngay_sinh',
+                        'gioi_tinh'))->first();
+            
+            if ($result) {
+                $ds_hp = DB::table('ket_qua')
+                ->join('hoc_phan', 'ket_qua.hoc_phan_id', '=', 'hoc_phan.id')
+                ->where('sinh_vien_id', '=', $result->sinh_vien_id)
+                ->get(array('diem_tong_ket',
+                            'diem_he_4',
+                            'qua_mon',
+                            'so_tin_chi',
+                            'tinh_vao_tich_luy',
+                            'bien_che_id'));
+
+                $stc_dat = 0;
+                $stc_chuadat = 0;
+                $stc_dat_gannhat = 0;
+
+                foreach ($ds_hp as $hp) {
+                    if ($hp->qua_mon == 1 && $hp->tinh_vao_tich_luy == 1)
+                        $stc_dat += $hp->so_tin_chi;
+
+                    if ($hp->qua_mon == 0 && $hp->tinh_vao_tich_luy == 1)
+                        $stc_chuadat += $hp->so_tin_chi;
+
+                    if ($hp->qua_mon == 1 && $hp->tinh_vao_tich_luy == 1 && $hp->bien_che_id == $hk_hien_tai->id)
+                        $stc_dat_gannhat += $hp->so_tin_chi;
+                }
+
+                $object = (object) array(
+                    "id" => $result->id,
+                    "ten" => $result->ten,
+                    "ten_dang_nhap" => $result->ten_dang_nhap,
+                    "email" => $result->email,
+                    "sdt" => $result->sdt,
+                    "ngay_sinh" => $result->ngay_sinh,
+                    "gioi_tinh" => $result->gioi_tinh,
+                    "stc_dat" => $stc_dat,
+                    "stc_chuadat" => $stc_chuadat,
+                    "stc_dat_gannhat" => $stc_dat_gannhat,
+                );
+                return $this->success($object, 200, "");
+            }
+
+            return $this->error("", 404, "Không tìm thấy sinh viên");
         }
         
         return $this->success($object, 200, "");
