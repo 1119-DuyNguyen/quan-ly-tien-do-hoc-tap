@@ -98,6 +98,10 @@ class AnalyticsController extends ApiController
 
                 if ($type == 'lop_hoc_id') {
 
+                    if ($sv->da_tot_nghiep == "1") {
+                        $sv_da_tot_nghiep++;
+                    }
+
                     if ($sv->thoi_gian_ket_thuc < date("Y-m-d H:i:s"))
                         $sv_tre_han++;
 
@@ -112,7 +116,9 @@ class AnalyticsController extends ApiController
                 }
             }
 
-            $stc_trung_binh = ceil($stc / $sv_tong);
+            $stc_trung_binh = 0;
+            if ($sv_tong > 0)
+                $stc_trung_binh = ceil($stc / $sv_tong);
 
             $arr = array(
                 "tong_sv" => $sv_tong,
@@ -180,6 +186,10 @@ class AnalyticsController extends ApiController
             $object->sv_tot_nghiep = dssvTable()->where('nganh_id', '=', $nganh_id)->where('da_tot_nghiep', '=', '1')->get()->count();
             $object->sv_chua_tot_nghiep = $object->tong_sv - $object->sv_tot_nghiep;
             $object->sv_tre_han = 0;
+
+            $object->sv_bi_canh_cao = dssvTable()->where('nganh_id', '=', $nganh_id)->where('so_lan_canh_cao', '>=', '1')->count();
+            $object->sv_bi_bth = dssvTable()->where('nganh_id', '=', $nganh_id)->where('buoc_thoi_hoc', '=', '1')->count();;
+
             foreach (dssvTable()->where('nganh_id', '=', $nganh_id)->select("*")->get() as $sv) {
                 if ($sv->nam_ket_thuc < date("Y") && $sv->da_tot_nghiep == "0") 
                     $object->sv_tre_han++;
@@ -196,6 +206,9 @@ class AnalyticsController extends ApiController
 
             $object->sv_chua_tot_nghiep = $object->tong_sv - $object->sv_tot_nghiep;
             $object->sv_tre_han = 0;
+
+            $object->sv_bi_canh_cao = dssvTable()->where('khoa_id', '=', $khoa_id)->where('so_lan_canh_cao', '>=', '1')->count();
+            $object->sv_bi_bth = dssvTable()->where('khoa_id', '=', $khoa_id)->where('da_tot_nghiep', '=', '1')->count();
             
             foreach (dssvTable()->where('khoa_id', '=', $khoa_id)->select("*")->get() as $sv) {
                 if ($sv->nam_ket_thuc < date("Y") && $sv->da_tot_nghiep == "0") 
@@ -207,16 +220,25 @@ class AnalyticsController extends ApiController
             $lop_str = $request->input("lop");
 
             $lop_list = DB::table("lop_hoc")->where('ma_lop', 'LIKE', "%$lop_str%")->get(array('ma_lop','id'));
+
             $tt_lop_list = new Collection();
             foreach($lop_list as $lop) {
                 $tt_lop_list->add(getNumOfSinhVien($lop->id, "lop"));
             }
 
-            return $this->success($tt_lop_list, 200, "");
+            if ($lop_list->count() == 0)
+                return $this->error("", 404, "");
+
+            return $this->success((object) array(
+                "lop" => $lop_list,
+                "noi_dung_lop" => $tt_lop_list
+            ), 200, "");
         } else if ($request->input("sv") !== null) {
             $search_sv_txt = $request->input("sv");
 
-            $hk_hien_tai = (new SemesterController())->index($request)->original['data']['hk_hien_tai'];
+            $semester = (new SemesterController())->index($request)->original['data'];
+            $hk_truoc = $semester['hk_truoc'];
+            $hk_hien_tai = $semester['hk_hien_tai'];
 
             $result = DB::table('tai_khoan')
             ->where('ten_dang_nhap', 'LIKE', "%$search_sv_txt%")
@@ -229,29 +251,92 @@ class AnalyticsController extends ApiController
                         'gioi_tinh'))->first();
             
             if ($result) {
+                
                 $ds_hp = DB::table('ket_qua')
                 ->join('hoc_phan', 'ket_qua.hoc_phan_id', '=', 'hoc_phan.id')
-                ->where('sinh_vien_id', '=', $result->sinh_vien_id)
+                ->where('sinh_vien_id', '=', $result->id)
                 ->get(array('diem_tong_ket',
                             'diem_he_4',
                             'qua_mon',
                             'so_tin_chi',
-                            'tinh_vao_tich_luy',
+                            'co_tinh_tich_luy',
                             'bien_che_id'));
 
                 $stc_dat = 0;
                 $stc_chuadat = 0;
                 $stc_dat_gannhat = 0;
 
+                $stc_da_hoc_gan_nhat = 0;
+                $dtb_hk_gan_nhat = 0;
+                $dtb_hk4_gan_nhat = 0;
+
                 foreach ($ds_hp as $hp) {
-                    if ($hp->qua_mon == 1 && $hp->tinh_vao_tich_luy == 1)
+                    if ($hp->qua_mon == 1 && $hp->co_tinh_tich_luy == 1)
                         $stc_dat += $hp->so_tin_chi;
 
-                    if ($hp->qua_mon == 0 && $hp->tinh_vao_tich_luy == 1)
+                    if ($hp->qua_mon == 0 && $hp->co_tinh_tich_luy == 1)
                         $stc_chuadat += $hp->so_tin_chi;
 
-                    if ($hp->qua_mon == 1 && $hp->tinh_vao_tich_luy == 1 && $hp->bien_che_id == $hk_hien_tai->id)
+                    if ($hp->qua_mon == 1 && $hp->co_tinh_tich_luy == 1 && $hp->bien_che_id == $hk_hien_tai->id)
                         $stc_dat_gannhat += $hp->so_tin_chi;
+                }
+
+                $hk_can_tinh = -1;
+                if ($hk_truoc !== null) { // học kỳ trước tồn tại
+                    foreach ($ds_hp as $hp) {
+                        if (
+                            ($hp->diem_he_4 === null || $hp->diem_tong_ket === null)
+                            &&
+                            $hp->bien_che_id == $hk_hien_tai->id
+                            ) {
+                                // chưa nhập điểm
+                                $hk_can_tinh = $hk_truoc->id;
+                                break;
+                        }
+                    }
+                    // đã nhập điểm
+                    if ($hk_can_tinh == -1) $hk_can_tinh = $hk_hien_tai->id;
+                }
+
+                if ($hk_can_tinh != -1) { // xác định được hk cần tính
+                    foreach($ds_hp as $hp) {
+                        if ($hp->bien_che_id == $hk_can_tinh && $hp->co_tinh_tich_luy == 1) {
+                            $stc_da_hoc_gan_nhat += $hp->so_tin_chi;
+                            $dtb_hk4_gan_nhat += $hp->diem_he_4 * $hp->so_tin_chi;
+                            $dtb_hk_gan_nhat += $hp->diem_tong_ket * $hp->so_tin_chi;
+                        }
+                    }
+
+                    if ($stc_da_hoc_gan_nhat > 0) {
+                        $dtb_hk4_gan_nhat /= $stc_da_hoc_gan_nhat;
+                        $dtb_hk_gan_nhat /= $stc_da_hoc_gan_nhat;
+                    }
+                    
+                }
+
+                // tính điểm
+
+                $ds_hp_toan_khoa = DB::select(
+                    "SELECT KQ.hoc_phan_id, sinh_vien_id, diem_tong_ket, diem_he_4, so_tin_chi FROM ket_qua KQ 
+                    INNER JOIN hoc_phan ON KQ.hoc_phan_id = hoc_phan.id
+                    LEFT OUTER JOIN (SELECT `hoc_phan_id`, max(`created_at`) as compare_create_at from ket_qua group by hoc_phan_id) _KQ 
+                    ON KQ.created_at = _KQ.compare_create_at AND KQ.hoc_phan_id = _KQ.hoc_phan_id 
+                    WHERE sinh_vien_id = $result->id AND hoc_phan.co_tinh_tich_luy = 1"
+                );
+
+                $tong_stc_da_hoc = 0;
+                $tong_dtb_hk = 0;
+                $tong_dtb_hk4 = 0;
+
+                foreach ($ds_hp_toan_khoa as $hp) {
+                    $tong_stc_da_hoc += $hp->so_tin_chi;
+                    $tong_dtb_hk4 += $hp->diem_he_4 * $hp->so_tin_chi;
+                    $tong_dtb_hk += $hp->diem_tong_ket * $hp->so_tin_chi;
+                }
+
+                if ($tong_stc_da_hoc > 0) {
+                    $tong_dtb_hk /= $tong_stc_da_hoc;
+                    $tong_dtb_hk4 /= $tong_stc_da_hoc;
                 }
 
                 $object = (object) array(
@@ -262,14 +347,21 @@ class AnalyticsController extends ApiController
                     "sdt" => $result->sdt,
                     "ngay_sinh" => $result->ngay_sinh,
                     "gioi_tinh" => $result->gioi_tinh,
+
                     "stc_dat" => $stc_dat,
                     "stc_chuadat" => $stc_chuadat,
                     "stc_dat_gannhat" => $stc_dat_gannhat,
+
+                    "dtb_hk_gan_nhat" => round($dtb_hk_gan_nhat, 2),
+                    "dtb_hk4_gan_nhat" => round($dtb_hk4_gan_nhat, 2),
+
+                    "tong_dtb_hk" => round($tong_dtb_hk, 2),
+                    "tong_dtb_hk4" => round($tong_dtb_hk4, 2)
                 );
                 return $this->success($object, 200, "");
             }
 
-            return $this->error("", 404, "Không tìm thấy sinh viên");
+            return $this->error("", 404, "");
         }
         
         return $this->success($object, 200, "");

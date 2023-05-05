@@ -48,7 +48,11 @@ route.addRoute(
 );
 
 
-route.addRoute('quan-tri-vien/dashboard', Analytics.index, { title: 'role' }, 'templates/admin/dashboard.html');
+route.addRoute('quan-tri-vien/dashboard', Analytics.index, { title: 'Thống kê' }, 'templates/admin/dashboard.html');
+route.addRoute('quan-tri-vien/graduate/', Analytics.graduate, { title: 'Tiến độ học tập' }, 'templates/admin/graduate.html');
+route.addRoute('quan-tri-vien/graduate/class', Analytics.class, { title: 'Tiến độ lớp' }, 'templates/admin/class.html');
+route.addRoute('quan-tri-vien/graduate/faculty', Analytics.faculty, { title: 'Tiến độ ngành' }, 'templates/admin/faculty.html');
+route.addRoute('quan-tri-vien/graduate/student', Analytics.student, { title: 'Tiến độ sinh viên' }, 'templates/admin/student.html');
 
 route.addRoute('quan-tri-vien/program', Program.index, { title: 'Chương trình đào tạo' }, '');
 route.addRoute('quan-tri-vien/program/$id', Program.edit, { title: 'Chương trình đào tạo' }, '');

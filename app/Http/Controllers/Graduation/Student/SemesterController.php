@@ -20,6 +20,7 @@ class SemesterController extends ApiController
         $ngayHienTai = date('Y-m-d h:i:s');
         $ngayHienTai = date('Y-m-d h:i:s', strtotime($ngayHienTai));
 
+        $hk_truoc = null;
         $hk_hien_tai = null;
         $hk_ke_tiep = null;
 
@@ -32,6 +33,8 @@ class SemesterController extends ApiController
                 $hk_hien_tai = $bien_che;
                 if ($i + 1 < count($ds_bien_che))
                     $hk_ke_tiep = $ds_bien_che[$i + 1];
+                if ($i - 1 >= 0)
+                    $hk_truoc = $ds_bien_che[$i - 1];
                 break;
             }
         }
@@ -57,44 +60,15 @@ class SemesterController extends ApiController
             $hk_hien_tai = $ds_bien_che[$curr];
             if ($curr + 1 < count($ds_bien_che))
                 $hk_ke_tiep = $ds_bien_che[$curr + 1];
+            if ($curr - 1 >= 0)
+                $hk_truoc = $ds_bien_che[$curr - 1];
         }
 
         $arr = array(
+            "hk_truoc" => $hk_truoc,
             "hk_hien_tai" => $hk_hien_tai,
             "hk_ke_tiep" => $hk_ke_tiep
         );
         return $this->success($arr, 200);
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Request $request, string $id)
-    {
-        
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
     }
 }
