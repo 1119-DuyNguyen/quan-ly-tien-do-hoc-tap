@@ -1,4 +1,5 @@
 import GraduateCrawler from '../../components/dashboard/graduateCrawler.js';
+import { alertComponent } from '../../components/helper/alert-component.js';
 let graduate = new GraduateCrawler();
 
 export class Graduate {
@@ -42,14 +43,14 @@ export class Graduate {
                 if (element.value.length == 0) {
                     check = false;
                     element.focus();
-                    alert('Chưa nhập điểm');
+                    alertComponent("Lỗi", 'Chưa nhập điểm');
                     break;
                 }
 
                 if (isNaN(parseFloat(element.value))) {
                     check = false;
                     element.focus();
-                    alert('Điểm không hợp lệ');
+                    alertComponent("Lỗi", 'Điểm không hợp lệ');
                     break;
                 }
 

@@ -1,15 +1,22 @@
 @use '../../abstract';
 
 .analytics {
+    &__search {
+        input {
+            padding: .5rem;
+        }
+    }
     &__container {
         display: grid;
         width: inherit;
         grid-template-columns: repeat(2, 1fr);
-        grid-template-rows: repeat(3, 1fr);
         grid-column-gap: 6rem;
         grid-row-gap: 2rem;
         padding: 6rem;
         padding-top: 2rem;
+        &--1_column {
+            grid-template-columns: repeat(1, 1fr);
+        }
     }
     &__item {
         background-color: white;

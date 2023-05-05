@@ -25,8 +25,6 @@ class SuggestGraduateController extends ApiController
         $chtr_dao_tao_id = DB::table('lop_hoc')->where('id', $lop_hoc_id)->get('chuong_trinh_dao_tao_id')[0]->chuong_trinh_dao_tao_id;
         $thoi_gian_vao_hoc = DB::table('lop_hoc')->where('id', $lop_hoc_id)->get('thoi_gian_vao_hoc')[0]->thoi_gian_vao_hoc;
 
-        $ds_bien_che = DB::table('bien_che')->get();
-
         $ngayHienTai = date('Y-m-d h:i:s');
         $ngayHienTai = date('Y-m-d h:i:s', strtotime($ngayHienTai));
 
@@ -35,42 +33,10 @@ class SuggestGraduateController extends ApiController
         $hk_hien_tai = null;
         $hk_ke_tiep = null;
 
-        // xác định sv đang ở hk hiện tại nào.
-        for ($i = 0; $i < count($ds_bien_che); $i++) {
-            $bien_che = $ds_bien_che[$i];
-            $ngay_bat_dau = $bien_che->ngay_bat_dau;
-            $ngay_ket_thuc = $bien_che->ngay_ket_thuc;
-            if ((strtotime($ngayHienTai) >= strtotime($ngay_bat_dau)) && (strtotime($ngayHienTai) <= strtotime($ngay_ket_thuc))) {
-                $hk_hien_tai = $bien_che;
-                if ($i + 1 < count($ds_bien_che))
-                    $hk_ke_tiep = $ds_bien_che[$i + 1];
-                break;
-            }
-        }
+        $arr = (new SemesterController())->index($request)->original['data'];
 
-        // tìm kỳ học gần nhất
-        // https://stackoverflow.com/questions/15016725/how-to-get-closest-date-compared-to-an-array-of-dates-in-php
-        function find_closest($ds_bien_che, $date)
-        {
-            //$count = 0;
-            foreach ($ds_bien_che as $bien_che) {
-                //$interval[$count] = abs(strtotime($date) - strtotime($day));
-                $interval[] = abs(strtotime($date) - strtotime($bien_che->ngay_bat_dau));
-                //$count++;
-            }
-
-            asort($interval);
-            $closest = key($interval);
-
-            return $closest;
-        }
-
-        if ($hk_hien_tai == null) {
-            $curr = find_closest($ds_bien_che, $ngayHienTai);
-            $hk_hien_tai = $ds_bien_che[$curr];
-            if ($curr + 1 < count($ds_bien_che))
-                $hk_ke_tiep = $ds_bien_che[$curr + 1];
-        }
+        $hk_hien_tai = $arr['hk_hien_tai'];
+        $hk_ke_tiep = $arr['hk_ke_tiep'];
 
         $hk_chinh = false;
 
