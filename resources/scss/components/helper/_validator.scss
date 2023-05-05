@@ -1,12 +1,10 @@
 .form {
     min-height: auto;
-    padding: 32px 24px;
+    // padding: 32px 24px;
     text-align: center;
-    background: #fff;
+    // background: #fff;
     border-radius: 8px;
-    margin: 24px;
     align-self: center;
-    box-shadow: 0 2px 5px 0 rgba(51, 62, 73, 0.1);
     .select input[type='radio'],
     .select input[type='checkbox'] {
         display: inline;
@@ -29,9 +27,9 @@
         font-weight: 300;
     }
     .form-group {
-        display: flex;
-        margin-bottom: 16px;
-        flex-direction: column;
+        // display: flex;
+        // margin-bottom: 16px;
+        // flex-direction: column;
     }
     .form-group.invalid .form-control {
         border-color: #f33a58;
@@ -72,11 +70,11 @@
     //     border-color: #2a83ff;
     // }
 
-    .form-message {
-        font-size: 1rem;
-        line-height: 1rem;
-        padding: 4px 0 0;
-    }
+    // .form-message {
+    //     font-size: 1rem;
+    //     line-height: 1rem;
+    //     padding: 4px 0 0;
+    // }
 
     .form-submit {
         outline: none;

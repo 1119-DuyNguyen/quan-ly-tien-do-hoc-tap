@@ -1,3 +1,4 @@
+import { Validator } from '../components/helper/Validator.js';
 import { toast } from '../components/helper/toast.js';
 import { routeHref } from '../routes/route.js';
 
@@ -8,17 +9,16 @@ export class Authentication {
     static URL_LOGOUT = location.protocol + '//' + location.host + '/api/logout';
     static login() {
         var form = document.getElementById('login-form');
-
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
+        let formValidate = new Validator(form);
+        formValidate.onSubmit = function (formData) {
             // var inputs = form.querySelectorAll('input');
             //var formData = new FormData(form);
 
-            const data = new FormData(form);
-            const formData = {};
-            for (const [key, value] of data) {
-                formData[key] = value;
-            }
+            // const data = new FormData(form);
+            // const formData = {};
+            // for (const [key, value] of data) {
+            //     formData[key] = value;
+            // }
             axios
                 .post(Authentication.URL_LOGIN, formData, {
                     headers: {
@@ -42,6 +42,9 @@ export class Authentication {
                     } else throw 'Lỗi máy chủ';
                 })
                 .catch((error) => {
+                    // if (error?.response?.data?.message) {
+                    //     alertComponent('Có lỗi sai', error.response.data.message);
+                    // }
                     window.localStorage.removeItem('roleSlug');
                     window.localStorage.removeItem('role');
                     window.localStorage.removeItem('user');
@@ -54,7 +57,10 @@ export class Authentication {
                 .finally(() => {
                     routeHref('/');
                 });
-        });
+        };
+        // form.addEventListener('submit', (e) => {
+
+        // });
     }
     static refreshToken() {
         return axios.post(Authentication.URL_LOGIN_REFRESH, null, {

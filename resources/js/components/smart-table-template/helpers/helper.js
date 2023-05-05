@@ -11,12 +11,14 @@ export function createElement(type = 'div', className = '', text = '') {
     if (text) el.innerHTML = text;
     return el;
 }
-export function getDataJsonKeys(dataJson) {
+export function getDataJsonKeys(dataJson = []) {
+    if (!dataJson) return undefined;
     //object
     if (dataJson.constructor.name === 'Object') {
         return Object.keys(dataJson);
     }
     if (Array.isArray(dataJson)) {
+        if (!dataJson[0]) return [];
         return Object.keys(dataJson[0]);
     }
 

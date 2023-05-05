@@ -30,10 +30,8 @@ class ChuongTrinhDaoTao extends Model
 		'tong_tin_chi',
 		'thoi_gian_dao_tao',
 		'chu_ky_id',
-		'khoa_id',
+		'nganh_id',
 		'trinh_do_dao_tao',
-		'ma_chuong_trinh_dao_tao',
-		'ctdt_cha_id'
 	];
 	public function chu_ky()
 	{

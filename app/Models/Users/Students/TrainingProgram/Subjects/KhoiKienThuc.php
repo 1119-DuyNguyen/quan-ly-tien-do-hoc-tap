@@ -14,19 +14,19 @@ use App\Models\Users\Students\TrainingProgram\Subjects\LoaiKienThuc;
 class KhoiKienThuc extends Model
 {
 	protected $table = 'khoi_kien_thuc';
-	public $timestamps = false;
 
 	protected $casts = [
-		'so_tin_chi' => 'int',
-		'khoa_id' => 'int',
-		'loai_kien_thuc_id' => 'int'
+		'tong_tin_chi_ktt_tu_chon' => 'int',
+		'loai_kien_thuc_id' => 'int',
+		'chuong_trinh_dao_tao_id' => 'int'
+
 	];
 
 	protected $fillable = [
 		'ten',
-		'so_tin_chi',
-		'khoa_id',
-		'loai_kien_thuc_id'
+		'tong_tin_chi_ktt_tu_chon',
+		'loai_kien_thuc_id',
+		'chuong_trinh_dao_tao_id'
 	];
 
 	public function khoa()

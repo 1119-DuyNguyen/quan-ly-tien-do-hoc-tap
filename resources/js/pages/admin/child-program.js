@@ -1,16 +1,15 @@
+import { SmartTableTemplate } from '../../components/smart-table-template/SmartTableTemplate';
 import { Validator } from '../../components/helper/Validator';
 import { alertComponent } from '../../components/helper/alert-component';
 import { ConfirmComponent } from '../../components/helper/confirm-component';
 import { ModalComponent } from '../../components/helper/modal-component';
 import { toast } from '../../components/helper/toast';
-import { SmartTableTemplate } from '../../components/smart-table-template/SmartTableTemplate';
-import { ChildProgram } from './child-program';
 
-export class Program {
-    static URL_Program = location.protocol + '//' + location.host + '/api/admin/program';
+export class ChildProgram {
+    static URL_Program = location.protocol + '//' + location.host + '/api/admin/child-program';
     static export() {}
     static edit() {}
-    static getAddFormElement(textSubmit = '', tableTem) {
+    static getAddFormElement(textSubmit = '', tableTem, idProgram) {
         let formContainer = document.createElement('form');
         formContainer.classList.add('form');
         formContainer.innerHTML = `
@@ -20,28 +19,22 @@ export class Program {
             <input rules='required' type="text" name='ten' class="input" />
         </div>
         <div class="grid-item form-group">
-            <label for=""> Tổng tín chỉ</label>
-            <input name='tong_tin_chi'  type="text" class="input"rules='required|number' value="" />
+            <label for=""> Tổng tín chỉ tự chọn</label>
+            <input name='tong_tin_chi_ktt_tu_chon'  type="text" class="input"rules='required|number' value="" />
         </div>
-        <div class="grid-item form-group">
-            <label for=""> Thời gian đào tạo</label>
-            <input type="text" name='thoi_gian_dao_tao' rules='required|number' class="input" value="" />
-        </div>
+
         <!-- select -->
         <div class="grid-item form-group">
-            <label>Ngành</label>
+            <label>Loại kiến thức</label>
 
-            <select name="nganh_id" rules='required'>
-
-            </select>
-        </div>
-        <div class="grid-item form-group">
-            <label>Chu kỳ</label>
-
-            <select name="chu_ky_id"  rules='required'>
+            <select name="loai_kien_thuc_id" rules='required'>
 
             </select>
+            
+
         </div>
+    <input type="hidden" name="chuong_trinh_dao_tao_id" value="${idProgram}"/>
+       
     </div>
     <button class="form-submit">${textSubmit}</button>
         `;
@@ -59,7 +52,7 @@ export class Program {
         handleValidator.onSubmit = function (data) {
             //  console.log(data);
             axios
-                .post(Program.URL_Program, data)
+                .post(ChildProgram.URL_Program, data)
                 .then((res) => tableTem.reRenderTable())
                 .catch((err) => {
                     console.log(err.response);
@@ -71,11 +64,11 @@ export class Program {
 
         return formContainer;
     }
-    static getEditFormElement(textSubmit = '', tableTem, rowId) {
+    static getEditFormElement(textSubmit = '', tableTem, rowId, idProgram) {
         let formContainer = document.createElement('form');
 
         axios
-            .get(Program.URL_Program + '/' + rowId)
+            .get(ChildProgram.URL_Program + '/' + rowId)
             .then((res) => res.data.data)
             .then((data) => {
                 formContainer.classList.add('form');
@@ -83,34 +76,26 @@ export class Program {
                 formContainer.innerHTML = `
                 <div class="grid-container-half">
                 <div class="grid-item form-group">
-                    <label for=""> Tên</label>
-                    <input rules='required' type="text" name='ten' class="input" value="${data.ten}" />
+                    <label for="">Tên</label>
+                    <input rules='required' type="text" name='ten' class="input" 
+                    value="${data.ten}"
+                    />
                 </div>
                 <div class="grid-item form-group">
-                    <label for=""> Tổng tín chỉ</label>
-                    <input name='tong_tin_chi'  type="text" class="input"rules='required|number' 
-                    value="${data.tong_tin_chi}" />
+                    <label for=""> Tổng tín chỉ tự chọn</label>
+                    <input name='tong_tin_chi'  type="text" class="input"rules='required|number' value="${data.tong_tin_chi_ktt_tu_chon}" />
                 </div>
-                <div class="grid-item form-group">
-                    <label for=""> Thời gian đào tạo</label>
-                    <input type="text" name='thoi_gian_dao_tao'
-                     rules='required|number' class="input" value="${data.thoi_gian_dao_tao}" />
-                </div>
+        
                 <!-- select -->
                 <div class="grid-item form-group">
-                    <label>Ngành</label>
+                    <label>Loại kiến thức</label>
         
-                    <select name="nganh_id" rules='required' data-select='ten_nganh'>
-        
-                    </select>
-                </div>
-                <div class="grid-item form-group">
-                    <label>Chu kỳ</label>
-        
-                    <select name="chu_ky_id"  rules='required'  data-select='ten_chu_ky'>
+                    <select name="loai_kien_thuc_id" rules='required'>
         
                     </select>
                 </div>
+                 <input type="hidden" name="chuong_trinh_dao_tao_id" value="${idProgram}"/>
+
             </div>
             <button class="form-submit">${textSubmit}</button>
                 `;
@@ -125,13 +110,8 @@ export class Program {
                         }
                     });
 
-                    formContainer.querySelectorAll(`select[name="chu_ky_id"] option`).forEach((option) => {
-                        if (option.value == data.chu_ky_id) {
-                            option.selected = true;
-                        } else option.selected = false;
-                    });
-                    formContainer.querySelectorAll(`select[name="nganh_id"] option`).forEach((option) => {
-                        if (option.value == data.nganh_id) {
+                    formContainer.querySelectorAll(`select[name="loai_kien_thuc_id"] option`).forEach((option) => {
+                        if (option.value == data.loai_kien_thuc_id) {
                             option.selected = true;
                         } else option.selected = false;
                     });
@@ -144,7 +124,7 @@ export class Program {
         handleValidator.onSubmit = function (data) {
             //  console.log(data);
             axios
-                .put(Program.URL_Program + '/' + rowId, data)
+                .put(ChildProgram.URL_Program + '/' + rowId, data)
                 .then((res) => tableTem.reRenderTable())
                 .catch((err) => {
                     console.log(err.response);
@@ -155,18 +135,18 @@ export class Program {
         };
         return formContainer;
     }
-    static index() {
+    static index(idProgram) {
         // let smartTable = new SmartTableTemplate();
         //helper function
 
         let rootElement = document.getElementById('main-content');
 
-        let programContainer = document.createElement('div');
-        programContainer.classList.add('program-container');
-        rootElement.appendChild(programContainer);
-        let tableTem = new SmartTableTemplate(programContainer);
+        let childProgramContainer = document.createElement('div');
+        childProgramContainer.classList.add('child-program-container');
+        rootElement.appendChild(childProgramContainer);
+        let tableTem = new SmartTableTemplate(childProgramContainer);
 
-        tableTem.fetchDataTable(Program.URL_Program, {
+        tableTem.fetchDataTable(ChildProgram.URL_Program, {
             formatAttributeHeader: {
                 id: {
                     width: '40px',
@@ -177,25 +157,29 @@ export class Program {
                     minWidth: '300px',
                     sort: true,
                 },
-                tong_tin_chi: {
-                    title: 'Tổng tín chỉ',
+                tong_tin_chi_ktt_tu_chon: {
+                    title: 'Tổng tín chỉ tự chọn',
                     minWidth: '50px',
                     oneLine: true,
                 },
-                thoi_gian_dao_tao: {
-                    title: 'Thời gian đào tạo',
+                tong_tin_chi_ktt_bat_buoc: {
+                    title: 'Tổng tín chỉ bắt buộc',
+                    minWidth: '50px',
+
                     oneLine: true,
                 },
-                trinh_do_dao_tao: {
-                    title: 'Trình độ đào tạo',
+                tong_tin_chi: {
+                    title: 'Tổng tín chỉ',
+                    minWidth: '50px',
+
                     oneLine: true,
                 },
-                ten_nganh: {
-                    title: 'Tên ngành',
+                ten_lkt: {
+                    title: 'Loại khối kiến thức',
                     oneLine: true,
                 },
-                ten_chu_ky: {
-                    title: 'Tên chu kỳ',
+                ten_ctdt: {
+                    title: 'Tên chương trình đào tạo',
                     oneLine: true,
                 },
 
@@ -212,13 +196,12 @@ export class Program {
             },
             pagination: true,
             add: (e) => {
-                new ModalComponent(Program.getAddFormElement('Thêm ', tableTem));
+                new ModalComponent(ChildProgram.getAddFormElement('Thêm ', tableTem, idProgram));
             },
             edit: (e) => {
                 let rowId = e.target.closest('tr')?.querySelector('[data-attr="id"]')?.getAttribute('data-content');
-                if (rowId) new ModalComponent(Program.getEditFormElement('Cập nhập', tableTem, rowId));
+                if (rowId) new ModalComponent(ChildProgram.getEditFormElement('Cập nhập', tableTem, rowId, idProgram));
             },
-            export: true,
             view: true,
         });
         // let tableTem = new SmartTableTemplate(tableTest, response.pokedata, {
@@ -232,7 +215,12 @@ export class Program {
     static view({ id }) {
         try {
             if (id) {
-                ChildProgram.index(id);
+                let rootElement = document.getElementById('main-content');
+
+                let formValid = new Validator('#role-form');
+                formValid.onSubmit = (data) => {
+                    console.log(data);
+                };
             } else {
             }
         } catch (err) {

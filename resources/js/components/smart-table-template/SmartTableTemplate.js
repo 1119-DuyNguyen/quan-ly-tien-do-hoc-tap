@@ -27,6 +27,7 @@ export class SmartTableTemplate {
 
     #paginationService;
     isFirstInit = false;
+    #selectDataList;
     /**
      * @var options Object
      * formatAttributeHeader : convert name json to format
@@ -38,38 +39,42 @@ export class SmartTableTemplate {
         pagination: false,
         urlAPI: '',
         rowPerPage: '',
+        view: false,
+        export: false,
+        add: false,
     };
     // formatAttributeHeader
     // key object json => utf8 name
     // {name: '123'}, format=['name'=>"tên"]
     //render => tên: 123
-
-    createControlBtns() {
-        let container = createElement('div', 'control-container');
-        let containerBtns = createElement('div', 'control-btns');
-        let addBtn = createElement(
-            'a',
-            'btn btn--primary',
-            '<i class="fa-solid fa-circle-plus" style="margin-right:8px"></i>Thêm'
-        );
-        addBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            routeHref(location.protocol + '//' + location.host + location.pathname + '/edit');
-        });
-        containerBtns.appendChild(addBtn);
-        container.appendChild(containerBtns);
-
-        return container;
+    get getDataSelectList() {
+        return this.#selectDataList;
     }
-    constructor(
-        rootElement,
-        selectList = {
-            select1: {
-                textDefault: '',
-                urlOptionList: '',
-            },
+    createControlBtns() {
+        if (this.#option['add']) {
+            let container = createElement('div', 'control-container');
+            let containerBtns = createElement('div', 'control-btns');
+            let addBtn = createElement(
+                'a',
+                'btn btn--primary',
+                '<i class="fa-solid fa-circle-plus" style="margin-right:8px"></i>Thêm'
+            );
+
+            if (typeof this.#option['add'] == 'function') {
+                addBtn.addEventListener('click', this.#option['add']);
+            } else {
+                addBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    routeHref(location.protocol + '//' + location.host + location.pathname + '/edit');
+                });
+            }
+
+            containerBtns.appendChild(addBtn);
+            container.appendChild(containerBtns);
+            return container;
         }
-    ) {
+    }
+    constructor(rootElement) {
         try {
             if (!rootElement) {
                 throw 'Element is not valid';
@@ -82,34 +87,78 @@ export class SmartTableTemplate {
         }
     }
     /**
+     *
+     * @param {Object} dataSelect
+     * @example {name: [] option array}
+     */
+    renderSelectList(dataSelect = []) {
+        let selectContainer = document.createElement('div');
+        selectContainer.classList.add('select-container');
+        this.#selectDataList = dataSelect;
+        dataSelect.forEach((selectList) => {
+            let html = `<option value="">Tất cả</option>`;
+            if (selectList.text) {
+                html = `<option value="">${selectList.text}</option>`;
+                delete selectList.text;
+            }
+            for (let key in selectList) {
+                //create select
+                let select = document.createElement('select');
+                select.setAttribute('name', key);
+                const url = new URL(window.location.href);
+                selectList[key].forEach((option) => {
+                    let currentSelect = url.searchParams.get(key) == option.id ? 'selected' : '';
+                    html += `<option value=${option.id ?? ''} ${currentSelect}>${option.ten ?? ''}</option>`;
+                });
+                select.innerHTML = html;
+
+                selectContainer.appendChild(select);
+            }
+        });
+        //binding action
+
+        let selectList = selectContainer.querySelectorAll('select[name]');
+        selectList.forEach((select) => {
+            select.onchange = (e) => {
+                let value = select.value;
+                const url = new URL(window.location.href);
+                url.searchParams.set(select.getAttribute('name'), value);
+                window.history.replaceState(null, null, url);
+                this.reRenderTable();
+            };
+        });
+        return selectContainer;
+    }
+    /**
      * element append child - table with dataJson and options
      * @param {*} dataJson
      * @param {Object} option
      * @returns
      */
-    init(dataJson, option, paginationOption = {}) {
+    init(dataJson, option, paginationOption, selectDataList) {
         try {
             option = assignOption(this.#option, option);
             //header create edit delete
             //container
-            if (dataJson.length < 1) {
-                throw new Error('Data cant be null');
-            }
-
+            // if (dataJson.length < 1) {
+            //     throw new Error('Data cant be null');
+            // }
             if (getArrayDepth(dataJson) > 2) {
                 throw new Error('Deep array muse be smaller than 2');
             }
             if (!this.isFirstInit) {
-                //action;
-                if (option['edit']) {
-                    this.#container.appendChild(this.createControlBtns());
+                if (selectDataList) {
+                    this.#container.appendChild(this.renderSelectList(selectDataList));
                 }
+                //action;
+                let controlBtns = this.createControlBtns();
+                if (controlBtns) this.#container.appendChild(controlBtns);
                 let containerTable = createElement('div', 'container-table');
                 this.#content = createElement('table', 'table');
                 containerTable.appendChild(this.#content);
                 this.#container.appendChild(containerTable);
                 this.isFirstInit = true;
-                if (option['pagination']) {
+                if (option['pagination'] && paginationOption) {
                     this.handleCreatePagination(paginationOption);
                 }
             } else {
@@ -119,11 +168,11 @@ export class SmartTableTemplate {
             this.#headerBtns = [];
             this.#body = createElement('tbody', 'table-content');
             //content
-
             let headers = getDataJsonKeys(dataJson);
-            if (!headers) {
-                throw new Error('get headers faild');
-            } else {
+            if (!headers || !Array.isArray(headers) || headers.length < 1) {
+                this.#content.innerHTML = 'Không tìm thấy dữ liệu';
+
+                return;
             }
             this.#header.appendChild(this.#createRowHeader(headers));
             this.#content.appendChild(this.#header);
@@ -134,10 +183,15 @@ export class SmartTableTemplate {
             this.#content.appendChild(this.#body);
         } catch (err) {
             console.error(err);
+            return;
         }
     }
     handleCreatePagination(paginationOption) {
-        this.#paginationService = new PaginationService(this.#container, this.reRenderTable, paginationOption);
+        this.#paginationService = new PaginationService(
+            this.#container,
+            this.reRenderTable.bind(this),
+            paginationOption
+        );
 
         this.#paginationService.renderPagination();
     }
@@ -236,55 +290,103 @@ export class SmartTableTemplate {
     #createRowBasedObject(obj) {
         const row = document.createElement('tr');
         // render checkbox, action
-        if (this.#option['edit']) {
+        if (this.#option['edit'] || this.#option['export'] || this.#option['view']) {
             //show/update/ delete button
             let btnActions = createElement('td', 'group-action');
-            let showBtn = createElement('button', 'btn btn--primary', '<i class="fa-regular fa-eye"></i>');
-            showBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.preventDefault();
-                let rowId = row.querySelector('[data-attr="id"] ');
-                if (rowId) {
-                    routeHref(
-                        location.protocol +
-                            '//' +
-                            location.host +
-                            location.pathname +
-                            '/' +
-                            rowId.getAttribute('data-content')
-                    );
+            if (this.#option['export']) {
+                let exportBtn = createElement(
+                    'button',
+                    'btn btn--success',
+                    '<i class="fa-regular fa-floppy-disk"></i>'
+                );
+                if (typeof this.#option['export'] === 'function') {
+                    exportBtn.addEventListener('click', this.#option['export']);
                 }
-            });
-            let deleteBtn = createElement('button', 'btn btn--danger', '<i class="fa-regular fa-trash-can"></i>');
-            deleteBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                let rowId = row.querySelector('[data-attr="id"]');
-                if (rowId) {
-                    try {
-                        new ConfirmComponent({
-                            questionText: 'Bạn có chắc chắn muốn xóa không ?',
-                            trueButtonText: 'Có',
-                            falseButtonText: 'Không',
-                        }).then((data) => {
-                            if (data)
-                                axios
-                                    .delete(this.#option.urlAPI + '/' + rowId.getAttribute('data-content'))
-                                    .then((res) => row.remove());
-                        });
-                    } catch (e) {
-                        console.error(e);
-                        toast({
-                            title: 'Thao tác xóa thất bại',
-                            message: 'Vui lòng thử lại sau ít phút',
-                            duration: 4000,
-                            type: 'error',
-                        });
+
+                btnActions.appendChild(exportBtn);
+            }
+            if (this.#option['view']) {
+                let viewBtn = createElement('button', 'btn btn--primary', '<i class="fa-regular fa-eye"></i>');
+                if (typeof this.#option['view'] === 'function') {
+                    viewBtn.addEventListener('click', this.#option['view']);
+                } else {
+                    viewBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        let rowId = row.querySelector('[data-attr="id"] ');
+                        if (rowId) {
+                            routeHref(
+                                location.protocol +
+                                    '//' +
+                                    location.host +
+                                    location.pathname +
+                                    '/' +
+                                    rowId.getAttribute('data-content')
+                            );
+                        }
+                    });
+                }
+
+                btnActions.appendChild(viewBtn);
+            }
+            if (this.#option['edit']) {
+                let editBtn = createElement(
+                    'button',
+                    'btn btn--warning',
+                    '<i class="fa-regular fa-pen-to-square"></i>'
+                );
+                if (typeof this.#option['edit'] === 'function') {
+                    editBtn.addEventListener('click', this.#option['edit']);
+                } else {
+                    editBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.preventDefault();
+                        let rowId = row.querySelector('[data-attr="id"] ');
+                        if (rowId) {
+                            routeHref(
+                                location.protocol +
+                                    '//' +
+                                    location.host +
+                                    location.pathname +
+                                    '/' +
+                                    rowId.getAttribute('data-content')
+                            );
+                        }
+                    });
+                }
+
+                let deleteBtn = createElement('button', 'btn btn--danger', '<i class="fa-regular fa-trash-can"></i>');
+                deleteBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    let rowId = row.querySelector('[data-attr="id"]');
+                    if (rowId) {
+                        try {
+                            new ConfirmComponent({
+                                questionText: 'Bạn có chắc chắn muốn xóa không ?',
+                                trueButtonText: 'Có',
+                                falseButtonText: 'Không',
+                            }).then((data) => {
+                                if (data)
+                                    axios
+                                        .delete(this.#option.urlAPI + '/' + rowId.getAttribute('data-content'))
+                                        .then((res) => row.remove());
+                            });
+                        } catch (e) {
+                            console.error(e);
+                            toast({
+                                title: 'Thao tác xóa thất bại',
+                                message: 'Vui lòng thử lại sau ít phút',
+                                duration: 4000,
+                                type: 'error',
+                            });
+                        }
                     }
-                }
-                console.log('here', rowId);
-            });
-            btnActions.appendChild(showBtn);
-            btnActions.appendChild(deleteBtn);
+                    console.log('here', rowId);
+                });
+
+                btnActions.appendChild(editBtn);
+                btnActions.appendChild(deleteBtn);
+            }
+
             row.appendChild(btnActions);
         }
         //render data and assign key
@@ -390,7 +492,7 @@ export class SmartTableTemplate {
         if (jsonData) {
             option.urlAPI = urlAPI;
             option = assignOption(this.#option, option);
-            this.init(jsonData.data.dataObject, option, jsonData.data.paginationOption);
+            this.init(jsonData.data.dataObject, option, jsonData.data.paginationOption, jsonData.data.selectDataList);
             return true;
         } else return false;
     }

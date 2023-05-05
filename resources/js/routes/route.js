@@ -102,12 +102,11 @@ async function routeTo(route, _params, is404 = false) {
         // sidebarEl.dataset.isInit = '';
     }
     rootEl.innerHTML = '';
-
+    if (!is404) {
+        let briefContainer = generateBriefMap(rootEl);
+        if (briefContainer) rootEl.appendChild(briefContainer);
+    }
     if (html) {
-        if (!is404) {
-            let briefContainer = generateBriefMap(rootEl);
-            if (briefContainer) rootEl.appendChild(briefContainer);
-        }
         rootEl.insertAdjacentHTML('beforeend', html);
     }
 

@@ -9,10 +9,7 @@ function getParent(element, selector) {
 }
 const validatorRules = {
     required: function (value) {
-        if (typeof value == 'string') return value.trim() ? undefined : 'Vui lòng nhập trường này';
-        else {
-            return value ? undefined : 'Vui lòng nhập trường này';
-        }
+        return value.trim() ? undefined : 'Vui lòng nhập trường này';
     },
     email: function (value) {
         var regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -47,15 +44,18 @@ const validatorRules = {
             return value === input.value ? undefined : `Mật khẩu nhập lại không đúng`;
         };
     },
-
+    number: function (value) {
+        var regex = /^\d+$/;
+        return regex.test(value) ? undefined : 'Trường chỉ chấp nhận định dạng là số';
+    },
     file: function (value) {},
 };
-export function Validator(formSelector, { formGroup, errorSelector } = {}) {
+export function Validator(formElement, { formGroup, errorSelector } = {}) {
     if (!formGroup) formGroup = '.form-group';
     if (!errorSelector) errorSelector = '.form-message'; // thẻ span
     var _this = this; // object Validator
     var rulesCollector = {};
-    var formElement = document.querySelector(formSelector);
+    // var formElement = document.querySelector(formElement);
 
     function addErrorMessage(inputElement, errorMessage) {
         var parent = getParent(inputElement, formGroup);
@@ -77,7 +77,7 @@ export function Validator(formSelector, { formGroup, errorSelector } = {}) {
         if (parent) {
             //thẻ span
             let formMessage = parent.querySelector(errorSelector);
-            if (formMessage) formMessage.innerHTML = '';
+            if (formMessage) formMessage.remove();
             //invalid vào div -> nhìn giống lỗi
             parent.classList.remove('invalid');
         }

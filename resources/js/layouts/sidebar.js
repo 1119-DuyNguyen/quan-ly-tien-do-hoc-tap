@@ -35,7 +35,7 @@ let navPage = {
     },
 
     classroom: {
-        role: ['sinh-vien', 'giang-vien', 'quan-tri-vien'],
+        role: ['sinh-vien', 'giang-vien', ''],
         icon: 'fa-solid fa-chalkboard icon',
         text: 'Lớp học',
     },
@@ -48,6 +48,11 @@ let navPage = {
         role: ['quan-tri-vien'],
         icon: 'fa-regular fa-user icon',
         text: 'Tài khoản',
+    },
+    subject: {
+        role: ['quan-tri-vien'],
+        text: 'Học phần',
+        icon: 'fa-regular fa-book-open"',
     },
     logout: {
         role: ['*'],

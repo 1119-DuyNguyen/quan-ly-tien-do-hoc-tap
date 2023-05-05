@@ -41,7 +41,7 @@ trait ApiResponser
             $code
         );
     }
-    protected function paginate($request, $table,  $jsonResource, $orderColumnValid = ['id'], $itemPerPage = 10, $step = 3)
+    protected function paginate($request, $table, $jsonResource, $orderColumnValid = ['id'], $selectDataList = [],  $itemPerPage = 10, $step = 3)
     {
         //$request->validate(['sort' => 'in:column1,column2']);
         //if (Schema::hasColumn('users', $request->sort)) {
@@ -85,14 +85,24 @@ trait ApiResponser
                 return  $r->newInstanceArgs([$item]);
             });
         }
+        if ($total <= $itemPerPage) {
+            return $this->success([
 
+                'dataObject' => $data,
+                'selectDataList' => $selectDataList
+
+                //call_user_func($jsonResource . "::collection", $data),
+            ]);
+        }
         return $this->success([
             'paginationOption' => [
                 'total' => $total,
                 'perPage' => $itemPerPage,
                 'step' => $step,
+
             ],
-            'dataObject' => $data
+            'dataObject' => $data,
+            'selectDataList' => $selectDataList
             //call_user_func($jsonResource . "::collection", $data),
         ]);
         //return   ->paginate($perPage);
@@ -109,7 +119,7 @@ trait ApiResponser
      * 
      * @return [type]
      */
-    protected function paginateMultipleTable($request, $builderTableJoin,  $jsonResource, $orderColumnValid = ['id'], $itemPerPage = 10, $step = 3)
+    protected function paginateMultipleTable($request, $builderTableJoin,   $jsonResource,  $orderColumnValid = ['id'], $selectDataList = [], $itemPerPage, $step = 3)
     {
         //$request->validate(['sort' => 'in:column1,column2']);
         //if (Schema::hasColumn('users', $request->sort)) {
@@ -138,7 +148,9 @@ trait ApiResponser
         } else {
             $orderColumn = $orderColumnValid[0] ?? 'id';
         }
-
+        if (!isset($itemPerPage)) {
+            $itemPerPage = 10;
+        }
         $total = $builderTableJoin->count();
         $data = $builderTableJoin
             ->orderBy($orderColumn, $dir)
@@ -154,40 +166,26 @@ trait ApiResponser
                 return  $r->newInstanceArgs([$item]);
             });
         }
+        if ($total <= $itemPerPage) {
+            return $this->success([
 
+                'dataObject' => $data,
+                'selectDataList' => $selectDataList
+
+                //call_user_func($jsonResource . "::collection", $data),
+            ]);
+        }
         return $this->success([
             'paginationOption' => [
                 'total' => $total,
                 'perPage' => $itemPerPage,
                 'step' => $step,
             ],
-            'dataObject' => $data
+            'dataObject' => $data,
+            'selectDataList' => $selectDataList
+
             //call_user_func($jsonResource . "::collection", $data),
         ]);
         //return   ->paginate($perPage);
-    }
-    protected function paginateObjectData($request, $objectData, $itemPerPage = 10, $step = 3)
-    {
-        $finalData = [];
-        $curPage = $request->input('page');
-        if (!is_numeric($curPage)) {
-            $curPage = 1;
-        }
-        $total = sizeof($objectData);
-        for ($i = 0; $i < $itemPerPage; $i++) {
-            $indexToGet = ($curPage - 1) * $itemPerPage + $i;
-            if ($indexToGet < $total) {
-                array_push($finalData, $objectData[$indexToGet]);
-            }
-        }
-        return $this->success([
-            'paginationOption' => [
-                'total' => $total,
-                'perPage' => $itemPerPage,
-                'curPage' => $curPage,
-                'step' => $step,
-            ],
-            'dataObject' => $finalData,
-        ]);
     }
 }

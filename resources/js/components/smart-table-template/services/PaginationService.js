@@ -20,8 +20,8 @@ export class PaginationService {
      */
     constructor(container, reRenderTableCallBack, option = {}) {
         assignOption(this.option, option);
-        this.option.totalPage = Math.round(this.option.total / this.option.perPage);
-        if (this.option.totalPage >= 2) {
+        this.option.totalPage = Math.ceil(this.option.total / this.option.perPage);
+        if (this.option.totalPage >= 1) {
             // mặc định là append
             this.#pagination = createElement('ul', 'pagination');
             container.appendChild(this.#pagination);

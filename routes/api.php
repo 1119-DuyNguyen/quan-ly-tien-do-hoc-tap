@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AnalyticsController;
+use App\Http\Controllers\Admin\ChildProgramController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Test\TestApi;
@@ -10,6 +11,7 @@ use App\Http\Controllers\Class\ClassroomController;
 use App\Http\Controllers\Class\Post\PostController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\ProgramController;
+use App\Http\Controllers\Admin\SubjectController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Class\Post\BaitapController;
 use App\Http\Controllers\Class\BaiTapSinhVienController;
@@ -61,10 +63,13 @@ Route::middleware('auth:api')->group(function () {
             Route::apiResource('/role', RoleController::class);
             Route::apiResource('/user', UserController::class);
             Route::apiResource('/permissions', PermissionController::class);
-            Route::apiResource('/permissions', PermissionController::class);
-            Route::apiResource('/program', ProgramController::class);
 
-            Route::get('/permissions/all', [PermissionController::class, 'all']);
+            Route::apiResource('/subject', SubjectController::class);
+
+            Route::apiResource('/program', ProgramController::class);
+            Route::get('/child-program/subject', [ChildProgramController::class, 'getSubject']);
+
+            Route::apiResource('/child-program', ChildProgramController::class);
         });
 });
 Route::get('/permissions/all', [PermissionController::class, 'all']);

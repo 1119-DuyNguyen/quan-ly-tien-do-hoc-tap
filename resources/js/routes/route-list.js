@@ -11,6 +11,7 @@ import { Analytics } from '../pages/admin/analytics.js';
 import { HomeworkMark } from '../components/classroom/group/post/HomeworkMark.js';
 import { User } from '../pages/admin/User.js';
 import { Program } from '../pages/admin/program.js';
+import { Subject } from '../pages/admin/subject.js';
 
 const route = new Route();
 
@@ -47,16 +48,17 @@ route.addRoute(
     'templates/teacher/homework.html'
 );
 
-
 route.addRoute('quan-tri-vien/dashboard', Analytics.index, { title: 'role' }, 'templates/admin/dashboard.html');
 
 route.addRoute('quan-tri-vien/program', Program.index, { title: 'Chương trình đào tạo' }, '');
-route.addRoute('quan-tri-vien/program/$id', Program.edit, { title: 'Chương trình đào tạo' }, '');
-
+route.addRoute('quan-tri-vien/program/$id', Program.view, { title: 'Chương trình đào tạo' }, '');
 
 route.addRoute('quan-tri-vien/role', Role.index, { title: 'Quyền' }, '');
 route.addRoute('quan-tri-vien/role/edit', Role.edit, { title: 'Quyền' }, 'templates/admin/role-edit.html');
 route.addRoute('quan-tri-vien/role/edit/$id', Role.edit, { title: 'Quyền' }, 'templates/admin/role-edit.html');
+// route.addRoute('quan-tri-vien/subject', Sub.edit, { title: 'Quyền' }, 'templates/admin/role-edit.html');
+route.addRoute('quan-tri-vien/subject', Subject.index, { title: 'Học phần' }, '');
 
 route.addRoute('quan-tri-vien/user', User.index, { title: 'Người dùng' }, '');
+
 export var routeList = route.getUrlRoutes();

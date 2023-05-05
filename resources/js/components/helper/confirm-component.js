@@ -1,3 +1,6 @@
+/**
+ *
+ */
 export class ConfirmComponent {
     constructor({ questionText, trueButtonText, falseButtonText, parent }) {
         console.log(document.body);

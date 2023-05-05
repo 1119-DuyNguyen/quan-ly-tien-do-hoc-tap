@@ -7,14 +7,28 @@
     //set border table;
     .container-table {
         overflow-x: auto;
+        padding: 24px 0;
     }
     // table,
     // th,
     // td {
     //     border: 1px solid #ddd;
     // }
-
+    .select-container {
+        padding: 16px 0;
+        margin: 16px 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        & > * {
+            margin-top: 8px;
+            width: 100%;
+        }
+    }
     .control-container {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 16px;
         .control-btn {
             padding: 8px 0;
             text-align: left;
@@ -36,6 +50,7 @@
         // box-sizing: border-box;
         border-collapse: collapse;
         width: 100%;
+
         // overflow-x: auto;
         overflow-x: scroll;
         .table-header tr {
@@ -57,7 +72,6 @@
                     text-align: left;
                     width: 100%;
                     padding: 8px;
-                    justify-content: center;
                 }
                 /* //Black right-Pointing Small Triangle */
                 &.sort {
