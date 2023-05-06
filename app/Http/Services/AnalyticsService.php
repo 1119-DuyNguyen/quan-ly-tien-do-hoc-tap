@@ -14,14 +14,29 @@ class AnalyticsService {
     private $dssv;
     private $ds_moc_thoi_gian;
     private $object;
+    private $tt_lop_chi_tiet = false;
+    private $dssv_columns = array( "tinh_trang_sinh_vien.sinh_vien_id",
+    "tai_khoan.ten",
+    "tai_khoan.ten_dang_nhap",
+    "tinh_trang_sinh_vien.lop_hoc_id",
+    "nam_ket_thuc",
+    "thoi_gian_ket_thuc",
+    "da_tot_nghiep",
+    "so_lan_canh_cao",
+    "buoc_thoi_hoc",
+    "moc_thoi_gian_id",
+    "chuong_trinh_dao_tao.nganh_id",
+    "khoa.id as khoa_id");
 
     private function dssvTable() {
         return DB::table("tinh_trang_sinh_vien")
+        ->join("tai_khoan", "tinh_trang_sinh_vien.sinh_vien_id", "=", "tai_khoan.id")
         ->join("lop_hoc", "tinh_trang_sinh_vien.lop_hoc_id", "=", "lop_hoc.id")
         ->join("chuong_trinh_dao_tao", "lop_hoc.chuong_trinh_dao_tao_id", "=", "chuong_trinh_dao_tao.id")
         ->join("chu_ky", "chuong_trinh_dao_tao.chu_ky_id", "=", "chu_ky.id")
         ->join("nganh", "chuong_trinh_dao_tao.nganh_id", "=", "nganh.id")
-        ->join("khoa", "nganh.khoa_id", "=", "khoa.id");
+        ->join("khoa", "nganh.khoa_id", "=", "khoa.id")
+        ->select($this->dssv_columns);
     }
 
     public function main(PaginationRequest $request) {
@@ -32,7 +47,9 @@ class AnalyticsService {
         } else if ($request->input("khoa") !== null) {
             $this->tk_khoa($request);
         } else if ($request->input("lop") !== null) {
-            return $this->tk_lop($request);
+            return $this->tk_lop($request, false);
+        } else if ($request->input("tt_lop") !== null) {
+            return $this->tk_lop($request, true);
         } else if ($request->input("sv") !== null) {
             return $this->tk_sv($request);
         }
@@ -149,6 +166,9 @@ class AnalyticsService {
             "sv_dat_dk_tot_nghiep" => 0
         );
 
+        if ($type == 'lop_hoc_id' && $this->tt_lop_chi_tiet == true)
+            $arr['dssv'] = $dssv;
+
         return $arr;
     }
 
@@ -161,7 +181,8 @@ class AnalyticsService {
         $so_sv_bi_canh_cao = $this->dssvTable()->where('so_lan_canh_cao', '>', '0')->get()->count();
         $so_sv_bi_bth = $this->dssvTable()->where('buoc_thoi_hoc', '=', '1')->get()->count();
 
-        $dssv = $this->dssvTable()->select("*")->get();
+        $dssv = $this->dssvTable()->get();
+
         $this->dssv = $dssv;
 
         $so_sv_tre_han = 0;
@@ -218,40 +239,109 @@ class AnalyticsService {
 
         $khoa_id = intval($khoa_id);
 
-        $this->object->tong_sv = $this->dssvTable()->where('khoa_id', '=', $khoa_id)->get()->count();
-        $this->object->sv_tot_nghiep = $this->dssvTable()->where('khoa_id', '=', $khoa_id)->where('da_tot_nghiep', '=', '1')->get()->count();
+        $this->object->tong_sv = $this->dssvTable()->where('nganh.khoa_id', '=', $khoa_id)->get()->count();
+        $this->object->sv_tot_nghiep = $this->dssvTable()->where('nganh.khoa_id', '=', $khoa_id)->where('da_tot_nghiep', '=', '1')->get()->count();
 
         $this->object->sv_chua_tot_nghiep = $this->object->tong_sv - $this->object->sv_tot_nghiep;
         $this->object->sv_tre_han = 0;
 
-        $this->object->sv_bi_canh_cao = $this->dssvTable()->where('khoa_id', '=', $khoa_id)->where('so_lan_canh_cao', '>=', '1')->count();
-        $this->object->sv_bi_bth = $this->dssvTable()->where('khoa_id', '=', $khoa_id)->where('da_tot_nghiep', '=', '1')->count();
+        $this->object->sv_bi_canh_cao = $this->dssvTable()->where('nganh.khoa_id', '=', $khoa_id)->where('so_lan_canh_cao', '>=', '1')->count();
+        $this->object->sv_bi_bth = $this->dssvTable()->where('nganh.khoa_id', '=', $khoa_id)->where('da_tot_nghiep', '=', '1')->count();
         
-        foreach ($this->dssvTable()->where('khoa_id', '=', $khoa_id)->select("*")->get() as $sv) {
+        foreach ($this->dssvTable()->where('nganh.khoa_id', '=', $khoa_id)->select("*")->get() as $sv) {
             if ($sv->nam_ket_thuc < date("Y") && $sv->da_tot_nghiep == "0") 
                 $this->object->sv_tre_han++;
         }
 
         $this->object->dot = $this->getNumOfSinhVien($khoa_id, "khoa");
+
+        $ds_lop = DB::table('lop_hoc')
+        ->join('chuong_trinh_dao_tao', 'chuong_trinh_dao_tao_id', '=', 'chuong_trinh_dao_tao.id')
+        ->join('nganh', 'chuong_trinh_dao_tao.nganh_id', '=', 'nganh.id')
+        ->where('khoa_id', '=', $khoa_id)
+        ->get(array('lop_hoc.id', 'ma_lop', 'ten_lop', 'so_luong_sinh_vien'));
+
+        $this->object->ds_lop = $ds_lop;
     }
 
-    private function tk_lop(PaginationRequest $request) {
-        $lop_str = $request->input("lop");
+    private function tk_lop(PaginationRequest $request, bool $tt_chi_tiet) {
+        if (!$tt_chi_tiet)
+            $lop_str = $request->input("lop");
+        else 
+            $lop_str = $request->input("tt_lop");
 
-        $lop_list = DB::table("lop_hoc")->where('ma_lop', 'LIKE', "%$lop_str%")->get(array('ma_lop','id'));
+        $this->tt_lop_chi_tiet = $tt_chi_tiet;
+
+        if (!$tt_chi_tiet)
+            $lop_list = DB::table("lop_hoc")->where('ma_lop', 'LIKE', "%$lop_str%")->get(array('ma_lop','id'));
+        else 
+            $lop_list = DB::table("lop_hoc")->where('ma_lop', 'LIKE', "%$lop_str%")->get(array('ma_lop','id'))->first();
 
         $tt_lop_list = new Collection();
+
+        if ($lop_list === null)
+            return $this->error("", 404, "Không tìm thấy lớp");
+
         foreach($lop_list as $lop) {
-            $tt_lop_list->add($this->getNumOfSinhVien($lop->id, "lop"));
+            if (!$tt_chi_tiet)
+                $tt_lop_list->add($this->getNumOfSinhVien($lop->id, "lop"));
+            else
+            {
+                $tt_lop_list->add($this->getNumOfSinhVien($lop_list->id, "lop"));
+                break;
+            }
         }
 
-        if ($lop_list->count() == 0)
+        if (DB::table("lop_hoc")->where('ma_lop', 'LIKE', "%$lop_str%")->get(array('ma_lop','id'))->count() == 0)
             return $this->error("", 404, "");
 
         return $this->success((object) array(
             "lop" => $lop_list,
             "noi_dung_lop" => $tt_lop_list
         ), 200, "");
+    }
+
+    private function getHPList(int $sinh_vien_id) {
+        $result = DB::table("tinh_trang_sinh_vien")
+        ->where('tinh_trang_sinh_vien.sinh_vien_id', '=', $sinh_vien_id)
+        ->join('lop_hoc', 'tinh_trang_sinh_vien.lop_hoc_id', '=', 'lop_hoc.id')->get('chuong_trinh_dao_tao_id')->first();
+
+        if ($result === null)
+            $chuong_trinh_dao_tao_id = -1;
+        else
+            $chuong_trinh_dao_tao_id = $result->chuong_trinh_dao_tao_id;
+
+        $ds_khoi_kien_thuc = DB::table('khoi_kien_thuc')
+        ->where('chuong_trinh_dao_tao_id', '=', $chuong_trinh_dao_tao_id)
+        ->get(array('id','ten'));
+
+        $object = array();
+
+        foreach($ds_khoi_kien_thuc as $kkt) {
+            $ds_hp_batbuoc = DB::table('hoc_phan_kkt_bat_buoc')
+            ->where('khoi_kien_thuc_id', '=', $kkt->id)
+            ->join('hoc_phan', 'hoc_phan_id', '=', 'hoc_phan.id')
+            ->select(array('hoc_phan_id', 'ma_hoc_phan', 'ten', 'so_tin_chi'))
+            ->groupBy('hoc_phan_id')
+            ->get();
+            
+            $ds_hp_tuchon = DB::table('hoc_phan_kkt_tu_chon')
+            ->where('khoi_kien_thuc_id', '=', $kkt->id)
+            ->join('hoc_phan', 'hoc_phan_id', '=', 'hoc_phan.id')
+            ->select(array('hoc_phan_id', 'ma_hoc_phan', 'ten', 'so_tin_chi'))
+            ->groupBy('hoc_phan_id')
+            ->get();
+
+            $object[] = (object) array(
+                "ten" => $kkt->ten,
+                "ds_hp_batbuoc" => $ds_hp_batbuoc,
+                "ds_hp_tuchon" => $ds_hp_tuchon,
+            );
+        }
+
+        $object = $object;
+
+        return $object;
     }
 
     private function tk_sv(PaginationRequest $request) {
@@ -266,7 +356,8 @@ class AnalyticsService {
         $hk_hien_tai = $response->hk_hien_tai;
 
         $result = DB::table('tai_khoan')
-        ->where('ten_dang_nhap', 'LIKE', "%$search_sv_txt%")
+        ->where('ten_dang_nhap', 'LIKE', "%$search_sv_txt%", "and")
+        ->where('quyen_id', '=', 1)
         ->get(array('id', 
                     'ten', 
                     'ten_dang_nhap',
@@ -280,7 +371,9 @@ class AnalyticsService {
             $ds_hp = DB::table('ket_qua')
             ->join('hoc_phan', 'ket_qua.hoc_phan_id', '=', 'hoc_phan.id')
             ->where('sinh_vien_id', '=', $result->id)
-            ->get(array('diem_tong_ket',
+            ->get(array('hoc_phan.id',
+                        'ma_hoc_phan',
+                        'diem_tong_ket',
                         'diem_he_4',
                         'qua_mon',
                         'so_tin_chi',
@@ -381,7 +474,10 @@ class AnalyticsService {
                 "dtb_hk4_gan_nhat" => round($dtb_hk4_gan_nhat, 2),
 
                 "tong_dtb_hk" => round($tong_dtb_hk, 2),
-                "tong_dtb_hk4" => round($tong_dtb_hk4, 2)
+                "tong_dtb_hk4" => round($tong_dtb_hk4, 2),
+
+                "dshp_sv" => $ds_hp,
+                "dshp" => $this->getHPList($result->id)
             );
             return $this->success($object, 200, "");
         }
