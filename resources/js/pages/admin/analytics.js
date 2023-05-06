@@ -336,7 +336,7 @@ export class Analytics {
                         <td>${element.ma_lop}</td>
                         <td>${element.ten_lop}</td>
                         <td>${element.so_luong_sinh_vien}</td>
-                        <td><a href="${Analytics.URL + '/class/' +element.id}">Xem chi tiết</a></td>
+                        <td><a href="${Analytics.URL + '/class/' +element.ma_lop}">Xem chi tiết</a></td>
                     </tr>`;
                 });
 
@@ -387,7 +387,10 @@ export class Analytics {
             let list = ``, check;
             data.dshp.forEach(kkt => {
                 list += `<tr>
-                    <td colspan="6" style='text-align: left; font-weight: bold'>${kkt.ten}</td>
+                    <td colspan="8" style='text-align: left; font-weight: bold'>${kkt.ten}</td>
+                </tr>
+                <tr style="height: 2rem">
+                    <td colspan="8"></td>
                 </tr>`;
                 kkt.ds_hp_batbuoc.forEach(hp => {
                     check = false;
@@ -395,6 +398,7 @@ export class Analytics {
                         const hpsv = data.dshp_sv[i];
                         if (hpsv.id == hp.hoc_phan_id) {
                             list += `<tr>
+                                <td></td>
                                 <td>${hp.ma_hoc_phan}</td>
                                 <td style='text-align: left'>${hp.ten}</td>
                                 <td style='text-align: center'>${(hpsv.diem_tong_ket === null) ? '' : hpsv.diem_tong_ket}</td>
@@ -409,6 +413,7 @@ export class Analytics {
                     }
                     if (!check) {
                         list += `<tr>
+                            <td></td>
                             <td>${hp.ma_hoc_phan}</td>
                             <td style='text-align: left'>${hp.ten}</td>
                             <td></td>
@@ -429,6 +434,7 @@ export class Analytics {
                         const hpsv = data.dshp_sv[i];
                         if (hpsv.id == hp.hoc_phan_id) {
                             list += `<tr>
+                                <td></td>
                                 <td>${hp.ma_hoc_phan}</td>
                                 <td style='text-align: left'>${hp.ten}</td>
                                 <td style='text-align: center'>${(hpsv.diem_tong_ket === null) ? '' : hpsv.diem_tong_ket}</td>
@@ -443,6 +449,7 @@ export class Analytics {
                     }
                     if (!check) {
                         list += `<tr>
+                            <td></td>
                             <td>${hp.ma_hoc_phan}</td>
                             <td style='text-align: left'>${hp.ten}</td>
                             <td></td>
@@ -460,6 +467,7 @@ export class Analytics {
                 <div class="graduate__item__content">
                     <table>
                         <tr>
+                            <th style='width: 10%'></th>
                             <th>Mã học phần</th>
                             <th style='width: 35%; text-align: left'>Tên học phần</th>
                             <th style='width: auto; text-align: center'>Điểm tổng kết</th>
