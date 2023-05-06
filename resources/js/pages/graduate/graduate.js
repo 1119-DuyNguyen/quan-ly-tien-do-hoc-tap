@@ -27,6 +27,8 @@ export class Graduate {
             graduate__container[0].innerHTML = '<h3>Học kỳ này bạn không đăng ký học phần nào cả.</h3>';
         }
 
+        graduate__container[0].innerHTML += graduate.returnSuggestBtn();
+
         let goi_y_hoc_phanBtn = document.querySelector('#goi_y_hoc_phan');
         let arr_kqdukien,
             kq_du_kien,

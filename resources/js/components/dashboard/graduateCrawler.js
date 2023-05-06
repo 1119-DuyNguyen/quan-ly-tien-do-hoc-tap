@@ -87,6 +87,10 @@ export default class GraduateCrawler {
         })
     }
 
+    returnSuggestBtn() {
+        return "<div style='text-align: center'><button class='btn btn--primary' style='margin-top: 1rem;' id='goi_y_hoc_phan'>Gợi ý học phần học kỳ kế</button></div>";
+    }
+
     /**
      * Hàm render dữ liệu từ server
      * @param {number} id id của học kỳ cần render, mặc định là -1, ứng với mọi học kỳ
@@ -209,10 +213,6 @@ export default class GraduateCrawler {
 
                 htmlReturn += html;
             });
-
-            if (type == 'suggest') {
-                htmlReturn += "<div style='text-align: center'><button class='btn btn--primary' style='margin-top: 1rem;' id='goi_y_hoc_phan'>Gợi ý học phần học kỳ kế</button></div>";
-            }
 
             return htmlReturn;
 

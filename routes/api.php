@@ -16,6 +16,7 @@ use App\Http\Controllers\Class\BaiTapSinhVienController;
 use App\Http\Controllers\DataImport\DataImportController;
 use App\Http\Controllers\Class\Everyone\EveryoneController;
 use App\Http\Controllers\Graduation\Student\GraduateStudentController;
+use App\Http\Controllers\Graduation\Student\SemesterController;
 use App\Http\Controllers\Graduation\Student\SuggestGraduateController;
 
 /*
@@ -51,6 +52,8 @@ Route::middleware('auth:api')->group(function () {
 
     Route::apiResource('/graduate', GraduateStudentController::class);
     Route::apiResource('/suggestion', SuggestGraduateController::class);
+
+    Route::apiResource('/semester', SemesterController::class);
 
     Route::middleware('role:Quản trị viên')
         ->name('admin.')
