@@ -11,6 +11,7 @@ use App\Http\Controllers\ApiController;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\PaginationRequest;
 use App\Models\Users\Classes\Posts\BaiTapSinhVien;
+use Exception;
 use Illuminate\Support\Str;
 
 class BaiTapSinhVienController extends ApiController
