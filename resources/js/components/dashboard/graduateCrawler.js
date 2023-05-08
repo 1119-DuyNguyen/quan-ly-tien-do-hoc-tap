@@ -233,7 +233,7 @@ export default class GraduateCrawler {
         .then((response) => {
             let data = response.data.data;
 
-            let ds_goi_y = data.goi_y;
+            let ds_goi_y = Object.values(data.goi_y);
 
             ds_goi_y = ds_goi_y.filter(monTrongDS => {
                 return !(dsmon_da_pass.indexOf(monTrongDS.hoc_phan_id) > -1);
@@ -241,6 +241,7 @@ export default class GraduateCrawler {
             
             return ds_goi_y;
         }).catch(err => {
+            console.log(err);
             toast({
                 title: "",
                 message: err.data.message,

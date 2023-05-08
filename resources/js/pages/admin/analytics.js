@@ -384,14 +384,27 @@ export class Analytics {
 
             html += `<h3>Danh sách học phần theo tiến độ</h3>`
 
-            let list = ``, check;
+            let list = ``, check, count = 0;
             data.dshp.forEach(kkt => {
-                list += `<tr>
-                    <td colspan="8" style='text-align: left; font-weight: bold'>${kkt.ten}</td>
-                </tr>
-                <tr style="height: 2rem">
-                    <td colspan="8"></td>
-                </tr>`;
+                if (check == 0)
+                    list += `<tr>
+                        <td colspan="8" style='text-align: left; font-weight: bold'>${kkt.ten}</td>
+                    </tr>
+                    <tr style="height: 2rem">
+                        <td colspan="1"></td>
+                        <td colspan="7" style="text-align: left">Bắt buộc</td>
+                    </tr>`;
+                else 
+                    list += `<tr>
+                        <td colspan="8" style='text-align: left; font-weight: bold'>${kkt.ten}</td>
+                    </tr>
+                    <tr style="height: 2rem">
+                        <td colspan="1"></td>
+                        <td colspan="7" style="text-align: left">Bắt buộc</td>
+                    </tr>`;
+
+                count++;
+
                 kkt.ds_hp_batbuoc.forEach(hp => {
                     check = false;
                     for (let i = 0; i < data.dshp_sv.length; i++) {
@@ -426,7 +439,8 @@ export class Analytics {
                 })
                 if (kkt.ds_hp_tuchon.length > 0)
                     list += `<tr>
-                        <td colspan="6" style='text-align: left'>Tự chọn</td>
+                        <td colspan="1"></td>
+                        <td colspan="7" style='text-align: left'>Tự chọn</td>
                     </tr>`;
                 kkt.ds_hp_tuchon.forEach(hp => {
                     check = false;

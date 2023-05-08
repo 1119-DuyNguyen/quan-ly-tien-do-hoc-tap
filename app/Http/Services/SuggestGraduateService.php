@@ -140,8 +140,7 @@ class SuggestGraduateService {
             $dshp = $dshp->unique();
         }
 
-        for ($i = 0; $i < count($dshp); $i++) {
-            $hp = $dshp[$i];
+        foreach ($dshp as $hp) {
             $kq_tu_db = DB::table('hoc_phan')->where('id', $hp->hoc_phan_id)->get()[0];
 
             $hp->ten = $kq_tu_db->ten;

@@ -56,6 +56,13 @@ export class Graduate {
                     break;
                 }
 
+                if(parseFloat(element.value) < 0 || parseFloat(element.value) > 10) {
+                    check = false;
+                    element.focus();
+                    alertComponent("Lỗi", 'Điểm phải nằm trong khoảng từ 0 đến 10');
+                    break;
+                }
+
                 if (parseFloat(element.value) >= 4.0) arr_kqdukien.push(parseInt(element.dataset.hpid));
             }
             if (check) graduate__container[2].innerHTML = await graduate.renderDSGoiY(arr_kqdukien);
@@ -66,5 +73,9 @@ export class Graduate {
 
             graduate.paginatorAction(arr_kqdukien, graduate__container[2]);
         });
+
+        if (graduate.getLocalStorage('listMHChon').length > 0) {
+            graduate.renderDSMHchon([], graduate.getLocalStorage('listMHChon'));
+        }
     }
 }
