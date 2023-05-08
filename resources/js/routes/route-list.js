@@ -70,6 +70,30 @@ route.addRoute(
     { title: 'Tiến độ sinh viên' },
     'templates/admin/student.html'
 );
+route.addRoute(
+    'quan-tri-vien/graduate/class/$class_idn',
+    Analytics.class,
+    { title: 'Tiến độ lớp' },
+    'templates/admin/class.html'
+);
+route.addRoute(
+    'quan-tri-vien/graduate/faculty',
+    Analytics.faculty,
+    { title: 'Tiến độ ngành' },
+    'templates/admin/faculty.html'
+);
+route.addRoute(
+    'quan-tri-vien/graduate/student',
+    Analytics.student,
+    { title: 'Tiến độ sinh viên' },
+    'templates/admin/student.html'
+);
+route.addRoute(
+    'quan-tri-vien/graduate/student/$sv_username',
+    Analytics.student,
+    { title: 'Tiến độ sinh viên' },
+    'templates/admin/student.html'
+);
 
 route.addRoute('quan-tri-vien/program', Program.index, { title: 'Chương trình đào tạo' }, '');
 route.addRoute('quan-tri-vien/program/$id', Program.view, { title: 'Chương trình đào tạo' }, '');
