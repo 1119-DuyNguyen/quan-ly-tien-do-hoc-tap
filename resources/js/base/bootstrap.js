@@ -65,6 +65,16 @@ window.axios.interceptors.response.use(
             });
             return Promise.reject(error);
         }
+        if (error.response.status === 429) {
+            toast({
+                title: 'Gửi quá nhiều yêu cầu lên máy chủ. ',
+                message: 'Thử lại sau ít phút',
+                type: 'error',
+                duration: 5000,
+            });
+            return Promise.reject(error);
+        }
+
         if (error.response.status === 500) {
             let response500 = error.response;
             let mes500 = '';

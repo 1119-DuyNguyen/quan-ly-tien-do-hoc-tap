@@ -41,16 +41,26 @@ export function toast(
           <h2 class="toast__title">
             ${title}
             </h2>
-          <span class="toast__message">
+          <p class="toast__message">
             ${message}
-    
-          </span>
-        </div>
-        </div>  `;
+          </p>
+        </div> 
+
+        `;
         toastList.insertAdjacentElement('afterbegin', toast);
-        setTimeout(function () {
+        let cancleFunc = setTimeout(function () {
             toastList.removeChild(toast);
         }, duration + 500);
+        let btnClose = document.createElement('div');
+        btnClose.innerHTML = `        <div class='toast__close'>
+        X
+        </div>`;
+        btnClose.classList.add('toast__close');
+        btnClose.onclick = (e) => {
+            if (cancleFunc) clearTimeout(cancleFunc);
+            if (toast) toast.remove();
+        };
+        toast.appendChild(btnClose);
     }
 }
 

@@ -80,6 +80,7 @@ export class SmartTableTemplate {
                 throw 'Element is not valid';
             }
             this.#container = createElement('div', 'smart-table-template');
+            this.#container.innerHTML = '<loader-component></loader-component>';
             rootElement.appendChild(this.#container);
         } catch (e) {
             console.error(e);
@@ -147,6 +148,8 @@ export class SmartTableTemplate {
                 throw new Error('Deep array muse be smaller than 2');
             }
             if (!this.isFirstInit) {
+                this.#container.innerHTML = '';
+
                 if (selectDataList) {
                     this.#container.appendChild(this.renderSelectList(selectDataList));
                 }
@@ -497,6 +500,7 @@ export class SmartTableTemplate {
         } else return false;
     }
     reRenderTable() {
+        this.#content.innerHTML = '<loader-component></loader-component>';
         this.fetchDataTable(this.#option.urlAPI);
     }
 }
