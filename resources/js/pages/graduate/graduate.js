@@ -17,8 +17,9 @@ export class Graduate {
         graduate.renderSelectHK(bien_che_selector);
         graduate__container.innerHTML = await graduate.renderHK(-1);
 
-        let CURRENT_DOMAIN = location.protocol + '//' + location.host + '/' +'graduate/suggest';
-        document.querySelector("#graduate__suggest__link").href = CURRENT_DOMAIN;
+        let CURRENT_DOMAIN = location.protocol + '//' + location.host + '/' ;
+        document.querySelector("#graduate__suggest__link").href = CURRENT_DOMAIN+'graduate/suggest';
+        document.querySelector("#graduate__edu_program__link").href = CURRENT_DOMAIN+'graduate/edu_program';
     }
     static async suggest() {
         let graduate__container = document.querySelectorAll('.graduate__container');
