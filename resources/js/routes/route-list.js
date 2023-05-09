@@ -5,13 +5,13 @@ import { Info } from '../pages/info.js';
 import { ClassroomStudent } from '../pages/classroom/classroomStudent.js';
 import { ClassroomTeacher } from '../pages/classroom/classroomTeacher.js';
 
-import { Authentication } from '../pages/authentication.js';
 import { Role } from '../pages/admin/role.js';
 import { Analytics } from '../pages/admin/analytics.js';
 import { HomeworkMark } from '../components/classroom/group/post/HomeworkMark.js';
 import { User } from '../pages/admin/User.js';
 import { Program } from '../pages/admin/program.js';
 import { Subject } from '../pages/admin/subject.js';
+import { Authentication } from '../pages/authentication.js';
 
 const route = new Route();
 

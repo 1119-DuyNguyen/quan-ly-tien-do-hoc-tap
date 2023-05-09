@@ -8,19 +8,21 @@ use App\Models\Users\Students\TrainingProgram\Subjects\HocKyGoiY;
 use App\Models\Users\Students\TrainingProgram\Subjects\KhoiKienThuc;
 
 
-class HocPhanKhoiKienThuc extends Model
+class HocPhanKKTTuChon extends Model
 {
-	protected $table = 'hoc_phan_khoi_kien_thuc';
+	protected $table = 'hoc_phan_kkt_tu_chon';
 	public $timestamps = false;
 
 	protected $casts = [
 		'hoc_phan_id' => 'int',
-		'khoi_kien_thuc_id' => 'int'
+		'khoi_kien_thuc_id' => 'int',
+        'hoc_ky_goi_y' => 'int'
 	];
 
 	protected $fillable = [
 		'hoc_phan_id',
-		'khoi_kien_thuc_id'
+		'khoi_kien_thuc_id',
+        'hoc_ky_goi_y'
 	];
 
 	public function hoc_phan()

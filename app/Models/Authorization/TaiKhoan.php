@@ -14,12 +14,14 @@ class TaiKhoan extends Authenticatable
     protected $table = 'tai_khoan';
     use HasFactory, Notifiable, hasApiTokens;
     protected $casts = [
-        'create_at' => 'date',
         'khoa_id' => 'int',
         'lop_hoc_id' => 'int',
+        'quyen_id' => 'int',
+        'gioi_tinh' => 'int',
     ];
 
-    protected $fillable = ['ten', 'ten_dang_nhap', 'mat_khau', 'khoa_id', 'lop_hoc_id', 'quyen_id'];
+
+    protected $fillable = ['id', 'ten', 'ten_dang_nhap', 'mat_khau', 'remember_token', 'quyen_id', 'email', 'sdt', 'ngay_sinh', 'gioi_tinh', 'khoa_id'];
 
     protected $hidden = ['remember_token', 'mat_khau'];
 

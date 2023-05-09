@@ -48,119 +48,119 @@ use App\Models\Users\Students\TrainingProgram\KhoiKienThucChuongTrinhDaoTao;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
-    public function run(): void
-    {
-        DB::statement('SET FOREIGN_KEY_CHECKS=0');
-        //remove nào có khóa ngoại
+        /**
+         * Seed the application's database.
+         */
+        public function run(): void
+        {
+                DB::statement('SET FOREIGN_KEY_CHECKS=0');
+                //remove nào có khóa ngoại
 
-        // Nganh::truncate();
-        // Quyen::truncate();
-        // TaiKhoan::truncate();
-        // Khoa::truncate();
+                // Nganh::truncate();
+                // Quyen::truncate();
+                // TaiKhoan::truncate();
+                // Khoa::truncate();
 
-        $tableNames = Schema::getConnection()
-            ->getDoctrineSchemaManager()
-            ->listTableNames();
-        foreach ($tableNames as $name) {
-            //no truncate oauth
-            // if (str_contains($name, 'oauth')) {
-            //     continue;
-            // }
-            DB::table($name)->truncate();
-        }
-        DB::statement('SET FOREIGN_KEY_CHECKS=1');
+                $tableNames = Schema::getConnection()
+                        ->getDoctrineSchemaManager()
+                        ->listTableNames();
+                foreach ($tableNames as $name) {
+                        //no truncate oauth
+                        // if (str_contains($name, 'oauth')) {
+                        //     continue;
+                        // }
+                        DB::table($name)->truncate();
+                }
+                DB::statement('SET FOREIGN_KEY_CHECKS=1');
 
-        //base database
+                //base database
 
-        //php arrtisan db:seed
+                //php arrtisan db:seed
 
-        $this->call(QuyenSeeder::class);
-        $this->call(ChucNangSeeder::class);
-        $this->call(QuyenChucNangSeeder::class);
+                $this->call(QuyenSeeder::class);
+                $this->call(ChucNangSeeder::class);
+                $this->call(QuyenChucNangSeeder::class);
 
 
-        $this->call(OauthClientsSeeder::class);
-        Khoa::factory(4)->create();
-        Nganh::factory(3)->create();
-        // ChuKy::factory(4)->create();
-        $this->call(ChuKySeeder::class);
-        // ChucNang::factory()->count(10)->create();
-        $this->call(ChuongTrinhDaoTaoSeeder::class);
-        // NienKhoa::factory()
-        //     ->count(10)
-        //     ->create();
+                $this->call(OauthClientsSeeder::class);
+                Khoa::factory(4)->create();
+                Nganh::factory(3)->create();
+                // ChuKy::factory(4)->create();
+                $this->call(ChuKySeeder::class);
+                // ChucNang::factory()->count(10)->create();
+                $this->call(ChuongTrinhDaoTaoSeeder::class);
+                // NienKhoa::factory()
+                //     ->count(10)
+                //     ->create();
 
-        // users
-        $this->call(GVSeeder::class);
-        $this->call(CVHTSeeder::class);
-        $this->call(QTVSeeder::class);
-        $this->call(TroLyDaoTaoSeeder::class);
+                // users
+                $this->call(GVSeeder::class);
+                $this->call(CVHTSeeder::class);
+                $this->call(QTVSeeder::class);
+                $this->call(TroLyDaoTaoSeeder::class);
 
-        // LopHoc::factory()
-        //     ->count(5)
-        //     ->create();
-        $this->call([SVSeeder::class]);
-        $this->call([HocPhanSeeder::class]);
-        $this->call([NhomHocSeeder::class]);
-        $this->call([BaiDangSeeder::class]);
-        $this->call([ThamGiaSeeder::class]);
-        $this->call([BaiTapSinhVienSeeder::class]);
+                // LopHoc::factory()
+                //     ->count(5)
+                //     ->create();
+                $this->call([SVSeeder::class]);
+                $this->call([HocPhanSeeder::class]);
+                $this->call([NhomHocSeeder::class]);
+                $this->call([BaiDangSeeder::class]);
+                $this->call([ThamGiaSeeder::class]);
+                $this->call([BaiTapSinhVienSeeder::class]);
 
-        // BienChe::factory()
-        //     ->count(10)
-        //     ->create();
-        $this->call(KetQuaSeeder::class);
+                // BienChe::factory()
+                //     ->count(10)
+                //     ->create();
+                $this->call(KetQuaSeeder::class);
 
-        $this->call([LoaiKienThucSeeder::class]);
-        $this->call([KhoiKienThucSeeder::class]);
+                $this->call([LoaiKienThucSeeder::class]);
+                $this->call([KhoiKienThucSeeder::class]);
 
-        $this->call([HPKTTBatBuocSeeder::class]);
-        $this->call([HPKTTTuChonSeeder::class]);
+                $this->call([HPKTTBatBuocSeeder::class]);
+                $this->call([HPKTTTuChonSeeder::class]);
 
-        DB::statement("INSERT INTO `lop_hoc` (`co_van_hoc_tap_id`, `ten_lop`, `ma_lop`, `id`, `updated_at`, `created_at`, `chuong_trinh_dao_tao_id`, `thoi_gian_vao_hoc`, `thoi_gian_ket_thuc`) VALUES ('31', 'lorem', 'DCT1211', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '1', '2021-09-15 00:00:00', CURRENT_TIMESTAMP);");
+                DB::statement("INSERT INTO `lop_hoc` (`co_van_hoc_tap_id`, `ten_lop`, `ma_lop`, `id`, `updated_at`, `created_at`, `chuong_trinh_dao_tao_id`, `thoi_gian_vao_hoc`, `thoi_gian_ket_thuc`) VALUES ('31', 'lorem', 'DCT1211', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '1', '2021-09-15 00:00:00', CURRENT_TIMESTAMP);");
 
-        DB::statement("INSERT INTO `moc_thoi_gian_tot_nghiep` (`id`, `nam`, `dot`, `ten`, `updated_at`, `created_at`) VALUES (NULL, '2023', '1', 'Xét tốt nghiệp đợt 1 - 2023', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)");
-        DB::statement("INSERT INTO `moc_thoi_gian_tot_nghiep` (`id`, `nam`, `dot`, `ten`, `updated_at`, `created_at`) VALUES (NULL, '2023', '2', 'Xét tốt nghiệp đợt 2 - 2023', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)");
-        DB::statement("INSERT INTO `moc_thoi_gian_tot_nghiep` (`id`, `nam`, `dot`, `ten`, `updated_at`, `created_at`) VALUES (NULL, '2023', '3', 'Xét tốt nghiệp đợt 3 - 2023', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)");
-        DB::statement("INSERT INTO `moc_thoi_gian_tot_nghiep` (`id`, `nam`, `dot`, `ten`, `updated_at`, `created_at`) VALUES (NULL, '2023', '4', 'Xét tốt nghiệp đợt 4 - 2023', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)");
+                DB::statement("INSERT INTO `moc_thoi_gian_tot_nghiep` (`id`, `nam`, `dot`, `ten`, `updated_at`, `created_at`) VALUES (NULL, '2023', '1', 'Xét tốt nghiệp đợt 1 - 2023', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)");
+                DB::statement("INSERT INTO `moc_thoi_gian_tot_nghiep` (`id`, `nam`, `dot`, `ten`, `updated_at`, `created_at`) VALUES (NULL, '2023', '2', 'Xét tốt nghiệp đợt 2 - 2023', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)");
+                DB::statement("INSERT INTO `moc_thoi_gian_tot_nghiep` (`id`, `nam`, `dot`, `ten`, `updated_at`, `created_at`) VALUES (NULL, '2023', '3', 'Xét tốt nghiệp đợt 3 - 2023', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)");
+                DB::statement("INSERT INTO `moc_thoi_gian_tot_nghiep` (`id`, `nam`, `dot`, `ten`, `updated_at`, `created_at`) VALUES (NULL, '2023', '4', 'Xét tốt nghiệp đợt 4 - 2023', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)");
 
-        for ($i = 63; $i < 163; $i++) {
-            DB::statement("INSERT INTO `tinh_trang_sinh_vien` (`so_lan_canh_cao`, `da_tot_nghiep`, `moc_thoi_gian_id`, `buoc_thoi_hoc`, `updated_at`, `created_at`, `sinh_vien_id`, `ly_do_buoc_thoi_hoc`, `lop_hoc_id`, `khoi_kien_thuc_id`) VALUES
+                for ($i = 63; $i < 163; $i++) {
+                        DB::statement("INSERT INTO `tinh_trang_sinh_vien` (`so_lan_canh_cao`, `da_tot_nghiep`, `moc_thoi_gian_id`, `buoc_thoi_hoc`, `updated_at`, `created_at`, `sinh_vien_id`, `ly_do_buoc_thoi_hoc`, `lop_hoc_id`, `khoi_kien_thuc_id`) VALUES
             (0, " . fake()->numberBetween(0, 1) . ", " . fake()->numberBetween(1, 4) . ", NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, $i, NULL, 1, 4);");
+                }
+
+
+
+                // HocPhan::factory()
+                //     ->count(10)
+                //     ->create();
+                // NhomHoc::factory()
+                //     ->count(10)
+                //     ->create();
+                // BaiDang::factory()->count(10)->create();
+                // BinhLuan::factory()->count(10)->create();
+                // FileBaiDang::factory()->count(10)->create();
+                // FileBinhLuan::factory()->count(10)->create();
+                // QuanTriVien::factory()->count(10)->create();
+                // MocThoiGian::factory()->count(10)->create();
+                // SinhVienChungChi::factory()->count(10)->create();
+                // ThamGia::factory()->count(10)->create();
+                // TinhTrangSinhVien::factory()->count(10)->create();
+                // ChuanDauRa::factory()->count(10)->create();
+                // ChungChi::factory()->count(10)->create();
+                // BienChe::factory()->count(10)->create();
+                // ChuKy::factory()->count(10)->create();
+                // KhoiKienThucChuongTrinhDaoTao::factory()->count(10)->create();
+                // DieuKienTienQuyet::factory()->count(10)->create();
+                // HocKyGoiY::factory()->count(10)->create();
+                // HocPhanKhoiKienThuc::factory()->count(10)->create();
+                // KetQua::factory()->count(10)->create();
+                // KhoiKienThuc::factory()->count(3)->create();
+                // LoaiKienThuc::factory()->count(3)->create();
+
+                // ChucNang::factory()->count(10)->create();
         }
-
-
-
-        // HocPhan::factory()
-        //     ->count(10)
-        //     ->create();
-        // NhomHoc::factory()
-        //     ->count(10)
-        //     ->create();
-        // BaiDang::factory()->count(10)->create();
-        // BinhLuan::factory()->count(10)->create();
-        // FileBaiDang::factory()->count(10)->create();
-        // FileBinhLuan::factory()->count(10)->create();
-        // QuanTriVien::factory()->count(10)->create();
-        // MocThoiGian::factory()->count(10)->create();
-        // SinhVienChungChi::factory()->count(10)->create();
-        // ThamGia::factory()->count(10)->create();
-        // TinhTrangSinhVien::factory()->count(10)->create();
-        // ChuanDauRa::factory()->count(10)->create();
-        // ChungChi::factory()->count(10)->create();
-        // BienChe::factory()->count(10)->create();
-        // ChuKy::factory()->count(10)->create();
-        // KhoiKienThucChuongTrinhDaoTao::factory()->count(10)->create();
-        // DieuKienTienQuyet::factory()->count(10)->create();
-        // HocKyGoiY::factory()->count(10)->create();
-        // HocPhanKhoiKienThuc::factory()->count(10)->create();
-        // KetQua::factory()->count(10)->create();
-        // KhoiKienThuc::factory()->count(3)->create();
-        // LoaiKienThuc::factory()->count(3)->create();
-
-        // ChucNang::factory()->count(10)->create();
-    }
 }

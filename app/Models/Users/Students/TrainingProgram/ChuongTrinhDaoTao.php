@@ -20,18 +20,17 @@ class ChuongTrinhDaoTao extends Model
 	protected $casts = [
 		'tong_tin_chi' => 'int',
 		'thoi_gian_dao_tao' => 'float',
-		'chu_ky_id' => 'int',
-		'khoa_id' => 'int',
-		'ctdt_cha_id' => 'int'
+		'nganh_id' => 'int',
+		'chu_ky_id' => 'int'
 	];
 
 	protected $fillable = [
 		'ten',
-		'tong_tin_chi',
 		'thoi_gian_dao_tao',
-		'chu_ky_id',
-		'nganh_id',
 		'trinh_do_dao_tao',
+		'nganh_id',
+		'chu_ky_id',
+		'tong_tin_chi'
 	];
 	public function chu_ky()
 	{

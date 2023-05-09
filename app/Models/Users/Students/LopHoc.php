@@ -15,11 +15,14 @@ class LopHoc extends Model
     public $timestamps = false;
 
     protected $casts = [
-        'nien_khoa_id' => 'int',
         'co_van_hoc_tap_id' => 'int',
+        'ma_lop' => 'int',
+        'chuong_trinh_dao_tao_id' => 'int',
     ];
 
-    protected $fillable = ['nien_khoa_id', 'co_van_hoc_tap_id', 'ten_lop', 'ma_lop'];
+
+
+    protected $fillable = ['co_van_hoc_tap_id', 'ten_lop', 'ma_lop', 'chuong_trinh_dao_tao_id', 'thoi_gian_vao_hoc', 'thoi_gian_ket_thuc'];
 
     public function tai_khoan()
     {

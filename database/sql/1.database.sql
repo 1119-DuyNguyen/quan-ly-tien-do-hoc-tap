@@ -1120,4 +1120,3 @@ ALTER TABLE `oauth_personal_access_clients`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 COMMIT;
 
-
