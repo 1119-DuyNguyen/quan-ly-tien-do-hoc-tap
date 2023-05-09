@@ -3,6 +3,7 @@ import { toast } from "../../components/helper/toast";
 
 export class Analytics {
     static URL_REQ = location.protocol + '//' + location.host + '/api/admin/analytics';
+    static URL_SV = location.protocol + '//' + location.host + '/api/graduate-on-edu-program';
     static URL = location.protocol + '//' + location.host + '/graduate';
 
     static async callData(khoa = -1, nganh = -1) {
@@ -361,28 +362,35 @@ export class Analytics {
         }
     }
 
-    static renderTTSV(sv_username) {
+    static renderTTSV(sv_username, show_ttcn) {
         document.querySelector(".analytics__container").innerHTML = "";
 
-        axios.get(Analytics.URL_REQ+"?sv="+sv_username).then(response => {
+        let url = '';
+
+        if (show_ttcn) url = Analytics.URL_REQ+"?sv="+sv_username;
+        else url = Analytics.URL_SV;
+
+        axios.get(url).then(response => {
             let data = response.data.data;
 
             let html = ``;
 
-            html += `<div class="analytics__item analytics__item--blue">`;
-            html += `<h3>Thông tin cá nhân</h3>`
-            html += `<p>Mã sinh viên: ${data.ten_dang_nhap}</p>`
-            html += `<p>Họ tên: ${data.ten}</p>`
-            html += `<p>Ngày sinh: ${(data.ngay_sinh === null) ? '' : data.ngay_sinh}</p>`
-            html += `<p>Số điện thoại: ${(data.sdt === null) ? "" : data.sdt}</p>`
-            html += `<p>Giới tính: ${(data.gioi_tinh == 0) ? "Nam" : "Nữ" }</p>`
-            html += `</div>`
+            if (show_ttcn) {
+                html += `<div class="analytics__item analytics__item--blue">`;
+                html += `<h3>Thông tin cá nhân</h3>`
+                html += `<p>Mã sinh viên: ${data.ten_dang_nhap}</p>`
+                html += `<p>Họ tên: ${data.ten}</p>`
+                html += `<p>Ngày sinh: ${(data.ngay_sinh === null) ? '' : data.ngay_sinh}</p>`
+                html += `<p>Số điện thoại: ${(data.sdt === null) ? "" : data.sdt}</p>`
+                html += `<p>Giới tính: ${(data.gioi_tinh == 0) ? "Nam" : "Nữ" }</p>`
+                html += `</div>`
+            }
 
             // Danh sách học phần theo tiến độ
 
             html += `<div class="analytics__item analytics__item">`
 
-            let list = ``, check, count = 0;
+            let list = ``, check, sltc;
             
             data.dshp = Object.values(data.dshp)
             
@@ -394,26 +402,20 @@ export class Analytics {
                     return;
                 }
 
-                if (check == 0)
-                    list += `<tr>
-                        <td colspan="8" style='text-align: left; font-weight: bold'>${kkt.ten}</td>
-                    </tr>
-                    <tr style="height: 2rem">
-                        <td colspan="1"></td>
-                        <td colspan="7" style="text-align: left">Bắt buộc</td>
-                    </tr>`;
-                else 
-                    list += `<tr>
-                        <td colspan="8" style='text-align: left; font-weight: bold'>${kkt.ten}</td>
-                    </tr>
-                    <tr style="height: 2rem">
-                        <td colspan="1"></td>
-                        <td colspan="7" style="text-align: left">Bắt buộc</td>
-                    </tr>`;
-
-                count++;
-
                 if (typeof kkt.ds_hp_batbuoc != 'undefined')
+                {
+                    sltc = 0;
+                    kkt.ds_hp_batbuoc.forEach(hp => sltc += hp.so_tin_chi)
+                    if (kkt.ds_hp_batbuoc.length > 0)
+                        list += `<tr>
+                            <td colspan="8" style='text-align: left; font-weight: bold'>${kkt.ten}</td>
+                        </tr>
+                        <tr style="height: 2rem">
+                            <td colspan="1"></td>
+                            <td colspan="4" style="text-align: left">Bắt buộc</td>
+                            <td style="text-align: center"><i>${sltc}</i></td>
+                            <td colspan="4"></td>
+                        </tr>`;
                     kkt.ds_hp_batbuoc.forEach(hp => {
                         check = false;
                         for (let i = 0; i < data.dshp_sv.length; i++) {
@@ -446,15 +448,18 @@ export class Analytics {
                             </tr>`;
                         }
                     })
-
-                
+                }
 
                 if (typeof kkt.ds_hp_tuchon != 'undefined')
                 {
+                    sltc = 0;
+                    kkt.ds_hp_tuchon.forEach(hp => sltc += hp.so_tin_chi)
                     if (kkt.ds_hp_tuchon.length > 0)
                         list += `<tr>
                             <td colspan="1"></td>
-                            <td colspan="7" style='text-align: left'>Tự chọn</td>
+                            <td colspan="4" style='text-align: left'>Tự chọn</td>
+                            <td style="text-align: center;"><i>${sltc}</i></td>
+                            <td colspan="4"></td>
                         </tr>`;
                     kkt.ds_hp_tuchon.forEach(hp => {
                         check = false;
@@ -551,7 +556,7 @@ export class Analytics {
 
         if (typeof sv_username === "string") {
             document.querySelector(".analytics__search.analytics__select__container").innerHTML = "";
-            Analytics.renderTTSV(sv_username);
+            Analytics.renderTTSV(sv_username, true);
         } else {
             let searchbox = document.querySelector(".analytics__search input");
             let searchBtn = document.querySelector(".analytics__search button");
@@ -562,7 +567,7 @@ export class Analytics {
 
                 if (searchbox.value.length > 0) {
                     
-                    Analytics.renderTTSV(searchbox.value);
+                    Analytics.renderTTSV(searchbox.value, true);
 
                 } else {
                     alertComponent("Lỗi", "Nhập mã sinh viên cần tìm!");

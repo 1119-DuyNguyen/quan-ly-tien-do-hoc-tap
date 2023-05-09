@@ -490,34 +490,29 @@ class AnalyticsService {
                 $tong_dtb_hk4 /= $tong_stc_da_hoc;
             }
 
-            if ($sv_id == 0)
-                $object = (object) array(
-                    "id" => $result->id,
-                    "ten" => $result->ten,
-                    "ten_dang_nhap" => $result->ten_dang_nhap,
-                    "email" => $result->email,
-                    "sdt" => $result->sdt,
-                    "ngay_sinh" => $result->ngay_sinh,
-                    "gioi_tinh" => $result->gioi_tinh,
+            $object = (object) array(
+                "id" => $result->id,
+                "ten" => $result->ten,
+                "ten_dang_nhap" => $result->ten_dang_nhap,
+                "email" => $result->email,
+                "sdt" => $result->sdt,
+                "ngay_sinh" => $result->ngay_sinh,
+                "gioi_tinh" => $result->gioi_tinh,
 
-                    "stc_dat" => $stc_dat,
-                    "stc_chuadat" => $stc_chuadat,
-                    "stc_dat_gannhat" => $stc_dat_gannhat,
+                "stc_dat" => $stc_dat,
+                "stc_chuadat" => $stc_chuadat,
+                "stc_dat_gannhat" => $stc_dat_gannhat,
 
-                    "dtb_hk_gan_nhat" => round($dtb_hk_gan_nhat, 2),
-                    "dtb_hk4_gan_nhat" => round($dtb_hk4_gan_nhat, 2),
+                "dtb_hk_gan_nhat" => round($dtb_hk_gan_nhat, 2),
+                "dtb_hk4_gan_nhat" => round($dtb_hk4_gan_nhat, 2),
 
-                    "tong_dtb_hk" => round($tong_dtb_hk, 2),
-                    "tong_dtb_hk4" => round($tong_dtb_hk4, 2),
+                "tong_dtb_hk" => round($tong_dtb_hk, 2),
+                "tong_dtb_hk4" => round($tong_dtb_hk4, 2),
 
-                    "dshp_sv" => $ds_hp,
-                    "dshp" => $this->getHPList($result->id)
-                );
-            else 
-                $object = (object) array(
-                    "dshp_sv" => $ds_hp,
-                    "dshp" => $this->getHPList($result->id)
-                );
+                "dshp_sv" => $ds_hp,
+                "dshp" => $this->getHPList($result->id)
+            );
+            
             return $this->success($object, 200, "");
         }
 

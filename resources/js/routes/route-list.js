@@ -24,6 +24,7 @@ route.addRoute('sinh-vien/dashboard', DashBoard.index, { title: 'DashBoard' }, '
 route.addRoute('sinh-vien/info', Info.index, {}, 'templates/info.html');
 route.addRoute('sinh-vien/graduate', Graduate.index, { title: 'Tốt nghiệp' }, 'templates/gradute.html');
 route.addRoute('sinh-vien/graduate/suggest', Graduate.suggest, { title: 'Gợi ý' }, 'templates/suggest_graduate.html');
+route.addRoute('sinh-vien/graduate/edu_program', Graduate.edu_program, { title: 'Kết quả theo tiến độ' }, 'templates/graduate_on_edu_program.html');
 route.addRoute('sinh-vien/classroom', ClassroomStudent.index, { title: 'Nhóm học' }, 'templates/student/class.html');
 route.addRoute(
     'sinh-vien/classroom/$id',

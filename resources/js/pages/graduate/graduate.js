@@ -1,5 +1,6 @@
 import GraduateCrawler from '../../components/dashboard/graduateCrawler.js';
 import { alertComponent } from '../../components/helper/alert-component.js';
+import { Analytics } from '../admin/analytics.js';
 let graduate = new GraduateCrawler();
 
 export class Graduate {
@@ -78,4 +79,7 @@ export class Graduate {
             graduate.renderDSMHchon([], graduate.getLocalStorage('listMHChon'));
         }
     }
+    static edu_program() {
+        Analytics.renderTTSV("", false);
+    }    
 }

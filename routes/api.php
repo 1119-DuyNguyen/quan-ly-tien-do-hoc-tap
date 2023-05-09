@@ -52,7 +52,7 @@ Route::middleware('auth:api')->group(function () {
     Route::apiResource('/test', TestApi::class);
 
     Route::apiResource('/graduate', GraduateStudentController::class);
-    Route::apiResource('/graduate/education-program', ResultBaseOnEducationProgramController::class);
+    Route::apiResource('/graduate-on-edu-program', ResultBaseOnEducationProgramController::class);
     Route::apiResource('/suggestion', SuggestGraduateController::class);
 
     Route::apiResource('/semester', SemesterController::class);
