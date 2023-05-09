@@ -66,6 +66,7 @@ class KhoiKienThucImportInfo extends ImportInfo
                 //Loai
                 if ($this->setValueFromKeyStr($ten_loai, $row[0], '/')){
                     $ten_KKT = null;
+                    $tin_chi = 0;
                     // $isTuChon = true;
                     continue;
                 };
@@ -78,12 +79,12 @@ class KhoiKienThucImportInfo extends ImportInfo
                 }
 
                 if ($ten_KKT == null){
-                    if ($this->setValueFromKeyStr($tmp, $row[0], '*'))
+                    if ($this->setLoai($row, $tmp, $tin_chi))
                         $ten_KKT = $ten_loai;
                     continue;
                 }
 
-                if ($this->setValueFromKeyStr($tmp, $row[0], '*')) {
+                if ($this->setLoai($row, $tmp, $tin_chi)) {
                     // $isTuChon = !$isTuChon;
                     continue;
                 }
@@ -91,7 +92,11 @@ class KhoiKienThucImportInfo extends ImportInfo
                     // $CTDT[$ten_loai] = [];
                     // $CTDT[$ten_loai][$ten_KKT] = [];
                     $CTDT[$ten_loai][$ten_KKT]['Bat-buoc'] = [];
-                    $CTDT[$ten_loai][$ten_KKT]['Tu-chon'] = [];
+                    $CTDT[$ten_loai][$ten_KKT]['Tu-chon'] = [
+                        // 'Tin-chi' => $tin_chi
+                    ];
+                    $CTDT[$ten_loai][$ten_KKT]['Tin-chi-tu-chon'] = $tin_chi;
+                    // $CTDT[$ten_loai][$ten_KKT]['Tu-chon']['Tin-chi'] = $tin_chi;
                     // dd([$ten_loai, $ten_KKT]);
                 }
                 // dd($getHP($row), $row);
@@ -156,6 +161,7 @@ class KhoiKienThucImportInfo extends ImportInfo
 
             foreach($CTDT as $key=>$value){
                 if (gettype($key) == 'integer') continue;
+                $ten_KKT = key($value);
                 $value = array_pop($value);
 
                 $loai_kt = LoaiKienThuc::updateOrCreate([
@@ -171,7 +177,8 @@ class KhoiKienThucImportInfo extends ImportInfo
                     'loai_kien_thuc_id' => $loai_kt->id,
                     'chuong_trinh_dao_tao_id' => $ctdt->id
                 ],[
-                    'ten' => key($value),
+                    'ten' => $ten_KKT,
+                    'tong_tin_chi_ktt_tu_chon' => $value['Tin-chi-tu-chon']
                 ]);
                 HocPhanKKTBatBuoc::where('khoi_kien_thuc_id', $kkt->id)->delete();
                 HocPhanKKTTuChon::where('khoi_kien_thuc_id', $kkt->id)->delete();
@@ -267,6 +274,16 @@ class KhoiKienThucImportInfo extends ImportInfo
         // dd($rs);
         return [$rs, $this->getGoiY($row)];
         // ##ĐÁNH DẤU CHO TEAM: đổi $rs->ten thành $rs để trả về model (->ten) để dễ nhìn kết quả thôi
+    }
+
+    public function setLoai($row, &$tmp, &$set){
+        if ($this->setValueFromKeyStr($tmp, $row[0], '*')){
+            if (strpos($row[0], 'tự chọn') !== false)
+                // dd(intval($row[3]));
+                $set = intval($row[3]);
+            return true;
+        }
+        return false;
     }
 
     public function getFloatFromStr($str){

@@ -133,8 +133,8 @@ class DataImportController extends ApiController
         }
         return [
             'err' => false,
-            // 'res' => $failures
-            'res' => []
+            'res' => $failures
+            // 'res' => []
         ];
 
     }
