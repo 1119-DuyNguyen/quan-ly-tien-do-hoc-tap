@@ -4,6 +4,7 @@ import { alertComponent } from '../../components/helper/alert-component';
 import { ConfirmComponent } from '../../components/helper/confirm-component';
 import { ModalComponent } from '../../components/helper/modal-component';
 import { toast } from '../../components/helper/toast';
+import { TreeTable } from '../../components/helper/tree-table';
 
 export class ChildProgram {
     static URL_Program = location.protocol + '//' + location.host + '/api/admin/child-program';
@@ -144,66 +145,191 @@ export class ChildProgram {
         let childProgramContainer = document.createElement('div');
         childProgramContainer.classList.add('child-program-container');
         rootElement.appendChild(childProgramContainer);
-        let tableTem = new SmartTableTemplate(childProgramContainer);
+        childProgramContainer.innerHTML = `
+        <table class="tree">
+            <li><a href="#">Part 1</a>
+                <ul>
+                <li><a href="#">Item A</a>
+                    <ul>
+                    <li><a href="#">Sub-item 1</a></li>
+                    <li><a href="#">Sub-item 2</a></li>
+                    <li><a href="#">Sub-item 3</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">Item B</a>
+                    <ul>
+                    <li><a href="#">Sub-item 1</a></li>
+                    <li><a href="#">Sub-item 2</a></li>
+                    <li><a href="#">Sub-item 3</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">Item C</a>
+                    <ul>
+                    <li><a href="#">Sub-item 1</a></li>
+                    <li><a href="#">Sub-item 2</a></li>
+                    <li><a href="#">Sub-item 3</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">Item D</a>
+                    <ul>
+                    <li><a href="#">Sub-item 1</a></li>
+                    <li><a href="#">Sub-item 2</a></li>
+                    <li><a href="#">Sub-item 3</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">Item E</a>
+                    <ul>
+                    <li><a href="#">Sub-item 1</a></li>
+                    <li><a href="#">Sub-item 2</a></li>
+                    <li><a href="#">Sub-item 3</a></li>
+                    </ul>
+                </li>
+                </ul>
+            </li>
 
-        tableTem.fetchDataTable(ChildProgram.URL_Program, {
-            formatAttributeHeader: {
-                id: {
-                    width: '40px',
-                    sort: true,
-                },
-                ten: {
-                    title: 'Tên',
-                    minWidth: '300px',
-                    sort: true,
-                },
-                tong_tin_chi_ktt_tu_chon: {
-                    title: 'Tổng tín chỉ tự chọn',
-                    minWidth: '50px',
-                    oneLine: true,
-                },
-                tong_tin_chi_ktt_bat_buoc: {
-                    title: 'Tổng tín chỉ bắt buộc',
-                    minWidth: '50px',
+            <li><a href="#">Part 2</a>
+                <ul>
+                <li><a href="#">Item A</a>
+                    <ul>
+                    <li><a href="#">Sub-item 1</a></li>
+                    <li><a href="#">Sub-item 2</a></li>
+                    <li><a href="#">Sub-item 3</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">Item B</a>
+                    <ul>
+                    <li><a href="#">Sub-item 1</a></li>
+                    <li><a href="#">Sub-item 2</a></li>
+                    <li><a href="#">Sub-item 3</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">Item C</a>
+                    <ul>
+                    <li><a href="#">Sub-item 1</a></li>
+                    <li><a href="#">Sub-item 2</a></li>
+                    <li><a href="#">Sub-item 3</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">Item D</a>
+                    <ul>
+                    <li><a href="#">Sub-item 1</a></li>
+                    <li><a href="#">Sub-item 2</a></li>
+                    <li><a href="#">Sub-item 3</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">Item E</a>
+                    <ul>
+                    <li><a href="#">Sub-item 1</a></li>
+                    <li><a href="#">Sub-item 2</a></li>
+                    <li><a href="#">Sub-item 3</a></li>
+                    </ul>
+                </li>
+                </ul>
+            </li>
 
-                    oneLine: true,
-                },
-                tong_tin_chi: {
-                    title: 'Tổng tín chỉ',
-                    minWidth: '50px',
+            <li><a href="#">Part 3</a>
+                <ul>
+                <li><a href="#">Item A</a>
+                    <ul>
+                    <li><a href="#">Sub-item 1</a></li>
+                    <li><a href="#">Sub-item 2</a></li>
+                    <li><a href="#">Sub-item 3</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">Item B</a>
+                    <ul>
+                    <li><a href="#">Sub-item 1</a></li>
+                    <li><a href="#">Sub-item 2</a></li>
+                    <li><a href="#">Sub-item 3</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">Item C</a>
+                    <ul>
+                    <li><a href="#">Sub-item 1</a></li>
+                    <li><a href="#">Sub-item 2</a></li>
+                    <li><a href="#">Sub-item 3</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">Item D</a>
+                    <ul>
+                    <li><a href="#">Sub-item 1</a></li>
+                    <li><a href="#">Sub-item 2</a></li>
+                    <li><a href="#">Sub-item 3</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">Item E</a>
+                    <ul>
+                    <li><a href="#">Sub-item 1</a></li>
+                    <li><a href="#">Sub-item 2</a></li>
+                    <li><a href="#">Sub-item 3</a></li>
+                    </ul>
+                </li>
+                </ul>
+            </li>
+            </table>
+        
+        `;
+        let treeTable = new TreeTable(childProgramContainer);
+        // let tableTem = new SmartTableTemplate(childProgramContainer);
 
-                    oneLine: true,
-                },
-                ten_lkt: {
-                    title: 'Loại khối kiến thức',
-                    oneLine: true,
-                },
-                ten_ctdt: {
-                    title: 'Tên chương trình đào tạo',
-                    oneLine: true,
-                },
+        // tableTem.fetchDataTable(ChildProgram.URL_Program, {
+        //     formatAttributeHeader: {
+        //         id: {
+        //             width: '40px',
+        //             sort: true,
+        //         },
+        //         ten: {
+        //             title: 'Tên',
+        //             minWidth: '300px',
+        //             sort: true,
+        //         },
+        //         tong_tin_chi_ktt_tu_chon: {
+        //             title: 'Tổng tín chỉ tự chọn',
+        //             minWidth: '50px',
+        //             oneLine: true,
+        //         },
+        //         tong_tin_chi_ktt_bat_buoc: {
+        //             title: 'Tổng tín chỉ bắt buộc',
+        //             minWidth: '50px',
 
-                created_at: {
-                    title: 'Ngày khởi tạo',
-                    type: 'date',
-                    oneLine: true,
-                },
-                updated_at: {
-                    title: 'Ngày cập nhập',
-                    type: 'date',
-                    oneLine: true,
-                },
-            },
-            pagination: true,
-            add: (e) => {
-                new ModalComponent(ChildProgram.getAddFormElement('Thêm ', tableTem, idProgram));
-            },
-            edit: (e) => {
-                let rowId = e.target.closest('tr')?.querySelector('[data-attr="id"]')?.getAttribute('data-content');
-                if (rowId) new ModalComponent(ChildProgram.getEditFormElement('Cập nhập', tableTem, rowId, idProgram));
-            },
-            view: true,
-        });
+        //             oneLine: true,
+        //         },
+        //         tong_tin_chi: {
+        //             title: 'Tổng tín chỉ',
+        //             minWidth: '50px',
+
+        //             oneLine: true,
+        //         },
+        //         ten_lkt: {
+        //             title: 'Loại khối kiến thức',
+        //             oneLine: true,
+        //         },
+        //         ten_ctdt: {
+        //             title: 'Tên chương trình đào tạo',
+        //             oneLine: true,
+        //         },
+
+        //         created_at: {
+        //             title: 'Ngày khởi tạo',
+        //             type: 'date',
+        //             oneLine: true,
+        //         },
+        //         updated_at: {
+        //             title: 'Ngày cập nhập',
+        //             type: 'date',
+        //             oneLine: true,
+        //         },
+        //     },
+        //     pagination: true,
+        //     add: (e) => {
+        //         new ModalComponent(ChildProgram.getAddFormElement('Thêm ', tableTem, idProgram));
+        //     },
+        //     edit: (e) => {
+        //         let rowId = e.target.closest('tr')?.querySelector('[data-attr="id"]')?.getAttribute('data-content');
+        //         if (rowId) new ModalComponent(ChildProgram.getEditFormElement('Cập nhập', tableTem, rowId, idProgram));
+        //     },
+        //     view: true,
+        // });
         // let tableTem = new SmartTableTemplate(tableTest, response.pokedata, {
         //     formatAttributeHeader: {
         //         name: 'Tên',
