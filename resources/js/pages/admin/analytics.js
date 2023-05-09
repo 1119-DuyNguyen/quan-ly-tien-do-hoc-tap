@@ -382,10 +382,18 @@ export class Analytics {
 
             html += `<div class="analytics__item analytics__item">`
 
-            html += `<h3>Danh sách học phần theo tiến độ</h3>`
-
             let list = ``, check, count = 0;
+            
+            data.dshp = Object.values(data.dshp)
+            
             data.dshp.forEach(kkt => {
+
+                if (typeof kkt == 'string')
+                {
+                    html += `<h3>Danh sách học phần theo tiến độ ${kkt}</h3>`
+                    return;
+                }
+
                 if (check == 0)
                     list += `<tr>
                         <td colspan="8" style='text-align: left; font-weight: bold'>${kkt.ten}</td>
@@ -405,77 +413,84 @@ export class Analytics {
 
                 count++;
 
-                kkt.ds_hp_batbuoc.forEach(hp => {
-                    check = false;
-                    for (let i = 0; i < data.dshp_sv.length; i++) {
-                        const hpsv = data.dshp_sv[i];
-                        if (hpsv.id == hp.hoc_phan_id) {
+                if (typeof kkt.ds_hp_batbuoc != 'undefined')
+                    kkt.ds_hp_batbuoc.forEach(hp => {
+                        check = false;
+                        for (let i = 0; i < data.dshp_sv.length; i++) {
+                            const hpsv = data.dshp_sv[i];
+                            if (hpsv.id == hp.hoc_phan_id && hpsv.diem_tong_ket !== null) {
+                                list += `<tr>
+                                    <td></td>
+                                    <td>${hp.ma_hoc_phan}</td>
+                                    <td style='text-align: left'>${hp.ten}</td>
+                                    <td style='text-align: center'>${hpsv.diem_tong_ket}</td>
+                                    <td>${(hpsv.diem_he_4 === null) ? '' : hpsv.diem_he_4}</td>
+                                    <td>${hp.so_tin_chi}</td>
+                                    <td>${(hpsv.qua_mon == 1) ? '<input type="checkbox" checked disabled>' : '<input type="checkbox" disabled>'}</td>
+                                    <td><input type="checkbox" checked disabled></td>
+                                </tr>`;
+                                check = true;
+                                break;
+                            }
+                        }
+                        if (!check) {
                             list += `<tr>
                                 <td></td>
                                 <td>${hp.ma_hoc_phan}</td>
                                 <td style='text-align: left'>${hp.ten}</td>
-                                <td style='text-align: center'>${(hpsv.diem_tong_ket === null) ? '' : hpsv.diem_tong_ket}</td>
-                                <td>${(hpsv.diem_he_4 === null) ? '' : hpsv.diem_he_4}</td>
-                                <td>${hp.so_tin_chi}</td>
-                                <td>${(hpsv.qua_mon == 1) ? '<input type="checkbox" checked disabled>' : '<input type="checkbox" disabled>'}</td>
-                                <td><input type="checkbox" checked disabled></td>
-                            </tr>`;
-                            check = true;
-                            break;
-                        }
-                    }
-                    if (!check) {
-                        list += `<tr>
-                            <td></td>
-                            <td>${hp.ma_hoc_phan}</td>
-                            <td style='text-align: left'>${hp.ten}</td>
-                            <td></td>
-                            <td></td>
-                            <td>${hp.so_tin_chi}</td>
-                            <td></td>
-                            <td><input type="checkbox" disabled></td>
-                        </tr>`;
-                    }
-                })
-                if (kkt.ds_hp_tuchon.length > 0)
-                    list += `<tr>
-                        <td colspan="1"></td>
-                        <td colspan="7" style='text-align: left'>Tự chọn</td>
-                    </tr>`;
-                kkt.ds_hp_tuchon.forEach(hp => {
-                    check = false;
-                    for (let i = 0; i < data.dshp_sv.length; i++) {
-                        const hpsv = data.dshp_sv[i];
-                        if (hpsv.id == hp.hoc_phan_id) {
-                            list += `<tr>
                                 <td></td>
-                                <td>${hp.ma_hoc_phan}</td>
-                                <td style='text-align: left'>${hp.ten}</td>
-                                <td style='text-align: center'>${(hpsv.diem_tong_ket === null) ? '' : hpsv.diem_tong_ket}</td>
-                                <td>${(hpsv.diem_he_4 === null) ? '' : hpsv.diem_he_4}</td>
+                                <td></td>
                                 <td>${hp.so_tin_chi}</td>
-                                <td>${(hpsv.qua_mon == 1) ? '<input type="checkbox" checked disabled>' : '<input type="checkbox" disabled>'}</td>
-                                <td><input type="checkbox" checked disabled></td>
+                                <td></td>
+                                <td><input type="checkbox" disabled></td>
                             </tr>`;
-                            check = true;
-                            break;
                         }
-                    }
-                    if (!check) {
-                        list += `<tr>
-                            <td></td>
-                            <td>${hp.ma_hoc_phan}</td>
-                            <td style='text-align: left'>${hp.ten}</td>
-                            <td></td>
-                            <td></td>
-                            <td>${hp.so_tin_chi}</td>
-                            <td></td>
-                            <td><input type="checkbox" disabled></td>
-                        </tr>`;
-                    }
-                })
+                    })
 
-            });
+                
+
+                if (typeof kkt.ds_hp_tuchon != 'undefined')
+                {
+                    if (kkt.ds_hp_tuchon.length > 0)
+                        list += `<tr>
+                            <td colspan="1"></td>
+                            <td colspan="7" style='text-align: left'>Tự chọn</td>
+                        </tr>`;
+                    kkt.ds_hp_tuchon.forEach(hp => {
+                        check = false;
+                        for (let i = 0; i < data.dshp_sv.length; i++) {
+                            const hpsv = data.dshp_sv[i];
+                            if (hpsv.id == hp.hoc_phan_id && hpsv.diem_tong_ket !== null) {
+                                list += `<tr>
+                                    <td></td>
+                                    <td>${hp.ma_hoc_phan}</td>
+                                    <td style='text-align: left'>${hp.ten}</td>
+                                    <td style='text-align: center'>${hpsv.diem_tong_ket}</td>
+                                    <td>${(hpsv.diem_he_4 === null) ? '' : hpsv.diem_he_4}</td>
+                                    <td>${hp.so_tin_chi}</td>
+                                    <td>${(hpsv.qua_mon == 1) ? '<input type="checkbox" checked disabled>' : '<input type="checkbox" disabled>'}</td>
+                                    <td><input type="checkbox" checked disabled></td>
+                                </tr>`;
+                                check = true;
+                                break;
+                            }
+                        }
+                        if (!check) {
+                            list += `<tr>
+                                <td></td>
+                                <td>${hp.ma_hoc_phan}</td>
+                                <td style='text-align: left'>${hp.ten}</td>
+                                <td></td>
+                                <td></td>
+                                <td>${hp.so_tin_chi}</td>
+                                <td></td>
+                                <td><input type="checkbox" disabled></td>
+                            </tr>`;
+                        }
+                    })
+                }
+
+                });
 
             html += `<div class="graduate__container" style="max-height: 32rem; overflow-y: auto">
                 <div class="graduate__item__content">
