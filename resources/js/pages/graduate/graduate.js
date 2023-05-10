@@ -18,6 +18,9 @@ export class Graduate {
         graduate.renderSelectHK(bien_che_selector);
         graduate__container.innerHTML = await graduate.renderHK(-1);
 
+        if (graduate__container.innerHTML.length == 0) 
+            graduate__container.innerHTML = "Không tìm thấy kết quả";
+
         let CURRENT_DOMAIN = location.protocol + '//' + location.host + '/' ;
         document.querySelector("#graduate__suggest__link").addEventListener('click', () => routeHref(CURRENT_DOMAIN+'graduate/suggest'))
         document.querySelector("#graduate__edu_program__link").addEventListener('click', () => routeHref(CURRENT_DOMAIN+'graduate/edu_program'));

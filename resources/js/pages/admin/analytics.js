@@ -363,7 +363,7 @@ export class Analytics {
     }
 
     static renderTTSV(sv_username, show_ttcn) {
-        document.querySelector(".analytics__container").innerHTML = "";
+        document.querySelector(".analytics__container").innerHTML = "<loader-component></loader-component>";
 
         let url = '';
 
@@ -385,6 +385,21 @@ export class Analytics {
                 html += `<p>Giới tính: ${(data.gioi_tinh == 0) ? "Nam" : "Nữ" }</p>`
                 html += `</div>`
             }
+
+            // Chương trình đào tạo
+
+            if (data.chuong_trinh_dao_tao !== null)
+                html += `<div class="analytics__item analytics__item--green">
+                    <h2>${data.chuong_trinh_dao_tao.ten}</h2>
+                    <p>Trình độ đào tạo: ${data.chuong_trinh_dao_tao.trinh_do_dao_tao ?? ''}</p>
+                    <p>Ngành đào tạo: ${data.chuong_trinh_dao_tao.ten_nganh ?? ''}</p>													
+                    <p>Mã ngành: ${data.chuong_trinh_dao_tao.nganh_id ?? ''}</p>													
+                    <p>Hình thức đào tạo: ${data.chuong_trinh_dao_tao.hinh_thuc_dao_tao ?? ''}</p>													
+                    <p>Thời gian đào tạo:${data.chuong_trinh_dao_tao.thoi_gian_dao_tao ?? '0'} năm </p>													
+                    <p>Chu kỳ: ${data.chuong_trinh_dao_tao.ten_chu_ky}</p>													
+                    <p>Tín chỉ tối thiểu:  ${data.chuong_trinh_dao_tao.tong_tin_chi}</p>													
+                    <p>Ghi chú:  ${data.chuong_trinh_dao_tao.ghi_chu ?? 'Không'}</p>													                       
+                </div>`
 
             // Danh sách học phần theo tiến độ
 

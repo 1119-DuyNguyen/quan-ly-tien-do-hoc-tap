@@ -301,7 +301,7 @@ class AnalyticsService {
         ), 200, "");
     }
 
-    private function getHPList(int $sinh_vien_id) {
+    private function getChTrDaoTao(int $sinh_vien_id) {
         $result = DB::table("tinh_trang_sinh_vien")
         ->where('tinh_trang_sinh_vien.sinh_vien_id', '=', $sinh_vien_id)
         ->join('lop_hoc', 'tinh_trang_sinh_vien.lop_hoc_id', '=', 'lop_hoc.id')->get('chuong_trinh_dao_tao_id')->first();
@@ -310,6 +310,18 @@ class AnalyticsService {
             $chuong_trinh_dao_tao_id = -1;
         else
             $chuong_trinh_dao_tao_id = $result->chuong_trinh_dao_tao_id;
+
+        return DB::table('chuong_trinh_dao_tao')
+            ->join('nganh', 'chuong_trinh_dao_tao.nganh_id', 'nganh.id')
+            ->join('chu_ky', 'chuong_trinh_dao_tao.chu_ky_id', 'chu_ky.id')
+            ->join('khoa', 'nganh.khoa_id', 'khoa.id')
+            ->selectRaw('chuong_trinh_dao_tao.*,khoa.ten as ten_khoa,nganh.ma_nganh,chu_ky.ten as ten_chu_ky,nganh.ten as ten_nganh')
+            ->where('chuong_trinh_dao_tao.id', $chuong_trinh_dao_tao_id)
+            ->first();
+    }
+
+    private function getHPList(int $sinh_vien_id) {
+        $chuong_trinh_dao_tao_id = $this->getChTrDaoTao($sinh_vien_id)->id;
 
         $ten_ctdt = DB::table("chuong_trinh_dao_tao")
         ->where('id', '=', $chuong_trinh_dao_tao_id)->get('ten')->first()->ten;
@@ -384,7 +396,7 @@ class AnalyticsService {
                         'gioi_tinh'))->first();
         
         if ($result) {
-            
+
             $ds_hp = DB::table('ket_qua')
             ->join('hoc_phan', 'ket_qua.hoc_phan_id', '=', 'hoc_phan.id')
             ->where('sinh_vien_id', '=', $result->id)
@@ -510,7 +522,9 @@ class AnalyticsService {
                 "tong_dtb_hk4" => round($tong_dtb_hk4, 2),
 
                 "dshp_sv" => $ds_hp,
-                "dshp" => $this->getHPList($result->id)
+                "dshp" => $this->getHPList($result->id),
+
+                "chuong_trinh_dao_tao" => $this->getChTrDaoTao($result->id)
             );
             
             return $this->success($object, 200, "");
