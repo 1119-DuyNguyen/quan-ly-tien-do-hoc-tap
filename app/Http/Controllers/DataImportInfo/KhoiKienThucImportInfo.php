@@ -66,7 +66,6 @@ class KhoiKienThucImportInfo extends ImportInfo
                 //Loai
                 if ($this->setValueFromKeyStr($ten_loai, $row[0], '/')){
                     $ten_KKT = null;
-                    $tin_chi = 0;
                     // $isTuChon = true;
                     continue;
                 };
@@ -79,32 +78,39 @@ class KhoiKienThucImportInfo extends ImportInfo
                 }
 
                 if ($ten_KKT == null){
-                    if ($this->setLoai($row, $tmp, $tin_chi))
+                    if ($this->setLoai($row, $tmp, $tin_chi)){
                         $ten_KKT = $ten_loai;
+                        // if ()
+                        $CTDT[$ten_loai][$ten_KKT]['Tin-chi-tu-chon'] = $tin_chi;
+                    }
                     continue;
                 }
 
                 if ($this->setLoai($row, $tmp, $tin_chi)) {
-                    // $isTuChon = !$isTuChon;
+                    $CTDT[$ten_loai][$ten_KKT]['Tin-chi-tu-chon'] = $tin_chi;
+                // if (!$tin_chi != 0)
+                //     // dd($tin_chi);
+                //     // $isTuChon = !$isTuChon;
                     continue;
                 }
-                if (!isset($CTDT[$ten_loai][$ten_KKT])){
+
+                if (!isset($CTDT[$ten_loai][$ten_KKT]['Bat-buoc'])){
                     // $CTDT[$ten_loai] = [];
                     // $CTDT[$ten_loai][$ten_KKT] = [];
                     $CTDT[$ten_loai][$ten_KKT]['Bat-buoc'] = [];
                     $CTDT[$ten_loai][$ten_KKT]['Tu-chon'] = [
                         // 'Tin-chi' => $tin_chi
                     ];
-                    $CTDT[$ten_loai][$ten_KKT]['Tin-chi-tu-chon'] = $tin_chi;
-                    // $CTDT[$ten_loai][$ten_KKT]['Tu-chon']['Tin-chi'] = $tin_chi;
-                    // dd([$ten_loai, $ten_KKT]);
+                    $CTDT[$ten_loai][$ten_KKT]['Tin-chi-tu-chon'] = 0;
+                // dd([$ten_loai, $ten_KKT]);
                 }
                 // dd($getHP($row), $row);
+                // dd($CTDT);
                 if (strpos($tmp, 'tự chọn') === false){
                     array_push($CTDT[$ten_loai][$ten_KKT]['Bat-buoc'], $this->getHP($row));
                     // dd($CTDT[$ten_loai][$ten_KKT]['Tu-chon'], $getHP($row));
                 }else
-                    array_push($CTDT[$ten_loai][$ten_KKT]['Tu-chon'], $this->getHP($row));
+                array_push($CTDT[$ten_loai][$ten_KKT]['Tu-chon'], $this->getHP($row));
 
             }
 
@@ -113,6 +119,7 @@ class KhoiKienThucImportInfo extends ImportInfo
             // pt1 là model học phần
             // pt2 là model mảng chứa các số từ 1 - 9 ứng với học kì gợi ý là học kì mấy, ex: [1,3,4] thì hk 1 và 3 và 4 là hk gợi ý
 
+            // dd($CTDT);
             // dd($ten_loai);
             if (!isset($CTDT))
                 return [
@@ -171,7 +178,7 @@ class KhoiKienThucImportInfo extends ImportInfo
 
                 ]);
 
-                // dd(key($value));
+                // dd($value['Tin-chi-tu-chon']);
 
                 $kkt = KhoiKienThuc::updateOrCreate([
                     'loai_kien_thuc_id' => $loai_kt->id,
@@ -272,15 +279,17 @@ class KhoiKienThucImportInfo extends ImportInfo
         // $rs->hoc_phan_tuong_duong_id = $row[13];
 
         // dd($rs);
+        // return null;
         return [$rs, $this->getGoiY($row)];
         // ##ĐÁNH DẤU CHO TEAM: đổi $rs->ten thành $rs để trả về model (->ten) để dễ nhìn kết quả thôi
     }
 
     public function setLoai($row, &$tmp, &$set){
         if ($this->setValueFromKeyStr($tmp, $row[0], '*')){
-            if (strpos($row[0], 'tự chọn') !== false)
-                // dd(intval($row[3]));
+            if (strpos($row[0], 'tự chọn') !== false){
                 $set = intval($row[3]);
+                // dd($set);
+            }
             return true;
         }
         return false;
