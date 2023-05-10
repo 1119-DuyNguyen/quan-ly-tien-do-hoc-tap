@@ -1,6 +1,7 @@
 import GraduateCrawler from '../../components/dashboard/graduateCrawler.js';
 import { alertComponent } from '../../components/helper/alert-component.js';
 import { Analytics } from '../admin/analytics.js';
+import { routeHref } from '../../routes/route.js';
 let graduate = new GraduateCrawler();
 
 export class Graduate {
@@ -18,8 +19,8 @@ export class Graduate {
         graduate__container.innerHTML = await graduate.renderHK(-1);
 
         let CURRENT_DOMAIN = location.protocol + '//' + location.host + '/' ;
-        document.querySelector("#graduate__suggest__link").href = CURRENT_DOMAIN+'graduate/suggest';
-        document.querySelector("#graduate__edu_program__link").href = CURRENT_DOMAIN+'graduate/edu_program';
+        document.querySelector("#graduate__suggest__link").addEventListener('click', () => routeHref(CURRENT_DOMAIN+'graduate/suggest'))
+        document.querySelector("#graduate__edu_program__link").addEventListener('click', () => routeHref(CURRENT_DOMAIN+'graduate/edu_program'));
     }
     static async suggest() {
         let graduate__container = document.querySelectorAll('.graduate__container');
