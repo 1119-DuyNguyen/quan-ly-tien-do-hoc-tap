@@ -44,7 +44,7 @@ route.addRoute(
 );
 route.addRoute(
     'giang-vien/classroom/bai-tap/$id',
-    HomeworkMark.index,
+    HomeworkMark.show,
     { title: 'Bài tập $id' },
     'templates/teacher/homework.html'
 );

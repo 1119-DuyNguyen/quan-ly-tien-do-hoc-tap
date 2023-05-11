@@ -14,7 +14,8 @@ class AnalyticsController extends ApiController
 {
     private $analyticsService;
 
-    public function __construct(AnalyticsService $analyticsService) {
+    public function __construct(AnalyticsService $analyticsService)
+    {
         $this->analyticsService = $analyticsService;
     }
     /**

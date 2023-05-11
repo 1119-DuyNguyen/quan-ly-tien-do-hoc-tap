@@ -11,6 +11,7 @@ use App\Http\Controllers\ApiController;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\PaginationRequest;
 use App\Models\Users\Classes\Posts\BaiTapSinhVien;
+use Exception;
 use Illuminate\Support\Str;
 
 class BaiTapSinhVienController extends ApiController
@@ -30,7 +31,7 @@ class BaiTapSinhVienController extends ApiController
             Storage::putFileAs('files', $request->file('files'), $name);
             $storeData['bai_tap_id'] = $request->bai_tap_id;
             $storeData['sinh_vien_id'] = $request->user()->id;
-            $storeData['link_file'] = 'files/' . $name;
+            $storeData['link_file'] = '/storage/app/files/' . $name;
 
             BaiTapSinhVien::insert($storeData);
 
@@ -47,10 +48,9 @@ class BaiTapSinhVienController extends ApiController
         $data = DB::table('bai_tap_sinh_vien')
             ->where('bai_tap_id', '=', $bai_tap_id)
             ->where('sinh_vien_id', '=', $request->user()->id)
-            ->get()
-            ->first();
+            ->get();
 
-        return $data->link_file;
+        return $this->success($data, 200, 'Đã lấy được file bài tập');
     }
 
     public function destroy(Request $request, string $bai_tap_id)

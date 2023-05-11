@@ -24,9 +24,9 @@ class PermissionController extends ApiController
         //
         $permissons = ChucNang::all();
         $permissons->map(function ($item) {
-            return  new PermissionResource($item);
+            return new PermissionResource($item);
         });
-        return  $this->success($permissons, 200);
+        return $this->success($permissons, 200);
     }
 
     /**
@@ -59,7 +59,6 @@ class PermissionController extends ApiController
      */
     public function update(Request $request, ChucNang $chucNang)
     {
-
         try {
             $chucNang->update($request->input());
             return $this->success(null, 204, 'Cập nhập thành công');

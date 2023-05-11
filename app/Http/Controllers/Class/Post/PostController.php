@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Class\Post;
 
+use App\Events\AnythingBePosted;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -57,8 +58,10 @@ class PostController extends ApiController
 
     public function store(Request $request, BaiDang $baiDang)
     {
+        $baiDang = $request->all();
+        broadcast(new AnythingBePosted($request->user(), $baiDang));
         try {
-            $baiDang->create($request->all());
+            $request['nguoi_dung_id'] = $request->user()->id;
             if ($request->hasFile('files')) {
                 foreach ($request->file('files') as $file) {
                     $name = time() . rand(1, 100) . Str::random(40) . '.' . $file->extension();
@@ -70,7 +73,8 @@ class PostController extends ApiController
                     FileBaiDang::create($fileData);
                 }
             }
-            return $this->success($baiDang, 201, 'Created');
+            BaiDang::create($request->all());
+            return $this->success($baiDang, 201, 'Đã đăng bài viết');
         } catch (Exception $e) {
             //catch exception
             echo 'Message: ' . $e->getMessage();
@@ -94,7 +98,7 @@ class PostController extends ApiController
                 }
             }
             $baiDang->update($request->all());
-            return $this->success($baiDang, 201, 'Updated');
+            return $this->success($baiDang, 201, 'Đã cập nhật bài đăng');
         } catch (Exception $e) {
             //catch exception
             echo 'Message: ' . $e->getMessage();
@@ -107,7 +111,7 @@ class PostController extends ApiController
         $baiDang = BaiDang::find($id);
         try {
             $baiDang->delete();
-            return $this->success(null, 204, 'Deleted');
+            return $this->success(null, 204, 'Đã xoá bài đăng');
         } catch (Exception $e) {
             //catch exception
             echo 'Message: ' . $e->getMessage();

@@ -120,7 +120,6 @@ class ProgramController extends ApiController
      */
     public function destroy(Request $request, $id)
     {
-
         try {
             //code...
             $data = ChuongTrinhDaoTao::findOrFail($id);

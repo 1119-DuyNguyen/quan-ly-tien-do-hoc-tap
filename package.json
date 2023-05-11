@@ -12,5 +12,9 @@
     },
     "optionalDependencies": {
         "fsevents": "^2.3.2"
+    },
+    "dependencies": {
+        "laravel-echo": "^1.15.1",
+        "pusher-js": "^8.0.2"
     }
 }

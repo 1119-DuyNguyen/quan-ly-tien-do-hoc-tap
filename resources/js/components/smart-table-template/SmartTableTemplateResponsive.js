@@ -455,7 +455,7 @@ export class SmartTableTemplateResponsive {
         if (jsonData) {
             option.urlAPI = urlAPI;
             option = assignOption(this.#option, option);
-            this.init(jsonData.data.dataObject, option, jsonData.data.paginationOption);
+            this.init(jsonData.data. , option, jsonData.data.paginationOption);
             return true;
         } else return false;
     }
