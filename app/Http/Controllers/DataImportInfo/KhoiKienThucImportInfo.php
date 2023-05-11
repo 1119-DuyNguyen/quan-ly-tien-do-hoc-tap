@@ -165,16 +165,16 @@ class KhoiKienThucImportInfo extends ImportInfo
             ]);
 
             // dd($CTDT);
-
+            $dai_cuong = 1;
             foreach($CTDT as $key=>$value){
                 if (gettype($key) == 'integer') continue;
+
                 $ten_KKT = key($value);
                 $value = array_pop($value);
 
                 $loai_kt = LoaiKienThuc::updateOrCreate([
                     'ten' => $key,
                 ],[
-                    'dai_cuong' => strpos($key, 'đại cương') !== false ? 1 : 0
 
                 ]);
 
@@ -185,8 +185,11 @@ class KhoiKienThucImportInfo extends ImportInfo
                     'chuong_trinh_dao_tao_id' => $ctdt->id
                 ],[
                     'ten' => $ten_KKT,
-                    'tong_tin_chi_ktt_tu_chon' => $value['Tin-chi-tu-chon']
+                    'tong_tin_chi_ktt_tu_chon' => $value['Tin-chi-tu-chon'],
+                    'dai_cuong' => $dai_cuong
                 ]);
+                if ($dai_cuong == 1)
+                    $dai_cuong = 0;
                 HocPhanKKTBatBuoc::where('khoi_kien_thuc_id', $kkt->id)->delete();
                 HocPhanKKTTuChon::where('khoi_kien_thuc_id', $kkt->id)->delete();
 
