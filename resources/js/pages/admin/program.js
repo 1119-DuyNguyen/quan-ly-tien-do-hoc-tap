@@ -288,7 +288,7 @@ export class Program {
                     .then((data) => {
                         //create Loại & Khối kiến thức
                         let html = '';
-                        //data.forEach((kkt) => {});
+                        //  data.forEach((kkt) => {});
                         tableContainer.innerHTML = `
  
                         <div class="table-container">

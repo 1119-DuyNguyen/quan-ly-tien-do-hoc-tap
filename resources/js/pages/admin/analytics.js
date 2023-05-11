@@ -3,6 +3,7 @@ import { toast } from "../../components/helper/toast";
 
 export class Analytics {
     static URL_REQ = location.protocol + '//' + location.host + '/api/admin/analytics';
+    static URL_SV = location.protocol + '//' + location.host + '/api/graduate-on-edu-program';
     static URL = location.protocol + '//' + location.host + '/graduate';
 
     static async callData(khoa = -1, nganh = -1) {
@@ -361,121 +362,155 @@ export class Analytics {
         }
     }
 
-    static renderTTSV(sv_username) {
-        document.querySelector(".analytics__container").innerHTML = "";
+    static renderTTSV(sv_username, show_ttcn) {
+        document.querySelector(".analytics__container").innerHTML = "<loader-component></loader-component>";
 
-        axios.get(Analytics.URL_REQ+"?sv="+sv_username).then(response => {
+        let url = '';
+
+        if (show_ttcn) url = Analytics.URL_REQ+"?sv="+sv_username;
+        else url = Analytics.URL_SV;
+
+        axios.get(url).then(response => {
             let data = response.data.data;
 
             let html = ``;
 
-            html += `<div class="analytics__item analytics__item--blue">`;
-            html += `<h3>Thông tin cá nhân</h3>`
-            html += `<p>Mã sinh viên: ${data.ten_dang_nhap}</p>`
-            html += `<p>Họ tên: ${data.ten}</p>`
-            html += `<p>Ngày sinh: ${(data.ngay_sinh === null) ? '' : data.ngay_sinh}</p>`
-            html += `<p>Số điện thoại: ${(data.sdt === null) ? "" : data.sdt}</p>`
-            html += `<p>Giới tính: ${(data.gioi_tinh == 0) ? "Nam" : "Nữ" }</p>`
-            html += `</div>`
+            if (show_ttcn) {
+                html += `<div class="analytics__item analytics__item--blue">`;
+                html += `<h3>Thông tin cá nhân</h3>`
+                html += `<p>Mã sinh viên: ${data.ten_dang_nhap}</p>`
+                html += `<p>Họ tên: ${data.ten}</p>`
+                html += `<p>Ngày sinh: ${(data.ngay_sinh === null) ? '' : data.ngay_sinh}</p>`
+                html += `<p>Số điện thoại: ${(data.sdt === null) ? "" : data.sdt}</p>`
+                html += `<p>Giới tính: ${(data.gioi_tinh == 0) ? "Nam" : "Nữ" }</p>`
+                html += `</div>`
+            }
+
+            // Chương trình đào tạo
+
+            if (data.chuong_trinh_dao_tao !== null)
+                html += `<div class="analytics__item analytics__item--green">
+                    <h2>${data.chuong_trinh_dao_tao.ten}</h2>
+                    <p>Trình độ đào tạo: ${data.chuong_trinh_dao_tao.trinh_do_dao_tao ?? ''}</p>
+                    <p>Ngành đào tạo: ${data.chuong_trinh_dao_tao.ten_nganh ?? ''}</p>													
+                    <p>Mã ngành: ${data.chuong_trinh_dao_tao.nganh_id ?? ''}</p>													
+                    <p>Hình thức đào tạo: ${data.chuong_trinh_dao_tao.hinh_thuc_dao_tao ?? ''}</p>													
+                    <p>Thời gian đào tạo:${data.chuong_trinh_dao_tao.thoi_gian_dao_tao ?? '0'} năm </p>													
+                    <p>Chu kỳ: ${data.chuong_trinh_dao_tao.ten_chu_ky}</p>													
+                    <p>Tín chỉ tối thiểu:  ${data.chuong_trinh_dao_tao.tong_tin_chi}</p>													
+                    <p>Ghi chú:  ${data.chuong_trinh_dao_tao.ghi_chu ?? 'Không'}</p>													                       
+                </div>`
 
             // Danh sách học phần theo tiến độ
 
             html += `<div class="analytics__item analytics__item">`
 
-            html += `<h3>Danh sách học phần theo tiến độ</h3>`
-
-            let list = ``, check, count = 0;
+            let list = ``, check, sltc;
+            
+            data.dshp = Object.values(data.dshp)
+            
             data.dshp.forEach(kkt => {
-                if (check == 0)
-                    list += `<tr>
-                        <td colspan="8" style='text-align: left; font-weight: bold'>${kkt.ten}</td>
-                    </tr>
-                    <tr style="height: 2rem">
-                        <td colspan="1"></td>
-                        <td colspan="7" style="text-align: left">Bắt buộc</td>
-                    </tr>`;
-                else 
-                    list += `<tr>
-                        <td colspan="8" style='text-align: left; font-weight: bold'>${kkt.ten}</td>
-                    </tr>
-                    <tr style="height: 2rem">
-                        <td colspan="1"></td>
-                        <td colspan="7" style="text-align: left">Bắt buộc</td>
-                    </tr>`;
 
-                count++;
+                if (typeof kkt == 'string')
+                {
+                    html += `<h3>Danh sách học phần theo tiến độ ${kkt}</h3>`
+                    return;
+                }
 
-                kkt.ds_hp_batbuoc.forEach(hp => {
-                    check = false;
-                    for (let i = 0; i < data.dshp_sv.length; i++) {
-                        const hpsv = data.dshp_sv[i];
-                        if (hpsv.id == hp.hoc_phan_id) {
+                if (typeof kkt.ds_hp_batbuoc != 'undefined')
+                {
+                    sltc = 0;
+                    kkt.ds_hp_batbuoc.forEach(hp => sltc += hp.so_tin_chi)
+                    if (kkt.ds_hp_batbuoc.length > 0)
+                        list += `<tr>
+                            <td colspan="8" style='text-align: left; font-weight: bold'>${kkt.ten}</td>
+                        </tr>
+                        <tr style="height: 2rem">
+                            <td colspan="1"></td>
+                            <td colspan="4" style="text-align: left">Bắt buộc</td>
+                            <td style="text-align: center"><i>${sltc}</i></td>
+                            <td colspan="4"></td>
+                        </tr>`;
+                    kkt.ds_hp_batbuoc.forEach(hp => {
+                        check = false;
+                        for (let i = 0; i < data.dshp_sv.length; i++) {
+                            const hpsv = data.dshp_sv[i];
+                            if (hpsv.id == hp.hoc_phan_id && hpsv.diem_tong_ket !== null) {
+                                list += `<tr>
+                                    <td></td>
+                                    <td>${hp.ma_hoc_phan}</td>
+                                    <td style='text-align: left'>${hp.ten}</td>
+                                    <td style='text-align: center'>${hpsv.diem_tong_ket}</td>
+                                    <td>${(hpsv.diem_he_4 === null) ? '' : hpsv.diem_he_4}</td>
+                                    <td>${hp.so_tin_chi}</td>
+                                    <td>${(hpsv.qua_mon == 1) ? '<input type="checkbox" checked disabled>' : '<input type="checkbox" disabled>'}</td>
+                                    <td><input type="checkbox" checked disabled></td>
+                                </tr>`;
+                                check = true;
+                                break;
+                            }
+                        }
+                        if (!check) {
                             list += `<tr>
                                 <td></td>
                                 <td>${hp.ma_hoc_phan}</td>
                                 <td style='text-align: left'>${hp.ten}</td>
-                                <td style='text-align: center'>${(hpsv.diem_tong_ket === null) ? '' : hpsv.diem_tong_ket}</td>
-                                <td>${(hpsv.diem_he_4 === null) ? '' : hpsv.diem_he_4}</td>
+                                <td></td>
+                                <td></td>
                                 <td>${hp.so_tin_chi}</td>
-                                <td>${(hpsv.qua_mon == 1) ? '<input type="checkbox" checked disabled>' : '<input type="checkbox" disabled>'}</td>
-                                <td><input type="checkbox" checked disabled></td>
+                                <td></td>
+                                <td><input type="checkbox" disabled></td>
                             </tr>`;
-                            check = true;
-                            break;
                         }
-                    }
-                    if (!check) {
+                    })
+                }
+
+                if (typeof kkt.ds_hp_tuchon != 'undefined')
+                {
+                    sltc = 0;
+                    kkt.ds_hp_tuchon.forEach(hp => sltc += hp.so_tin_chi)
+                    if (kkt.ds_hp_tuchon.length > 0)
                         list += `<tr>
-                            <td></td>
-                            <td>${hp.ma_hoc_phan}</td>
-                            <td style='text-align: left'>${hp.ten}</td>
-                            <td></td>
-                            <td></td>
-                            <td>${hp.so_tin_chi}</td>
-                            <td></td>
-                            <td><input type="checkbox" disabled></td>
+                            <td colspan="1"></td>
+                            <td colspan="4" style='text-align: left'>Tự chọn</td>
+                            <td style="text-align: center;"><i>${sltc}</i></td>
+                            <td colspan="4"></td>
                         </tr>`;
-                    }
-                })
-                if (kkt.ds_hp_tuchon.length > 0)
-                    list += `<tr>
-                        <td colspan="1"></td>
-                        <td colspan="7" style='text-align: left'>Tự chọn</td>
-                    </tr>`;
-                kkt.ds_hp_tuchon.forEach(hp => {
-                    check = false;
-                    for (let i = 0; i < data.dshp_sv.length; i++) {
-                        const hpsv = data.dshp_sv[i];
-                        if (hpsv.id == hp.hoc_phan_id) {
+                    kkt.ds_hp_tuchon.forEach(hp => {
+                        check = false;
+                        for (let i = 0; i < data.dshp_sv.length; i++) {
+                            const hpsv = data.dshp_sv[i];
+                            if (hpsv.id == hp.hoc_phan_id && hpsv.diem_tong_ket !== null) {
+                                list += `<tr>
+                                    <td></td>
+                                    <td>${hp.ma_hoc_phan}</td>
+                                    <td style='text-align: left'>${hp.ten}</td>
+                                    <td style='text-align: center'>${hpsv.diem_tong_ket}</td>
+                                    <td>${(hpsv.diem_he_4 === null) ? '' : hpsv.diem_he_4}</td>
+                                    <td>${hp.so_tin_chi}</td>
+                                    <td>${(hpsv.qua_mon == 1) ? '<input type="checkbox" checked disabled>' : '<input type="checkbox" disabled>'}</td>
+                                    <td><input type="checkbox" checked disabled></td>
+                                </tr>`;
+                                check = true;
+                                break;
+                            }
+                        }
+                        if (!check) {
                             list += `<tr>
                                 <td></td>
                                 <td>${hp.ma_hoc_phan}</td>
                                 <td style='text-align: left'>${hp.ten}</td>
-                                <td style='text-align: center'>${(hpsv.diem_tong_ket === null) ? '' : hpsv.diem_tong_ket}</td>
-                                <td>${(hpsv.diem_he_4 === null) ? '' : hpsv.diem_he_4}</td>
+                                <td></td>
+                                <td></td>
                                 <td>${hp.so_tin_chi}</td>
-                                <td>${(hpsv.qua_mon == 1) ? '<input type="checkbox" checked disabled>' : '<input type="checkbox" disabled>'}</td>
-                                <td><input type="checkbox" checked disabled></td>
+                                <td></td>
+                                <td><input type="checkbox" disabled></td>
                             </tr>`;
-                            check = true;
-                            break;
                         }
-                    }
-                    if (!check) {
-                        list += `<tr>
-                            <td></td>
-                            <td>${hp.ma_hoc_phan}</td>
-                            <td style='text-align: left'>${hp.ten}</td>
-                            <td></td>
-                            <td></td>
-                            <td>${hp.so_tin_chi}</td>
-                            <td></td>
-                            <td><input type="checkbox" disabled></td>
-                        </tr>`;
-                    }
-                })
+                    })
+                }
 
-            });
+                });
 
             html += `<div class="graduate__container" style="max-height: 32rem; overflow-y: auto">
                 <div class="graduate__item__content">
@@ -536,7 +571,7 @@ export class Analytics {
 
         if (typeof sv_username === "string") {
             document.querySelector(".analytics__search.analytics__select__container").innerHTML = "";
-            Analytics.renderTTSV(sv_username);
+            Analytics.renderTTSV(sv_username, true);
         } else {
             let searchbox = document.querySelector(".analytics__search input");
             let searchBtn = document.querySelector(".analytics__search button");
@@ -547,7 +582,7 @@ export class Analytics {
 
                 if (searchbox.value.length > 0) {
                     
-                    Analytics.renderTTSV(searchbox.value);
+                    Analytics.renderTTSV(searchbox.value, true);
 
                 } else {
                     alertComponent("Lỗi", "Nhập mã sinh viên cần tìm!");

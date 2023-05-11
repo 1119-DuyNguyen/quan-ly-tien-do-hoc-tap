@@ -51,7 +51,7 @@ class AnalyticsService {
         } else if ($request->input("tt_lop") !== null) {
             return $this->tk_lop($request, true);
         } else if ($request->input("sv") !== null) {
-            return $this->tk_sv($request);
+            return $this->tk_sv($request, 0);
         }
 
         return $this->success($this->object, 200, "");
@@ -301,7 +301,7 @@ class AnalyticsService {
         ), 200, "");
     }
 
-    private function getHPList(int $sinh_vien_id) {
+    private function getChTrDaoTao(int $sinh_vien_id) {
         $result = DB::table("tinh_trang_sinh_vien")
         ->where('tinh_trang_sinh_vien.sinh_vien_id', '=', $sinh_vien_id)
         ->join('lop_hoc', 'tinh_trang_sinh_vien.lop_hoc_id', '=', 'lop_hoc.id')->get('chuong_trinh_dao_tao_id')->first();
@@ -311,11 +311,28 @@ class AnalyticsService {
         else
             $chuong_trinh_dao_tao_id = $result->chuong_trinh_dao_tao_id;
 
+        return DB::table('chuong_trinh_dao_tao')
+            ->join('nganh', 'chuong_trinh_dao_tao.nganh_id', 'nganh.id')
+            ->join('chu_ky', 'chuong_trinh_dao_tao.chu_ky_id', 'chu_ky.id')
+            ->join('khoa', 'nganh.khoa_id', 'khoa.id')
+            ->selectRaw('chuong_trinh_dao_tao.*,khoa.ten as ten_khoa,nganh.ma_nganh,chu_ky.ten as ten_chu_ky,nganh.ten as ten_nganh')
+            ->where('chuong_trinh_dao_tao.id', $chuong_trinh_dao_tao_id)
+            ->first();
+    }
+
+    private function getHPList(int $sinh_vien_id) {
+        $chuong_trinh_dao_tao_id = $this->getChTrDaoTao($sinh_vien_id)->id;
+
+        $ten_ctdt = DB::table("chuong_trinh_dao_tao")
+        ->where('id', '=', $chuong_trinh_dao_tao_id)->get('ten')->first()->ten;
+
         $ds_khoi_kien_thuc = DB::table('khoi_kien_thuc')
         ->where('chuong_trinh_dao_tao_id', '=', $chuong_trinh_dao_tao_id)
         ->get(array('id','ten'));
 
-        $object = array();
+        $object = array(
+            'ten_ctdt' => $ten_ctdt,
+        );
 
         foreach($ds_khoi_kien_thuc as $kkt) {
             $ds_hp_batbuoc = DB::table('hoc_phan_kkt_bat_buoc')
@@ -339,13 +356,13 @@ class AnalyticsService {
             );
         }
 
-        $object = $object;
-
         return $object;
     }
 
-    private function tk_sv(PaginationRequest $request) {
-        $search_sv_txt = $request->input("sv");
+    public function tk_sv(PaginationRequest $request, int $sv_id) {
+        
+        if ($sv_id == 0)
+            $search_sv_txt = $request->input("sv");
 
         $internalRequest = Request::create('/api/semester', 'GET');
 
@@ -355,19 +372,31 @@ class AnalyticsService {
         $hk_truoc = $response->hk_truoc;
         $hk_hien_tai = $response->hk_hien_tai;
 
-        $result = DB::table('tai_khoan')
-        ->where('ten_dang_nhap', 'LIKE', "%$search_sv_txt%", "and")
-        ->where('quyen_id', '=', 1)
-        ->get(array('id', 
-                    'ten', 
-                    'ten_dang_nhap',
-                    'email',
-                    'sdt',
-                    'ngay_sinh',
-                    'gioi_tinh'))->first();
+        if ($sv_id == 0)
+            $result = DB::table('tai_khoan')
+            ->where('ten_dang_nhap', 'LIKE', "%$search_sv_txt%", "and")
+            ->where('quyen_id', '=', 1)
+            ->get(array('id', 
+                        'ten', 
+                        'ten_dang_nhap',
+                        'email',
+                        'sdt',
+                        'ngay_sinh',
+                        'gioi_tinh'))->first();
+        else
+            $result = DB::table('tai_khoan')
+            ->where('id', '=', $sv_id)
+            ->where('quyen_id', '=', 1)
+            ->get(array('id', 
+                        'ten', 
+                        'ten_dang_nhap',
+                        'email',
+                        'sdt',
+                        'ngay_sinh',
+                        'gioi_tinh'))->first();
         
         if ($result) {
-            
+
             $ds_hp = DB::table('ket_qua')
             ->join('hoc_phan', 'ket_qua.hoc_phan_id', '=', 'hoc_phan.id')
             ->where('sinh_vien_id', '=', $result->id)
@@ -389,6 +418,22 @@ class AnalyticsService {
             $dtb_hk4_gan_nhat = 0;
 
             foreach ($ds_hp as $hp) {
+                if ($hp->diem_tong_ket !== null) {
+                    $hp->qua_mon = 1;
+                    if ($hp->diem_tong_ket < 4.0)
+                    {
+                        $hp->diem_he_4 = 0.0;
+                        $hp->qua_mon = 0;
+                    }
+                    else if ($hp->diem_tong_ket >= 4.0 && $hp->diem_tong_ket < 5.5)
+                        $hp->diem_he_4 = 1.0;
+                    else if ($hp->diem_tong_ket >= 5.5 && $hp->diem_tong_ket < 7.0)
+                        $hp->diem_he_4 = 2.0;
+                    else if ($hp->diem_tong_ket >= 7.0 && $hp->diem_tong_ket < 8.5)
+                        $hp->diem_he_4 = 3.0;
+                    else if ($hp->diem_tong_ket >= 8.5)
+                        $hp->diem_he_4 = 4.0;
+                }
                 if ($hp->qua_mon == 1 && $hp->co_tinh_tich_luy == 1)
                     $stc_dat += $hp->so_tin_chi;
 
@@ -477,8 +522,11 @@ class AnalyticsService {
                 "tong_dtb_hk4" => round($tong_dtb_hk4, 2),
 
                 "dshp_sv" => $ds_hp,
-                "dshp" => $this->getHPList($result->id)
+                "dshp" => $this->getHPList($result->id),
+
+                "chuong_trinh_dao_tao" => $this->getChTrDaoTao($result->id)
             );
+            
             return $this->success($object, 200, "");
         }
 

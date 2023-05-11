@@ -17,6 +17,7 @@ use App\Http\Controllers\Class\Post\BaitapController;
 use App\Http\Controllers\Class\BaiTapSinhVienController;
 use App\Http\Controllers\Class\Everyone\EveryoneController;
 use App\Http\Controllers\Admin\ProgramKnowledgeBlockController;
+use App\Http\Controllers\Graduation\Student\ResultBaseOnEducationProgramController;
 use App\Http\Controllers\Graduation\Student\SemesterController;
 use App\Http\Controllers\Graduation\Student\GraduateStudentController;
 use App\Http\Controllers\Graduation\Student\SuggestGraduateController;
@@ -53,6 +54,7 @@ Route::middleware('auth:api')->group(function () {
     Route::apiResource('/test', TestApi::class);
 
     Route::apiResource('/graduate', GraduateStudentController::class);
+    Route::apiResource('/graduate-on-edu-program', ResultBaseOnEducationProgramController::class);
     Route::apiResource('/suggestion', SuggestGraduateController::class);
 
     Route::apiResource('/semester', SemesterController::class);
