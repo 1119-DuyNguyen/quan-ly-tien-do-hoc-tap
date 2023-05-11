@@ -1,8 +1,12 @@
 import { alertComponent } from "../../components/helper/alert-component";
 import { toast } from "../../components/helper/toast";
+import { PaginationService } from "../../components/smart-table-template/services/PaginationService";
+import { TableTree } from "../../components/table-tree";
+import { routeHref } from "../../routes/route";
 
 export class Analytics {
     static URL_REQ = location.protocol + '//' + location.host + '/api/admin/analytics';
+    static URL_CLASS = location.protocol + '//' + location.host + '/api/admin/class';
     static URL_SV = location.protocol + '//' + location.host + '/api/graduate-on-edu-program';
     static URL = location.protocol + '//' + location.host + '/graduate';
 
@@ -138,9 +142,9 @@ export class Analytics {
     static graduate() {
         let url = location.protocol + '//' + location.host + '/graduate';
 
-        document.getElementById('graduate__faculty').href = url + '/faculty';
-        document.getElementById('graduate__class').href = url + '/class';
-        document.getElementById('graduate__student').href = url + '/student';
+        document.getElementById('graduate__faculty').addEventListener('click', () => routeHref(url + '/faculty'))
+        document.getElementById('graduate__class').addEventListener('click', () => routeHref(url + '/class'))
+        document.getElementById('graduate__student').addEventListener('click', () => routeHref(url + '/student'))
     }
 
     static renderTTLop(class_idn, type) {
@@ -148,15 +152,15 @@ export class Analytics {
 
         let param = (type == "chi_tiet") ? "tt_lop" : "lop";
 
-        axios.get(Analytics.URL_REQ+`?${param}=`+class_idn).then(response => {
+        axios.get(Analytics.URL_REQ+`?${param}=`+class_idn).then(async response => {
             let data = response.data.data;
             
-            let html = ``;
-
+            let html = ``, ma_lop_lay_duoc = null;
 
             if (typeof data.lop.length == "undefined") {
 
                 const ma_lop = data.lop.ma_lop;
+                ma_lop_lay_duoc = data.lop.ma_lop;
                 const nd_lop = data.noi_dung_lop[0];
 
                 html += `<div class="analytics__item analytics__item--blue">`;
@@ -172,17 +176,8 @@ export class Analytics {
                 html += `<div class="analytics__item analytics__item">`
 
                 html += `<h3>Danh sách sinh viên thuộc lớp ${ma_lop}</h3>`
-
-                let list = ``;
-                nd_lop.dssv.forEach(element => {
-                    list += `<tr>
-                        <td>${element.ten_dang_nhap}</td>
-                        <td>${element.ten}</td>
-                        <td><a href="${Analytics.URL + '/student/' +element.ten_dang_nhap}">Xem chi tiết</a></td>
-                    </tr>`;
-                });
-
-                html += `<div class="graduate__container" style="max-height: 16rem; overflow-y: auto">
+                
+                html += `<div id="dssv_table" class="graduate__container">
                     <div class="graduate__item__content">
                         <table>
                             <tr>
@@ -190,7 +185,6 @@ export class Analytics {
                                 <th>Tên sinh viên</th>
                                 <th>Hành động</th>
                             </tr>
-                            ${list}
                         </table>
                     </div>
                 </div>`
@@ -209,11 +203,15 @@ export class Analytics {
                 html += `<p>Số lượng sinh viên đã tốt nghiệp: ${nd_lop.sv_tot_nghiep}</p>`
                 html += `<p>Số lượng sinh viên bị cảnh cáo: ${nd_lop.sv_bi_canh_cao}</p>`
                 html += `<p>Số lượng sinh viên bị buộc thôi học: ${nd_lop.sv_bi_bth}</p>`
-                html += `<p><a href="${Analytics.URL + '/class/' +ma_lop}">Xem chi tiết</a></p>`
+                html += `<p><a href="${Analytics.URL + '/class/' +ma_lop}" class="xem__chi__tiet__lop">Xem chi tiết</a></p>`
                 html += `</div>`
             }
 
             document.querySelector(".analytics__container").innerHTML = html;
+
+            document.querySelectorAll('.xem__chi__tiet__lop').forEach(elem => {
+                elem.addEventListener('click', () => routeHref(elem.href))
+            })
 
             document.querySelector(".analytics__container").classList.add("analytics__container--1_column");
 
@@ -223,6 +221,43 @@ export class Analytics {
                 type: 'success',
                 duration: 3000
             })
+
+            //  Sau khi render table
+
+            if (typeof data.lop.length != "undefined") return;
+
+            let dssv_table = document.querySelector("#dssv_table");
+            let dssv = await axios.get(Analytics.URL_CLASS + '/' + class_idn + '/students').then(response => response.data.data)
+
+            const renderDataPhanTrang = async () => {
+
+                const queryString = window.location.search;
+                const urlParams = new URLSearchParams(queryString);
+                const page = (urlParams.get('page') === null) ? 1 : urlParams.get('page');
+
+                dssv = await axios.get(Analytics.URL_CLASS + '/' + ma_lop_lay_duoc + '/students?page='+page).then(response => response.data.data)
+                document.querySelector("#dssv_table tbody").innerHTML = `<tr>
+                        <th>Mã sinh viên</th>
+                        <th>Tên sinh viên</th>
+                        <th>Hành động</th>
+                    </tr>`;
+                dssv.dataObject.forEach(element => {
+                    let html = `<tr>
+                        <td>${element.ten_dang_nhap}</td>
+                        <td>${element.ten}</td>
+                        <td><a href='${Analytics.URL + '/class/' + ma_lop_lay_duoc + '/' + element.ten_dang_nhap}'>Xem chi tiết</a></td>
+                    </tr>`;
+                    document.querySelector("#dssv_table tbody").insertAdjacentHTML('beforeend', html);
+                });
+                document.querySelectorAll('.xem__chi__tiet__lop').forEach(elem => {
+                    elem.addEventListener('click', () => routeHref(elem.href))
+                })
+            };
+
+            renderDataPhanTrang();
+
+            let paginateContainer = new PaginationService(dssv_table, renderDataPhanTrang,dssv.paginationOption);
+            paginateContainer.renderPagination();
         }).catch(err => {
             console.error(err);
             if (err.response.status === 404) {
@@ -244,9 +279,13 @@ export class Analytics {
         });
     }
 
-    static async class({class_idn}) {
+    static async class({class_idn, sv_username}) {
 
-        if (typeof class_idn === "string") {
+        if (typeof sv_username === "string") {
+            document.querySelector(".analytics__search.analytics__select__container").innerHTML = "";
+            document.querySelector(".analytics__container").classList.add("analytics__container--1_column");
+            Analytics.renderTTSV(sv_username, true);
+        } else if (typeof class_idn === "string") {
             document.querySelector(".analytics__search.analytics__select__container").innerHTML = "";
             Analytics.renderTTLop(class_idn, "chi_tiet")
         } else {
@@ -400,6 +439,8 @@ export class Analytics {
                     <p>Tín chỉ tối thiểu:  ${data.chuong_trinh_dao_tao.tong_tin_chi}</p>													
                     <p>Ghi chú:  ${data.chuong_trinh_dao_tao.ghi_chu ?? 'Không'}</p>													                       
                 </div>`
+            else document.querySelector(".analytics__container").innerHTML = "Không tìm thấy chương trình đào tạo!";
+
 
             // Danh sách học phần theo tiến độ
 
@@ -422,22 +463,20 @@ export class Analytics {
                     sltc = 0;
                     kkt.ds_hp_batbuoc.forEach(hp => sltc += hp.so_tin_chi)
                     if (kkt.ds_hp_batbuoc.length > 0)
-                        list += `<tr>
-                            <td colspan="8" style='text-align: left; font-weight: bold'>${kkt.ten}</td>
+                        list += `<tr data-depth="0" class='collapse'>
+                            <td colspan="8" style='text-align: left; font-weight: bold' class='toggle'>${kkt.ten}</td>
                         </tr>
-                        <tr style="height: 2rem">
-                            <td colspan="1"></td>
-                            <td colspan="4" style="text-align: left">Bắt buộc</td>
+                        <tr data-depth="1" style="height: 2rem" class='collapse'>
+                            <td colspan="4" style="text-align: left" class='toggle'>Bắt buộc</td>
                             <td style="text-align: center"><i>${sltc}</i></td>
-                            <td colspan="4"></td>
+                            <td colspan="2"></td>
                         </tr>`;
                     kkt.ds_hp_batbuoc.forEach(hp => {
                         check = false;
                         for (let i = 0; i < data.dshp_sv.length; i++) {
                             const hpsv = data.dshp_sv[i];
                             if (hpsv.id == hp.hoc_phan_id && hpsv.diem_tong_ket !== null) {
-                                list += `<tr>
-                                    <td></td>
+                                list += `<tr data-depth="2">
                                     <td>${hp.ma_hoc_phan}</td>
                                     <td style='text-align: left'>${hp.ten}</td>
                                     <td style='text-align: center'>${hpsv.diem_tong_ket}</td>
@@ -451,8 +490,7 @@ export class Analytics {
                             }
                         }
                         if (!check) {
-                            list += `<tr>
-                                <td></td>
+                            list += `<tr data-depth="2">
                                 <td>${hp.ma_hoc_phan}</td>
                                 <td style='text-align: left'>${hp.ten}</td>
                                 <td></td>
@@ -470,19 +508,17 @@ export class Analytics {
                     sltc = 0;
                     kkt.ds_hp_tuchon.forEach(hp => sltc += hp.so_tin_chi)
                     if (kkt.ds_hp_tuchon.length > 0)
-                        list += `<tr>
-                            <td colspan="1"></td>
-                            <td colspan="4" style='text-align: left'>Tự chọn</td>
+                        list += `<tr data-depth="1" class='collapse'>
+                            <td colspan="4" style='text-align: left' class='toggle'>Tự chọn</td>
                             <td style="text-align: center;"><i>${sltc}</i></td>
-                            <td colspan="4"></td>
+                            <td colspan="2"></td>
                         </tr>`;
                     kkt.ds_hp_tuchon.forEach(hp => {
                         check = false;
                         for (let i = 0; i < data.dshp_sv.length; i++) {
                             const hpsv = data.dshp_sv[i];
                             if (hpsv.id == hp.hoc_phan_id && hpsv.diem_tong_ket !== null) {
-                                list += `<tr>
-                                    <td></td>
+                                list += `<tr data-depth="2">
                                     <td>${hp.ma_hoc_phan}</td>
                                     <td style='text-align: left'>${hp.ten}</td>
                                     <td style='text-align: center'>${hpsv.diem_tong_ket}</td>
@@ -496,8 +532,7 @@ export class Analytics {
                             }
                         }
                         if (!check) {
-                            list += `<tr>
-                                <td></td>
+                            list += `<tr data-depth="2">
                                 <td>${hp.ma_hoc_phan}</td>
                                 <td style='text-align: left'>${hp.ten}</td>
                                 <td></td>
@@ -513,10 +548,9 @@ export class Analytics {
                 });
 
             html += `<div class="graduate__container" style="max-height: 32rem; overflow-y: auto">
-                <div class="graduate__item__content">
+                <div class="graduate__item__content table-container">
                     <table>
                         <tr>
-                            <th style='width: 10%'></th>
                             <th>Mã học phần</th>
                             <th style='width: 35%; text-align: left'>Tên học phần</th>
                             <th style='width: auto; text-align: center'>Điểm tổng kết</th>
@@ -546,6 +580,10 @@ export class Analytics {
             html += `</div>`
 
             document.querySelector(".analytics__container").innerHTML = html;
+
+            // Sau khi render bảng
+
+            document.querySelectorAll('table').forEach(elem => TableTree.bind(elem));
         }).catch(err => {
             console.error(err);
             if (err.response.status === 404) {
@@ -555,6 +593,7 @@ export class Analytics {
                     type: "error",
                     duration: 3000
                 })
+                document.querySelector(".analytics__container").innerHTML = "";
             } else {
                 toast({
                     title: "Lỗi",

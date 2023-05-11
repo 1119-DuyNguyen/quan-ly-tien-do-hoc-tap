@@ -264,6 +264,12 @@ class AnalyticsService {
         $this->object->ds_lop = $ds_lop;
     }
 
+    public function dssv_theo_lop(PaginationRequest $request, string $ma_lop) {
+        $dssv = $this->dssvTable()->where('ma_lop', 'LIKE', "%$ma_lop%");
+        
+        return $this->paginateMultipleTable($request, $dssv, null, ['sinh_vien_id'],     null,9);
+    }
+
     private function tk_lop(PaginationRequest $request, bool $tt_chi_tiet) {
         if (!$tt_chi_tiet)
             $lop_str = $request->input("lop");

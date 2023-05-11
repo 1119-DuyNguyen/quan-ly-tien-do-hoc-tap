@@ -65,6 +65,12 @@ route.addRoute(
     'templates/admin/class.html'
 );
 route.addRoute(
+    'quan-tri-vien/graduate/class/$class_idn/$sv_username',
+    Analytics.class,
+    { title: 'Tiến độ sinh viên' },
+    'templates/admin/class.html'
+);
+route.addRoute(
     'quan-tri-vien/graduate/faculty',
     Analytics.faculty,
     { title: 'Tiến độ ngành' },
