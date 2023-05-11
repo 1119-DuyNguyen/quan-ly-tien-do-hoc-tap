@@ -18,7 +18,7 @@ use App\Http\Controllers\Admin\ProgramKnowledgeBlockController;
 use App\Http\Controllers\Graduation\Student\ResultBaseOnEducationProgramController;
 use App\Http\Controllers\Graduation\Student\SemesterController;
 use App\Http\Controllers\Class\ChamDiemController;
-use App\Http\Controllers\DataImport\DataImportController;
+use App\Http\Controllers\DataImportController;
 use App\Http\Controllers\Class\Everyone\EveryoneController;
 use App\Http\Controllers\Class\FileBaiTapController;
 use App\Http\Controllers\Class\ThamGiaController;
