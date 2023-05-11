@@ -16,7 +16,7 @@ class BaiDangSeeder extends Seeder
     {
         //
         // //bai_dang
-        for ($i = 0; $i < 20; $i++) {
+        for ($i = 0; $i < 5000; $i++) {
             BaiDang::create([
                 'tieu_de' => fake()->word,
                 'noi_dung' => fake()->word,

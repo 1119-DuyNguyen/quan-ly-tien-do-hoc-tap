@@ -29,21 +29,17 @@ class ThamGiaController extends ApiController
             ->join('tai_khoan', 'tai_khoan.id', '=', 'tham_gia.sinh_vien_id')
             ->join('bai_dang', 'bai_dang.nhom_hoc_id', '=', 'tham_gia.nhom_hoc_id')
             ->where('bai_dang.id', '=', $id)
-            ->get(array('tham_gia.sinh_vien_id as sinh_vien_id',
-                        'tai_khoan.ten as ten_sinh_vien'));
-        
+            ->get(['tham_gia.sinh_vien_id as sinh_vien_id', 'tai_khoan.ten as ten_sinh_vien']);
+
         $dsbt = DB::table('bai_tap_sinh_vien')
             ->join('tai_khoan', 'tai_khoan.id', '=', 'bai_tap_sinh_vien.sinh_vien_id')
             ->where('bai_tap_id', '=', $id)
-            ->get(array('tai_khoan.id as sinh_vien_id',
-                        'tai_khoan.ten as ten_sinh_vien',
-                        'link_file',
-                        'diem'));;
+            ->get(['tai_khoan.id as sinh_vien_id', 'tai_khoan.ten as ten_sinh_vien', 'link_file', 'diem']);
 
-        $object = (object) array(
-            "dssv_tham_gia" => $dssv_thamgia,
-            "dsbt" => $dsbt
-        );
+        $object = (object) [
+            'dssv_tham_gia' => $dssv_thamgia,
+            'dsbt' => $dsbt,
+        ];
         return $this->success($object, 200, 'Success');
     }
 }

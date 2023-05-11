@@ -2,6 +2,7 @@ export class Homework {
     static URL_POST = location.protocol + '//' + location.host + '/api/posts';
     static URL_EXCERCISE = location.protocol + '//' + location.host + '/api/exercises';
     static URL_BAI_TAP_SINH_VIEN = location.protocol + '//' + location.host + '/api/bai-tap-sinh-vien';
+    static URL_FILE_BAI_TAP = location.protocol + '//' + location.host + '/classroom/file-bai-tap';
     static _this = this;
     #container;
     constructor(element) {
@@ -46,7 +47,9 @@ export class Homework {
                             <i class="fa-solid fa-trash-can" style="cursor: pointer"></i>
                         </div>
                         <div class="task__action task__action--blue">
-                            <div>Xem chi tiết</div>
+                            <a href="${decodeHtml(
+                                Homework.URL_CHAM_DIEM_SINH_VIEN + `/${element.bai_dang_id}`
+                            )}">Chấm điểm</a>
                         </div>
                         <div class="task__status task__status--green">
                             <div class="task__status__icon">
@@ -79,6 +82,15 @@ export class Homework {
             //     });
             // fileHref = fileLink ? fileLink : 'a';
             // console.log(fileHref);
+            axios
+                .get(Homework.URL_BAI_TAP_SINH_VIEN + `/${element.bai_dang_id}`)
+                .then(function (response) {
+                    console.log(response.data.data);
+                    console.log(element.bai_dang_id);
+                })
+                .catch(function (err) {
+                    console.log(err);
+                });
 
             html += `<div class="task" id="bai_dang_${decodeHtml(element.bai_dang_id)}">
                         <div class="task__container">
@@ -131,7 +143,7 @@ export class Homework {
                         <div class="task__action task__action--blue">
                             <div>Xem thêm</div>
                         </div>
-                        <div class="task__status task__status--green">Điểm
+                        <div class="task__status task__status--green">Điểm: 
                             <div class="task__status__icon">
                                 <img src="../../img/check-green.png" alt="" />
                             </div>
