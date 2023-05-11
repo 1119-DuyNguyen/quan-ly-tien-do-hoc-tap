@@ -18,7 +18,7 @@ import { toast } from '../helper/toast.js';
 //     );
 // window.customElements.define('loader-component', LoaderComponent);
 
-export class SmartTableTemplate {
+export class SmartTableTemplateResponsive {
     #container;
     #content;
     #header;
@@ -42,14 +42,13 @@ export class SmartTableTemplate {
         view: false,
         export: false,
         add: false,
+        sortKey: 'ten',
     };
     // formatAttributeHeader
     // key object json => utf8 name
     // {name: '123'}, format=['name'=>"tên"]
     //render => tên: 123
-    get getDataSelectList() {
-        return this.#selectDataList;
-    }
+
     createControlBtns() {
         if (this.#option['add']) {
             let container = createElement('div', 'control-container');
@@ -87,56 +86,14 @@ export class SmartTableTemplate {
             return;
         }
     }
-    /**
-     *
-     * @param {Object} dataSelect
-     * @example {name: [] option array}
-     */
-    renderSelectList(dataSelect = []) {
-        let selectContainer = document.createElement('div');
-        selectContainer.classList.add('select-container');
-        this.#selectDataList = dataSelect;
-        dataSelect.forEach((selectList) => {
-            let html = `<option value="">Tất cả</option>`;
-            if (selectList.text) {
-                html = `<option value="">${selectList.text}</option>`;
-                delete selectList.text;
-            }
-            for (let key in selectList) {
-                //create select
-                let select = document.createElement('select');
-                select.setAttribute('name', key);
-                const url = new URL(window.location.href);
-                selectList[key].forEach((option) => {
-                    let currentSelect = url.searchParams.get(key) == option.id ? 'selected' : '';
-                    html += `<option value=${option.id ?? ''} ${currentSelect}>${option.ten ?? ''}</option>`;
-                });
-                select.innerHTML = html;
 
-                selectContainer.appendChild(select);
-            }
-        });
-        //binding action
-
-        let selectList = selectContainer.querySelectorAll('select[name]');
-        selectList.forEach((select) => {
-            select.onchange = (e) => {
-                let value = select.value;
-                const url = new URL(window.location.href);
-                url.searchParams.set(select.getAttribute('name'), value);
-                window.history.replaceState(null, null, url);
-                this.reRenderTable();
-            };
-        });
-        return selectContainer;
-    }
     /**
      * element append child - table with dataJson and options
      * @param {*} dataJson
      * @param {Object} option
      * @returns
      */
-    init(dataJson, option, paginationOption, selectDataList) {
+    init(dataJson, option, paginationOption) {
         try {
             option = assignOption(this.#option, option);
             //header create edit delete
@@ -150,9 +107,6 @@ export class SmartTableTemplate {
             if (!this.isFirstInit) {
                 this.#container.innerHTML = '';
 
-                if (selectDataList) {
-                    this.#container.appendChild(this.renderSelectList(selectDataList));
-                }
                 //action;
                 let controlBtns = this.createControlBtns();
                 if (controlBtns) this.#container.appendChild(controlBtns);
@@ -198,7 +152,6 @@ export class SmartTableTemplate {
 
         this.#paginationService.renderPagination();
     }
-
     /**
      *
      * @param {Array} headers
@@ -213,10 +166,8 @@ export class SmartTableTemplate {
         }
         // tạo col group
         let colGroup = document.createElement('colgroup');
-
         //tách header
         let trHeader = createElement('tr');
-
         const url = new URL(window.location.href);
         let currentKey = url.searchParams.get('order-column') ?? 'id';
         let dir = url.searchParams.get('dir') ?? '';
@@ -236,7 +187,35 @@ export class SmartTableTemplate {
             let options = this.#option['formatAttributeHeader'][header];
             let iconHeader = '';
             let colE = document.createElement('col');
+            if (this.#option.sortKey && this.#option.sortKey == header) {
+                th.classList.add('sort');
+                btn.dataset.key = header;
+                if (header === currentKey) {
+                    if (dir == 'desc') {
+                        btn.setAttribute('data-dir', 'asc');
+                    }
+                    if (dir == 'asc') {
+                        btn.setAttribute('data-dir', 'desc');
+                    }
+                }
+                btn.addEventListener('click', (e) => {
+                    //reset btn
+                    this.#headerBtns.map((button) => {
+                        if (button !== e.target) {
+                            button.removeAttribute('data-dir');
+                        }
+                    });
+                    if (e.target.getAttribute('data-dir') == 'desc') {
+                        addDirAndSortColumnParameter('desc', e.target.dataset.key);
+                        e.target.setAttribute('data-dir', 'asc');
+                    } else {
+                        addDirAndSortColumnParameter('asc', e.target.dataset.key);
 
+                        e.target.setAttribute('data-dir', 'desc');
+                    }
+                    this.reRenderTable();
+                });
+            }
             if (options) {
                 if (options.max) {
                     colE.style.minWidth = options.width;
@@ -252,42 +231,13 @@ export class SmartTableTemplate {
                 }
                 if (options.ellipsis) {
                 }
-                if (options.sort) {
-                    th.classList.add('sort');
-                    btn.dataset.key = header;
-                    if (header === currentKey) {
-                        if (dir == 'desc') {
-                            btn.setAttribute('data-dir', 'asc');
-                        }
-                        if (dir == 'asc') {
-                            btn.setAttribute('data-dir', 'desc');
-                        }
-                    }
-                    btn.addEventListener('click', (e) => {
-                        //reset btn
-                        this.#headerBtns.map((button) => {
-                            if (button !== e.target) {
-                                button.removeAttribute('data-dir');
-                            }
-                        });
-                        let data;
-                        if (e.target.getAttribute('data-dir') == 'desc') {
-                            addDirAndSortColumnParameter('desc', e.target.dataset.key);
-                            e.target.setAttribute('data-dir', 'asc');
-                        } else {
-                            addDirAndSortColumnParameter('asc', e.target.dataset.key);
-
-                            e.target.setAttribute('data-dir', 'desc');
-                        }
-                        this.reRenderTable();
-                    });
-                }
             }
             btn.textContent = title + iconHeader;
 
             this.#headerBtns.push(btn);
             th.appendChild(btn);
             trHeader.appendChild(th);
+
             colGroup.appendChild(colE);
         });
         // render checkbox, action
@@ -505,7 +455,7 @@ export class SmartTableTemplate {
         if (jsonData) {
             option.urlAPI = urlAPI;
             option = assignOption(this.#option, option);
-            this.init(jsonData.data.dataObject, option, jsonData.data.paginationOption, jsonData.data.selectDataList);
+            this.init(jsonData.data.dataObject, option, jsonData.data.paginationOption);
             return true;
         } else return false;
     }

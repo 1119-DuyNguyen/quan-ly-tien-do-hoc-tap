@@ -14,7 +14,7 @@ import { Subject } from '../pages/admin/subject.js';
 import { Authentication } from '../pages/authentication.js';
 
 const route = new Route();
-
+console.log('hi');
 route.addRoute('/', Authentication.login, { title: 'Login' }, 'templates/login.html');
 route.addRoute('404', '', { title: '404' }, 'templates/404.html');
 

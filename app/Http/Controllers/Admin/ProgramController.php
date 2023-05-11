@@ -78,11 +78,21 @@ class ProgramController extends ApiController
      */
     public function show($id)
     {
-        $ctdt = ChuongTrinhDaoTao::find($id);
-        if (is_null($ctdt)) {
-            return $this->error(null, 400, 'Không tìm thấy dữ liệu chương trình đào tạo');
-        }
-        return $this->success($ctdt, 200);
+
+
+        // if (is_null($ctdt)) {
+        //     return $this->error(null, 400, 'Không tìm thấy dữ liệu chương trình đào tạo');
+        // }
+        return $this->success(
+            DB::table('chuong_trinh_dao_tao')
+                ->join('nganh', 'chuong_trinh_dao_tao.nganh_id', 'nganh.id')
+                ->join('chu_ky', 'chuong_trinh_dao_tao.chu_ky_id', 'chu_ky.id')
+                ->join('khoa', 'nganh.khoa_id', 'khoa.id')
+                ->selectRaw('chuong_trinh_dao_tao.*,khoa.ten as ten_khoa,nganh.ma_nganh,chu_ky.ten as ten_chu_ky,nganh.ten as ten_nganh')
+                ->where('chuong_trinh_dao_tao.id', $id)
+                ->first(),
+            200
+        );
 
         //
     }

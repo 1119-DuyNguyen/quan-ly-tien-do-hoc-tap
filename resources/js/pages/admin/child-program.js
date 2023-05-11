@@ -146,128 +146,101 @@ export class ChildProgram {
         childProgramContainer.classList.add('child-program-container');
         rootElement.appendChild(childProgramContainer);
         childProgramContainer.innerHTML = `
-        <table class="tree">
-            <li><a href="#">Part 1</a>
-                <ul>
-                <li><a href="#">Item A</a>
-                    <ul>
-                    <li><a href="#">Sub-item 1</a></li>
-                    <li><a href="#">Sub-item 2</a></li>
-                    <li><a href="#">Sub-item 3</a></li>
-                    </ul>
-                </li>
-                <li><a href="#">Item B</a>
-                    <ul>
-                    <li><a href="#">Sub-item 1</a></li>
-                    <li><a href="#">Sub-item 2</a></li>
-                    <li><a href="#">Sub-item 3</a></li>
-                    </ul>
-                </li>
-                <li><a href="#">Item C</a>
-                    <ul>
-                    <li><a href="#">Sub-item 1</a></li>
-                    <li><a href="#">Sub-item 2</a></li>
-                    <li><a href="#">Sub-item 3</a></li>
-                    </ul>
-                </li>
-                <li><a href="#">Item D</a>
-                    <ul>
-                    <li><a href="#">Sub-item 1</a></li>
-                    <li><a href="#">Sub-item 2</a></li>
-                    <li><a href="#">Sub-item 3</a></li>
-                    </ul>
-                </li>
-                <li><a href="#">Item E</a>
-                    <ul>
-                    <li><a href="#">Sub-item 1</a></li>
-                    <li><a href="#">Sub-item 2</a></li>
-                    <li><a href="#">Sub-item 3</a></li>
-                    </ul>
-                </li>
-                </ul>
-            </li>
+        <div class="program-container" >
 
-            <li><a href="#">Part 2</a>
-                <ul>
-                <li><a href="#">Item A</a>
-                    <ul>
-                    <li><a href="#">Sub-item 1</a></li>
-                    <li><a href="#">Sub-item 2</a></li>
-                    <li><a href="#">Sub-item 3</a></li>
-                    </ul>
-                </li>
-                <li><a href="#">Item B</a>
-                    <ul>
-                    <li><a href="#">Sub-item 1</a></li>
-                    <li><a href="#">Sub-item 2</a></li>
-                    <li><a href="#">Sub-item 3</a></li>
-                    </ul>
-                </li>
-                <li><a href="#">Item C</a>
-                    <ul>
-                    <li><a href="#">Sub-item 1</a></li>
-                    <li><a href="#">Sub-item 2</a></li>
-                    <li><a href="#">Sub-item 3</a></li>
-                    </ul>
-                </li>
-                <li><a href="#">Item D</a>
-                    <ul>
-                    <li><a href="#">Sub-item 1</a></li>
-                    <li><a href="#">Sub-item 2</a></li>
-                    <li><a href="#">Sub-item 3</a></li>
-                    </ul>
-                </li>
-                <li><a href="#">Item E</a>
-                    <ul>
-                    <li><a href="#">Sub-item 1</a></li>
-                    <li><a href="#">Sub-item 2</a></li>
-                    <li><a href="#">Sub-item 3</a></li>
-                    </ul>
-                </li>
-                </ul>
-            </li>
+        <div class="program-container__item program-container__item--primary">
+        <h4 style="text-align:center;">CHƯƠNG TRÌNH ĐÀO TẠO NGÀNH KỸ THUẬT PHẦN MỀM</h4>
+        <p>Trình độ đào tạo: Đại học</p>
+ 												
+        <p>Ngành đào tạo: Công nghệ thông tin (cấp bằng Kỹ sư ngành Công nghệ thông tin)</p>													
+        <p>Mã ngành: 7480201</p>													
+        <p>Hình thức đào tạo: Chính quy, Hệ đào tạo Chất lượng cao</p>													
+        <p>Thời gian đào tạo: 4.5 năm</p>													
+        <p>Chu kỳ: 2020-2021</p>													
+        <p>Tín chỉ tối thiểu: 140</p>													
+        <p>Ghi chú: Giáo dục thể chất và GDQP bắt buộc phải học và cấp chứng chỉ trước khi ra trường</p>													
 
-            <li><a href="#">Part 3</a>
-                <ul>
-                <li><a href="#">Item A</a>
-                    <ul>
-                    <li><a href="#">Sub-item 1</a></li>
-                    <li><a href="#">Sub-item 2</a></li>
-                    <li><a href="#">Sub-item 3</a></li>
-                    </ul>
-                </li>
-                <li><a href="#">Item B</a>
-                    <ul>
-                    <li><a href="#">Sub-item 1</a></li>
-                    <li><a href="#">Sub-item 2</a></li>
-                    <li><a href="#">Sub-item 3</a></li>
-                    </ul>
-                </li>
-                <li><a href="#">Item C</a>
-                    <ul>
-                    <li><a href="#">Sub-item 1</a></li>
-                    <li><a href="#">Sub-item 2</a></li>
-                    <li><a href="#">Sub-item 3</a></li>
-                    </ul>
-                </li>
-                <li><a href="#">Item D</a>
-                    <ul>
-                    <li><a href="#">Sub-item 1</a></li>
-                    <li><a href="#">Sub-item 2</a></li>
-                    <li><a href="#">Sub-item 3</a></li>
-                    </ul>
-                </li>
-                <li><a href="#">Item E</a>
-                    <ul>
-                    <li><a href="#">Sub-item 1</a></li>
-                    <li><a href="#">Sub-item 2</a></li>
-                    <li><a href="#">Sub-item 3</a></li>
-                    </ul>
-                </li>
-                </ul>
-            </li>
-            </table>
+        										
+        </div>
+        </div>
+        <div class="table-container"></div>
+        <table class="table-graduate">
+        <colgroup>
+        <col span="1" style="width: 10%;">
+        <col span="1" style="width: 15%;">
+        <col span="1" style="width: 35%;">
+        <col span="1" style="width: 10%;">
+        <col span="1" style="width: 15%;">
+        <col span="1" style="width: 15%;">
         
+
+        </colgroup>
+        <thead>
+        <tr>
+            <th rowspan="2">Thứ tự</th>
+            <th rowspan="2">Mã học phần</th>
+            <th rowspan="2">Tên Học phần</th>
+            <th rowspan="2">Số tín chỉ</th>
+
+            <th rowspan="1" colspan='9'>HỌC KỲ</th>
+            <th rowspan="2">Mã học phần trước</th>
+        </tr>
+        <tr>
+        <td colspan=""></td>
+        <td colspan=""></td>
+
+        <td colspan=""></td>
+
+        <td colspan=""></td>
+        <td>1</td>
+        <td>1</td>
+
+        <td>1</td>
+
+        <td>2</td>
+
+        <td>3</td>
+
+        <td>4</td>
+
+        <td>5</td>
+
+        <td>6</td>
+
+        <td>7</td>
+
+        <td>8</td>
+        <td>9</td>
+        <td></td>
+
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td colspan="3">Khối kiến thức a</td>
+            <td colspan="1">25/25</td>
+            <td colspan="10"></td>
+        </tr>
+        <tr>
+            <td colspan="3">Các học phần bắt buộc</td>
+            <td colspan="1">37/37</td>
+            <td colspan="10"></td>
+
+        </tr>
+
+        <tr>
+            <td>February</td>
+            <td>$80</td>
+            <td>$80</td>
+            <td>$80</td>
+            <td>January</td>
+
+
+            <td>$80</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
         `;
         let treeTable = new TreeTable(childProgramContainer);
         // let tableTem = new SmartTableTemplate(childProgramContainer);

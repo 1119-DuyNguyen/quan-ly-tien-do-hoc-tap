@@ -4,6 +4,7 @@ import { ConfirmComponent } from '../../components/helper/confirm-component';
 import { ModalComponent } from '../../components/helper/modal-component';
 import { toast } from '../../components/helper/toast';
 import { SmartTableTemplate } from '../../components/smart-table-template/SmartTableTemplate';
+import { TableTree } from '../../components/table-tree';
 import { ChildProgram } from './child-program';
 
 export class Program {
@@ -158,9 +159,8 @@ export class Program {
     static index() {
         // let smartTable = new SmartTableTemplate();
         //helper function
-
         let rootElement = document.getElementById('main-content');
-
+        axios.get();
         let programContainer = document.createElement('div');
         programContainer.classList.add('program-container');
         rootElement.appendChild(programContainer);
@@ -229,10 +229,166 @@ export class Program {
         //     edit: true,
         // });
     }
+    static getDetailProgram(id) {
+        return axios.get(Program.URL_Program + '/' + id).then((res) => res.data.data);
+    }
+    static getDetailKnowledgeBlock(idProgram) {
+        return axios.get(Program.URL_Program + '/' + idProgram + '/knowledge_block').then((res) => res.data.data);
+    }
     static view({ id }) {
         try {
             if (id) {
-                ChildProgram.index(id);
+                // ChildProgram.index(id);
+
+                let rootElement = document.getElementById('main-content');
+                let knowledgeBlockContainer = document.createElement('div');
+                knowledgeBlockContainer.classList.add('child-program-container');
+                rootElement.appendChild(knowledgeBlockContainer);
+                let programContainer = document.createElement('div');
+
+                knowledgeBlockContainer.appendChild(programContainer);
+
+                Program.getDetailProgram(id)
+                    .then((data) => {
+                        programContainer.classList.add('program-container');
+
+                        if (!data) {
+                            programContainer.innerHTML = `<p>Không tìm thấy chương trình đào tạo</p>`;
+                            return;
+                        }
+
+                        programContainer.innerHTML = `
+                <div class="" >
+        
+                <div class="program-container__item program-container__item--primary">
+                <h2 >${data.ten}</h2>
+                <p>Trình độ đào tạo: ${data.trinh_do_dao_tao ?? ''}</p>
+                                                         
+                <p>Ngành đào tạo: ${data.ten_nganh ?? ''}</p>													
+                <p>Mã ngành: ${data.nganh_id ?? ''}</p>													
+                <p>Hình thức đào tạo: ${data.hinh_thuc_dao_tao ?? ''}</p>													
+                <p>Thời gian đào tạo:${data.thoi_gian_dao_tao ?? '0'} năm </p>													
+                <p>Chu kỳ: ${data.ten_chu_ky}</p>													
+                <p>Tín chỉ tối thiểu:  ${data.tong_tin_chi}</p>													
+                <p>Ghi chú:  ${data.ghi_chu ?? 'Không'}</p>													
+        
+                                                        
+                </div>
+                </div>
+                `;
+                    })
+                    .catch((err) => {
+                        alertComponent('Tìm kiếm dữ liệu chương trình đào tạo thất bại');
+                    });
+
+                let tableContainer = document.createElement('div');
+                knowledgeBlockContainer.appendChild(tableContainer);
+
+                Program.getDetailKnowledgeBlock(id)
+                    .then((data) => {
+                        //create Loại & Khối kiến thức
+                        let html = '';
+                        //data.forEach((kkt) => {});
+                        tableContainer.innerHTML = `
+ 
+                        <div class="table-container">
+                        <table class="table-graduate">
+                        <colgroup>
+                        <col span="1" style="width: 5%; min-width:40px;">
+                        <col span="1" style="width: 15%; min-width:120px;">
+                        <col span="1" style="width: 40%; min-width:320px;">
+                        <col span="1" style="width: 10%;min-width:80px;">
+                        <col span="1" style="width: 15%;min-width:200px; ">
+                        <col span="1" style="width: 15%; min-width:120px;">
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th rowspan="2">TT</th>
+                            <th rowspan="2">Mã học phần</th>
+                            <th rowspan="2">Tên Học phần</th>
+                            <th rowspan="2">Số tín chỉ</th>
+                            <th rowspan="2">HỌC KỲ</th>
+                            <th rowspan="2">Mã học phần trước</th>
+                        </tr>
+                
+                        </thead> 
+                        <tbody>
+                        <tr data-depth="0" class='collapse'>
+                        <td colspan="3" class='toggle'>Loại kiến thức a</td>
+                        <td colspan="1">25/25</td>
+                        <td colspan="2"></td>
+                        </tr>
+                        <tr data-depth="1" class='collapse'>
+                            <td colspan="3" class='toggle'>Khối kiến thức a</td>
+                            <td colspan="1">25/25</td>
+                            <td colspan="2"></td>
+                        </tr>
+                        <tr data-depth="2" class='collapse'>
+                            <td colspan="3" class='toggle'>Các học phần bắt buộc</td>
+                            <td colspan="1">37/37</td>
+                            <td colspan="2"></td>
+                        </tr>
+                
+                        <tr>
+                            <td>February</td>
+                            <td>$80</td>
+                            <td>$80</td>
+                            <td>$80</td>
+                            <td>
+                            <label>
+                            <input type="checkbox" value="1" name="">
+                            1
+                            </label>
+                            <label>
+                            <input type="checkbox" value="2" name="">
+                            2
+                            </label>
+                            <label>
+                            <input type="checkbox" value="3" name="">
+                            3
+                            </label>
+                            <label>
+                            <input type="checkbox" value="4" name="">
+                            4
+                            </label>
+                            <label>
+                            <input type="checkbox" value="5" name="">
+                            5
+                            </label>
+                            <label>
+                            <input type="checkbox" value="6" name="">
+                            6
+                            </label>
+
+                            </td>
+                
+                
+                            <td>$80</td>
+                        </tr>
+                        <tr data-depth="2" class='collapse'>
+                        <td colspan="3" class='toggle'>Các học phần tự chọn</td>
+                        <td colspan="1">37/37</td>
+                        <td colspan="2"></td>
+                        </tr>
+                        <tr data-depth="0" class='collapse'>
+                        <td colspan="3" class='toggle'>Loại kiến thức b</td>
+                        <td colspan="1">25/25</td>
+                        <td colspan="2"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                        `;
+                        tableContainer.querySelectorAll('table').forEach((table) => {
+                            TableTree.bind(table);
+                        });
+                        console.log(data);
+                    })
+                    .catch((err) => {
+                        console.error(err);
+                        alertComponent('khởi tạo khối kiến thức chương trình đào tạo thất bại');
+                    });
+                // let treeTable = new TreeTable(childProgramContainer);
             } else {
             }
         } catch (err) {

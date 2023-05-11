@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Test\TestApi;
+use App\Http\Controllers\PeriodController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\DataImportController;
@@ -13,9 +14,9 @@ use App\Http\Controllers\Class\ClassroomController;
 use App\Http\Controllers\Class\Post\PostController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Class\Post\BaitapController;
-use App\Http\Controllers\Admin\ChildProgramController;
 use App\Http\Controllers\Class\BaiTapSinhVienController;
 use App\Http\Controllers\Class\Everyone\EveryoneController;
+use App\Http\Controllers\Admin\ProgramKnowledgeBlockController;
 use App\Http\Controllers\Graduation\Student\SemesterController;
 use App\Http\Controllers\Graduation\Student\GraduateStudentController;
 use App\Http\Controllers\Graduation\Student\SuggestGraduateController;
@@ -69,10 +70,12 @@ Route::middleware('auth:api')->group(function () {
             Route::apiResource('/subject', SubjectController::class);
 
             Route::apiResource('/program', ProgramController::class);
-            Route::get('/child-program/subject', [ChildProgramController::class, 'getSubject']);
+            Route::apiResource('program.knowledge_block', ProgramKnowledgeBlockController::class);
 
-            Route::apiResource('/child-program', ChildProgramController::class);
+            //      Route::get('/child-program/subject', [KnowledgeBlockController::class, 'getSubject']);
         });
+    // Route::apiResource('/period', PeriodController::class);
+    // Route::apiResource('/major', MajorController::class);
 });
 Route::get('/permissions/all', [PermissionController::class, 'all']);
 

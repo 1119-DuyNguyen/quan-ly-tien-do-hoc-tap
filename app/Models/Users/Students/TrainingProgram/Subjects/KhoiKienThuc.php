@@ -53,8 +53,8 @@ class KhoiKienThuc extends Model
 			->withPivot('id');
 	}
 
-	public function chuong_trinh_dao_taos()
+	public function chuong_trinh_dao_tao()
 	{
-		return $this->belongsToMany(ChuongTrinhDaoTao::class, 'khoi_kien_thuc_chuong_trinh_dao_tao');
+		return $this->belongsToMany(ChuongTrinhDaoTao::class, 'chuong_trinh_dao_tao_id');
 	}
 }

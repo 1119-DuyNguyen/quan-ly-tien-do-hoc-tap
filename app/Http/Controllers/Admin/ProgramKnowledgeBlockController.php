@@ -9,45 +9,47 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\ApiController;
 use App\Http\Requests\Admin\ChildProgramRequest;
 use App\Http\Resources\Admin\ChildProgramResource;
+use App\Models\Users\Students\TrainingProgram\ChuongTrinhDaoTao;
 use App\Models\Users\Students\TrainingProgram\Subjects\KhoiKienThuc;
 
-class ChildProgramController extends ApiController
+class ProgramKnowledgeBlockController extends ApiController
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(ChildProgramRequest $request)
+    public function index($id)
     {
-        //
-        //
-        try {
-            //code...
-            $loaiKienThuc = DB::table('loai_kien_thuc')->select('id', 'ten')->get();
+        $lktList = [];
+        $kktList = DB::table('khoi_kien_thuc')
+            ->whereIn('chuong_trinh_dao_tao_id', [$id])
+            ->join(
+                'loai_kien_thuc',
+                'khoi_kien_thuc.loai_kien_thuc_id',
+                'loai_kien_thuc.id'
+            )
+            ->get(['khoi_kien_thuc.*', 'loai_kien_thuc.ten as ten_loai_kien_thuc']);
 
-            $selectDataList = [
-                [
-                    'loai_kien_thuc_id' => $loaiKienThuc,
 
-                    'text' => 'Chọn loại kiến thức'
-                ]
-            ];
-            $builderTableJoin = DB::table('khoi_kien_thuc')
-                ->join(
-                    'chuong_trinh_dao_tao',
-                    'khoi_kien_thuc.chuong_trinh_dao_tao_id',
-                    'chuong_trinh_dao_tao.id'
-                )
-                ->join('loai_kien_thuc', 'khoi_kien_thuc.loai_kien_thuc_id', 'loai_kien_thuc.id')
-                ->selectRaw('khoi_kien_thuc.*,loai_kien_thuc.ten as ten_loai_kien_thuc,chuong_trinh_dao_tao.ten as ten_chuong_trinh_dao_tao');
-            $lktInput = $request->input('loai_kien_thuc_id');
-            if ($lktInput && $lktInput != '') {
-                $builderTableJoin = $builderTableJoin->where('loai_kien_thuc.id', $lktInput);
+        foreach ($kktList as $kkt) {
+
+            $hpBatBuoc = DB::table('hoc_phan_kkt_bat_buoc')
+                ->whereIn('khoi_kien_thuc_id', [$kkt->id])
+                ->join('hoc_phan', 'hoc_phan_kkt_bat_buoc.hoc_phan_id', 'hoc_phan.id')->get(['hoc_phan.*', 'hoc_ky_goi_y']);
+            $kkt->hpBatBuoc = $hpBatBuoc;
+            $hpTuChon = DB::table('hoc_phan_kkt_tu_chon')
+                ->whereIn('khoi_kien_thuc_id', [$kkt->id])
+                ->join('hoc_phan', 'hoc_phan_kkt_tu_chon.hoc_phan_id', 'hoc_phan.id')->get(['hoc_phan.*', 'hoc_ky_goi_y']);
+            $kkt->hpTuChon = $hpTuChon;
+            if (!isset($lktList[$kkt->loai_kien_thuc_id])) {
+                $lktList[$kkt->loai_kien_thuc_id] = [$kkt];
+            } else {
+                // tương đương push
+                $lktList[$kkt->loai_kien_thuc_id] = [$lktList[$kkt->loai_kien_thuc_id],  [$kkt]];
             }
-            return $this->paginateMultipleTable($request, $builderTableJoin, ChildProgramResource::class, ['id', 'ten'], $selectDataList, 5);
-        } catch (\Throwable $th) {
-            //throw $th;
-            return $this->error(null, 400, 'Đã xảy ra lỗi khi lấy dữ liệu từ máy chủ ');
         }
+
+
+        return $this->success($lktList, 200);
     }
 
     /**
@@ -96,20 +98,20 @@ class ChildProgramController extends ApiController
             return $this->error(null, 400, 'Máy chủ cập nhập không thành công' . $e->getMessage());
         }
     }
-    public function getSubject()
-    {
+    // public function getSubject()
+    // {
 
-        try {
-            $kkt = KhoiKienThuc::findOrFail($id);
+    //     try {
+    //         $kkt = KhoiKienThuc::findOrFail($id);
 
-            $kkt->fill($request->all())->save();
+    //         $kkt->fill($request->all())->save();
 
-            return $this->success($kkt, 200, 'Cập nhập dữ liệu thành công');
-        } catch (Exception $e) {
-            //catch exception
-            return $this->error(null, 400, 'Máy chủ cập nhập không thành công' . $e->getMessage());
-        }
-    }
+    //         return $this->success($kkt, 200, 'Cập nhập dữ liệu thành công');
+    //     } catch (Exception $e) {
+    //         //catch exception
+    //         return $this->error(null, 400, 'Máy chủ cập nhập không thành công' . $e->getMessage());
+    //     }
+    // }
     /**
      * Remove the specified resource from storage.
      */

@@ -48,18 +48,42 @@
 
     .table {
         // box-sizing: border-box;
-        border-collapse: collapse;
         width: 100%;
-
+        border-collapse: separate;
+        border-spacing: 0 1rem;
         // overflow-x: auto;
-        overflow-x: scroll;
-        .table-header tr {
-            white-space: nowrap;
+        overflow-x: auto;
+        height: 500px;
+        // make border radius
+        td {
+            background-color: #fff;
+        }
+        th:first-child,
+        td:first-child {
+            border-color: #fff;
+            border-left-style: solid;
+            border-top-left-radius: 10px;
+            border-bottom-left-radius: 10px;
+        }
+        th:last-child,
+        td:last-child {
+            border-color: #fff;
+            border-right-style: solid;
+            border-bottom-right-radius: 10px;
+            border-top-right-radius: 10px;
+        }
 
+        .table-header tr {
+            // white-space: nowrap;
+            th:first-child,
+            th:last-child {
+                border-color: #2a83ff;
+            }
             th {
                 font-weight: bold;
-                //   background-color: #eee;
-                background-color: inherit;
+                background-color: #2a83ff;
+                color: #fff;
+                // background-color: inherit;
                 padding: 8px;
                 text-align: center;
 
@@ -72,6 +96,7 @@
                     text-align: left;
                     width: 100%;
                     padding: 8px;
+                    color: #fff;
                 }
                 /* //Black right-Pointing Small Triangle */
                 &.sort {
@@ -82,7 +107,7 @@
                         //   position: absolute;
                         padding: 0 4px;
                         content: '\25B8';
-                        color: black;
+                        color: inherit;
                     }
                     /* //Black Up-Pointing Small Triangle */
                     button[data-dir='asc']::after {

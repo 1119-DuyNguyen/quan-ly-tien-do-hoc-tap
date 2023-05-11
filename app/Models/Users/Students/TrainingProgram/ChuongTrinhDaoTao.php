@@ -30,17 +30,14 @@ class ChuongTrinhDaoTao extends Model
 		'trinh_do_dao_tao',
 		'nganh_id',
 		'chu_ky_id',
-		'tong_tin_chi'
+		'tong_tin_chi',
+		'ghi_chu'
 	];
 	public function chu_ky()
 	{
 		return $this->belongsTo(ChuKy::class);
 	}
 
-	public function chuong_trinh_dao_tao()
-	{
-		return $this->belongsTo(ChuongTrinhDaoTao::class, 'ctdt_cha_id');
-	}
 
 	public function khoa()
 	{
@@ -52,10 +49,7 @@ class ChuongTrinhDaoTao extends Model
 		return $this->hasMany(ChuanDauRa::class);
 	}
 
-	public function chuong_trinh_dao_taos()
-	{
-		return $this->hasMany(ChuongTrinhDaoTao::class, 'ctdt_cha_id');
-	}
+
 
 	public function hoc_ky_goi_ys()
 	{
@@ -64,7 +58,7 @@ class ChuongTrinhDaoTao extends Model
 
 	public function khoi_kien_thucs()
 	{
-		return $this->hasMany(KhoiKienThuc::class, 'khoi_kien_thuc_chuong_trinh_dao_tao');
+		return $this->hasMany(KhoiKienThuc::class, 'id');
 	}
 
 	public function nien_khoas()
