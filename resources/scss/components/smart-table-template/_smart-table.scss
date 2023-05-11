@@ -136,55 +136,55 @@
             }
         }
     }
-    .pagination {
-        display: flex;
-        justify-content: flex-end;
-        padding: 16px 0;
-        margin: 16px 0;
-        list-style-type: none;
-        text-align: center;
+}
+.pagination {
+    display: flex;
+    justify-content: flex-end;
+    padding: 16px 0;
+    margin: 16px 0;
+    list-style-type: none;
+    text-align: center;
 
-        &__item {
-            margin-left: 4px;
-            display: inline;
-            & > * {
-                display: inline-block;
-                text-decoration: none;
-                width: 40px;
-                line-height: 35px;
-                margin: 8px 0;
+    &__item {
+        margin-left: 4px;
+        display: inline;
+        & > * {
+            display: inline-block;
+            text-decoration: none;
+            width: 40px;
+            line-height: 35px;
+            margin: 8px 0;
+        }
+        &__link {
+            border: 1px solid #ddd;
+            font-size: 15px;
+            color: #999;
+            background-color: #fff;
+            &--disabled {
+                // cursor: default;
+                // text-decoration: none;
+                // opacity: 0.4;
+                pointer-events: none;
+                color: #dbe3e8;
+                cursor: default;
+                border-color: #dbe3e8;
             }
-            &__link {
-                border: 1px solid #ddd;
-                font-size: 15px;
-                color: #999;
-                background-color: #fff;
-                &--disabled {
-                    // cursor: default;
-                    // text-decoration: none;
-                    // opacity: 0.4;
-                    pointer-events: none;
-                    color: #dbe3e8;
-                    cursor: default;
-                    border-color: #dbe3e8;
-                }
-                &.focus,
-                &:focus {
-                    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.5);
-                }
-                &:hover {
-                    cursor: pointer;
-                    color: #5488c7;
-                    border-color: #5488c7;
-                }
-                &--active {
-                    // border-color: #337ab7;
-                    // color: #fff;
-                    // background-color: #00a5f0;
-                    cursor: pointer;
-                    color: #5488c7;
-                    border-color: #5488c7;
-                }
+            &.focus,
+            &:focus {
+                box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.5);
+            }
+            &:hover {
+                cursor: pointer;
+                color: #5488c7;
+                border-color: #5488c7;
+            }
+            &--active {
+                // border-color: #337ab7;
+                // color: #fff;
+                // background-color: #00a5f0;
+                cursor: pointer;
+                color: #5488c7;
+                border-color: #5488c7;
             }
         }
     }
