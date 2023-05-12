@@ -161,12 +161,17 @@ export class SmartTableTemplate {
                 containerTable.appendChild(this.#content);
                 this.#container.appendChild(containerTable);
                 this.isFirstInit = true;
-                if (option['pagination'] && paginationOption) {
-                    this.handleCreatePagination(paginationOption);
-                }
             } else {
                 this.#content.innerHTML = '';
             }
+            if (option['pagination'] && paginationOption) {
+                console.log(paginationOption);
+                if (this.#paginationService) {
+                    this.#paginationService.destroy();
+                }
+                this.handleCreatePagination(paginationOption);
+            }
+
             this.#header = createElement('thead', 'table-header');
             this.#headerBtns = [];
             this.#body = createElement('tbody', 'table-content');
@@ -198,6 +203,7 @@ export class SmartTableTemplate {
 
         this.#paginationService.renderPagination();
     }
+
     /**
      *
      * @param {Array} headers
@@ -210,12 +216,18 @@ export class SmartTableTemplate {
             url.searchParams.set('order-column', column);
             window.history.replaceState(null, null, url);
         }
+        // tạo col group
+        let colGroup = document.createElement('colgroup');
+
         //tách header
         let trHeader = createElement('tr');
+
         const url = new URL(window.location.href);
         let currentKey = url.searchParams.get('order-column') ?? 'id';
         let dir = url.searchParams.get('dir') ?? '';
         if (this.#option['edit']) {
+            let colE = document.createElement('col');
+            colGroup.appendChild(colE);
             // header show/update/ delete button
             let actionTitle = createElement('th', 'btns-action');
             actionTitle.textContent = 'Hành động';
@@ -228,16 +240,17 @@ export class SmartTableTemplate {
             let title = header;
             let options = this.#option['formatAttributeHeader'][header];
             let iconHeader = '';
+            let colE = document.createElement('col');
 
             if (options) {
                 if (options.max) {
-                    th.style.minWidth = options.width;
+                    colE.style.minWidth = options.width;
                 }
                 if (options.minWidth) {
-                    th.style.minWidth = options.minWidth;
+                    colE.style.minWidth = options.minWidth;
                 }
                 if (options.width) {
-                    th.style.width = options.width;
+                    colE.style.width = options.width;
                 }
                 if (options.title) {
                     title = options.title ? options.title : header;
@@ -280,8 +293,10 @@ export class SmartTableTemplate {
             this.#headerBtns.push(btn);
             th.appendChild(btn);
             trHeader.appendChild(th);
+            colGroup.appendChild(colE);
         });
         // render checkbox, action
+        this.#content.insertAdjacentHTML('afterbegin', colGroup.outerHTML);
 
         return trHeader;
     }
@@ -368,10 +383,12 @@ export class SmartTableTemplate {
                                 trueButtonText: 'Có',
                                 falseButtonText: 'Không',
                             }).then((data) => {
-                                if (data)
+                                if (data) {
+                                    let url = new URL(this.#option.urlAPI);
                                     axios
-                                        .delete(this.#option.urlAPI + '/' + rowId.getAttribute('data-content'))
-                                        .then((res) => row.remove());
+                                        .delete(url.origin + url.pathname + '/' + rowId.getAttribute('data-content'))
+                                        .then((res) => this.reRenderTable());
+                                }
                             });
                         } catch (e) {
                             console.error(e);

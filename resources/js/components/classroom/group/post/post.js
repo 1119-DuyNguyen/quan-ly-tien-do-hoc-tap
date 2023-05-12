@@ -89,8 +89,6 @@ export class Post {
 
         formData.append('loai_noi_dung', '1');
         formData.append('nhom_hoc_id', id);
-        //cái này fix lại sau khi có auth
-        formData.append('nguoi_dung_id', id);
 
         console.log(formData);
 

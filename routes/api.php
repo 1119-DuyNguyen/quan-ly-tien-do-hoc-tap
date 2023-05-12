@@ -2,21 +2,30 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Test\TestApi;
+use App\Http\Controllers\PeriodController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\DataImportController;
 use App\Http\Controllers\Admin\ProgramController;
 use App\Http\Controllers\Admin\SubjectController;
 use App\Http\Controllers\Auth\UserAuthController;
 use App\Http\Controllers\Admin\AnalyticsController;
+use App\Http\Controllers\Admin\GraduatedController;
+use App\Http\Controllers\Admin\LateGraduatedController;
 use App\Http\Controllers\Class\ClassroomController;
 use App\Http\Controllers\Class\Post\PostController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Class\Post\BaitapController;
-use App\Http\Controllers\Admin\ChildProgramController;
 use App\Http\Controllers\Class\BaiTapSinhVienController;
-use App\Http\Controllers\Class\Everyone\EveryoneController;
+use App\Http\Controllers\Admin\ProgramKnowledgeBlockController;
+use App\Http\Controllers\Admin\StudentsInClassController;
+use App\Http\Controllers\Auth\UserPermissionsController;
+use App\Http\Controllers\Graduation\Student\ResultBaseOnEducationProgramController;
 use App\Http\Controllers\Graduation\Student\SemesterController;
+use App\Http\Controllers\Class\ChamDiemController;
+use App\Http\Controllers\DataImportController;
+use App\Http\Controllers\Class\Everyone\EveryoneController;
+use App\Http\Controllers\Class\FileBaiTapController;
+use App\Http\Controllers\Class\ThamGiaController;
 use App\Http\Controllers\Graduation\Student\GraduateStudentController;
 use App\Http\Controllers\Graduation\Student\SuggestGraduateController;
 
@@ -46,12 +55,16 @@ Route::middleware('auth:api')->group(function () {
     Route::apiResource('/posts', PostController::class);
     Route::apiResource('/exercises', BaitapController::class);
     Route::apiResource('/bai-tap-sinh-vien', BaiTapSinhVienController::class);
+    Route::apiResource('/file-bai-tap', FileBaiTapController::class);
+    Route::apiResource('/tham-gia-nhom-hoc', ThamGiaController::class);
+    Route::apiResource('/cham-diem', ChamDiemController::class);
     Route::apiResource('/everyone', EveryoneController::class);
     Route::post('/logout', [UserAuthController::class, 'logout']);
     //   Route::resource('posts', PostController::class);
     Route::apiResource('/test', TestApi::class);
 
     Route::apiResource('/graduate', GraduateStudentController::class);
+    Route::apiResource('/graduate-on-edu-program', ResultBaseOnEducationProgramController::class);
     Route::apiResource('/suggestion', SuggestGraduateController::class);
 
     Route::apiResource('/semester', SemesterController::class);
@@ -60,22 +73,33 @@ Route::middleware('auth:api')->group(function () {
         ->name('admin.')
         ->prefix('/admin')
         ->group(function () {
-
             Route::apiResource('/analytics', AnalyticsController::class);
+            Route::apiResource('/get_students_list.type', GraduatedController::class);
+            Route::apiResource('/get_students_list.late', LateGraduatedController::class);
+            Route::apiResource('/class.students', StudentsInClassController::class);
             Route::apiResource('/role', RoleController::class);
             Route::apiResource('/user', UserController::class);
+            Route::apiResource('/user.role', UserController::class);
+            Route::apiResource('/user.faculty', UserController::class);
+            Route::apiResource('/user.major', UserController::class);
+            Route::apiResource('/user.subject', UserController::class);
+
             Route::apiResource('/permissions', PermissionController::class);
 
+            Route::apiResource('/user-permissions', UserPermissionsController::class);
+
+            Route::get('/subject/all', [SubjectController::class, 'all']);
             Route::apiResource('/subject', SubjectController::class);
 
             Route::apiResource('/program', ProgramController::class);
-            Route::get('/child-program/subject', [ChildProgramController::class, 'getSubject']);
+            Route::apiResource('program.knowledge_block', ProgramKnowledgeBlockController::class);
 
-            Route::apiResource('/child-program', ChildProgramController::class);
+            //      Route::get('/child-program/subject', [KnowledgeBlockController::class, 'getSubject']);
         });
+    // Route::apiResource('/period', PeriodController::class);
+    // Route::apiResource('/major', MajorController::class);
 });
 Route::get('/permissions/all', [PermissionController::class, 'all']);
-
 
 Route::apiResource('/role', RoleController::class);
 Route::apiResource('/user', UserController::class);

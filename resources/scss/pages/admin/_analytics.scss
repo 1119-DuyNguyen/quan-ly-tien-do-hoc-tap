@@ -54,7 +54,12 @@
 @media screen and (max-width: 360px) {
     .analytics {
         &__container {
+            padding: 0;
             grid-template-columns: repeat(1, 1fr);
+            min-width: 16rem;
+        }
+        &__item {
+            min-width: 16rem;
         }
     }
 }
@@ -62,7 +67,15 @@
 @media screen and (min-width: 360px) and (max-width: 768px) {
     .analytics {
         &__container {
+            padding: 4rem;
+            padding-top: 2rem;
+            padding-bottom: 2rem;
             grid-template-columns: repeat(1, 1fr);
+        }
+        &__item {
+            min-width: 17.5rem;
+            width: 80vw;
+            max-width: 43rem;
         }
         &__select__container {
             & > * {

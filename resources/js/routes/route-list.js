@@ -12,9 +12,10 @@ import { User } from '../pages/admin/User.js';
 import { Program } from '../pages/admin/program.js';
 import { Subject } from '../pages/admin/subject.js';
 import { Authentication } from '../pages/authentication.js';
+import { UserPermissions } from '../pages/admin/user-permissons.js';
 
 const route = new Route();
-
+console.log('hi');
 route.addRoute('/', Authentication.login, { title: 'Login' }, 'templates/login.html');
 route.addRoute('404', '', { title: '404' }, 'templates/404.html');
 
@@ -25,6 +26,7 @@ route.addRoute('sinh-vien/dashboard', DashBoard.index, { title: 'DashBoard' }, '
 route.addRoute('sinh-vien/info', Info.index, {}, 'templates/info.html');
 route.addRoute('sinh-vien/graduate', Graduate.index, { title: 'Tốt nghiệp' }, 'templates/gradute.html');
 route.addRoute('sinh-vien/graduate/suggest', Graduate.suggest, { title: 'Gợi ý' }, 'templates/suggest_graduate.html');
+route.addRoute('sinh-vien/graduate/edu_program', Graduate.edu_program, { title: 'Kết quả theo tiến độ' }, 'templates/graduate_on_edu_program.html');
 route.addRoute('sinh-vien/classroom', ClassroomStudent.index, { title: 'Nhóm học' }, 'templates/student/class.html');
 route.addRoute(
     'sinh-vien/classroom/$id',
@@ -43,7 +45,7 @@ route.addRoute(
 );
 route.addRoute(
     'giang-vien/classroom/bai-tap/$id',
-    HomeworkMark.index,
+    HomeworkMark.show,
     { title: 'Bài tập $id' },
     'templates/teacher/homework.html'
 );
@@ -61,6 +63,12 @@ route.addRoute(
     'quan-tri-vien/graduate/class/$class_idn',
     Analytics.class,
     { title: 'Tiến độ lớp' },
+    'templates/admin/class.html'
+);
+route.addRoute(
+    'quan-tri-vien/graduate/class/$class_idn/$sv_username',
+    Analytics.class,
+    { title: 'Tiến độ sinh viên' },
     'templates/admin/class.html'
 );
 route.addRoute(
@@ -87,7 +95,7 @@ route.addRoute('quan-tri-vien/program/$id', Program.view, { title: 'Chương tr�
 
 route.addRoute('quan-tri-vien/role', Role.index, { title: 'Quyền' }, '');
 route.addRoute('quan-tri-vien/role/edit', Role.edit, { title: 'Quyền' }, 'templates/admin/role-edit.html');
-route.addRoute('quan-tri-vien/role/edit/$id', Role.edit, { title: 'Quyền' }, 'templates/admin/role-edit.html');
+route.addRoute('quan-tri-vien/role/edit/$id', UserPermissions.edit, { title: 'Quyền' }, 'templates/admin/role-edit.html');
 // route.addRoute('quan-tri-vien/subject', Sub.edit, { title: 'Quyền' }, 'templates/admin/role-edit.html');
 route.addRoute('quan-tri-vien/subject', Subject.index, { title: 'Học phần' }, '');
 

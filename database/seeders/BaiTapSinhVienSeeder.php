@@ -13,7 +13,7 @@ class BaiTapSinhVienSeeder extends Seeder
     {
         //
         // //bai_tap_sinh_vien
-        for ($i = 0; $i < 5; $i++) {
+        for ($i = 0; $i < 100; $i++) {
             BaiTapSinhVien::create([
                 'bai_tap_id' => BaiDang::all()
                     ->where('loai_noi_dung', '=', '2')

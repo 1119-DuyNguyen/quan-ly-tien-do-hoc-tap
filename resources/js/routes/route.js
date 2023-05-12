@@ -9,6 +9,7 @@ routeObj.listRoutes = routeList ? routeList : [];
 routeObj.currentPage = '';
 routeObj.previousPage = '';
 const SIGN_VARIABLE_URL = '$';
+
 /**
  *
  * @param {String} href
