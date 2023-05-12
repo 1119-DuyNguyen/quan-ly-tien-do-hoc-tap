@@ -108,3 +108,4 @@ Route::group(
 
 //Import data
 Route::post('import-data', DataImportController::class);
+Route::get('export-data', [DataImportController::class, 'export']);
