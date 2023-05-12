@@ -9,6 +9,8 @@ use App\Http\Controllers\Admin\ProgramController;
 use App\Http\Controllers\Admin\SubjectController;
 use App\Http\Controllers\Auth\UserAuthController;
 use App\Http\Controllers\Admin\AnalyticsController;
+use App\Http\Controllers\Admin\GraduatedController;
+use App\Http\Controllers\Admin\LateGraduatedController;
 use App\Http\Controllers\Class\ClassroomController;
 use App\Http\Controllers\Class\Post\PostController;
 use App\Http\Controllers\Admin\PermissionController;
@@ -73,6 +75,8 @@ Route::middleware('auth:api')->group(function () {
         ->prefix('/admin')
         ->group(function () {
             Route::apiResource('/analytics', AnalyticsController::class);
+            Route::apiResource('/get_students_list.type', GraduatedController::class);
+            Route::apiResource('/get_students_list.late', LateGraduatedController::class);
             Route::apiResource('/class.students', StudentsInClassController::class);
             Route::apiResource('/role', RoleController::class);
             Route::apiResource('/user', UserController::class);

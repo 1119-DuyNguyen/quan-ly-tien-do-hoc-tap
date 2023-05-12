@@ -246,7 +246,7 @@ class AnalyticsService {
         $this->object->sv_tre_han = 0;
 
         $this->object->sv_bi_canh_cao = $this->dssvTable()->where('nganh.khoa_id', '=', $khoa_id)->where('so_lan_canh_cao', '>=', '1')->count();
-        $this->object->sv_bi_bth = $this->dssvTable()->where('nganh.khoa_id', '=', $khoa_id)->where('da_tot_nghiep', '=', '1')->count();
+        $this->object->sv_bi_bth = $this->dssvTable()->where('nganh.khoa_id', '=', $khoa_id)->where('buoc_thoi_hoc', '=', '1')->count();
         
         foreach ($this->dssvTable()->where('nganh.khoa_id', '=', $khoa_id)->select("*")->get() as $sv) {
             if ($sv->nam_ket_thuc < date("Y") && $sv->da_tot_nghiep == "0") 
@@ -267,7 +267,7 @@ class AnalyticsService {
     public function dssv_theo_lop(PaginationRequest $request, string $ma_lop) {
         $dssv = $this->dssvTable()->where('ma_lop', 'LIKE', "%$ma_lop%");
         
-        return $this->paginateMultipleTable($request, $dssv, null, ['sinh_vien_id'],     null,9);
+        return $this->paginateMultipleTable($request, $dssv, null, ['sinh_vien_id'], null, 9);
     }
 
     private function tk_lop(PaginationRequest $request, bool $tt_chi_tiet) {

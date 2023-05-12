@@ -9,6 +9,7 @@ export class Analytics {
     static URL_CLASS = location.protocol + '//' + location.host + '/api/admin/class';
     static URL_SV = location.protocol + '//' + location.host + '/api/graduate-on-edu-program';
     static URL = location.protocol + '//' + location.host + '/graduate';
+    static URL_SV_LIST = location.protocol + '//' + location.host + '/api/admin/get_students_list';
 
     static async callData(khoa = -1, nganh = -1) {
 
@@ -55,20 +56,106 @@ export class Analytics {
 
     static async index() {
 
-        function renderData(elem, tong_sv, sv_tot_nghiep, sv_tre_han, sv_chua_tot_nghiep, sv_bi_canh_cao, sv_bi_bth) {
+        function renderData(elem, tong_sv, sv_tot_nghiep, sv_tre_han, sv_chua_tot_nghiep, sv_bi_canh_cao, sv_bi_bth, chon_khoa = -1, chon_dot = -1) {
             elem[0].innerHTML = tong_sv;
             
-            let ty_le_sv_tot_nghiep = parseFloat((sv_tot_nghiep / tong_sv) * 100);
+            let ty_le_sv_tot_nghiep = parseFloat((sv_tot_nghiep / tong_sv) * 100).toFixed(2);
             elem[1].innerHTML = (isNaN(ty_le_sv_tot_nghiep)) ? 0 : ty_le_sv_tot_nghiep + "%";
 
-            let ty_le_sv_tre_han = parseFloat((sv_tre_han / sv_chua_tot_nghiep) * 100);
+            let ty_le_sv_tre_han = parseFloat((sv_tre_han / sv_chua_tot_nghiep) * 100).toFixed(2);
             elem[2].innerHTML = (isNaN(ty_le_sv_tre_han)) ? 0 : ty_le_sv_tre_han + "%";
             
-            let ty_le_sv_chua_tot_nghiep = parseFloat((sv_chua_tot_nghiep / tong_sv) * 100);
+            let ty_le_sv_chua_tot_nghiep = parseFloat((sv_chua_tot_nghiep / tong_sv) * 100).toFixed(2);
             elem[3].innerHTML = (isNaN(ty_le_sv_chua_tot_nghiep)) ? 0 : ty_le_sv_chua_tot_nghiep + "%";
 
             elem[4].innerHTML = sv_bi_canh_cao;
             elem[5].innerHTML = sv_bi_bth;
+
+            document.querySelector('#second__part').setAttribute('style', 'display: grid;');
+
+            document.querySelector('#non_graduated').innerHTML = `<div id="dssv_chua_tn" class="graduate__container">
+                <div class="graduate__item__content">
+                    <table>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>`
+            document.querySelector('#suspended').innerHTML = `<div id="dssv_bth">
+                <div class="graduate__item__content">
+                    <table>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>`
+
+            axios.get(Analytics.URL_SV_LIST + '/' + chon_khoa + '/' + 'type/non_graduated').then(response => {
+                let data = response.data.data;
+
+                if (data.dataObject.length > 0) {
+
+                    const renderDataChuaTN = async () => {
+                        const queryString = window.location.search;
+                        const urlParams = new URLSearchParams(queryString);
+                        const page = (urlParams.get('page') === null) ? 1 : urlParams.get('page');
+
+                        let dssv = await axios.get(Analytics.URL_SV_LIST + '/' + chon_khoa + '/' + 'type/non_graduated?page='+page).then(response => response.data.data)
+
+                        document.querySelector("#non_graduated tbody").innerHTML = `<tr>
+                            <th>Mã sinh viên</th>
+                            <th>Tên sinh viên</th>
+                        </tr>`
+                        dssv.dataObject.forEach(element => {
+                            let html = `<tr>
+                                <td>${element.ten_dang_nhap}</td>
+                                <td>${element.ten}</td>
+                            </tr>`;
+                            document.querySelector("#non_graduated tbody").insertAdjacentHTML('beforeend', html);
+                        });
+                    }
+
+                    let paginateContainer = new PaginationService(document.querySelector('#dssv_chua_tn'), renderDataChuaTN, data.paginationOption);
+                    paginateContainer.renderPagination();
+
+                    renderDataChuaTN();
+                } else {
+                    document.querySelector('#non_graduated').innerHTML = ">>> Không tìm thấy sinh viên <<<";
+                }
+            })
+            axios.get(Analytics.URL_SV_LIST + '/' + chon_khoa + '/' + 'type/suspended').then(response => {
+                let data = response.data.data
+
+                if (data.dataObject.length > 0) {
+
+                    const renderDataBTH = async () => {
+                        const queryString = window.location.search;
+                        const urlParams = new URLSearchParams(queryString);
+                        const page = (urlParams.get('page') === null) ? 1 : urlParams.get('page');
+
+                        let dssv = await axios.get(Analytics.URL_SV_LIST + '/' + chon_khoa + '/' + 'type/suspended?page='+page).then(response => response.data.data)
+
+                        document.querySelector("#suspended tbody").innerHTML = `<tr>
+                            <th>Mã sinh viên</th>
+                            <th>Tên sinh viên</th>
+                        </tr>`
+                        dssv.dataObject.forEach(element => {
+                            let html = `<tr>
+                                <td>${element.ten_dang_nhap}</td>
+                                <td>${element.ten}</td>
+                            </tr>`;
+                            document.querySelector("#suspended tbody").insertAdjacentHTML('beforeend', html);
+                        });
+                    }
+
+                    let paginateContainer = new PaginationService(document.querySelector('#dssv_bth'), renderDataBTH, data.paginationOption);
+                    paginateContainer.renderPagination();
+
+                    renderDataBTH();
+                } else {
+                    document.querySelector('#suspended').innerHTML = ">>> Không tìm thấy sinh viên <<<";
+                }
+            })
+
+            
         }
 
         let data = await Analytics.callData();
@@ -77,6 +164,8 @@ export class Analytics {
 
         function init() {
             let analytics__item = document.querySelectorAll(".analytics__item__title");
+
+            document.querySelector('#second__part').setAttribute('style', 'display: none;');
 
             renderData(analytics__item, data.tong_sv, data.sv_tot_nghiep, data.sv_tre_han, data.sv_chua_tot_nghiep, data.sv_bi_canh_cao, data.sv_bi_bth);
 
@@ -133,7 +222,7 @@ export class Analytics {
                         dataToGet = data.dot[chon_dot];
                     
                     renderData(analytics__item, dataToGet.tong_sv, dataToGet.sv_tot_nghiep, dataToGet.sv_tre_han, dataToGet.sv_chua_tot_nghiep,
-                        dataToGet.sv_bi_canh_cao, dataToGet.sv_bi_bth);
+                        dataToGet.sv_bi_canh_cao, dataToGet.sv_bi_bth, chon_khoa, chon_dot);
                 })
             }
         }
@@ -235,7 +324,7 @@ export class Analytics {
                 const urlParams = new URLSearchParams(queryString);
                 const page = (urlParams.get('page') === null) ? 1 : urlParams.get('page');
 
-                dssv = await axios.get(Analytics.URL_CLASS + '/' + ma_lop_lay_duoc + '/students?page='+page).then(response => response.data.data)
+                let dssv = await axios.get(Analytics.URL_CLASS + '/' + ma_lop_lay_duoc + '/students?page='+page).then(response => response.data.data)
                 document.querySelector("#dssv_table tbody").innerHTML = `<tr>
                         <th>Mã sinh viên</th>
                         <th>Tên sinh viên</th>
@@ -245,11 +334,11 @@ export class Analytics {
                     let html = `<tr>
                         <td>${element.ten_dang_nhap}</td>
                         <td>${element.ten}</td>
-                        <td><a href='${Analytics.URL + '/class/' + ma_lop_lay_duoc + '/' + element.ten_dang_nhap}'>Xem chi tiết</a></td>
+                        <td><a class='xem__chi__tiet__sv' href='${Analytics.URL + '/class/' + ma_lop_lay_duoc + '/' + element.ten_dang_nhap}'>Xem chi tiết</a></td>
                     </tr>`;
                     document.querySelector("#dssv_table tbody").insertAdjacentHTML('beforeend', html);
                 });
-                document.querySelectorAll('.xem__chi__tiet__lop').forEach(elem => {
+                document.querySelectorAll('.xem__chi__tiet__sv').forEach(elem => {
                     elem.addEventListener('click', () => routeHref(elem.href))
                 })
             };
@@ -375,7 +464,7 @@ export class Analytics {
                                 <td>${element.ma_lop}</td>
                                 <td>${element.ten_lop}</td>
                                 <td>${element.so_luong_sinh_vien}</td>
-                                <td><a href="${Analytics.URL + '/class/' +element.ma_lop}">Xem chi tiết</a></td>
+                                <td><a class='xem__chi__tiet__lop' href="${Analytics.URL + '/class/' +element.ma_lop}">Xem chi tiết</a></td>
                             </tr>`;
                         });
 
@@ -398,6 +487,10 @@ export class Analytics {
                 }
 
                 document.querySelector(".analytics__container").innerHTML = html;
+
+                document.querySelectorAll('.xem__chi__tiet__lop').forEach(elem => {
+                    elem.addEventListener('click', () => routeHref(elem.href))
+                })
             })
         }
     }

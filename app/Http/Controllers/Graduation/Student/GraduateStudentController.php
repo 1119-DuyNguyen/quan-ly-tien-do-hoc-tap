@@ -17,8 +17,8 @@ class GraduateStudentController extends ApiController
     {
         $data = DB::table('ket_qua')->where('sinh_vien_id', $request->user()->id)->get();
 
-        $ds_bien_che = DB::table('bien_che')->select('id', 'ten')->get();
-        $ds_hoc_phan = DB::table('hoc_phan')->select('id', 'ten', 'so_tin_chi')->get();
+        $ds_bien_che = DB::table('bien_che')->select(array('id', 'ten'))->get();
+        $ds_hoc_phan = DB::table('hoc_phan')->select(array('id', 'ten', 'so_tin_chi', 'ma_hoc_phan'))->get();
 
         $result = [
             'bien_che' => $ds_bien_che,
@@ -44,8 +44,8 @@ class GraduateStudentController extends ApiController
     {
         $data = DB::table('ket_qua')->where('sinh_vien_id', $request->user()->id)->get();
 
-        $ds_bien_che = DB::table('bien_che')->select('id', 'ten')->where('id', $id)->get();
-        $ds_hoc_phan = DB::table('hoc_phan')->select('id', 'ten', 'so_tin_chi')->get();
+        $ds_bien_che = DB::table('bien_che')->select(array('id', 'ten'))->where('id', $id)->get();
+        $ds_hoc_phan = DB::table('hoc_phan')->select(array('id', 'ten', 'so_tin_chi', 'ma_hoc_phan'))->get();
 
         $result = [
             'bien_che' => $ds_bien_che,
