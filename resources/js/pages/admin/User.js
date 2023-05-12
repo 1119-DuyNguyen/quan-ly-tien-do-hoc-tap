@@ -30,35 +30,56 @@ export class User {
             <input rules='required' type="text" name='ten' class="input" />
         </div>
         <div class="grid-item form-group">
-            <label for=""> Ghi chú</label>
-            <input name='tong_tin_chi_ktt_tu_chon'  type="text" class="input"rules='required|number' value="" />
+            <label for=""> Tên đăng nhập</label>
+            <input name='ten_dang_nhap'  type="text" class="input"rules='required' value="" />
         </div>
+        <div class="grid-item form-group">
+            <label for=""> email</label>
+            <input name='email'  type="email" class="input"rules='required' value="" />
+        </div>
+            <div class="grid-item form-group">
+            <label for=""> Số điện thoại</label>
+            <input name='sdt'  type="text" class="input"rules='required' value="" />
+        </div>
+        <div class="grid-item form-group">
+        <label for=""> Ngày sinh</label>
+        <input name='ngay_sinh'  type="date" class="input"rules='required' value="" />
+    </div>
 
         <!-- select -->
         <div class="grid-item form-group">
-            <label>Loại kiến thức</label>
+            <label>Khoa</label>
 
-            <select name="loai_kien_thuc_id" rules='required'>
-
+            <select name="khoa_id" rules='required'>
+        
             </select>
             
 
         </div>
+        <div class="grid-item form-group">
+        <label>Vai trò</label>
+
+        <select name="role_id" rules='required'>
+
+        </select>
+        
+
+    </div>
     <input type="hidden" name="chuong_trinh_dao_tao_id" value="${idProgram}"/>
        
     </div>
     <button class="form-submit">${textSubmit}</button>
         `;
-        let selectContainer = tableTem.renderSelectList(tableTem.getDataSelectList);
-        if (selectContainer) {
-            let selectList = selectContainer.querySelectorAll('select') ?? [];
-            selectList.forEach((select) => {
-                let selectForm = formContainer.querySelector(`select[name="${select.getAttribute('name')}"`);
-                if (selectForm) {
-                    selectForm.innerHTML = select.innerHTML;
-                }
-            });
-        }
+        // let selectContainer = tableTem.renderSelectList(tableTem.getDataSelectList);
+        // if (selectContainer) {
+        //     let selectList = selectContainer.querySelectorAll('select') ?? [];
+        //     selectList.forEach((select) => {
+        //         let selectForm = formContainer.querySelector(`select[name="${select.getAttribute('name')}"`);
+        //         if (selectForm) {
+        //             selectForm.innerHTML = select.innerHTML;
+        //         }
+        //     });
+        // }
         let handleValidator = new Validator(formContainer);
         handleValidator.onSubmit = function (data) {
             //  console.log(data);
@@ -79,7 +100,7 @@ export class User {
         let formContainer = document.createElement('form');
 
         axios
-            .get(ChildProgram.URL_Program + '/' + rowId)
+            .get(User.URL_Program + '/' + rowId)
             .then((res) => res.data.data)
             .then((data) => {
                 formContainer.classList.add('form');

@@ -5,17 +5,18 @@ $firstLight: #fefcf3;
 // $secondLight: #f5ebe0;
 $secondLight: #fff;
 .table-tree {
-    tr td div {
-        max-height: 100px;
-        padding: 10px 10px;
-        transition: max-height 0.6s, padding 0.6s;
-    }
-    tr.hide td div {
-        max-height: 0;
-        padding: 0 10px;
-        box-sizing: border-box;
-        overflow: hidden;
-        transition: max-height 0.3s, padding 0.3s;
+    // tr td {
+    //     max-height: 100px;
+    //     padding: 10px 10px;
+    //     transition: max-height 0.6s, padding 0.6s;
+    // }
+    tr.hide {
+        // max-height: 0;
+        // padding: 0 10px;
+        // box-sizing: border-box;
+        // overflow: hidden;
+        // transition: max-height 0.3s, padding 0.3s;
+        display: none;
     }
 
     // tr.hide {
@@ -64,7 +65,6 @@ $secondLight: #fff;
         width: 16px;
         line-height: 16px;
         text-align: center;
-        display: inline-block;
         cursor: pointer;
     }
 }

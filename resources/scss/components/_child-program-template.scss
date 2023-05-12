@@ -14,7 +14,7 @@
         justify-content: center;
         align-items: center;
         padding: 0.5rem 0;
-
+        text-align: left;
         &__item {
             box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
             width: 100%;
@@ -35,18 +35,21 @@
     }
 
     .table-container {
-        min-height: 100vh;
+        min-height: 50vh;
         height: auto;
         width: 100%;
 
-        width: auto;
-        background-color: #fff;
-        border-radius: 1rem;
+        border-top-left-radius: 1rem;
+        border-top-right-radius: 1rem;
+
+        overflow: auto;
+        background-color: inherit;
     }
     .table-graduate {
         width: 100%;
         padding: 8px;
         border-collapse: collapse;
+
         td {
             text-align: left;
             padding: 0 4px;

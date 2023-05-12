@@ -168,7 +168,11 @@ trait ApiResponser
         }
         if ($total <= $itemPerPage) {
             return $this->success([
-
+                'paginationOption' => [
+                    'total' => '0',
+                    'perPage' => '100',
+                    'step' => $step,
+                ],
                 'dataObject' => $data,
                 'selectDataList' => $selectDataList
 

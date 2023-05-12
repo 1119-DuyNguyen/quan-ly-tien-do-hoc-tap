@@ -18,6 +18,27 @@ function nextUntilElement(elem, elements) {
     }
     return siblings;
 }
+
+/**
+ * https://api.jquery.com/nextuntil/
+ * Get all following siblings of each element up to
+ *  but not including the element matched by the selector, DOM node, or jQuery object passed.
+ * @param {Element} elem
+ * @param {*} elements
+ * @returns
+ */
+function previousUntilElement(elem, elements) {
+    var siblings = [];
+    elem = elem.previousElementSibling;
+    while (elem) {
+        // Vì con đều là tr nên phải chặn
+        if (elements.includes(elem)) break;
+
+        siblings.push(elem);
+        elem = elem.nextElementSibling;
+    }
+    return siblings;
+}
 export class TableTree {
     static styleCss = `
     `;

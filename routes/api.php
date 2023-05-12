@@ -55,7 +55,6 @@ Route::middleware('auth:api')->group(function () {
     Route::apiResource('/posts', PostController::class);
     Route::apiResource('/exercises', BaitapController::class);
     Route::apiResource('/bai-tap-sinh-vien', BaiTapSinhVienController::class);
-    Route::apiResource('/bai-tap-sinh-vien/', BaiTapSinhVienController::class);
     Route::apiResource('/file-bai-tap', FileBaiTapController::class);
     Route::apiResource('/tham-gia-nhom-hoc', ThamGiaController::class);
     Route::apiResource('/cham-diem', ChamDiemController::class);
@@ -80,10 +79,16 @@ Route::middleware('auth:api')->group(function () {
             Route::apiResource('/class.students', StudentsInClassController::class);
             Route::apiResource('/role', RoleController::class);
             Route::apiResource('/user', UserController::class);
+            Route::apiResource('/user.role', UserController::class);
+            Route::apiResource('/user.faculty', UserController::class);
+            Route::apiResource('/user.major', UserController::class);
+            Route::apiResource('/user.subject', UserController::class);
+
             Route::apiResource('/permissions', PermissionController::class);
 
             Route::apiResource('/user-permissions', UserPermissionsController::class);
 
+            Route::get('/subject/all', [SubjectController::class, 'all']);
             Route::apiResource('/subject', SubjectController::class);
 
             Route::apiResource('/program', ProgramController::class);

@@ -21,6 +21,7 @@ let navPage = {
         icon: 'fa-regular fa-address-card icon',
         text: 'Thông tin cá nhân',
     },
+
     graduate: {
         // role: ['sinh-vien', 'giang-vien', 'quan-tri-vien', 'co-van-hoc-tap'],
         role: ['sinh-vien', 'quan-tri-vien', 'co-van-hoc-tap'],
