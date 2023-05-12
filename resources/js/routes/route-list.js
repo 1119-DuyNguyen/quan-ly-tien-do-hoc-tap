@@ -12,6 +12,7 @@ import { User } from '../pages/admin/User.js';
 import { Program } from '../pages/admin/program.js';
 import { Subject } from '../pages/admin/subject.js';
 import { Authentication } from '../pages/authentication.js';
+import { UserPermissions } from '../pages/admin/user-permissons.js';
 
 const route = new Route();
 console.log('hi');
@@ -94,7 +95,7 @@ route.addRoute('quan-tri-vien/program/$id', Program.view, { title: 'Chﾆｰﾆ｡ng trﾃ
 
 route.addRoute('quan-tri-vien/role', Role.index, { title: 'Quy盻］' }, '');
 route.addRoute('quan-tri-vien/role/edit', Role.edit, { title: 'Quy盻］' }, 'templates/admin/role-edit.html');
-route.addRoute('quan-tri-vien/role/edit/$id', Role.edit, { title: 'Quy盻］' }, 'templates/admin/role-edit.html');
+route.addRoute('quan-tri-vien/role/edit/$id', UserPermissions.edit, { title: 'Quy盻］' }, 'templates/admin/role-edit.html');
 // route.addRoute('quan-tri-vien/subject', Sub.edit, { title: 'Quy盻］' }, 'templates/admin/role-edit.html');
 route.addRoute('quan-tri-vien/subject', Subject.index, { title: 'H盻皇 ph蘯ｧn' }, '');
 

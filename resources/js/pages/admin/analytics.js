@@ -343,8 +343,6 @@ export class Analytics {
                 let ten_khoa = '';
                 for (let i = 0; i < data.khoa.length; i++) {
                     const element = data.khoa[i];
-                    
-                    console.log(element);
 
                     if (element.id == chon_khoa)
                         ten_khoa = element.ten;
@@ -353,8 +351,6 @@ export class Analytics {
                 let dataToGet = data;
                 if (chon_dot != -1)
                     dataToGet = data.dot[chon_dot];
-                    
-                console.log(dataToGet);
 
                 let html = ``;
 
@@ -367,34 +363,39 @@ export class Analytics {
                 html += `<p>Số lượng sinh viên bị buộc thôi học: ${dataToGet.sv_bi_bth}</p>`
                 html += `</div>`
 
-                html += `<div class="analytics__item">`;
-                html += `<h3>Danh sách lớp thuộc khoa ${ten_khoa}</h3>`
+                if (typeof dataToGet.ds_lop != 'undefined') {
+                    if (dataToGet.ds_lop.length > 0) {
+                        html += `<div class="analytics__item">`;
+                        html += `<h3>Danh sách lớp thuộc khoa ${ten_khoa}</h3>`
 
-                let list = ``;
-                dataToGet.ds_lop.forEach(element => {
-                    list += `<tr>
-                        <td>${element.ma_lop}</td>
-                        <td>${element.ten_lop}</td>
-                        <td>${element.so_luong_sinh_vien}</td>
-                        <td><a href="${Analytics.URL + '/class/' +element.ma_lop}">Xem chi tiết</a></td>
-                    </tr>`;
-                });
+                        let list = ``;
+                        
+                        dataToGet.ds_lop.forEach(element => {
+                            list += `<tr>
+                                <td>${element.ma_lop}</td>
+                                <td>${element.ten_lop}</td>
+                                <td>${element.so_luong_sinh_vien}</td>
+                                <td><a href="${Analytics.URL + '/class/' +element.ma_lop}">Xem chi tiết</a></td>
+                            </tr>`;
+                        });
 
-                html += `<div class="graduate__container">
-                    <div class="graduate__item__content">
-                        <table>
-                            <tr>
-                                <th>Mã lớp</th>
-                                <th>Tên lớp</th>
-                                <th>Số lượng sinh viên</th>
-                                <th>Hành động</th>
-                            </tr>
-                            ${list}
-                        </table>
-                    </div>
-                </div>`
+                        html += `<div class="graduate__container">
+                            <div class="graduate__item__content" style="max-height: 15rem; overflow-y: auto">
+                                <table>
+                                    <tr>
+                                        <th>Mã lớp</th>
+                                        <th>Tên lớp</th>
+                                        <th>Số lượng sinh viên</th>
+                                        <th>Hành động</th>
+                                    </tr>
+                                    ${list}
+                                </table>
+                            </div>
+                        </div>`
 
-                html += `</div>`
+                        html += `</div>`
+                    }
+                }
 
                 document.querySelector(".analytics__container").innerHTML = html;
             })

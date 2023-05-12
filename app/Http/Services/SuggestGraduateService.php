@@ -110,7 +110,7 @@ class SuggestGraduateService {
             // dd($dshp_goiy_bb, $dshp_goiy_tuchon);
 
             foreach ($dshp_goiy_bb as $hp) {
-                if ($hp->hoc_ky_goi_y == $hk_ke) {
+                if (intval($hp->hoc_ky_goi_y) % 2 == intval($hk_ke) % 2) {
                     $dshp->add($hp);
                     continue;
                 }
