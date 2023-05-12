@@ -161,12 +161,17 @@ export class SmartTableTemplate {
                 containerTable.appendChild(this.#content);
                 this.#container.appendChild(containerTable);
                 this.isFirstInit = true;
-                if (option['pagination'] && paginationOption) {
-                    this.handleCreatePagination(paginationOption);
-                }
             } else {
                 this.#content.innerHTML = '';
             }
+            if (option['pagination'] && paginationOption) {
+                console.log(paginationOption);
+                if (this.#paginationService) {
+                    this.#paginationService.destroy();
+                }
+                this.handleCreatePagination(paginationOption);
+            }
+
             this.#header = createElement('thead', 'table-header');
             this.#headerBtns = [];
             this.#body = createElement('tbody', 'table-content');
@@ -378,10 +383,12 @@ export class SmartTableTemplate {
                                 trueButtonText: 'Có',
                                 falseButtonText: 'Không',
                             }).then((data) => {
-                                if (data)
+                                if (data) {
+                                    let url = new URL(this.#option.urlAPI);
                                     axios
-                                        .delete(this.#option.urlAPI + '/' + rowId.getAttribute('data-content'))
-                                        .then((res) => row.remove());
+                                        .delete(url.origin + url.pathname + '/' + rowId.getAttribute('data-content'))
+                                        .then((res) => this.reRenderTable());
+                                }
                             });
                         } catch (e) {
                             console.error(e);

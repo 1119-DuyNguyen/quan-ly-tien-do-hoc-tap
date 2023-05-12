@@ -13,6 +13,9 @@ export class PaginationService {
     #container;
     #btnsHtml = '';
     #reRenderTableCallBack;
+    destroy() {
+        if (this.#pagination) this.#pagination.remove();
+    }
     /**
      * create pagination element
      * @param {Element} container

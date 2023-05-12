@@ -144,12 +144,13 @@ export class SmartTableTemplateResponsive {
         }
     }
     handleCreatePagination(paginationOption) {
+
         this.#paginationService = new PaginationService(
             this.#container,
             this.reRenderTable.bind(this),
             paginationOption
         );
-
+        
         this.#paginationService.renderPagination();
     }
     /**
