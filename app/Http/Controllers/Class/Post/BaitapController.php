@@ -67,7 +67,7 @@ class BaitapController extends ApiController
                     Storage::putFileAs('files', $file, $name);
 
                     $fileData['bai_dang_id'] = DB::table('bai_dang')->max('id');
-                    $fileData['link'] = 'files/' . $name;
+                    $fileData['link'] = '/files/' . $name;
 
                     FileBaiDang::create($fileData);
                 }
@@ -91,7 +91,7 @@ class BaitapController extends ApiController
                     Storage::putFileAs('files', $file, $name);
 
                     $fileData['bai_dang_id'] = $id;
-                    $fileData['link'] = 'files/' . $name;
+                    $fileData['link'] = '/files/' . $name;
 
                     FileBaiDang::where('bai_dang_id', $id)->update($fileData);
                 }

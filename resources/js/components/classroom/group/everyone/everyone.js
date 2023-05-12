@@ -2,7 +2,7 @@
 
 export class Everyone {
     static URL_EVERYONE = location.protocol + '//' + location.host + '/api/everyone';
-    static URL_GROUP = location.protocol + '//' + location.host + '/api/classes';
+    static URL_GROUP = location.protocol + '//' + location.host + '/api/class';
     #container;
     constructor(element) {
         this.#container = element;

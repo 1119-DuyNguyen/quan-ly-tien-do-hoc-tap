@@ -1,7 +1,7 @@
 import { routeHref } from '../../routes/route';
 
 export class ClassroomItem {
-    static URL_CLASSROOM = location.protocol + '//' + location.host + '/api/classes';
+    static URL_CLASSROOM = location.protocol + '//' + location.host + '/api/class';
     static URL_LINK_TO_GROUP = location.protocol + '//' + location.host + '/classroom';
     #container;
     createElement(type = 'div', className = '') {

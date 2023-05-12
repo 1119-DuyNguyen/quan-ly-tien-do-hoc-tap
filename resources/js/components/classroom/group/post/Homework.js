@@ -2,7 +2,8 @@ export class Homework {
     static URL_POST = location.protocol + '//' + location.host + '/api/posts';
     static URL_EXCERCISE = location.protocol + '//' + location.host + '/api/exercises';
     static URL_BAI_TAP_SINH_VIEN = location.protocol + '//' + location.host + '/api/bai-tap-sinh-vien';
-    static URL_FILE_BAI_TAP = location.protocol + '//' + location.host + '/classroom/file-bai-tap';
+    static URL_FILE_BAI_TAP = location.protocol + '//' + location.host + '/api/file-bai-tap';
+    static URL_CHAM_DIEM_SINH_VIEN = location.protocol + '//' + location.host + '/classroom/bai-tap';
     static _this = this;
     #container;
     constructor(element) {
@@ -65,32 +66,33 @@ export class Homework {
 
     async getStudentBaiTapData(id) {
         var BaiTapData;
+        var tungBaiTapData;
         let html = '';
-        let data = await axios.get(Homework.URL_EXCERCISE + `/${id}`).then(function (response) {
+
+        let dataBaiTap = await axios
+            .get(Homework.URL_EXCERCISE + `/${id}`)
+            .then(function (response) {
+                return response.data.data;
+            })
+            .catch(function (err) {
+                console.log(err);
+            });
+        BaiTapData = dataBaiTap ? dataBaiTap : [];
+
+        let dataTungBaiTap = await axios.get(Homework.URL_BAI_TAP_SINH_VIEN).then(function (response) {
             return response.data.data;
         });
-        BaiTapData = data ? data : [];
+        tungBaiTapData = dataTungBaiTap ? dataTungBaiTap : [];
+
         BaiTapData.forEach(async (element, index) => {
-            // var fileHref;
-            // let fileLink = axios
-            //     .get(BaiTap.URL_BAI_TAP_SINH_VIEN + `/${element.bai_dang_id}`)
-            //     .then(function (response) {
-            //         return response.data;
-            //     })
-            //     .catch(function (err) {
-            //         console.log(err);
-            //     });
-            // fileHref = fileLink ? fileLink : 'a';
-            // console.log(fileHref);
-            axios
-                .get(Homework.URL_BAI_TAP_SINH_VIEN + `/${element.bai_dang_id}`)
-                .then(function (response) {
-                    console.log(response.data.data);
-                    console.log(element.bai_dang_id);
-                })
-                .catch(function (err) {
-                    console.log(err);
-                });
+            let doneBaiTap = false;
+            let baiTaphtml = '';
+            tungBaiTapData.forEach((ele, index) => {
+                if (ele.bai_tap_id === element.bai_dang_id) {
+                    doneBaiTap = true;
+                    baiTaphtml += `<div id='bai_nop_bai_tap_${ele.bai_tap_id}' class='bai_nop_bai_tap' >Tải file đã nộp</div>`;
+                }
+            });
 
             html += `<div class="task" id="bai_dang_${decodeHtml(element.bai_dang_id)}">
                         <div class="task__container">
@@ -140,19 +142,30 @@ export class Homework {
                                 </div>
                             </form>
                         </div>
-                        <div class="task__action task__action--blue">
-                            <div>Xem thêm</div>
+                        
+                        
+                    `;
+
+            if (doneBaiTap) {
+                html += `<div class="task__action task__action--blue">
+                            <div>${baiTaphtml}</div>
+                         </div>`;
+            } else {
+                html += `<div class="task__action task__action--blue">
+                            <div>CHƯA NỘP</div>
+                         </div>`;
+            }
+            html += `<div class="task__status task__status--green">Điểm: 
+                        <div class="task__status__icon">
+                            <img src="../../img/check-green.png" alt="" />
                         </div>
-                        <div class="task__status task__status--green">Điểm: 
-                            <div class="task__status__icon">
-                                <img src="../../img/check-green.png" alt="" />
-                            </div>
-                        </div>
+                    </div>
                     </div>`;
         });
         this.#container.innerHTML = html;
         this.sinhVienNopBaiTap();
         this.sinhVienXoaBaiTap();
+        this.sinhVienDownBaiTap();
     }
 
     async addBaiTap(id) {
@@ -317,8 +330,6 @@ export class Homework {
                         });
                 }
             });
-
-            //xoá bài tập
         });
     }
 
@@ -345,6 +356,39 @@ export class Homework {
                             console.log(error);
                         });
                 }
+            });
+        });
+    }
+
+    sinhVienDownBaiTap() {
+        const btnDownBaiTapDaNop = document.querySelectorAll('.bai_nop_bai_tap');
+        console.log(btnDownBaiTapDaNop);
+        btnDownBaiTapDaNop.forEach((element) => {
+            element.addEventListener('click', (e) => {
+                let bai_tap_id = element.id.split('_')[4];
+                axios
+                    .get(Homework.URL_FILE_BAI_TAP + `/${bai_tap_id}`, {
+                        Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
+                        responseType: 'arraybuffer',
+                    })
+                    .then((response) => {
+                        // Parses file, and creates proxy (local data-URL for file).
+                        var proxy = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
+
+                        // Download from proxy.
+                        var link = document.createElement('a');
+                        document.body.appendChild(link); // Maybe required by Fire-fox browsers.
+                        link.href = proxy;
+                        link.download = 'my-file.pdf';
+                        link.click();
+
+                        // Cleanup.
+                        window.URL.revokeObjectURL(proxy);
+                        link.remove();
+                    })
+                    .catch(function (err) {
+                        console.log(err);
+                    });
             });
         });
     }

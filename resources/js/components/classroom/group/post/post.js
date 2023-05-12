@@ -1,4 +1,5 @@
 export class Post {
+    static URL_CLASS_POST = location.protocol + '//' + location.host + '/api/class';
     static URL_POST = location.protocol + '//' + location.host + '/api/posts';
     #container;
     constructor(element) {
@@ -46,7 +47,7 @@ export class Post {
     async getStudentPostData(id) {
         var postData;
         let html = '';
-        let data = await axios.get(Post.URL_POST + `/${id}`).then(function (response) {
+        let data = await axios.get(Post.URL_CLASS_POST + `/${id}/post/${id}`).then(function (response) {
             return response.data.data;
         });
         postData = data ? data : [];

@@ -19,9 +19,13 @@ class BaiTapSinhVienController extends ApiController
     /**
      * Display a listing of the resource.
      */
-    public function index(PaginationRequest $request)
+    public function index(Request $request)
     {
-        return $this->paginate($request, 'bai_tap_sinh_vien', 3, 1, 'bai_tap_id');
+        $data = DB::table('bai_tap_sinh_vien')
+            ->where('sinh_vien_id', '=', $request->user()->id)
+            ->get();
+
+        return $this->success($data, 200, 'Đã lấy được file bài tập');
     }
 
     public function store(Request $request)
@@ -31,7 +35,7 @@ class BaiTapSinhVienController extends ApiController
             Storage::putFileAs('files', $request->file('files'), $name);
             $storeData['bai_tap_id'] = $request->bai_tap_id;
             $storeData['sinh_vien_id'] = $request->user()->id;
-            $storeData['link_file'] = '/storage/app/files/' . $name;
+            $storeData['link_file'] = '/files/' . $name;
 
             BaiTapSinhVien::insert($storeData);
 
