@@ -338,11 +338,7 @@
         .home-right-container {
             grid-area: unset;
         }
-        .home-right-container
-            .progress-container
-            .percentage
-            .percentage__taskHours
-            .percentage__taskHours--item {
+        .home-right-container .progress-container .percentage .percentage__taskHours .percentage__taskHours--item {
             max-width: unset !important;
         }
     }

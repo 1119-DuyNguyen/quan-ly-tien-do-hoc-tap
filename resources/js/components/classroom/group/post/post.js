@@ -1,3 +1,5 @@
+import { PaginationService } from '../../../smart-table-template/services/PaginationService';
+
 export class Post {
     static URL_CLASS_POST = location.protocol + '//' + location.host + '/api/class';
     static URL_POST = location.protocol + '//' + location.host + '/api/posts';
@@ -9,50 +11,73 @@ export class Post {
     async getTeacherPostData(id) {
         var postData;
         let html = '';
-        let data = await axios.get(Post.URL_POST + `/${id}`).then(function (response) {
-            return response.data.data;
-        });
-        postData = data ? data : [];
-        postData.forEach((element, index) => {
-            html += `<div class="feed-item" id="bai_dang_${decodeHtml(element.bai_dang_id)}">
-                    <div class="feed-item__header">
-                        <img src="../../img/icon.png" />
-                        <div class="feed-item__header--text">
-                            <strong>${decodeHtml(element.ten_nguoi_dang)} </strong>
-                            <span>
-                                đã thêm 1 bài đăng mới: ${decodeHtml(element.tieu_de)}
-                            </span>
-                            <div class="feed-item__header--text-time">${decodeHtml(element.created_at)}</div>
-                        </div>
-                    </div>
-                    <div class="feed-item__content">
-                        <div class="feed-item__content-1">${decodeHtml(element.noi_dung)}</div>
-                    </div>
-                    <div class="feed-item-option">
-                        <i class="fa-solid fa-pen-to-square" style="cursor: pointer"></i>
-                        <i class="fa-solid fa-trash-can" style="cursor: pointer"></i>
-                    </div>
-                    <form class="feed-item__comment">
-                        <img src="../../img/icon.png" />
-                        <input type="text" class="feed-item__comment--input" />
-                        <input type="submit" class="feed-item__comment--btn" value="Bình luận" />
-                    </form>
-                </div>`;
-        });
-        this.#container.innerHTML = html;
-        this.deletePost();
-        this.editPost();
+        let _this = this;
+        let url = new URL(window.location.href);
+        let params = new URLSearchParams(url.search);
+        const urlNew = new URL(Post.URL_CLASS_POST + `/${id}/post/${id}`);
+        urlNew.searchParams.set('page', url.searchParams.get('page'));
+        axios
+            .get(urlNew.href)
+            .then((response) => {
+                return response.data.data;
+            })
+            .then((data) => {
+                postData = data.dataObject ? data.dataObject : [];
+                postData.forEach((element, index) => {
+                    html += `<div class="feed-item" data-value="${decodeHtml(bai_dang_id)}">
+                            <div class="feed-item__header">
+                                <img src="../../img/icon.png" />
+                                <div class="feed-item__header--text">
+                                    <strong>${decodeHtml(element.ten_nguoi_dang)} </strong>
+                                    <span>
+                                        đã thêm 1 bài đăng mới: ${decodeHtml(element.tieu_de)}
+                                    </span>
+                                    <div class="feed-item__header--text-time">${decodeHtml(element.created_at)}</div>
+                                </div>
+                            </div>
+                            <div class="feed-item__content">
+                                <div class="feed-item__content-1">${decodeHtml(element.noi_dung)}</div>
+                            </div>
+                            <div class="feed-item-option">
+                                <i class="fa-solid fa-pen-to-square" style="cursor: pointer"></i>
+                                <i class="fa-solid fa-trash-can" style="cursor: pointer"></i>
+                            </div>
+                            <form class="feed-item__comment">
+                                <img src="../../img/icon.png" />
+                                <input type="text" class="feed-item__comment--input" />
+                                <input type="submit" class="feed-item__comment--btn" value="Bình luận" />
+                            </form>
+                        </div>`;
+                });
+                this.#container.innerHTML = html;
+                let pagination = new PaginationService(
+                    _this.#container,
+                    _this.getTeacherPostData.bind(_this, id),
+                    data.paginationOption
+                );
+                pagination.renderPagination();
+                this.deletePost();
+                this.editPost();
+            });
     }
 
-    async getStudentPostData(id) {
+    getStudentPostData(id) {
         var postData;
         let html = '';
-        let data = await axios.get(Post.URL_CLASS_POST + `/${id}/post/${id}`).then(function (response) {
-            return response.data.data;
-        });
-        postData = data ? data : [];
-        postData.forEach((element, index) => {
-            html += `<div class="feed-item" id="bai_dang_${decodeHtml(element.bai_dang_id)}">
+        let _this = this;
+        let url = new URL(window.location.href);
+        let params = new URLSearchParams(url.search);
+        const urlNew = new URL(Post.URL_CLASS_POST + `/${id}/post/${id}`);
+        urlNew.searchParams.set('page', url.searchParams.get('page'));
+        axios
+            .get(urlNew.href)
+            .then((response) => {
+                return response.data.data;
+            })
+            .then((data) => {
+                postData = data.dataObject ? data.dataObject : [];
+                postData.forEach((element, index) => {
+                    html += `<div class="feed-item" data-value="${decodeHtml(element.bai_dang_id)}">
                     <div class="feed-item__header">
                         <img src="../../img/icon.png" />
                         <div class="feed-item__header--text">
@@ -72,8 +97,15 @@ export class Post {
                         <input type="submit" class="feed-item__comment--btn" value="Bình luận" />
                     </form>
                 </div>`;
-        });
-        this.#container.innerHTML = html;
+                });
+                this.#container.innerHTML = html;
+                let pagination = new PaginationService(
+                    _this.#container,
+                    _this.getStudentPostData.bind(_this, id),
+                    data.paginationOption
+                );
+                pagination.renderPagination();
+            });
     }
 
     async addPost(id) {
@@ -117,10 +149,10 @@ export class Post {
         let feedItems = document.querySelectorAll('.feed-item .fa-trash-can');
         feedItems.forEach((element) => {
             element.addEventListener('click', (event) => {
-                let bai_dang = element.parentElement.parentElement.id.split('_');
+                let bai_dang = element.parentElement.parentElement.dataset.value;
                 if (confirm('Bạn có chắc muốn xoá bài viết này?')) {
                     axios
-                        .delete(Post.URL_POST + `/${bai_dang[2]}`, {
+                        .delete(Post.URL_POST + `/${bai_dang}`, {
                             headers: {
                                 'Content-Type': 'application/json',
                             },
@@ -153,7 +185,7 @@ export class Post {
 
         taskEditBtn.forEach((element, index) => {
             element.addEventListener('click', (e) => {
-                let bai_dang = element.parentElement.parentElement.id.split('_');
+                let bai_dang = element.parentElement.parentElement.id.dataset.value;
 
                 editForm.style.display = 'block';
 
@@ -174,7 +206,7 @@ export class Post {
                     formData.append('_method', 'put');
 
                     await axios
-                        .put(Post.URL_POST + `/${bai_dang[2]}`, formData, {
+                        .put(Post.URL_POST + `/${bai_dang}`, formData, {
                             headers: {
                                 'Content-Type': 'application/json',
                             },
