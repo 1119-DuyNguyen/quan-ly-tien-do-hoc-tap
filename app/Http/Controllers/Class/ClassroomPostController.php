@@ -30,21 +30,22 @@ class ClassroomPostController extends ApiController
     }
     public function show(PaginationRequest $request, string $nhom_hoc_id)
     {
+        $request['dir'] = 'desc';
         $data = DB::table('bai_dang')
             ->join('tai_khoan', 'bai_dang.nguoi_dung_id', '=', 'tai_khoan.id')
             ->join('nhom_hoc', 'bai_dang.nhom_hoc_id', '=', 'nhom_hoc.id')
             ->where('nhom_hoc.id', '=', $nhom_hoc_id)
-            // ->select(
-            //     'bai_dang.id as bai_dang_id',
-            //     'tai_khoan.ten as ten_nguoi_dang',
-            //     'bai_dang.tieu_de as tieu_de',
-            //     'bai_dang.noi_dung as noi_dung',
-            //     'bai_dang.created_at as created_at'
-            // )
+            ->select(
+                'bai_dang.id as bai_dang_id',
+                'tai_khoan.ten as ten_nguoi_dang',
+                'bai_dang.tieu_de as tieu_de',
+                'bai_dang.noi_dung as noi_dung',
+                'bai_dang.created_at as created_at'
+            )
             ->where('bai_dang.loai_noi_dung', '=', '1');
         //return json_encode($data);
         //return dd($data);
-        return $this->paginateMultipleTable($request, $data, null, ['bai_dang.id'], null, 10);
+        return $this->paginateMultipleTable($request, $data, null, ['bai_dang.created_at'], null, 10);
     }
 
     public function store(Request $request, BaiDang $baiDang)
