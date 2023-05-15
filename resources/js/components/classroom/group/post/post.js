@@ -9,6 +9,7 @@ export class Post {
     }
 
     async getTeacherPostData(id) {
+        this.#container.innerHTML = `<loader-component></loader-component>`;
         var postData;
         let html = '';
         let _this = this;
@@ -24,7 +25,7 @@ export class Post {
             .then((data) => {
                 postData = data.dataObject ? data.dataObject : [];
                 postData.forEach((element, index) => {
-                    html += `<div class="feed-item" data-value="${decodeHtml(bai_dang_id)}">
+                    html += `<div class="feed-item" data-value="${decodeHtml(element.bai_dang_id)}">
                             <div class="feed-item__header">
                                 <img src="../../img/icon.png" />
                                 <div class="feed-item__header--text">
@@ -62,6 +63,7 @@ export class Post {
     }
 
     getStudentPostData(id) {
+        this.#container.innerHTML = `<loader-component></loader-component>`;
         var postData;
         let html = '';
         let _this = this;

@@ -33,6 +33,6 @@ class EveryoneController extends ApiController
             ->select('tai_khoan.ten as ten')
             ->get();
         //return json_encode($data);
-        return $this->success($data, 200, 'Success');
+        return $this->success($data, 200, 'Đã lấy danh sách lớp');
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Class\Post;
+namespace App\Http\Controllers\Class;
 
 use App\Models\User;
 use Illuminate\Support\Str;
@@ -16,7 +16,7 @@ use App\Models\Users\Classes\Posts\BaiDang;
 use App\Models\Users\Classes\Posts\FileBaiDang;
 use App\Models\Users\Classes\Posts\BaiTapSinhVien;
 
-class BaitapController extends ApiController
+class SVRightPanelController extends ApiController
 {
     public function index()
     {
@@ -41,12 +41,10 @@ class BaitapController extends ApiController
     {
         $request['dir'] = 'desc';
         $data = DB::table('bai_dang')
-            ->join('tai_khoan', 'bai_dang.nguoi_dung_id', '=', 'tai_khoan.id')
             ->join('nhom_hoc', 'bai_dang.nhom_hoc_id', '=', 'nhom_hoc.id')
             ->where('nhom_hoc.id', '=', $nhom_hoc_id)
             ->select(
                 'bai_dang.id as bai_dang_id',
-                'tai_khoan.ten as ten_nguoi_dang',
                 'bai_dang.tieu_de as tieu_de',
                 'bai_dang.noi_dung as noi_dung',
                 'bai_dang.created_at as created_at',
@@ -55,11 +53,7 @@ class BaitapController extends ApiController
             ->where('bai_dang.loai_noi_dung', '=', '2');
         // ->get();
         //return dd($request->all());
-        if ($request['sortBaiTap'] == 'moiNhat') {
-            return $this->paginateMultipleTable($request, $data, null, ['bai_dang.created_at'], null, 10);
-        } elseif ($request['sortBaiTap'] == 'deadline') {
-            return $this->paginateMultipleTable($request, $data, null, ['bai_dang.ngay_ket_thuc'], null, 10);
-        }
+        return $this->paginateMultipleTable($request, $data, null, ['bai_dang.created_at'], null, 3);
     }
 
     public function store(Request $request, BaiDang $baiDang)

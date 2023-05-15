@@ -9,6 +9,7 @@ export class Everyone {
     }
 
     async getEveryoneData(id) {
+        this.#container.innerHTML = `<loader-component></loader-component>`;
         var everyoneData;
         var teacherData;
         let html = '';

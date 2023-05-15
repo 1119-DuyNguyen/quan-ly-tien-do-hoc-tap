@@ -12,7 +12,8 @@ export class Homework {
         this.#container = element;
     }
 
-    async getTeacherBaiTapData(id) {
+    async getTeacherBaiTapData(id, sortBaiTap) {
+        this.#container.innerHTML = `<loader-component></loader-component>`;
         var BaiTapData;
         let html = '';
         let _this = this;
@@ -21,7 +22,11 @@ export class Homework {
         const urlNew = new URL(Homework.URL_EXCERCISE + `/${id}`);
         urlNew.searchParams.set('page', url.searchParams.get('page'));
         axios
-            .get(urlNew.href)
+            .get(urlNew.href, {
+                params: {
+                    sortBaiTap: `${sortBaiTap}`,
+                },
+            })
             .then((response) => {
                 return response.data.data;
             })
@@ -85,7 +90,8 @@ export class Homework {
             });
     }
 
-    async getStudentBaiTapData(id) {
+    async getStudentBaiTapData(id, sortBaiTap) {
+        this.#container.innerHTML = `<loader-component></loader-component>`;
         var BaiTapData;
         var tungBaiTapData;
         let html = '';
@@ -95,7 +101,11 @@ export class Homework {
         const urlNew = new URL(Homework.URL_EXCERCISE + `/${id}`);
         urlNew.searchParams.set('page', url.searchParams.get('page'));
         axios
-            .get(urlNew.href)
+            .get(urlNew.href, {
+                params: {
+                    sortBaiTap: `${sortBaiTap}`,
+                },
+            })
             .then((response) => {
                 return response.data.data;
             })
@@ -108,7 +118,6 @@ export class Homework {
                 tungBaiTapData = dataTungBaiTap ? dataTungBaiTap : [];
 
                 BaiTapData.forEach((element, index) => {
-                    console.log(element);
                     let doneBaiTap = false;
                     let baiTaphtml = '';
                     tungBaiTapData.forEach((ele, index) => {
@@ -118,6 +127,10 @@ export class Homework {
                         }
                     });
 
+                    let now = new Date();
+                    let ngay_ket_thuc = new Date(element.ngay_ket_thuc);
+                    let ngay_con_lai = Math.round(Math.abs(now - ngay_ket_thuc) / 86400000);
+
                     html += `<div class="task" data-value="${decodeHtml(element.bai_dang_id)}">
                             <div class="task__container">
                                 <div class="task__author__avatar">
@@ -125,7 +138,7 @@ export class Homework {
                                 </div>
                                 <div class="task__text">
                                     <div class="task__text-1st">
-                                        <div class="task__author__name">${decodeHtml(element.ten)}</div>
+                                        <div class="task__author__name">${decodeHtml(element.ten_nguoi_dang)}</div>
                                         <div class="task__title">đã đăng một bài tập mới: ${decodeHtml(
                                             element.tieu_de
                                         )}</div>
@@ -135,14 +148,9 @@ export class Homework {
                                     </div>
                                 </div>
                                 <div class="task__duration" style="width: fit-content; padding: 0px 5px;">${decodeHtml(
-                                    Math.round(
-                                        Math.abs(new Date() - new Date(`${element.ngay_ket_thuc}`)) /
-                                            1000 /
-                                            60 /
-                                            60 /
-                                            24
-                                    )
-                                )}d<div>
+                                    ngay_con_lai
+                                )}
+                                d<div>
                                 </div></div>
                                 
                             </div>
@@ -340,8 +348,8 @@ export class Homework {
             //nộp bài tập
             formNopBaiTap.addEventListener('submit', async function (e) {
                 e.preventDefault();
-                const formNopBaiData = new FormData(document.getElementById(`sinh_vien_nop_bai_tap_${bai_tap_id[2]}`));
-                var formDataFilesLength = document.getElementById(`sinh_vien_nop_bai_tap_${bai_tap_id[2]}_files`).files
+                const formNopBaiData = new FormData(document.getElementById(`sinh_vien_nop_bai_tap_${bai_tap_id}`));
+                var formDataFilesLength = document.getElementById(`sinh_vien_nop_bai_tap_${bai_tap_id}_files`).files
                     .length;
 
                 if (formDataFilesLength > 1) {

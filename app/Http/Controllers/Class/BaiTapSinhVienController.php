@@ -54,7 +54,7 @@ class BaiTapSinhVienController extends ApiController
             ->where('sinh_vien_id', '=', $request->user()->id)
             ->get();
 
-        return $this->success($data, 200, 'Đã lấy được file bài tập');
+        return $this->success($data, 200, 'Đã lấy được bài tập');
     }
 
     public function destroy(Request $request, string $bai_tap_id)

@@ -3,6 +3,7 @@ import { Everyone } from '../../components/classroom/group/everyone/everyone';
 import { Group } from '../../components/classroom/group/group';
 import { Homework } from '../../components/classroom/group/post/Homework';
 import { Post } from '../../components/classroom/group/post/post';
+import { RightPanel } from '../../components/classroom/group/rightPanel';
 
 export class ClassroomStudent {
     static index() {
@@ -33,11 +34,21 @@ export class ClassroomStudent {
         });
 
         //Render bài tập
+        let taskContainerContainer = document.getElementById('task-container');
+        let taskContainer = new Homework(taskContainerContainer);
         let baiTapBtn = navBarBtn[1];
         baiTapBtn.addEventListener('click', (e) => {
-            let taskContainerContainer = document.getElementById('task-container');
-            let taskContainer = new Homework(taskContainerContainer);
-            taskContainer.getStudentBaiTapData(id);
+            taskContainer.getStudentBaiTapData(id, 'moiNhat');
+        });
+
+        let sortBaiTapMoiBtn = document.getElementById('sinh_vien_new_bai_tap_btn');
+        sortBaiTapMoiBtn.addEventListener('click', (e) => {
+            taskContainer.getStudentBaiTapData(id, 'moiNhat');
+        });
+
+        let sortBaiTapDeadlineBtn = document.getElementById('sinh_vien_deadline_bai_tap_btn');
+        sortBaiTapDeadlineBtn.addEventListener('click', (e) => {
+            taskContainer.getStudentBaiTapData(id, 'deadline');
         });
 
         //render danh sách thành viên của group page
@@ -49,5 +60,10 @@ export class ClassroomStudent {
             let everyone = new Everyone(everyoneContainer);
             everyone.getEveryoneData(id);
         });
+
+        //load right panel
+        let rightPanelContainer = document.getElementById('exercise__content');
+        let rightPanel = new RightPanel(rightPanelContainer);
+        rightPanel.getBaiTapRightPanel(id);
     }
 }

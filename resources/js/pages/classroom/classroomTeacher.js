@@ -8,7 +8,7 @@ export class ClassroomTeacher {
     static index() {
         let classroomItemContainer = document.getElementById('classroom-item-container');
         let classroomItem = new ClassroomItem(classroomItemContainer);
-        classroomItem.getTeacherClassData();
+        classroomItem.getTeacherClassData(null);
     }
 
     static show({ id }) {
@@ -39,7 +39,17 @@ export class ClassroomTeacher {
         //Render bài tập
         let taskContainerContainer = document.getElementById('task-container');
         let taskContainer = new Homework(taskContainerContainer);
-        taskContainer.getTeacherBaiTapData(id);
+        taskContainer.getTeacherBaiTapData(id, 'moiNhat');
+
+        let sortBaiTapMoiBtn = document.getElementById('giao_vien_new_bai_tap_btn');
+        sortBaiTapMoiBtn.addEventListener('click', (e) => {
+            taskContainer.getTeacherBaiTapData(id, 'moiNhat');
+        });
+
+        let sortBaiTapDeadlineBtn = document.getElementById('giao_vien_deadline_bai_tap_btn');
+        sortBaiTapDeadlineBtn.addEventListener('click', (e) => {
+            taskContainer.getTeacherBaiTapData(id, 'deadline');
+        });
 
         //add bài tập
         let newTaskForm = document.getElementById('class-center-container__class-dashboard--new-homework');
@@ -47,5 +57,10 @@ export class ClassroomTeacher {
             e.preventDefault();
             taskContainer.addBaiTap(id);
         });
+
+        //right panel
+        let rightPanel = document.getElementById('exercise__content');
+        let rightPanelItem = new ClassroomItem(rightPanel);
+        rightPanelItem.getTeacherClassData(1);
     }
 }

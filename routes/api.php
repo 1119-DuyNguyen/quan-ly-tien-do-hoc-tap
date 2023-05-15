@@ -18,6 +18,7 @@ use App\Http\Controllers\Class\ChamDiemController;
 use App\Http\Controllers\DataImport\DataImportController;
 use App\Http\Controllers\Class\Everyone\EveryoneController;
 use App\Http\Controllers\Class\FileBaiTapController;
+use App\Http\Controllers\Class\SVRightPanelController;
 use App\Http\Controllers\Graduation\Student\GraduateStudentController;
 use App\Http\Controllers\Graduation\Student\SuggestGraduateController;
 
@@ -48,6 +49,7 @@ Route::middleware('auth:api')->group(function () {
     Route::apiResource('/posts', PostController::class);
     Route::apiResource('/exercises', BaitapController::class);
     Route::apiResource('/bai-tap-sinh-vien', BaiTapSinhVienController::class);
+    Route::apiResource('/right-panel-sinh-vien', SVRightPanelController::class);
     Route::apiResource('/cham-diem', ChamDiemController::class);
     Route::apiResource('/file-bai-tap', FileBaiTapController::class);
     Route::apiResource('/everyone', EveryoneController::class);
