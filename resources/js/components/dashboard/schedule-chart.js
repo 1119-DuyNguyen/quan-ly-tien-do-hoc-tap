@@ -35,27 +35,17 @@ function returnDaysRowHTML(date = new Date()) {
         last = obj.last;
 
     return `<div class="chart__content__row chart__content__row__date">
-        <div class="chart__content__col chart__content__col__date">${returnFullDate(
-            first.getTime()
-        )}</div>
-        <div class="chart__content__col chart__content__col__date">${returnFullDate(
-            first.getTime() + one_day
-        )}</div>
+        <div class="chart__content__col chart__content__col__date">${returnFullDate(first.getTime())}</div>
+        <div class="chart__content__col chart__content__col__date">${returnFullDate(first.getTime() + one_day)}</div>
         <div class="chart__content__col chart__content__col__date">${returnFullDate(
             first.getTime() + one_day * 2
         )}</div>
         <div class="chart__content__col chart__content__col__date">${returnFullDate(
             first.getTime() + one_day * 3
         )}</div>
-        <div class="chart__content__col chart__content__col__date">${returnFullDate(
-            last.getTime() - one_day * 2
-        )}</div>
-        <div class="chart__content__col chart__content__col__date">${returnFullDate(
-            last.getTime() - one_day
-        )}</div>
-        <div class="chart__content__col chart__content__col__date">${returnFullDate(
-            last.getTime()
-        )}</div>
+        <div class="chart__content__col chart__content__col__date">${returnFullDate(last.getTime() - one_day * 2)}</div>
+        <div class="chart__content__col chart__content__col__date">${returnFullDate(last.getTime() - one_day)}</div>
+        <div class="chart__content__col chart__content__col__date">${returnFullDate(last.getTime())}</div>
     </div>`;
 }
 
@@ -120,20 +110,13 @@ export class ScheduleChart {
     run() {
         // document.addEventListener('DOMContentLoaded', () => {
         const chart__content = document.getElementById('chart__content');
-        chart__content.insertBefore(
-            htmlToElement(returnDaysRowHTML()),
-            chart__content.firstChild
-        ); // thêm dòng date vào cuối ds node của chart__content
+        chart__content.insertBefore(htmlToElement(returnDaysRowHTML()), chart__content.firstChild); // thêm dòng date vào cuối ds node của chart__content
 
         const chart__header = document.getElementById('chart__header');
         let currentDate = new Date();
 
-        const chart__header__next = document.querySelector(
-            '.chart__header .chart__header__next'
-        );
-        const chart__header__prev = document.querySelector(
-            '.chart__header .chart__header__prev'
-        );
+        const chart__header__next = document.querySelector('.chart__header .chart__header__next');
+        const chart__header__prev = document.querySelector('.chart__header .chart__header__prev');
 
         let num = 0;
 
@@ -143,9 +126,7 @@ export class ScheduleChart {
             chart__content.innerHTML = '';
 
             currentDate = new Date(currentDate.getTime() + one_day * 7);
-            chart__content.append(
-                htmlToElement(returnDaysRowHTML(currentDate))
-            );
+            chart__content.append(htmlToElement(returnDaysRowHTML(currentDate)));
 
             chart__header.value = returnDateTimeFormally(currentDate);
 
@@ -157,9 +138,7 @@ export class ScheduleChart {
 
             // Phải đặt ngay tại đây nếu không sẽ lỗi logic hiển thị
             currentDate = new Date(currentDate.getTime() - one_day * 7);
-            chart__content.append(
-                htmlToElement(returnDaysRowHTML(currentDate))
-            );
+            chart__content.append(htmlToElement(returnDaysRowHTML(currentDate)));
 
             chart__header.value = returnDateTimeFormally(currentDate);
 
@@ -172,140 +151,47 @@ export class ScheduleChart {
             currentDate = new Date(chart__header.value);
             num = 0;
 
-            chart__content.append(
-                htmlToElement(returnDaysRowHTML(currentDate))
-            );
+            chart__content.append(htmlToElement(returnDaysRowHTML(currentDate)));
 
             innerMultipleTasks(subjects, currentDate);
         });
 
-        const subjects = [
-            {
-                tenNhomHoc: 'Testing',
-                tasks: [
-                    {
-                        loaiND: 'baitap',
-                        ngayBatDau: '2023/01/01',
-                        ngayKetThuc: '2023/03/14',
-                    },
-                ],
-            },
-            {
-                tenNhomHoc: 'UX Research',
-                tasks: [
-                    {
-                        loaiND: 'baitap',
-                        ngayBatDau: '2023/03/09',
-                        ngayKetThuc: '2023/03/10',
-                    },
-                    {
-                        loaiND: 'baitap',
-                        ngayBatDau: '2023/03/09',
-                        ngayKetThuc: '2023/03/11',
-                    },
-                    {
-                        loaiND: 'baitap',
-                        ngayBatDau: '2023/03/09',
-                        ngayKetThuc: '2023/03/10',
-                    },
-                    {
-                        loaiND: 'baitap',
-                        ngayBatDau: '2023/03/11',
-                        ngayKetThuc: '2023/03/12',
-                    },
-                ],
-            },
-            {
-                tenNhomHoc: 'Analysis',
-                tasks: [
-                    {
-                        loaiND: 'baitap',
-                        ngayBatDau: '2023/03/08',
-                        ngayKetThuc: '2023/03/10',
-                    },
-                    {
-                        loaiND: 'baitap',
-                        ngayBatDau: '2023/03/08',
-                        ngayKetThuc: '2023/03/10',
-                    },
-                    {
-                        loaiND: 'baitap',
-                        ngayBatDau: '2023/03/08',
-                        ngayKetThuc: '2023/03/09',
-                    },
-                ],
-            },
-            {
-                tenNhomHoc: 'Blender',
-                tasks: [
-                    {
-                        loaiND: 'baitap',
-                        ngayBatDau: '2023/03/07',
-                        ngayKetThuc: '2023/03/08',
-                    },
-                    {
-                        loaiND: 'baitap',
-                        ngayBatDau: '2023/03/08',
-                        ngayKetThuc: '2023/03/09',
-                    },
-                    {
-                        loaiND: 'baitap',
-                        ngayBatDau: '2023/03/07',
-                        ngayKetThuc: '2023/03/08',
-                    },
-                ],
-            },
-            {
-                tenNhomHoc: 'UI Animation',
-                tasks: [
-                    {
-                        loaiND: 'baitap',
-                        ngayBatDau: '2023/03/07',
-                        ngayKetThuc: '2023/03/08',
-                    },
-                    {
-                        loaiND: 'baitap',
-                        ngayBatDau: '2023/03/08',
-                        ngayKetThuc: '2023/03/10',
-                    },
-                    {
-                        loaiND: 'baitap',
-                        ngayBatDau: '2023/03/07',
-                        ngayKetThuc: '2023/03/09',
-                    },
-                    {
-                        loaiND: 'baitap',
-                        ngayBatDau: '2023/03/09',
-                        ngayKetThuc: '2023/03/10',
-                    },
-                ],
-            },
-            {
-                tenNhomHoc: 'Graphic Design',
-                tasks: [
-                    {
-                        loaiND: 'baitap',
-                        ngayBatDau: '2023/03/08',
-                        ngayKetThuc: '2023/03/10',
-                    },
-                    {
-                        loaiND: 'baitap',
-                        ngayBatDau: '2023/03/09',
-                        ngayKetThuc: '2023/03/10',
-                    },
-                    {
-                        loaiND: 'baitap',
-                        ngayBatDau: '2023/03/08',
-                        ngayKetThuc: '2023/03/09',
-                    },
-                    {
-                        loaiND: 'baitap',
-                        ngayBatDau: '2023/03/09',
-                        ngayKetThuc: '2023/03/11',
-                    },
-                ],
-            },
-        ];
+        function dateToYMD(date) {
+            var d = date.getDate();
+            var m = date.getMonth() + 1; //Month from 0 to 11
+            var y = date.getFullYear();
+            return '' + y + '/' + (m <= 9 ? '0' + m : m) + '/' + (d <= 9 ? '0' + d : d);
+        }
+
+        var subjects = new Array();
+
+        axios
+            .get(location.protocol + '//' + location.host + '/api/exercises')
+            .then((response) => {
+                let data = response.data.data;
+                var countNhomHoc = -1;
+                for (var i in data) {
+                    var item = data[i];
+                    let preItem = data[i - 1];
+                    if (preItem == null || item.id_nhom_hoc != preItem.id_nhom_hoc) {
+                        subjects.push({
+                            tenNhomHoc: `${item.ten_mon_hoc}`,
+                            tasks: [],
+                        });
+                        countNhomHoc++;
+                    } else {
+                        subjects[countNhomHoc].tasks.push({
+                            loaiND: 'baitap',
+                            ngayBatDau: `${dateToYMD(new Date(item.created_at))}`,
+                            ngayKetThuc: `${dateToYMD(new Date(item.ngay_ket_thuc))}`,
+                        });
+                    }
+                }
+                console.log(subjects);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
 
         innerMultipleTasks(subjects);
 
@@ -344,16 +230,12 @@ export class ScheduleChart {
             let colors_arr = ['bluepurple', 'green', 'orange', 'red', 'blue'];
 
             if (typeof subject.color == 'undefined') {
-                subject.color =
-                    colors_arr[getRandomInt(0, colors_arr.length - 1)];
+                subject.color = colors_arr[getRandomInt(0, colors_arr.length - 1)];
             }
 
             let width;
 
-            if (
-                Date.daysBetween(latestEnd, currentDate) > 0 ||
-                Date.daysBetween(currentDate, earliestStart) >= 6
-            )
+            if (Date.daysBetween(latestEnd, currentDate) > 0 || Date.daysBetween(currentDate, earliestStart) >= 6)
                 return ''; // Task đã hết hạn hoặc task chưa nằm trong tuần đang xét
             else if (Date.daysBetween(earliestStart, currentDate) >= 0) {
                 // start trước/ngay ngày hiện tại
@@ -363,9 +245,7 @@ export class ScheduleChart {
 
                 if (Date.daysBetween(earliestStart, currentDate) > 0) {
                     // trước ngày hiện tại nhưng nằm trong tuần đang xét
-                    width =
-                        lengthOfCourse -
-                        Date.daysBetween(earliestStart, currentDate);
+                    width = lengthOfCourse - Date.daysBetween(earliestStart, currentDate);
                     width = width > 7 ? 7 : width;
                 }
 
@@ -396,9 +276,7 @@ export class ScheduleChart {
             } else {
                 // < 0
 
-                let betweenDays = Math.abs(
-                    Date.daysBetween(earliestStart, currentDate)
-                );
+                let betweenDays = Math.abs(Date.daysBetween(earliestStart, currentDate));
                 width = lengthOfCourse;
 
                 if (lengthOfCourse > 7 - betweenDays)

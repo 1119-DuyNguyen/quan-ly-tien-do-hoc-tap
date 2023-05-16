@@ -9,6 +9,9 @@ export class ClassroomItem {
         element.classList.add(className);
         return element;
     }
+
+    nums = [];
+
     /**
      *
      * @param {Element} element
@@ -43,7 +46,7 @@ export class ClassroomItem {
                 this.routeClassroom();
             });
         } else {
-            for (let i = 0; i < 5; i++) {
+            for (let i = 0; i < 3; i++) {
                 let index = Math.floor(Math.random() * classData.length);
                 html += `
                     <a 

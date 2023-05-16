@@ -55,12 +55,14 @@
         .class-item {
             position: relative;
             max-width: 10rem;
+            min-width: 10rem;
             max-height: 14.6875rem;
             min-height: 10rem;
             display: inline-block;
             border-radius: 0.9375rem;
             text-align: center;
             margin: 5px;
+            text-decoration: none;
 
             &:hover {
                 cursor: pointer;
@@ -97,6 +99,20 @@
                     font-size: 0.8rem;
                 }
             }
+        }
+    }
+    .dashboard_link_to_classroom {
+        a {
+            text-decoration: none;
+            padding: 1rem;
+            background-color: #45bfff;
+            color: white;
+            float: left;
+            margin-top: 1rem;
+        }
+
+        :hover {
+            opacity: 0.6;
         }
     }
 }
@@ -218,43 +234,50 @@
                     height: 0.8rem;
                 }
             }
-            .deadline__item {
-                background: #ffffff;
-                box-shadow: -0.125rem 1.625rem 3.125rem -0.625rem rgba(0, 0, 0, 0.08);
-                border-radius: 0.75rem;
 
-                margin: 0.625rem 0.625rem;
-                padding: 20px;
+            a {
+                :hover {
+                    border: 1px solid;
+                }
 
-                min-height: 141px;
-                height: max-content;
+                .deadline__item {
+                    background: #ffffff;
+                    box-shadow: -0.125rem 1.625rem 3.125rem -0.625rem rgba(0, 0, 0, 0.08);
+                    border-radius: 0.75rem;
 
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                .deadline__item--subject {
-                    background: rgba(255, 156, 33, 0.1);
-                    border-radius: 16px;
-                    color: orange;
-                    padding: 10px;
-                    align-self: flex-start;
-                }
-                .deadline__item--teacher {
-                    font-weight: 700;
-                    margin-top: 12px;
-                    align-self: flex-start;
-                }
-                .deadline__item--time {
-                    padding: 8px;
-                    background: #ffbb55;
-                    color: #ffffff;
-                    border-radius: 25px;
-                    margin-top: 8px;
-                    align-self: flex-start;
-                }
-                .deadline__item--bio {
-                    color: #94959a;
-                    margin-top: 8px;
+                    margin: 0.625rem 0.625rem;
+                    padding: 20px;
+
+                    min-height: 141px;
+                    height: max-content;
+
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    .deadline__item--subject {
+                        background: rgba(255, 156, 33, 0.1);
+                        border-radius: 16px;
+                        color: orange;
+                        padding: 10px;
+                        align-self: flex-start;
+                    }
+                    .deadline__item--teacher {
+                        font-weight: 700;
+                        margin-top: 12px;
+                        align-self: flex-start;
+                    }
+                    .deadline__item--time {
+                        padding: 8px;
+                        background: #ffbb55;
+                        color: #ffffff;
+                        border-radius: 25px;
+                        margin-top: 8px;
+                        align-self: flex-start;
+                    }
+                    .deadline__item--bio {
+                        color: #94959a;
+                        margin-top: 8px;
+                    }
                 }
             }
         }

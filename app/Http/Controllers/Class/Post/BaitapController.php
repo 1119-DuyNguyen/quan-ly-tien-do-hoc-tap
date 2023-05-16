@@ -18,23 +18,27 @@ use App\Models\Users\Classes\Posts\BaiTapSinhVien;
 
 class BaitapController extends ApiController
 {
-    public function index()
+    public function index(Request $request)
     {
-        $data = DB::table('bai_dang')
-            ->join('tai_khoan', 'bai_dang.nguoi_dung_id', '=', 'tai_khoan.id')
-            ->join('nhom_hoc', 'bai_dang.nhom_hoc_id', '=', 'nhom_hoc.id')
-            ->join('bai_tap_sinh_vien', 'bai_tap_sinh_vien.bai_tap_id', '=', 'bai_dang.id')
+        $data = DB::table('tai_khoan')
+            ->where('tai_khoan.id', '=', $request->user()->id)
+            ->join('tham_gia', 'tham_gia.sinh_vien_id', '=', 'tai_khoan.id')
+            ->join('nhom_hoc', 'nhom_hoc.id', '=', 'tham_gia.nhom_hoc_id')
+            ->join('hoc_phan', 'hoc_phan.id', '=', 'nhom_hoc.hoc_phan_id')
+            ->join('bai_dang', 'bai_dang.nhom_hoc_id', '=', 'nhom_hoc.id')
             ->select(
                 'bai_dang.id as bai_dang_id',
-                'tai_khoan.ten as ten_nguoi_dang',
+                'nhom_hoc.id as id_nhom_hoc',
+                'hoc_phan.ten as ten_mon_hoc',
                 'bai_dang.tieu_de as tieu_de',
-                'bai_dang.noi_dung as noi_dung',
-                'bai_dang.created_at as created_at'
+                'bai_dang.created_at as created_at',
+                'bai_dang.ngay_ket_thuc as ngay_ket_thuc'
             )
             ->where('bai_dang.loai_noi_dung', '=', '2')
+            ->orderBy('nhom_hoc.id')
             ->get();
-        //return json_encode($data);
-        return $this->success($data, 200, 'Success');
+        //return dd($data);
+        return $this->success($data, 200, 'Đã lấy thông tin bài tập');
     }
 
     public function show(PaginationRequest $request, string $nhom_hoc_id)
