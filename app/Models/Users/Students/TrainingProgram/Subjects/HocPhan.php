@@ -9,6 +9,7 @@ use App\Models\Users\Students\TrainingProgram\Subjects\KhoiKienThuc;
 use App\Models\Users\Students\TrainingProgram\Subjects\DieuKienTienQuyet;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 class HocPhan extends Model
 {
     use HasFactory;
@@ -19,9 +20,13 @@ class HocPhan extends Model
         'so_tin_chi' => 'int',
         'phan_tram_giua_ki' => 'int',
         'phan_tram_cuoi_ki' => 'int',
+        'co_tinh_tich_luy' => 'int',
+        'hoc_phan_tuong_duong_id' => 'int'
     ];
 
-    protected $fillable = ['ma_hoc_phan', 'ten', 'so_tin_chi', 'phan_tram_giua_ki', 'phan_tram_cuoi_ki'];
+    protected $fillable = [
+        'ten', 'so_tin_chi', 'phan_tram_giua_ki', 'phan_tram_cuoi_ki', 'co_tinh_tich_luy', 'hoc_phan_tuong_duong_id', 'ma_hoc_phan'
+    ];
 
     public function dieu_kien_tien_quyets()
     {

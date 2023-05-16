@@ -2,28 +2,37 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use App\Models\Authorization\ChucNang;
 use App\Http\Controllers\ApiController;
-use App\Http\Requests\PermissionRequest;
-use Illuminate\Support\Facades\Log;
+use App\Http\Requests\PaginationRequest;
+use App\Http\Resources\Admin\PermissionResource;
+use Request;
 
 class PermissionController extends ApiController
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(PaginationRequest $request)
+    {
+        //
+        return $this->paginate($request, 'chuc_nang', PermissionResource::class, ['id', 'ten'], 5);
+    }
+    public function all()
     {
         //
         $permissons = ChucNang::all();
+        $permissons->map(function ($item) {
+            return new PermissionResource($item);
+        });
         return $this->success($permissons, 200);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(PermissionRequest $request)
+    public function store(Request $request)
     {
         //
 
@@ -48,9 +57,8 @@ class PermissionController extends ApiController
     /**
      * Update the specified resource in storage.
      */
-    public function update(PermissionRequest $request, ChucNang $chucNang)
+    public function update(Request $request, ChucNang $chucNang)
     {
-
         try {
             $chucNang->update($request->input());
             return $this->success(null, 204, 'Cập nhập thành công');

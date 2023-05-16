@@ -1,6 +1,9 @@
 import { assignOption, createElement, getArrayDepth, getDataJsonKeys, sortDataWithParam } from './helpers/helper.js';
 import { PaginationService } from './services/PaginationService.js';
 import { formatDate } from './helpers/date.js';
+import { routeHref } from '../../routes/route.js';
+import { ConfirmComponent } from '../helper/confirm-component.js';
+import { toast } from '../helper/toast.js';
 // const decodeHtml = (str) =>
 //     str.replace(
 //         /[&<>'"]/g,
@@ -24,6 +27,7 @@ export class SmartTableTemplate {
 
     #paginationService;
     isFirstInit = false;
+    #selectDataList;
     /**
      * @var options Object
      * formatAttributeHeader : convert name json to format
@@ -35,24 +39,40 @@ export class SmartTableTemplate {
         pagination: false,
         urlAPI: '',
         rowPerPage: '',
+        view: false,
+        export: false,
+        add: false,
     };
     // formatAttributeHeader
     // key object json => utf8 name
     // {name: '123'}, format=['name'=>"tên"]
     //render => tên: 123
-
+    get getDataSelectList() {
+        return this.#selectDataList;
+    }
     createControlBtns() {
-        let container = createElement('div', 'control-container');
-        let containerBtns = createElement('div', 'control-btns');
-        let addBtn = createElement(
-            'a',
-            'btn btn--primary',
-            '<i class="fa-solid fa-circle-plus" style="margin-right:8px"></i>Thêm'
-        );
-        containerBtns.appendChild(addBtn);
-        container.appendChild(containerBtns);
+        if (this.#option['add']) {
+            let container = createElement('div', 'control-container');
+            let containerBtns = createElement('div', 'control-btns');
+            let addBtn = createElement(
+                'a',
+                'btn btn--primary',
+                '<i class="fa-solid fa-circle-plus" style="margin-right:8px"></i>Thêm'
+            );
 
-        return container;
+            if (typeof this.#option['add'] == 'function') {
+                addBtn.addEventListener('click', this.#option['add']);
+            } else {
+                addBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    routeHref(location.protocol + '//' + location.host + location.pathname + '/edit');
+                });
+            }
+
+            containerBtns.appendChild(addBtn);
+            container.appendChild(containerBtns);
+            return container;
+        }
     }
     constructor(rootElement) {
         try {
@@ -60,11 +80,55 @@ export class SmartTableTemplate {
                 throw 'Element is not valid';
             }
             this.#container = createElement('div', 'smart-table-template');
+            this.#container.innerHTML = '<loader-component></loader-component>';
             rootElement.appendChild(this.#container);
         } catch (e) {
-            console.error(err);
+            console.error(e);
             return;
         }
+    }
+    /**
+     *
+     * @param {Object} dataSelect
+     * @example {name: [] option array}
+     */
+    renderSelectList(dataSelect = []) {
+        let selectContainer = document.createElement('div');
+        selectContainer.classList.add('select-container');
+        this.#selectDataList = dataSelect;
+        dataSelect.forEach((selectList) => {
+            let html = `<option value="">Tất cả</option>`;
+            if (selectList.text) {
+                html = `<option value="">${selectList.text}</option>`;
+                delete selectList.text;
+            }
+            for (let key in selectList) {
+                //create select
+                let select = document.createElement('select');
+                select.setAttribute('name', key);
+                const url = new URL(window.location.href);
+                selectList[key].forEach((option) => {
+                    let currentSelect = url.searchParams.get(key) == option.id ? 'selected' : '';
+                    html += `<option value=${option.id ?? ''} ${currentSelect}>${option.ten ?? ''}</option>`;
+                });
+                select.innerHTML = html;
+
+                selectContainer.appendChild(select);
+            }
+        });
+        //binding action
+
+        let selectList = selectContainer.querySelectorAll('select[name]');
+        selectList.forEach((select) => {
+            select.onchange = (e) => {
+                let value = select.value;
+                const url = new URL(window.location.href);
+                url.searchParams.set(select.getAttribute('name'), value);
+                window.history.replaceState(null, null, url);
+                this.reRenderTable();
+            };
+        });
+        return selectContainer;
     }
     /**
      * element append child - table with dataJson and options
@@ -72,43 +136,51 @@ export class SmartTableTemplate {
      * @param {Object} option
      * @returns
      */
-    init(dataJson, option, paginationOption = {}) {
+    init(dataJson, option, paginationOption, selectDataList) {
         try {
             option = assignOption(this.#option, option);
             //header create edit delete
             //container
-            if (dataJson.length < 1) {
-                throw new Error('Data cant be null');
-            }
-
+            // if (dataJson.length < 1) {
+            //     throw new Error('Data cant be null');
+            // }
             if (getArrayDepth(dataJson) > 2) {
                 throw new Error('Deep array muse be smaller than 2');
             }
             if (!this.isFirstInit) {
-                //action;
-                if (option['edit']) {
-                    this.#container.appendChild(this.createControlBtns());
+                this.#container.innerHTML = '';
+
+                if (selectDataList) {
+                    this.#container.appendChild(this.renderSelectList(selectDataList));
                 }
+                //action;
+                let controlBtns = this.createControlBtns();
+                if (controlBtns) this.#container.appendChild(controlBtns);
                 let containerTable = createElement('div', 'container-table');
                 this.#content = createElement('table', 'table');
                 containerTable.appendChild(this.#content);
                 this.#container.appendChild(containerTable);
                 this.isFirstInit = true;
-                if (option['pagination']) {
-                    this.handleCreatePagination(paginationOption);
-                }
             } else {
                 this.#content.innerHTML = '';
             }
+            if (option['pagination'] && paginationOption) {
+                console.log(paginationOption);
+                if (this.#paginationService) {
+                    this.#paginationService.destroy();
+                }
+                this.handleCreatePagination(paginationOption);
+            }
+
             this.#header = createElement('thead', 'table-header');
             this.#headerBtns = [];
             this.#body = createElement('tbody', 'table-content');
             //content
-
             let headers = getDataJsonKeys(dataJson);
-            if (!headers) {
-                throw new Error('get headers faild');
-            } else {
+            if (!headers || !Array.isArray(headers) || headers.length < 1) {
+                this.#content.innerHTML = 'Không tìm thấy dữ liệu';
+
+                return;
             }
             this.#header.appendChild(this.#createRowHeader(headers));
             this.#content.appendChild(this.#header);
@@ -119,13 +191,19 @@ export class SmartTableTemplate {
             this.#content.appendChild(this.#body);
         } catch (err) {
             console.error(err);
+            return;
         }
     }
     handleCreatePagination(paginationOption) {
-        this.#paginationService = new PaginationService(this.#container, this, paginationOption);
+        this.#paginationService = new PaginationService(
+            this.#container,
+            this.reRenderTable.bind(this),
+            paginationOption
+        );
 
         this.#paginationService.renderPagination();
     }
+
     /**
      *
      * @param {Array} headers
@@ -138,72 +216,88 @@ export class SmartTableTemplate {
             url.searchParams.set('order-column', column);
             window.history.replaceState(null, null, url);
         }
+        // tạo col group
+        let colGroup = document.createElement('colgroup');
+
         //tách header
         let trHeader = createElement('tr');
+
         const url = new URL(window.location.href);
         let currentKey = url.searchParams.get('order-column') ?? 'id';
         let dir = url.searchParams.get('dir') ?? '';
+        if (this.#option['edit']) {
+            let colE = document.createElement('col');
+            colGroup.appendChild(colE);
+            // header show/update/ delete button
+            let actionTitle = createElement('th', 'btns-action');
+            actionTitle.textContent = 'Hành động';
+            trHeader.appendChild(actionTitle);
+        }
         headers.forEach((header) => {
             let th = createElement('th');
             let btn = createElement('button');
-            btn.dataset.key = header;
-            if (header === currentKey) {
-                if (dir == 'desc') {
-                    btn.setAttribute('data-dir', 'asc');
-                }
-                if (dir == 'asc') {
-                    btn.setAttribute('data-dir', 'desc');
-                }
-            }
-            btn.addEventListener('click', (e) => {
-                //reset btn
-                this.#headerBtns.map((button) => {
-                    if (button !== e.target) {
-                        button.removeAttribute('data-dir');
-                    }
-                });
-                let data;
-                if (e.target.getAttribute('data-dir') == 'desc') {
-                    addDirAndSortColumnParameter('desc', e.target.dataset.key);
-                    e.target.setAttribute('data-dir', 'asc');
-                } else {
-                    addDirAndSortColumnParameter('asc', e.target.dataset.key);
 
-                    e.target.setAttribute('data-dir', 'desc');
-                }
-                this.reRenderTable();
-            });
             let title = header;
             let options = this.#option['formatAttributeHeader'][header];
+            let iconHeader = '';
+            let colE = document.createElement('col');
+
             if (options) {
                 if (options.max) {
-                    th.style.minWidth = options.width;
+                    colE.style.minWidth = options.width;
                 }
                 if (options.minWidth) {
-                    th.style.minWidth = options.minWidth;
+                    colE.style.minWidth = options.minWidth;
                 }
                 if (options.width) {
-                    th.style.width = options.width;
+                    colE.style.width = options.width;
                 }
                 if (options.title) {
                     title = options.title ? options.title : header;
                 }
                 if (options.ellipsis) {
                 }
+                if (options.sort) {
+                    th.classList.add('sort');
+                    btn.dataset.key = header;
+                    if (header === currentKey) {
+                        if (dir == 'desc') {
+                            btn.setAttribute('data-dir', 'asc');
+                        }
+                        if (dir == 'asc') {
+                            btn.setAttribute('data-dir', 'desc');
+                        }
+                    }
+                    btn.addEventListener('click', (e) => {
+                        //reset btn
+                        this.#headerBtns.map((button) => {
+                            if (button !== e.target) {
+                                button.removeAttribute('data-dir');
+                            }
+                        });
+                        let data;
+                        if (e.target.getAttribute('data-dir') == 'desc') {
+                            addDirAndSortColumnParameter('desc', e.target.dataset.key);
+                            e.target.setAttribute('data-dir', 'asc');
+                        } else {
+                            addDirAndSortColumnParameter('asc', e.target.dataset.key);
+
+                            e.target.setAttribute('data-dir', 'desc');
+                        }
+                        this.reRenderTable();
+                    });
+                }
             }
-            btn.textContent = title;
+            btn.textContent = title + iconHeader;
+
             this.#headerBtns.push(btn);
             th.appendChild(btn);
             trHeader.appendChild(th);
+            colGroup.appendChild(colE);
         });
         // render checkbox, action
+        this.#content.insertAdjacentHTML('afterbegin', colGroup.outerHTML);
 
-        if (this.#option['edit']) {
-            // header show/update/ delete button
-            let actionTitle = createElement('th', 'btns-action');
-            actionTitle.textContent = 'Hành động';
-            trHeader.appendChild(actionTitle);
-        }
         return trHeader;
     }
     /**
@@ -213,7 +307,108 @@ export class SmartTableTemplate {
      */
     #createRowBasedObject(obj) {
         const row = document.createElement('tr');
+        // render checkbox, action
+        if (this.#option['edit'] || this.#option['export'] || this.#option['view']) {
+            //show/update/ delete button
+            let btnActions = createElement('td', 'group-action');
+            if (this.#option['export']) {
+                let exportBtn = createElement(
+                    'button',
+                    'btn btn--success',
+                    '<i class="fa-regular fa-floppy-disk"></i>'
+                );
+                if (typeof this.#option['export'] === 'function') {
+                    exportBtn.addEventListener('click', this.#option['export']);
+                }
 
+                btnActions.appendChild(exportBtn);
+            }
+            if (this.#option['view']) {
+                let viewBtn = createElement('button', 'btn btn--primary', '<i class="fa-regular fa-eye"></i>');
+                if (typeof this.#option['view'] === 'function') {
+                    viewBtn.addEventListener('click', this.#option['view']);
+                } else {
+                    viewBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        let rowId = row.querySelector('[data-attr="id"] ');
+                        if (rowId) {
+                            routeHref(
+                                location.protocol +
+                                    '//' +
+                                    location.host +
+                                    location.pathname +
+                                    '/' +
+                                    rowId.getAttribute('data-content')
+                            );
+                        }
+                    });
+                }
+
+                btnActions.appendChild(viewBtn);
+            }
+            if (this.#option['edit']) {
+                let editBtn = createElement(
+                    'button',
+                    'btn btn--warning',
+                    '<i class="fa-regular fa-pen-to-square"></i>'
+                );
+                if (typeof this.#option['edit'] === 'function') {
+                    editBtn.addEventListener('click', this.#option['edit']);
+                } else {
+                    editBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.preventDefault();
+                        let rowId = row.querySelector('[data-attr="id"] ');
+                        if (rowId) {
+                            routeHref(
+                                location.protocol +
+                                    '//' +
+                                    location.host +
+                                    location.pathname +
+                                    '/' +
+                                    rowId.getAttribute('data-content')
+                            );
+                        }
+                    });
+                }
+
+                let deleteBtn = createElement('button', 'btn btn--danger', '<i class="fa-regular fa-trash-can"></i>');
+                deleteBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    let rowId = row.querySelector('[data-attr="id"]');
+                    if (rowId) {
+                        try {
+                            new ConfirmComponent({
+                                questionText: 'Bạn có chắc chắn muốn xóa không ?',
+                                trueButtonText: 'Có',
+                                falseButtonText: 'Không',
+                            }).then((data) => {
+                                if (data) {
+                                    let url = new URL(this.#option.urlAPI);
+                                    axios
+                                        .delete(url.origin + url.pathname + '/' + rowId.getAttribute('data-content'))
+                                        .then((res) => this.reRenderTable());
+                                }
+                            });
+                        } catch (e) {
+                            console.error(e);
+                            toast({
+                                title: 'Thao tác xóa thất bại',
+                                message: 'Vui lòng thử lại sau ít phút',
+                                duration: 4000,
+                                type: 'error',
+                            });
+                        }
+                    }
+                    console.log('here', rowId);
+                });
+
+                btnActions.appendChild(editBtn);
+                btnActions.appendChild(deleteBtn);
+            }
+
+            row.appendChild(btnActions);
+        }
         //render data and assign key
         const objKeys = Object.keys(obj);
         objKeys.map((key) => {
@@ -234,6 +429,9 @@ export class SmartTableTemplate {
                     divContent.style.overflow = 'hidden';
                     divContent.style.textOverflow = 'ellipsis';
                 }
+                if (options.oneLine) {
+                    divContent.style.whiteSpace = 'nowrap';
+                }
             }
             switch (type) {
                 case 'date':
@@ -242,20 +440,11 @@ export class SmartTableTemplate {
                 default:
                     divContent.innerHTML = obj[key];
             }
+            cell.setAttribute('data-content', divContent.innerHTML);
 
             row.appendChild(cell);
         });
 
-        // render checkbox, action
-        if (this.#option['edit']) {
-            //show/update/ delete button
-            let btnActions = createElement('td', 'group-action');
-            let showBtn = createElement('button', 'btn btn--primary', 'i');
-            let deleteBtn = createElement('button', 'btn btn--danger', 'x');
-            btnActions.appendChild(showBtn);
-            btnActions.appendChild(deleteBtn);
-            row.appendChild(btnActions);
-        }
         return row;
     }
     /**
@@ -323,11 +512,12 @@ export class SmartTableTemplate {
         if (jsonData) {
             option.urlAPI = urlAPI;
             option = assignOption(this.#option, option);
-            this.init(jsonData.data.dataObject, option, jsonData.data.paginationOption);
+            this.init(jsonData.data.dataObject, option, jsonData.data.paginationOption, jsonData.data.selectDataList);
             return true;
         } else return false;
     }
     reRenderTable() {
+        this.#content.innerHTML = '<loader-component></loader-component>';
         this.fetchDataTable(this.#option.urlAPI);
     }
 }

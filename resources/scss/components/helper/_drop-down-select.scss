@@ -1,0 +1,111 @@
+/*drop down select*/
+@use 'sass:math';
+$firstLight: #fefcf3;
+// $secondLight: #f5ebe0;
+$secondLight: #fff;
+.dropdown-check-list {
+    display: block;
+    box-sizing: border-box;
+    & > * {
+        box-sizing: $secondLight;
+    }
+    position: relative;
+    background-color: $secondLight;
+    .anchor {
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        text-align: left;
+        border: 1px solid #ccc;
+        font-size: 1rem;
+        padding: 8px 4px 8px 12px;
+        background-color: inherit;
+        text-indent: 0.01px;
+        text-overflow: '';
+        cursor: pointer;
+        border-radius: 4px;
+        i {
+            float: right;
+        }
+    }
+    // .anchor::after {
+    //     position: relative;
+    //     content: "  i";
+    //     width: 100px;
+    //     height: 82px;
+    //     background-image: url("/modal-svg/list-solid.svg");
+
+    //     background-size: 100px 82px;
+    // }
+    // .anchor.after {
+    // }
+    // .anchor:active:after {
+    //     right: 8px;
+    //     top: 21%;
+    // }
+
+    ul.items {
+        position: absolute;
+        top: 100%;
+        // xóa padding mặc định của ul
+        padding: 4px;
+        display: none;
+        z-index: 1000;
+        background-color: $secondLight;
+        width: 100%;
+        margin: 0;
+        border-radius: 4px;
+        $heightList: 320px;
+        height: $heightList;
+        overflow: auto;
+        li {
+            list-style: none;
+            padding: 8px 0px;
+            white-space: nowrap;
+            height: math.div($heightList, 8);
+            display: flex;
+            align-items: center;
+            label {
+                font-size: 1rem;
+                cursor: pointer;
+                height: 100%;
+                display: flex;
+                justify-content: flex-start;
+                align-items: center;
+                & > * {
+                    margin-right: 16px;
+                }
+            }
+            input[type='checkbox'] {
+                width: 10%;
+                height: 100%;
+                min-width: calc(10%);
+                &:after {
+                    position: absolute;
+                    // content: attr(data-text);
+                    top: 0;
+                    bottom: 0;
+                }
+            }
+            &:after {
+                position: relative;
+                // content: attr(data-text);
+            }
+        }
+    }
+
+    // &.visible .anchor {
+    //     color: #0094ff;
+    // }
+
+    &.visible {
+        padding-bottom: 4px !important;
+        .items {
+            display: block;
+            text-align: left;
+            font-size: 1rem;
+            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+        }
+    }
+}

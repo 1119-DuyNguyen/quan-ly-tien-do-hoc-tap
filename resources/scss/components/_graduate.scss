@@ -1,0 +1,144 @@
+.graduate {
+    width: 59.1rem;
+    margin: 1rem;
+    &__select {
+        width: 100%;
+        padding: .5rem 1rem;
+        border-radius: 1rem;
+    }
+    &__suggest {
+        text-align: right;
+        margin: .5rem 0;
+    }
+    &__button__container {
+        margin: .5rem 0;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-column-gap: 12rem;
+    }
+    &__item {
+        &__title {
+            font-weight: bold;
+            margin: 1rem 0;
+        }
+        &__content {
+            width: inherit;
+            overflow-x: auto;
+            &--suggest {
+                table {
+                    tbody {
+                        tr {
+                            &:first-child {
+                                th {
+                                    &:nth-of-type(5) {
+                                        width: 25%;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            table {
+                width: 100%;
+                background-color: #fff;
+                border-spacing: 0;
+                th, td {
+                    border: 1px solid #2A83FF;
+                }
+                border-radius: 1rem;
+                tbody {
+                    tr {
+                        &:first-child {
+                            background-color: #2A83FF;
+                            border: none;
+                            color: white;
+                            th {
+                                white-space: nowrap;
+                                width: auto;
+                                padding: 0 .5rem;
+                                &:first-child {
+                                    border-radius: 1rem 0 0 0;
+                                }
+                                &:nth-of-type(3) {
+                                    width: 35%;
+                                    text-align: left;
+                                }
+                                &:last-child {
+                                    border-radius: 0 1rem 0 0;
+                                }
+                            }
+                        }
+                        &:last-child {
+                            td {
+                                &:first-child {
+                                    border-radius: 0 0 0 1rem;
+                                }
+                                &:last-child {
+                                    border-radius: 0 0 1rem 0;
+                                }
+                            }
+                        }
+                    }
+                }
+                td {
+                    text-align: center;
+                    padding: 0 .5rem;
+                    &:nth-of-type(3) {
+                        text-align: left;
+                    }
+                }
+            }
+        }
+    }
+    
+    &__more:hover ~ &__tooltip {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    &__tooltip {
+        transition: all .2s ease-in-out;
+        position: absolute;
+        opacity: 0;
+        visibility: hidden;
+        &__item {
+            position: relative;
+            padding: .5rem;
+            border-radius: 1rem;
+            background: #84D295;
+            color: white;
+            top: -6.5rem;
+            &::after {
+                content: '';
+                margin: .5rem 0 0 1rem;
+                display: block;
+                position: absolute;
+                border-left: 10px solid transparent;
+                border-right: 10px solid transparent;
+                
+                border-top: 10px solid #84D295;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 360px) {
+    .graduate {
+        min-width: 16rem;
+        &__button__container {
+            grid-template-columns: repeat(1, 1fr);
+        }
+    }
+}
+
+@media screen and (min-width: 360px) and (max-width: 768px) {
+    .graduate {
+        min-width: 17.5rem;
+        width: 80vw;
+        max-width: 43rem;
+        &__button__container {
+            grid-template-columns: repeat(1, 1fr);
+        }
+    }
+}

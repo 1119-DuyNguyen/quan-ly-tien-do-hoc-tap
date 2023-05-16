@@ -1,41 +1,12 @@
 .role-container {
-    padding: 16px;
+    padding: 16px 0;
 
     .smart-table-template {
         font-size: 14px;
-        .table {
-            border-collapse: separate;
-            border-spacing: 0 1rem;
-        }
+
         thead {
             button {
                 justify-content: left !important;
-            }
-        }
-
-        tbody {
-            tr {
-                border-bottom-right-radius: 16px;
-                border-bottom-left-radius: 16px;
-            }
-            td {
-                background-color: #fff;
-            }
-            th:first-child,
-            td:first-child {
-                border-color: #fff;
-                border-left-style: solid;
-                border-top-left-radius: 10px;
-                border-bottom-left-radius: 10px;
-            }
-            th:last-child,
-            td:last-child {
-                border-color: #fff;
-                border-right-style: solid;
-                border-bottom-right-radius: 10px;
-                border-top-right-radius: 10px;
-            }
-            tbody {
             }
         }
     }

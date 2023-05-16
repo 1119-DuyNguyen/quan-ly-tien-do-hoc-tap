@@ -1,0 +1,41 @@
+<form action="#" method="POST" class="form" id="role-form">
+    <h3 class="heading">Chỉnh sửa quyền</h3>
+
+    <div class="form-group">
+        <label for="fullname" class="form-label">Tên quyền</label>
+        <input
+            id="ten"
+            name="ten"
+            rules="required"
+            type="text"
+            value="Thanh Duy"
+            placeholder="VD: Thanh Duy"
+            class="form-control"
+        />
+        <!-- <span class="form-message"></span> -->
+    </div>
+
+    <div class="form-group">
+        <label class="form-label">Ghi chú</label>
+        <textarea id="story" name="story" rows="5" cols="33">
+            It was a dark and stormy night...
+            
+        </textarea>
+        <!-- 
+        <span class="form-message"></span> -->
+    </div>
+
+    <div class="form-group">
+        <label class="form-label">Các chức năng</label>
+        <div class="select" id="select-permission">
+            <input name="gender" type="checkbox" value="male" class="form-control" />
+            Nam
+            <input name="gender" type="checkbox" value="female" class="form-control" />
+            Nữ
+        </div>
+        <!-- 
+        <span class="form-message"></span> -->
+    </div>
+
+    <button class="form-submit">Cập nhập</button>
+</form>

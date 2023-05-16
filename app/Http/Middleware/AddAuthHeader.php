@@ -16,13 +16,13 @@ class AddAuthHeader
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!$request->bearerToken()) {
-            //check if have authorization cookie 
-            if ($request->hasCookie(LoginService::ACCESS_TOKEN)) {
-                $token = $request->cookie(LoginService::ACCESS_TOKEN);
-                $request->headers->add(['Authorization' => 'Bearer ' . $token]);
-            }
-        }
+        // if (!$request->bearerToken()) {
+        //     //check if have authorization cookie 
+        //     if ($request->hasCookie(LoginService::ACCESS_TOKEN)) {
+        //         $token   = $request->cookie(LoginService::ACCESS_TOKEN);
+        //         $request->headers->add(['Authorization' => 'Bearer ' . $token]);
+        //     }
+        // }
         return $next($request);
     }
 }

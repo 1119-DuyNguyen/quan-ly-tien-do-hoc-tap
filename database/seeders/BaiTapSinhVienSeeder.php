@@ -12,8 +12,8 @@ class BaiTapSinhVienSeeder extends Seeder
     public function run(): void
     {
         //
-        // //bai_tao_sinh_vien
-        for ($i = 0; $i < 5; $i++) {
+        // //bai_tap_sinh_vien
+        for ($i = 0; $i < 100; $i++) {
             BaiTapSinhVien::create([
                 'bai_tap_id' => BaiDang::all()
                     ->where('loai_noi_dung', '=', '2')

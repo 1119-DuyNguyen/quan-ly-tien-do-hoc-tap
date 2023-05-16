@@ -81,6 +81,7 @@ window.getCookie = function (cname) {
 //     }
 // }
 window.decodeHtml = function (html) {
+    html = String(html);
     return html.replace(
         /[&<>'"]/g,
         (tag) =>

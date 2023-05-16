@@ -3,6 +3,7 @@
 @use '../components/percentage-circle';
 @use '../components/popup';
 @use '../components/people';
+@use '../components/graduate';
 
 .home-container {
     @include abstract.gridViewTemplateTwoCol(70%, 30%);

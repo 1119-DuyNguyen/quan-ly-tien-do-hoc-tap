@@ -9,40 +9,35 @@ use App\Models\Users\Students\Graduate\ChuanDauRa;
 use App\Models\Users\Students\TrainingProgram\ChuKy;
 use App\Models\Users\Students\TrainingProgram\Subjects\HocKyGoiY;
 use App\Models\Users\Students\TrainingProgram\Subjects\KhoiKienThuc;
-
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class ChuongTrinhDaoTao extends Model
 {
 	protected $table = 'chuong_trinh_dao_tao';
 
+	use HasFactory;
 
 	protected $casts = [
 		'tong_tin_chi' => 'int',
 		'thoi_gian_dao_tao' => 'float',
-		'chu_ky_id' => 'int',
-		'khoa_id' => 'int',
-		'ctdt_cha_id' => 'int'
+		'nganh_id' => 'int',
+		'chu_ky_id' => 'int'
 	];
 
 	protected $fillable = [
 		'ten',
-		'tong_tin_chi',
 		'thoi_gian_dao_tao',
-		'chu_ky_id',
-		'khoa_id',
 		'trinh_do_dao_tao',
-		'ma_chuong_trinh_dao_tao',
-		'ctdt_cha_id'
+		'nganh_id',
+		'chu_ky_id',
+		'tong_tin_chi',
+		'ghi_chu'
 	];
 	public function chu_ky()
 	{
 		return $this->belongsTo(ChuKy::class);
 	}
 
-	public function chuong_trinh_dao_tao()
-	{
-		return $this->belongsTo(ChuongTrinhDaoTao::class, 'ctdt_cha_id');
-	}
 
 	public function khoa()
 	{
@@ -54,10 +49,7 @@ class ChuongTrinhDaoTao extends Model
 		return $this->hasMany(ChuanDauRa::class);
 	}
 
-	public function chuong_trinh_dao_taos()
-	{
-		return $this->hasMany(ChuongTrinhDaoTao::class, 'ctdt_cha_id');
-	}
+
 
 	public function hoc_ky_goi_ys()
 	{
@@ -66,7 +58,7 @@ class ChuongTrinhDaoTao extends Model
 
 	public function khoi_kien_thucs()
 	{
-		return $this->belongsToMany(KhoiKienThuc::class, 'khoi_kien_thuc_chuong_trinh_dao_tao');
+		return $this->hasMany(KhoiKienThuc::class, 'id');
 	}
 
 	public function nien_khoas()

@@ -1,4 +1,5 @@
-import { Sidebar } from '../layouts/sidebar.js';
+import { header } from '../layouts/header.js';
+import { Sidebar, convertHrefToText } from '../layouts/sidebar.js';
 import { routeList } from './route-list.js';
 const routeObj = {};
 const PAGE_TITLE = 'Quản lý tiến độ học tập';
@@ -8,6 +9,7 @@ routeObj.listRoutes = routeList ? routeList : [];
 routeObj.currentPage = '';
 routeObj.previousPage = '';
 const SIGN_VARIABLE_URL = '$';
+
 /**
  *
  * @param {String} href
@@ -56,11 +58,13 @@ function checkParams(urlParams, routeParams) {
  * @param {Object} route { template, js}
  * @returns
  */
+let sidebar;
 async function routeTo(route, _params, is404 = false) {
     //  const route = routingList[href] || routingList['404'];
-
+    let rootEl = document.getElementById('main-content');
+    rootEl.innerHTML = '<loader-component></loader-component>';
     // get the html from the template
-    var html;
+    let html;
     try {
         // This async call may fail.
 
@@ -74,33 +78,36 @@ async function routeTo(route, _params, is404 = false) {
         console.error('không load được template', error);
         return false;
     }
-
-    if (html) {
+    let role = localStorage.getItem('roleSlug');
+    let sidebarEl = document.getElementById('main-sidebar');
+    header.bind();
+    if (role) {
         //loadMainSideBar
-        let role = localStorage.getItem('roleSlug');
-        let sidebarEl = document.getElementById('main-sidebar');
+        if (!sidebarEl.dataset.isInit) {
+            // sidebarEl.style.visibility = 'visible';
+            // sidebarEl.style.display = 'block';
 
-        if (role) {
-            console.log(sidebarEl);
-            if (!sidebarEl.dataset.isInit) {
-                sidebarEl.style.visibility = 'visible';
-                sidebarEl.dataset.isInit = 'true';
-                console.log('here');
-                let sidebar = new Sidebar(sidebarEl);
-            }
-        } else {
-            sidebarEl.innerHTML = '';
-            sidebarEl.style.visibility = 'hidden';
-            sidebarEl.dataset.isInit = '';
+            sidebarEl.dataset.isInit = 'true';
+            // console.log('here');
+            sidebar = new Sidebar(sidebarEl);
         }
-
-        let rootEl = document.getElementById('main-content');
-        rootEl.innerHTML = '';
-        if (!is404) {
-            let briefContainer = generateBriefMap(rootEl);
-            if (briefContainer) rootEl.appendChild(briefContainer);
+        //console.log(sidebarEl);
+    } else {
+        if (sidebar) {
+            sidebar.resetSideBar();
         }
+        // sidebarEl.innerHTML = '';
+        // //sidebarEl.style.visibility = 'hidden';
+        // // sidebarEl.style.display = 'none';
 
+        // sidebarEl.dataset.isInit = '';
+    }
+    rootEl.innerHTML = '';
+    if (!is404) {
+        let briefContainer = generateBriefMap(rootEl);
+        if (briefContainer) rootEl.appendChild(briefContainer);
+    }
+    if (html) {
         rootEl.insertAdjacentHTML('beforeend', html);
     }
 
@@ -110,8 +117,13 @@ async function routeTo(route, _params, is404 = false) {
         .querySelector('meta[name="keywords"]')
         .setAttribute('content', route.pageInfo.keyWord ? route.pageInfo.keyWord : PAGE_KEYWORD);
     if (route.method) {
-        route.method.call(null, _params);
+        try {
+            route.method.call(null, _params);
+        } catch (error) {
+            console.error(error);
+        }
     }
+    window.scrollTo(0, 0);
     return true;
 }
 
@@ -143,7 +155,7 @@ const generateBriefMap = (element) => {
     for (let i = 0; i < arrayPathname.length; ++i) {
         let a = document.createElement('a');
 
-        a.innerText = arrayPathname[i] + '/';
+        a.innerText = convertHrefToText(arrayPathname[i]) + '/';
         a.classList.add('btn');
         if (i === arrayPathname.length - 1) {
             a.classList.add('btn--link');
@@ -179,8 +191,8 @@ const urlLocationHandler = async () => {
         //  routeHref(re);
     } else {
         if (location !== '/') {
+            // location = '/';
             routeHref('/');
-
             return;
         }
     }
@@ -256,4 +268,5 @@ customFuncs.$('.sidebar__nav a', (a) => {
 // call the urlLocationHandler function to handle the initial url
 window.addEventListener('DOMContentLoaded', () => {
     urlLocationHandler();
+    document.getElementById('container-page').classList.remove('hide');
 });

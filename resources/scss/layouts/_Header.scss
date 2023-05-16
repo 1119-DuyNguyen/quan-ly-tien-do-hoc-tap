@@ -1,0 +1,55 @@
+.header-nav {
+    &.hide {
+        display: none;
+    }
+    position: fixed;
+    display: flex;
+    justify-content: left;
+    background-color: rgba(#f7fafb, 0.6);
+    color: #9ca8ba;
+    z-index: 900;
+    width: 100%;
+
+    .nav-container {
+        width: 100%;
+        display: flex;
+        padding-left: 0;
+        margin-bottom: 0;
+        list-style: none;
+        align-items: center;
+        justify-content: flex-start;
+        .nav-link {
+            position: relative;
+            font-weight: 900;
+            padding-left: 1rem;
+            padding: 1rem 2rem 1rem 0;
+            margin-right: 0.5rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            &:hover {
+                color: rgba(0, 0, 0, 0.5);
+            }
+            .badge {
+                position: absolute;
+                top: 0.5rem;
+                right: -0.125rem;
+                display: inline-block;
+                border-radius: 50%;
+                background: red;
+                color: white;
+                width: 1.875rem;
+                height: 1.875rem;
+                line-height: 1.875rem;
+                font-size: 0.75rem;
+                text-align: center;
+            }
+        }
+    }
+
+    // .btn-control-sidebar {
+    //     font-size: 20px;
+    //     cursor: pointer;
+
+    //     border: none;
+    // }
+}

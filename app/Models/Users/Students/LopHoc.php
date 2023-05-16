@@ -6,18 +6,23 @@ use App\Models\Authorization\TaiKhoan;
 use App\Models\Users\Students\NienKhoa;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Users\Staffs\CoVanHocTap;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class LopHoc extends Model
 {
+    use HasFactory;
     protected $table = 'lop_hoc';
     public $timestamps = false;
 
     protected $casts = [
-        'nien_khoa_id' => 'int',
         'co_van_hoc_tap_id' => 'int',
+        'ma_lop' => 'int',
+        'chuong_trinh_dao_tao_id' => 'int',
     ];
 
-    protected $fillable = ['nien_khoa_id', 'co_van_hoc_tap_id', 'ten_lop', 'ma_lop'];
+
+
+    protected $fillable = ['co_van_hoc_tap_id', 'ten_lop', 'ma_lop', 'chuong_trinh_dao_tao_id', 'thoi_gian_vao_hoc', 'thoi_gian_ket_thuc'];
 
     public function tai_khoan()
     {

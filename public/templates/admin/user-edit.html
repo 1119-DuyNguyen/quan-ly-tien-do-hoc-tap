@@ -1,0 +1,83 @@
+<form action="#" method="POST" class="form">
+    <div class="spacer"></div>
+
+    <div class="form-group">
+        <label for="fullname" class="form-label">Tên đầy đủ</label>
+        <input
+            id="fullname"
+            name="fullname"
+            rules="required"
+            type="text"
+            value="Thanh Duy"
+            placeholder="VD: Thanh Duy"
+            class="form-control"
+        />
+    </div>
+
+    <div class="form-group">
+        <label for="email" class="form-label">Email</label>
+        <input
+            id="email"
+            name="email"
+            rules="required|email"
+            type="text"
+            placeholder="VD: email@domain.com"
+            class="form-control"
+            value="thanhduy191103@gmail.com"
+        />
+        <span class="form-message"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="password" class="form-label">Mật khẩu</label>
+        <input
+            id="password"
+            name="password"
+            rules="required|min:6"
+            type="password"
+            placeholder="Nhập mật khẩu"
+            class="form-control"
+            value="123456"
+        />
+        <span class="form-message"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="password_confirmation" class="form-label">Nhập lại mật khẩu</label>
+        <input
+            id="password_confirmation"
+            name="password_confirmation"
+            placeholder="Nhập lại mật khẩu"
+            rules="repeatPassword:password"
+            type="password"
+            class="form-control"
+            value="12345"
+        />
+        <span class="form-message"></span>
+    </div>
+    <div class="form-group">
+        <label for="province" class="form-label">Tỉnh / Thành phố</label>
+        <select rules="required" id="province" name="province" class="form-control">
+            <option value="">---Chọn Tỉnh/TP</option>
+            <option value="hanoi">Hà Nội</option>
+            <option value="hochiminh">Hồ Chí Minh</option>
+        </select>
+        <span class="form-message"></span>
+    </div>
+    <div class="form-group select">
+        <label class="form-label">Giới tính</label>
+
+        <input name="gender" type="checkbox" value="male" class="form-control" />
+        Nam
+        <input name="gender" type="checkbox" value="female" class="form-control" />
+        Nữ
+
+        <span class="form-message"></span>
+    </div>
+    <div class="form-group">
+        <label for="avatar" class="form-label">Ảnh đại diện</label>
+        <input rules="required" id="avatar" name="avatar" type="file" class="form-control" />
+        <span class="form-message"></span>
+    </div>
+    <button class="form-submit">Đăng ký</button>
+</form>

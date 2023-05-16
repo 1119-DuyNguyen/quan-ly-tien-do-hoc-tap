@@ -10,11 +10,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class ChucNang extends Model
 {
     protected $table = 'chuc_nang';
-    public $timestamps = false;
     use HasFactory;
     protected $casts = [];
 
-    protected $fillable = ['ten', 'ghi_chu'];
+    protected $fillable = ['ten', 'ghi_chu', 'icon', 'href'];
 
     // public function nhom_quyens()
     // { //return $this->belongsToMany(Role::class, 'chuc_nang_nhom_quyen'); alphabet

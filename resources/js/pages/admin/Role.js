@@ -1,3 +1,5 @@
+import { Validator } from '../../components/helper/Validator';
+import { alertComponent } from '../../components/helper/alert-component';
 import { SmartTableTemplate } from '../../components/smart-table-template/SmartTableTemplate';
 
 export class Role {
@@ -16,11 +18,18 @@ export class Role {
             formatAttributeHeader: {
                 id: {
                     width: '40px',
+                    sort: true,
                 },
                 ten: {
                     title: 'Tên',
                     minWidth: '140px',
-                    ellipsis: true,
+                    oneLine: true,
+                    sort: true,
+                },
+                ten_slug: {
+                    title: 'Slug',
+                    minWidth: '140px',
+                    oneLine: true,
                 },
                 ghi_chu: {
                     title: 'Ghi chú',
@@ -48,6 +57,19 @@ export class Role {
         //     pagination: true,
         //     edit: true,
         // });
+    }
+    static edit() {
+        try {
+            let rootElement = document.getElementById('main-content');
+
+            let formValid = new Validator('#role-form');
+            formValid.onSubmit = (data) => {
+                console.log(data);
+            };
+        } catch (err) {
+            console.log(err);
+            alertComponent('Đã xảy ra lỗi khi khởi tạo biểu mẫu', 'Hãy thử làm mới trang');
+        }
     }
     // static show({ id }) {
     //     console.log(id);

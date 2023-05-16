@@ -1,49 +1,54 @@
 @use '../components/input-icon';
 @use '../abstract';
 //image và border phải để ở px
+.main-sidebar.hide {
+    width: 0px;
+    padding: 0;
+    overflow: hidden;
+}
 .main-sidebar {
+    z-index: 1000;
+    overflow-y: auto;
+    overflow-x: hidden;
     position: fixed;
     align-items: center;
     top: 0;
     left: 0;
     height: 100%;
-    z-index: 100;
-    width: 50px;
     //  padding: 24px 4px;
     padding: 24px 4px;
-    transition: all 0.2s ease;
+    transition: width 0.2s ease;
     background: #fff;
+
     //   background: #fff;
-
     //    border-right: 1px solid #262e4a;
-    &:hover,
-    &.hover {
-        width: 30vw;
+    width: 30vw;
+    max-width: 300px;
+    // &:hover,
+    // &.hover {
+    //     .container {
+    //         .sidebar__nav {
+    //             .sidebar__nav__link,
+    //             .sidebar__nav__static {
+    //                 // justify-content: left;
+    //                 .sidebar__nav__title {
+    //                     display: block;
+    //                 }
+    //                 .sidebar__nav__img {
+    //                     // display: inline-block;
 
-        .container {
-            .sidebar__nav {
-                .sidebar__nav__link,
-                .sidebar__nav__static {
-                    // justify-content: left;
-                    .sidebar__nav__title {
-                        display: block;
-                    }
-                    .sidebar__nav__img {
-                        // display: inline-block;
-
-                        display: inline-block;
-                    }
-                    .sidebar__nav__text {
-                        display: flex;
-                    }
-                    #toggle-sidebar {
-                        display: none;
-                    }
-                }
-            }
-        }
-    }
-
+    //                     display: inline-block;
+    //                 }
+    //                 .sidebar__nav__text {
+    //                     display: flex;
+    //                 }
+    //                 #toggle-sidebar {
+    //                     display: none;
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
     .container {
         position: relative;
         height: 100%;
@@ -123,6 +128,7 @@
                     display: flex;
                     justify-content: center;
                     align-items: center;
+                    min-width: 1.25rem;
                 }
 
                 &.hover,
@@ -138,12 +144,12 @@
                     }
                 }
             }
-            .sidebar__nav__img {
-                display: none;
-            }
+            // .sidebar__nav__img {
+            //     display: none;
+            // }
             .sidebar__nav__title,
             .sidebar__nav__text {
-                display: none;
+                // display: none;
                 margin-left: 10px;
                 margin-right: auto;
                 // white-space: nowrap;
@@ -153,51 +159,36 @@
 }
 
 //mid PC
-@media (max-width: 1023px) {
-    .main-sidebar {
-        &:hover,
-        &.hover {
-            width: 30vw;
-        }
-    }
-}
+// @media (max-width: 1023px) {
+//     .main-sidebar {
+//         width: 30vw;
+//     }
+// }
 
 //tablet
 @media (max-width: 768px) {
     .main-sidebar {
-        &:hover,
-        &.hover {
-            width: 40vw;
-        }
+        width: 40vw;
     }
 }
 
 //middle size responsive to avoid layout be collapsed
 @media (max-width: 620px) {
     .main-sidebar {
-        &:hover,
-        &.hover {
-            width: 60vw;
-        }
+        width: 60vw;
     }
 }
 
 //mobile S
 @media (max-width: 450px) {
     .main-sidebar {
-        &:hover,
-        &.hover {
-            width: 70vw;
-        }
+        width: 70vw;
     }
 }
 
 //mobile avg
 @media (max-width: 380px) {
     .main-sidebar {
-        &:hover,
-        &.hover {
-            width: 85vw;
-        }
+        width: 85vw;
     }
 }
