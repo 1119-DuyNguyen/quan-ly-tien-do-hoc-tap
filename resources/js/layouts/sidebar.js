@@ -113,7 +113,6 @@ export class Sidebar {
             // this.#slider = document.createElement('aside');
             // this.#slider.classList.add('main-sidebar');
             //    document.getElementById('main-sidebar');
-            console.log('here');
             this.#sidebar.innerHTML = '';
             let containerSidebar = this.createElementSidebar(params, user);
             let btnControlSidebar = document.getElementById('btn-control-sidebar');
@@ -219,7 +218,7 @@ export class Sidebar {
                 <h3 class="sidebar__nav__title__header">
                     ${user.username}
                 </h3>  <span class="sidebar__nav__title__description">
-  
+
                      <i class="fa-solid fa-id-badge icon"></i>
                      </i>${user.role}</span>
 

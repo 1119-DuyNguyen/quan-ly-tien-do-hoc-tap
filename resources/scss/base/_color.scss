@@ -15,6 +15,8 @@
 :root {
     --color: #{$color};
     --primary-color: #{$primary_color};
+    --primary-color-text: #{$primary_color_text};
+    --primary-color-opacity: var(--primary-color-text);
     --secondary-color: #{$secondary_color};
     --third-color: #{$third_color};
     --fourth-color: #{$fourth_color};
@@ -25,10 +27,11 @@
     --color-item-3: #ffbb55;
     --color-item-4: #ff7782;
     --color-item-5: #45bfff;
-    --success: #71be34;
-    --warning: #ffb702;
-    --info: #2f86eb;
-    --error: #ff623d;
+    --success-color: #71be34;
+    --warning-color: #ffb702;
+    --info-color: #2f86eb;
+    --error-color: #ff623d;
+    --danger-color: #dc3545;
 }
 
 // body {

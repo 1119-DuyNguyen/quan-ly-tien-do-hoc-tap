@@ -5,6 +5,7 @@
     &.hide {
         display: none;
     }
-    background-color: var(--fourth-color);
-    height: 100vh;
+    background-color: inherit;
+    min-height: 100vh;
+    height: auto;
 }

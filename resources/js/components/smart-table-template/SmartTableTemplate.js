@@ -30,6 +30,29 @@ export class SmartTableTemplate {
     #selectDataList;
     /**
      * @var options Object
+     *  @example
+     *     #option = {
+        formatAttributeHeader: {},
+        edit: false,
+        pagination: false,
+        urlAPI: '',
+        rowPerPage: '',
+        view: false,
+        export: false,
+        add: false,
+    };
+        @example formatAttributeHeader
+         {
+                ten: {
+                    title: 'Tên',
+                    minWidth: '300px',
+                    sort: true,
+                },
+           },
+     * avaiable option: width, title, minWidth, maxWidth, ellipsis
+     * Want whiteSpace nowrap ?
+     * then @example{ellipsis:true}
+     *   dont set width
      * formatAttributeHeader : convert name json to format
      * edit : if true then allow CRUD else only read. Based restful-api
      */
@@ -65,7 +88,7 @@ export class SmartTableTemplate {
             } else {
                 addBtn.addEventListener('click', (e) => {
                     e.preventDefault();
-                    routeHref(location.protocol + '//' + location.host + location.pathname + '/edit');
+                    routeHref(location.protocol + '//' + location.host + location.pathname + '/add');
                 });
             }
 
@@ -165,7 +188,6 @@ export class SmartTableTemplate {
                 this.#content.innerHTML = '';
             }
             if (option['pagination'] && paginationOption) {
-                console.log(paginationOption);
                 if (this.#paginationService) {
                     this.#paginationService.destroy();
                 }
@@ -310,7 +332,9 @@ export class SmartTableTemplate {
         // render checkbox, action
         if (this.#option['edit'] || this.#option['export'] || this.#option['view']) {
             //show/update/ delete button
-            let btnActions = createElement('td', 'group-action');
+            let btnActions = createElement('td');
+            let divContainer = createElement('div', 'group-action');
+            btnActions.appendChild(divContainer);
             if (this.#option['export']) {
                 let exportBtn = createElement(
                     'button',
@@ -321,7 +345,7 @@ export class SmartTableTemplate {
                     exportBtn.addEventListener('click', this.#option['export']);
                 }
 
-                btnActions.appendChild(exportBtn);
+                divContainer.appendChild(exportBtn);
             }
             if (this.#option['view']) {
                 let viewBtn = createElement('button', 'btn btn--primary', '<i class="fa-regular fa-eye"></i>');
@@ -344,7 +368,7 @@ export class SmartTableTemplate {
                     });
                 }
 
-                btnActions.appendChild(viewBtn);
+                divContainer.appendChild(viewBtn);
             }
             if (this.#option['edit']) {
                 let editBtn = createElement(
@@ -403,8 +427,8 @@ export class SmartTableTemplate {
                     console.log('here', rowId);
                 });
 
-                btnActions.appendChild(editBtn);
-                btnActions.appendChild(deleteBtn);
+                divContainer.appendChild(editBtn);
+                divContainer.appendChild(deleteBtn);
             }
 
             row.appendChild(btnActions);
@@ -419,6 +443,8 @@ export class SmartTableTemplate {
             //
             let type = '';
             let options = this.#option['formatAttributeHeader'][key];
+            let dataTitle = options.title ? options.title : key;
+
             if (options) {
                 type = options.type ? options.type : type;
                 if (options.ellipsis) {
@@ -441,6 +467,7 @@ export class SmartTableTemplate {
                     divContent.innerHTML = obj[key];
             }
             cell.setAttribute('data-content', divContent.innerHTML);
+            cell.setAttribute('data-title', dataTitle);
 
             row.appendChild(cell);
         });
@@ -478,6 +505,25 @@ export class SmartTableTemplate {
      * fetch data and render
      * @param {String} urlAPI
      * @param {Object} option
+     * @example
+     *     #option = {
+        formatAttributeHeader: {},
+        edit: false,
+        pagination: false,
+        urlAPI: '',
+        rowPerPage: '',
+        view: false,
+        export: false,
+        add: false,
+    };
+        @example formatAttributeHeader
+         {
+                ten: {
+                    title: 'Tên',
+                    minWidth: '300px',
+                    sort: true,
+                },
+           },
      * avaiable option: width, title, minWidth, maxWidth, ellipsis
      * Want whiteSpace nowrap ?
      * then @example{ellipsis:true}

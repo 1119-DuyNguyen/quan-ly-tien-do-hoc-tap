@@ -8,6 +8,7 @@
     display: flex;
     justify-content: left;
     background-color: var(--fourth-color);
+
     //color: #9ca8ba;
     color: $gray;
     z-index: 900;
@@ -38,7 +39,7 @@
                 right: -0.125rem;
                 display: inline-block;
                 border-radius: 50%;
-                background: var(--warning);
+                background: var(--warning-color);
                 color: var(--color);
                 width: 1.875rem;
                 height: 1.875rem;

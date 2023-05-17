@@ -106,6 +106,16 @@ export default class NiceSelect {
         maxSelectedOption: 2,
     };
     shouldCloseModal = false;
+    /**
+     * Biến 1 select bình thường thành phi thường
+     * @param {Element} element
+     * @param {Object} options
+     * @example     defaultOptions = {
+        searchable: false,
+        showSelectedItems: true,
+        maxSelectedOption: 2,
+    };
+     */
     constructor(element, options) {
         this.elSelectReal = element;
         this.config = Object.assign({}, this.defaultOptions, options || {});
@@ -484,7 +494,6 @@ NiceSelect.prototype._onClickedOutside = function (e) {
     // Để tránh việc nó truyền tới mấy đứa con
 
     if (!this.elNiceSelect.contains(e.target) || this.shouldCloseModal) {
-        console.log('true');
         removeClass(this.elNiceSelect, 'open');
         removeClass(this.elNiceSelect, 'focus');
 

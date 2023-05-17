@@ -26,6 +26,8 @@ $box_shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 3px 1px -2px rgba(0, 0, 0,
     0px 1px 5px 0px rgba(0, 0, 0, 0.2);
 // Style the dropdown
 
+$backgroundColor: var(--primary-color-text);
+$foregroundColor: var(--color);
 .nice-select {
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     -webkit-user-select: none; /* Safari */
@@ -33,7 +35,9 @@ $box_shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 3px 1px -2px rgba(0, 0, 0,
     user-select: none; /* Standard syntax */
     position: relative;
 
-    background-color: inherit;
+    background-color: $backgroundColor;
+    color: $foregroundColor;
+
     border-radius: $input_border_radius;
     border: none;
     box-sizing: border-box;
@@ -53,7 +57,6 @@ $box_shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 3px 1px -2px rgba(0, 0, 0,
     display: inline-block;
     position: relative;
     box-shadow: $box_shadow;
-    color: inherit;
     cursor: pointer;
     // placeHolder , selected option
     transition: all 0.2s ease-in-out;
@@ -244,7 +247,7 @@ $box_shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 3px 1px -2px rgba(0, 0, 0,
             font-size: $font_size;
             border: none;
             border-bottom: 1px solid $gray;
-
+            border-radius: 0;
             // &:focus {
             //     opacity: 0.8;
             // }

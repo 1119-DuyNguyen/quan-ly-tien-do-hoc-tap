@@ -1,12 +1,22 @@
 @use '../abstracts/variables' as *;
 .content-body {
     // color: #4d5068;
-    color: var(--fourth-color-text);
+    position: absolute;
+    margin-left: auto;
+    margin-right: auto;
+    top: 50%; /* position the top  edge of the element at the middle of the parent */
+    left: 50%; /* position the left edge of the element at the middle of the parent */
+    // lấy chiều ngang của thằng con bù vào :)))
+    transform: translate(
+        -50%,
+        -50%
+    ); /* This is a shorthand of
+                                         translateX(-50%) and translateY(-50%) */
+    color: var(--primary-color-text);
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100%;
     .form-wrapper {
         // min-width: 350px;
         min-width: 320px;
@@ -97,6 +107,13 @@
                 opacity: 0.8;
             }
             box-sizing: border-box;
+            &.process {
+                transition: opacity 0.2s;
+                opacity: 0.8;
+                // color: var(--color);
+                // background-color: $gray;
+                cursor: wait;
+            }
         }
     }
 }

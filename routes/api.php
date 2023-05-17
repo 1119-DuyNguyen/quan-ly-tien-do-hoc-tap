@@ -2,32 +2,33 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Test\TestApi;
+use App\Http\Controllers\MajorController;
 use App\Http\Controllers\PeriodController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\DataImportController;
 use App\Http\Controllers\Admin\ProgramController;
 use App\Http\Controllers\Admin\SubjectController;
 use App\Http\Controllers\Auth\UserAuthController;
+use App\Http\Controllers\Class\ThamGiaController;
+use App\Http\Controllers\Class\ChamDiemController;
 use App\Http\Controllers\Admin\AnalyticsController;
 use App\Http\Controllers\Admin\GraduatedController;
-use App\Http\Controllers\Admin\LateGraduatedController;
 use App\Http\Controllers\Class\ClassroomController;
 use App\Http\Controllers\Class\Post\PostController;
 use App\Http\Controllers\Admin\PermissionController;
-use App\Http\Controllers\Class\Post\BaitapController;
-use App\Http\Controllers\Class\BaiTapSinhVienController;
-use App\Http\Controllers\Admin\ProgramKnowledgeBlockController;
-use App\Http\Controllers\Admin\StudentsInClassController;
-use App\Http\Controllers\Auth\UserPermissionsController;
-use App\Http\Controllers\Graduation\Student\ResultBaseOnEducationProgramController;
-use App\Http\Controllers\Graduation\Student\SemesterController;
-use App\Http\Controllers\Class\ChamDiemController;
-use App\Http\Controllers\DataImportController;
-use App\Http\Controllers\Class\Everyone\EveryoneController;
 use App\Http\Controllers\Class\FileBaiTapController;
-use App\Http\Controllers\Class\ThamGiaController;
+use App\Http\Controllers\Class\Post\BaitapController;
+use App\Http\Controllers\Admin\LateGraduatedController;
+use App\Http\Controllers\Auth\UserPermissionsController;
+use App\Http\Controllers\Class\BaiTapSinhVienController;
+use App\Http\Controllers\Admin\StudentsInClassController;
+use App\Http\Controllers\Class\Everyone\EveryoneController;
+use App\Http\Controllers\Admin\ProgramKnowledgeBlockController;
+use App\Http\Controllers\Graduation\Student\SemesterController;
 use App\Http\Controllers\Graduation\Student\GraduateStudentController;
 use App\Http\Controllers\Graduation\Student\SuggestGraduateController;
+use App\Http\Controllers\Graduation\Student\ResultBaseOnEducationProgramController;
 
 /*
 |--------------------------------------------------------------------------
@@ -96,6 +97,9 @@ Route::middleware('auth:api')->group(function () {
 
             //      Route::get('/child-program/subject', [KnowledgeBlockController::class, 'getSubject']);
         });
+    Route::get('/major/all', [MajorController::class, 'all']);
+    Route::get('/period/all', [PeriodController::class, 'all']);
+
     // Route::apiResource('/period', PeriodController::class);
     // Route::apiResource('/major', MajorController::class);
 });

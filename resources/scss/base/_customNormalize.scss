@@ -17,7 +17,7 @@ html {
     // font-family: Verdana, Geneva, Tahoma, sans-serif;
     font-family: 'Be Vietnam Pro', Tahoma, sans-serif;
 
-    background-color: #f7fafb;
+    background-color: var(--fourth-color);
 }
 body {
     font-weight: 300;
@@ -25,6 +25,7 @@ body {
     min-height: 100vh;
     line-height: 1.75;
     word-spacing: 1.75;
+    height: auto;
 }
 // // @media only screen and (min-width: 45rem) {
 // //     html {
@@ -100,7 +101,10 @@ select {
     // padding: 8px 40px 8px 12px;
     text-indent: 0.01px;
     text-overflow: '';
-    background-color: inherit;
+    background-color: var(--secondary-color);
+    &:disabled {
+        background-color: inherit;
+    }
     cursor: pointer;
     border-radius: 4px;
     &:hover {
@@ -111,16 +115,29 @@ select {
         outline: none;
     }
     option {
+        &:disabled {
+            background-color: inherit;
+        }
         border-radius: 4px;
     }
 }
-input {
-    border-radius: 4px;
 
+input {
+    color: var(--color);
+    display: inline-block;
+    position: relative;
+    padding: 0 0 0 0.5em;
+    border: none;
+    box-sizing: border-box;
+    border-radius: 8px;
+    border: 2px solid $gray;
+    background-color: var(--primary-color-text);
     &:focus,
     &:focus-visible {
+        //outline: 2px solid $gray;
         outline: none;
-        outline: var(--primary-color) solid 2px;
+
+        // outline: var(--primary-color) solid 2px;
     }
 }
 input[type='checkbox'] {
@@ -129,7 +146,39 @@ input[type='checkbox'] {
         outline: none;
     }
 }
+.btn-submit {
+    background-color: var(--fourth-color);
+    color: var(--primary-color);
+    // background-color: #6371c5;
+    @media screen and (max-width: 480px) {
+        .form-wrapper {
+            width: 90%;
+        }
+    }
+    margin-top: 3.25rem;
+    margin-bottom: 3.25rem;
 
+    padding: 1em;
+    border-radius: 9999px;
+
+    outline: 0;
+    border: 0;
+    width: 100%;
+    cursor: pointer;
+    &:hover,
+    &:active {
+        transition: opacity 0.2s;
+        opacity: 0.8;
+    }
+    box-sizing: border-box;
+    &.process {
+        transition: opacity 0.2s;
+        opacity: 0.8;
+        // color: var(--color);
+        // background-color: $gray;
+        cursor: wait;
+    }
+}
 select::-ms-value {
     background: none;
 }
