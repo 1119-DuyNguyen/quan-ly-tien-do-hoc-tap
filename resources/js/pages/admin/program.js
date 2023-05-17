@@ -219,10 +219,11 @@ export class Program {
                 if (rowId) new ModalComponent(Program.getEditFormElement('Cập nhập', tableTem, rowId));
             },
             export: true,
-            view: (e) => {
-                let rowId = e.target.closest('tr')?.querySelector('[data-attr="id"]')?.getAttribute('data-content');
-                if (rowId) new ModalComponent(Program.renderViewCTDT(rowId));
-            },
+            // view: (e) => {
+            //     let rowId = e.target.closest('tr')?.querySelector('[data-attr="id"]')?.getAttribute('data-content');
+            //     if (rowId) new ModalComponent(Program.renderViewCTDT(rowId));
+            // },
+            view: true,
         });
         // let tableTem = new SmartTableTemplate(tableTest, response.pokedata, {
         //     formatAttributeHeader: {

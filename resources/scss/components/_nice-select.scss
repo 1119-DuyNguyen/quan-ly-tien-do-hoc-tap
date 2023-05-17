@@ -1,0 +1,265 @@
+@use 'sass:math';
+
+// Default variables
+$font_size: 1rem !default;
+$font_size_small: 0.75rem !default;
+
+$input_border_radius: 12px !default;
+$input_height: 38px !default;
+$input_height_small: 36px !default;
+$dropdown_padding: 24px !default;
+$primary_color: #404258 !default;
+$secondary_color: #474e68 !default;
+
+$third_color: #50577a !default;
+$fourth_color: #6b728e !default;
+
+//Màu trung tính
+$gray_dark: #444 !default;
+$gray: #b7c4cf !default;
+$gray_light: #eee3cb !default;
+$gray_lighter: #d7c0ae !default;
+
+$gray_hover: rgba($gray, 0.5);
+$arrow_color: $gray;
+$box_shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 3px 1px -2px rgba(0, 0, 0, 0.12),
+    0px 1px 5px 0px rgba(0, 0, 0, 0.2);
+// Style the dropdown
+
+.nice-select {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
+    position: relative;
+
+    background-color: inherit;
+    border-radius: $input_border_radius;
+    border: none;
+    box-sizing: border-box;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: $font_size;
+    font-weight: normal;
+    min-height: $input_height;
+    line-height: $input_height;
+    min-height: $input_height;
+    height: auto;
+    padding: 4px $dropdown_padding 4px math.div($dropdown_padding, 2);
+    min-width: 240px;
+
+    outline: none;
+
+    display: inline-block;
+    position: relative;
+    box-shadow: $box_shadow;
+    color: inherit;
+    cursor: pointer;
+    // placeHolder , selected option
+    transition: all 0.2s ease-in-out;
+
+    span.current {
+        display: block;
+        width: 100%;
+        text-align: center;
+    }
+    &.has-multiple span.current {
+        width: auto;
+        $marginSpanCurrent: 8px;
+        position: relative;
+        padding: 8px 16px;
+        min-height: $input_height;
+        height: auto;
+        text-align: left;
+        line-height: $input_height;
+        min-width: $input_height -12px;
+        display: inline-block;
+        vertical-align: top;
+        margin: 8px 4px;
+        background: $gray_hover;
+        border-radius: $input_border_radius;
+    }
+    &:hover,
+    &:active,
+    &:focus,
+    &.focus {
+        box-shadow: rgba(3, 102, 214, 0.3) 0px 0px 0px 3px;
+    }
+    // Arrow
+    &:after {
+        border-bottom: 2px solid $arrow_color;
+        border-right: 2px solid $arrow_color;
+        content: '';
+        display: block;
+        height: 5px;
+        margin-top: -4px;
+        pointer-events: none;
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform-origin: 66% 66%;
+        transform: rotate(45deg);
+        transition: all 0.15s ease-in-out;
+        width: 5px;
+    }
+
+    &.open {
+        &:after {
+            transform: rotate(-135deg);
+        }
+        .nice-select-dropdown {
+            opacity: 1;
+            pointer-events: auto;
+            transform: scale(1) translateY(0);
+        }
+    }
+    &.disabled {
+        border-color: lighten($gray_light, 2%);
+        color: $gray;
+        pointer-events: none;
+        &:after {
+            border-color: lighten($arrow_color, 20%);
+        }
+    }
+
+    // Modifiers
+    &.wide {
+        width: 100%;
+        .nice-select-dropdown {
+            left: 0 !important;
+            right: 0 !important;
+        }
+    }
+    &.right {
+        float: right;
+        .nice-select-dropdown {
+            left: auto;
+            right: 0;
+        }
+    }
+    &.small {
+        font-size: $font_size_small;
+        height: $input_height_small;
+        line-height: $input_height_small - 2;
+        &:after {
+            height: 4px;
+            width: 4px;
+        }
+        .option {
+            line-height: $input_height_small - 2;
+            min-height: $input_height_small - 2;
+        }
+    }
+
+    .nice-select-dropdown {
+        margin-top: 8px;
+        background-color: inherit;
+        color: inherit;
+        border-radius: $input_border_radius;
+        box-shadow: $box_shadow;
+
+        pointer-events: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        padding: 12px;
+        transform-origin: 50% 0;
+        transform: scale(0.75) translateY(-(math.div(-$input-height, 2)));
+        transition: all 0.2s cubic-bezier(0.5, 0, 0, 1.25), opacity 0.15s ease-out;
+        z-index: 9;
+        opacity: 0;
+    }
+
+    // List and options
+    .list {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 0;
+        max-height: 300px;
+        overflow-y: auto;
+
+        background-color: inherit;
+        // &:hover .option:not(:hover) {
+        //     background-color: transparent !important;
+        // }
+    }
+    .option {
+        cursor: pointer;
+        font-weight: 400;
+        line-height: $input_height;
+        list-style: none;
+        outline: none;
+        padding: 4px $dropdown_padding;
+        margin-top: 12px;
+        margin-right: 4px;
+        margin-left: 4px;
+
+        text-align: left;
+        transition: all 0.2s;
+        border-radius: $input_border_radius;
+        background-color: inherit;
+
+        &:hover,
+        &.focus,
+        &.selected.focus {
+            background-color: $gray_hover;
+        }
+        &.selected {
+            background-color: $gray_hover;
+        }
+        &.disabled {
+            background-color: transparent;
+            color: $gray;
+            cursor: default;
+        }
+    }
+
+    .optgroup {
+        font-weight: bold;
+    }
+    .nice-select-search-box {
+        box-sizing: border-box;
+        width: 100%;
+        padding: 5px;
+        pointer-events: none;
+        border-radius: 5px 5px 0 0;
+        background-color: inherit;
+
+        .nice-select-search {
+            box-sizing: border-box;
+            background-color: transparent;
+            border: none;
+            // color: $gray_dark;
+            color: inherit;
+            display: inline-block;
+            vertical-align: middle;
+            padding: 7px 12px;
+            margin: 0 10px 0 0;
+            width: 100%;
+            height: $input_height;
+            line-height: $input_height;
+            height: auto;
+            outline: 0 !important;
+            font-size: $font_size;
+            border: none;
+            border-bottom: 1px solid $gray;
+
+            // &:focus {
+            //     opacity: 0.8;
+            // }
+        }
+    }
+}
+
+// Use display instead of opacity for IE <= 10
+.no-csspointerevents .nice-select {
+    .nice-select-dropdown {
+        display: none;
+    }
+    &.open {
+        .nice-select-dropdown {
+            display: block;
+        }
+    }
+}

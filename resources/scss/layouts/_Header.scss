@@ -1,3 +1,5 @@
+@use '../abstracts/variables' as *;
+
 .header-nav {
     &.hide {
         display: none;
@@ -5,8 +7,9 @@
     position: fixed;
     display: flex;
     justify-content: left;
-    background-color: rgba(#f7fafb, 0.6);
-    color: #9ca8ba;
+    background-color: var(--fourth-color);
+    //color: #9ca8ba;
+    color: $gray;
     z-index: 900;
     width: 100%;
 
@@ -27,7 +30,7 @@
             font-size: 1.5rem;
             cursor: pointer;
             &:hover {
-                color: rgba(0, 0, 0, 0.5);
+                color: var(--primary-color);
             }
             .badge {
                 position: absolute;
@@ -35,8 +38,8 @@
                 right: -0.125rem;
                 display: inline-block;
                 border-radius: 50%;
-                background: red;
-                color: white;
+                background: var(--warning);
+                color: var(--color);
                 width: 1.875rem;
                 height: 1.875rem;
                 line-height: 1.875rem;

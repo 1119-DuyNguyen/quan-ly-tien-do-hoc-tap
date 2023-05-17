@@ -30,7 +30,7 @@
     //     // box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
     // }
     &--primary {
-        color: #fff;
+        color: var(--color);
         background-color: #00b0ff;
         border-color: #00b0ff;
         &:hover {
@@ -50,11 +50,12 @@
         // }
     }
     &--secondary {
-        color: #fff;
+        color: var(--color);
+
         background-color: #6c757d;
         border-color: #6c757d;
         &:hover {
-            color: #fff;
+            color: var(--color);
             background-color: #5a6268;
             border-color: #545b62;
         }

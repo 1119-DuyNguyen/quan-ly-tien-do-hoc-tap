@@ -1,6 +1,7 @@
+@use '../abstracts/variables' as *;
 .content-body {
     // color: #4d5068;
-    color: #fff;
+    color: var(--fourth-color-text);
     width: 100%;
     display: flex;
     justify-content: center;
@@ -24,10 +25,9 @@
         //     text-align: center;
         // }
         form {
-            background-color: #2a83ff;
+            background-color: var(--primary-color);
             width: 100%;
-            border: 2px solid #e5e7ec;
-
+            border: 2px solid var(--fourth-color);
             border-radius: 0.625rem;
             border-radius: 1.5rem;
             padding: 1.5rem;
@@ -37,11 +37,11 @@
             border: 0;
             text-align: left;
             position: relative;
-            border-bottom: 2px solid #ccc;
+            border-bottom: 2px solid $gray;
             margin-bottom: 1rem;
             margin-top: 2rem;
             &:focus {
-                outline: 1px solid #ccc;
+                outline: 1px solid $gray;
             }
             .input {
                 padding: 0.625em 2em 0.625em 0;
@@ -50,7 +50,7 @@
                 // padding: 0.5em 0 0.5em 1em;
                 width: 100%;
                 border: none;
-                color: #fff;
+                color: inherit;
                 background-color: inherit;
                 outline: 0;
                 box-sizing: border-box;
@@ -73,8 +73,8 @@
         }
 
         .btn-submit {
-            background-color: #fff;
-            color: #2a83ff;
+            background-color: var(--fourth-color);
+            color: var(--primary-color);
             // background-color: #6371c5;
             @media screen and (max-width: 480px) {
                 .form-wrapper {
