@@ -207,6 +207,7 @@ class AdministrativeClassesService {
             return $this->error('dssv bị null', 500, 'Lỗi xảy ra phía máy chủ');
 
         DB::table('tinh_trang_sinh_vien')
+        ->whereNotIn('sinh_vien_id', $request->input('dssv'))
         ->where('lop_hoc_id', '=', $lop_hoc_id)
         ->update(array(
             "lop_hoc_id" => null
