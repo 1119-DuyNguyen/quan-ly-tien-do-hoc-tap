@@ -76,8 +76,11 @@ class AdministrativeClassController extends ApiController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        //
+        if (intval($id) == 0)
+            return $this->error('', 404, 'Không tìm thấy lớp');
+
+        return $this->administrativeClassesService->removeClass(intval($id));
     }
 }

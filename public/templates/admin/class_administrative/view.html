@@ -25,7 +25,30 @@
             <label for="ket_thuc">Chọn thời gian kết thúc</label>
             <input class="input" type="date" id="ket_thuc" placeholder="Chọn thời gian kết thúc"  disabled>
         </div>
-        <button class="btn btn--info" id="chinh_sua">Chỉnh sửa</button>
+        <button class="btn btn--info" id="chinh_sua">Chỉnh sửa thông tin</button>
         <button class="btn btn--danger" id="xoa">Xoá</button>
+        <div>
+            <h3>Danh sách sinh viên thuộc lớp</h3>
+            <div id="dssv_table" class="graduate__container" style="max-height: 32rem; overflow-y: auto;">
+                <div class="graduate__item__content">
+                    <table>
+                        <tbody>
+                            <tr>
+                                <th>Mã sinh viên</th>
+                                <th>Tên sinh viên</th>
+                                <th>Hành động</th>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <br>
+            <form id="sv_to_dssv_form">
+                <label for="sv_to_dssv">Nhập mã sinh viên cần thêm vào danh sách</label>
+                <input type="text" id="sv_to_dssv">
+                <button class="btn btn--info">Thêm</button>
+            </form>
+        </div>
+        <button class="btn btn--info" id="cap_nhat_dssv">Cập nhật danh sách sinh viên</button>
     </div>
 </div>

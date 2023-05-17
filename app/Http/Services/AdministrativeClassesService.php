@@ -60,21 +60,21 @@ class AdministrativeClassesService {
     public function getStudent(string $student_idn) {
         $sv = DB::table('tinh_trang_sinh_vien')
         ->join('tai_khoan', 'tai_khoan.id', '=', 'tinh_trang_sinh_vien.sinh_vien_id')
-        ->where('tai_khoan.ten_dang_nhap', '=', $student_idn)->get(array('tai_khoan.id', 'tai_khoan.ten_dang_nhap', 'tai_khoan.ten'));
+        ->where('tai_khoan.ten_dang_nhap', '=', $student_idn)->get(array('tai_khoan.id', 'tai_khoan.ten_dang_nhap', 'tai_khoan.ten'))->first();
 
         return $this->success($sv, 200, '');
     }
 
-    public function getStudentWithClassId(PaginationRequest $request, int $class_id) {
+    public function getStudentWithClassId(Request $request, int $class_id) {
         $dssv = DB::table('tinh_trang_sinh_vien')
         ->join('tai_khoan', 'tai_khoan.id', '=', 'tinh_trang_sinh_vien.sinh_vien_id')
         ->where('lop_hoc_id', '=', $class_id)->select(array(
             'tai_khoan.id',
             'ten',
             'ten_dang_nhap'
-        ));
+        ))->get();
 
-        return $this->paginateMultipleTable($request, $dssv, null, ['ten'], null, 9);
+        return $this->success($dssv, 200, '');
     }
 
     public function addClass(Request $request) {
@@ -84,6 +84,9 @@ class AdministrativeClassesService {
         $ma_cvht = $request->input('ma_cvht');
         $bat_dau = $request->input('bat_dau');
         $ket_thuc = $request->input('ket_thuc');
+
+        if ($ma_ctdt == -1)
+            return $this->error('', 409, 'Chưa chọn chương trình đào tạo!');
 
         if (DB::table('lop_hoc')
         ->where('ma_lop', '=', $ma_lop)->count() > 0)
@@ -97,7 +100,7 @@ class AdministrativeClassesService {
         if ($ma_cvht !== null && DB::table('tai_khoan')
         ->where('id', '=', $ma_cvht)->count() == 0)
             return $this->error('', 404, 'Không tìm thấy cố vấn!');
-        if (DB::table('lop_hoc')
+        if ($ma_cvht !== null && DB::table('lop_hoc')
             ->where('co_van_hoc_tap_id', '=', $ma_cvht)->count() > 0)
                 return $this->error('', 409, 'Cố vấn đã phụ trách lớp khác!');
 
@@ -129,6 +132,9 @@ class AdministrativeClassesService {
         $ma_cvht = $request->input('ma_cvht');
         $bat_dau = $request->input('bat_dau');
         $ket_thuc = $request->input('ket_thuc');
+
+        if ($ma_ctdt == -1)
+            return $this->error('', 409, 'Chưa chọn chương trình đào tạo!');
 
         if (DB::table('lop_hoc')
         ->where('id', '=', $lop_hoc_id)->count() > 0) {
@@ -182,6 +188,38 @@ class AdministrativeClassesService {
     }
 
     public function removeClass(int $lop_hoc_id) {
+        DB::table('tinh_trang_sinh_vien')
+        ->where('lop_hoc_id', '=', $lop_hoc_id)
+        ->update(array(
+            "lop_hoc_id" => null
+        ));
+
+        DB::table('lop_hoc')
+        ->where('id', '=', $lop_hoc_id)
+        ->delete();
+
+        return $this->success('', 200, 'Xoá lớp thành công'); 
+    }
+
+    public function updateStudentsListOfClass(Request $request, int $lop_hoc_id) {
+
+        if ($request->input('dssv') === null)
+            return $this->error('dssv bị null', 500, 'Lỗi xảy ra phía máy chủ');
+
+        DB::table('tinh_trang_sinh_vien')
+        ->where('lop_hoc_id', '=', $lop_hoc_id)
+        ->update(array(
+            "lop_hoc_id" => null
+        ));
         
+        foreach($request->input('dssv') as $sv) {
+            DB::table('tinh_trang_sinh_vien')
+            ->where('sinh_vien_id', '=', $sv)
+            ->update(array(
+                "lop_hoc_id" => $lop_hoc_id
+            ));
+        }
+
+        return $this->success('', 200, 'Cập nhật danh sách sinh viên thành công'); 
     }
 }

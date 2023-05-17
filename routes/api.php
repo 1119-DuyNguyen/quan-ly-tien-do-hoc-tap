@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdministrativeClassController;
+use App\Http\Controllers\Admin\AdministrativeClassStudentsController;
 use App\Http\Controllers\Admin\AdvisorController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Test\TestApi;
@@ -98,6 +99,7 @@ Route::middleware('auth:api')->group(function () {
             Route::apiResource('program.knowledge_block', ProgramKnowledgeBlockController::class);
 
             Route::apiResource('/classes', AdministrativeClassController::class);
+            Route::apiResource('/classes.student', AdministrativeClassStudentsController::class);
             Route::apiResource('/classes-program', ProgramsListController::class);
             Route::apiResource('/classes-advisor', AdvisorController::class);
 

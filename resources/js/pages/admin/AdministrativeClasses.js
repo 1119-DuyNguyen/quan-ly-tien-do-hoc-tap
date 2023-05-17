@@ -212,7 +212,7 @@ export class AdministrativeClasses {
             }
 
             axios.post(AdministrativeClasses.URL_LIST, obj_lop).then((response) => {
-                // Done
+                routeHref(AdministrativeClasses.URL + '/' + response.data.data);
             }).catch((error) => {
                 console.error(error);
                 toast({
@@ -291,6 +291,23 @@ export class AdministrativeClasses {
         document.querySelector('#chinh_sua').addEventListener('click', () => {
             routeHref(AdministrativeClasses.URL + '/' + id + '/edit');
         })
+
+        document.querySelector('#xoa').addEventListener('click', () => {
+            if (confirm("Bạn có muốn xoá lớp này không?")) {
+                axios.delete(AdministrativeClasses.URL_LIST+'/' + id).then((response) => {
+                    routeHref(AdministrativeClasses.URL);
+                }).catch((error) => {
+                    console.error(error);
+
+                    toast({
+                        type: 'error',
+                        title: "Xảy ra lỗi khi xoá lớp!"
+                    })
+                })
+            }
+        })
+
+        AdministrativeClasses.sv_thuoc_lop({id});
     }
 
     static edit({id}) {
@@ -361,6 +378,119 @@ export class AdministrativeClasses {
                     type: 'error',
                     duration: 3000
                 })
+            })
+        })
+
+    }
+
+    static renderDSSVTable() {
+        const dssv_table = document.querySelector('#dssv_table');
+        if (dssv_table === null)
+            return;
+        dssv_table.innerHTML = `<div class="graduate__item__content">
+            <table>
+                <tbody>
+                    <tr>
+                        <th>Mã sinh viên</th>
+                        <th>Tên sinh viên</th>
+                        <th>Hành động</th>
+                    </tr>
+                </tbody>
+            </table>
+        </div>`;
+    }
+
+    static addSVToDSSVTable(ten_dang_nhap, ten, id_sv) {
+        const dssv_table = document.querySelector('#dssv_table tbody');
+
+        if (dssv_table === null) return;
+        dssv_table.innerHTML += `<tr class='sinhvien' data-id='${id_sv}'>
+            <td>${ten_dang_nhap}</td>
+            <td>${ten}</td>
+            <td><button class='btn btn--danger del_sv' id='del_sv_${id_sv}' style='margin: .5rem 0' data-id='${id_sv}'>Xoá khỏi danh sách</button></td>
+        </tr>`;
+
+        setTimeout(() => {
+            document.querySelector(`#del_sv_${id_sv}`).addEventListener('click', e => {
+                AdministrativeClasses.removeSVFromDSSVTable(id_sv);
+            })
+        }, 1);
+    }
+
+    static removeSVFromDSSVTable(id) {
+        const dssv = document.querySelectorAll('.sinhvien');
+
+        dssv.forEach(sv => {
+            if (sv.dataset.id == id) {
+                sv.remove();
+            }
+        })
+    }
+
+    static formAddSv(id_class) {
+        const sv_to_dssv_form = document.querySelector('#sv_to_dssv_form');
+
+        if (sv_to_dssv_form === null) return;
+        
+        sv_to_dssv_form.addEventListener('submit', e => {
+            e.preventDefault();
+
+            const sv_to_dssv = document.querySelector('#sv_to_dssv');
+            let sv_idn = sv_to_dssv.value;
+            if (sv_idn.length == 0) 
+                sv_idn = 'none';
+
+            axios.get(AdministrativeClasses.URL_LIST + '/'+ id_class + '/student/' + sv_idn).then(response => {
+                const data = response.data.data
+                if (data === null) {
+                    toast({
+                        title: "Không tìm thấy sinh viên!",
+                        type: 'error'
+                    })
+                    return;
+                }
+                AdministrativeClasses.removeSVFromDSSVTable(data.id);
+                AdministrativeClasses.addSVToDSSVTable(data.ten_dang_nhap, data.ten, data.id);
+                toast({
+                    title: "Thêm sinh viên thành công!",
+                    type: 'success'
+                })
+            })
+        })
+    }
+
+    static async sv_thuoc_lop({id}) {
+        AdministrativeClasses.renderDSSVTable();
+        await axios.get(AdministrativeClasses.URL_LIST + '/' + id + '/student').then(response => {
+            const data = response.data.data;
+
+            if (data === null)
+                return;
+            
+            data.forEach(sv => {
+                AdministrativeClasses.addSVToDSSVTable(sv.ten_dang_nhap, sv.ten, sv.id);
+            })
+        })
+
+        AdministrativeClasses.formAddSv(id);
+
+        const cap_nhat_dssv = document.querySelector('#cap_nhat_dssv')
+
+        if (cap_nhat_dssv === null) return;
+
+        cap_nhat_dssv.addEventListener('click', () => {
+            const dssv = document.querySelectorAll('.sinhvien');
+
+            if (dssv === null) return;
+            let sv_arr = [];
+            dssv.forEach(sv => {
+                sv_arr.push(sv.dataset.id);
+            })
+
+            axios.post(AdministrativeClasses.URL_LIST + '/' + id + '/student', {
+                dssv: sv_arr
+            }).then(response => {
+                console.log(response.data.data);
             })
         })
     }

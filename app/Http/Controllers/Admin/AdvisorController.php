@@ -22,7 +22,9 @@ class AdvisorController extends ApiController
      */
     public function index(PaginationRequest $request)
     {
-        return $this->administrativeClassesService->getCvht($request->cvht);
+        $cvht = $request->cvht;
+        if ($cvht === null) $cvht = '';
+        return $this->administrativeClassesService->getCvht($cvht);
     }
     /**
      * Display a listing of the resource.
