@@ -32,6 +32,7 @@ use App\Http\Controllers\Admin\StudentsInClassController;
 use App\Http\Controllers\Class\Everyone\EveryoneController;
 use App\Http\Controllers\Admin\ProgramKnowledgeBlockController;
 use App\Http\Controllers\Class\ClassroomPostController;
+use App\Http\Controllers\Class\MarksTable;
 use App\Http\Controllers\Class\SVRightPanelController;
 use App\Http\Controllers\Graduation\Student\SemesterController;
 use App\Http\Controllers\Graduation\Student\GraduateStudentController;
@@ -69,6 +70,7 @@ Route::middleware('auth:api')->group(function () {
     Route::apiResource('/file-bai-tap', FileBaiTapController::class);
     Route::apiResource('/tham-gia-nhom-hoc', ThamGiaController::class);
     Route::apiResource('/cham-diem', ChamDiemController::class);
+    Route::apiResource('/bang-diem', MarksTable::class);
     Route::apiResource('/everyone', EveryoneController::class);
     Route::post('/logout', [UserAuthController::class, 'logout']);
     //   Route::resource('posts', PostController::class);
