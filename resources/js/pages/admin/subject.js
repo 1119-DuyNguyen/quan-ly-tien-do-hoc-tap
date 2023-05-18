@@ -1,4 +1,4 @@
-import { Validator } from '../../components/helper/Validator';
+import { Validator } from '../../components/helper/validator';
 import { alertComponent } from '../../components/helper/alert-component';
 import { SmartTableTemplate } from '../../components/smart-table-template/SmartTableTemplate';
 import { ConfirmComponent } from '../../components/helper/confirm-component';
@@ -39,15 +39,15 @@ export class Subject {
             <label>Học phần tương đương</label>
 
             <select name="hoc_phan_tuong_duong_id" rules='required'>
-        
+
             </select>
         </div>
 
-        
+
 
     </div>
 
-       
+
     </div>
     <div class="form-group" style='text-align:left;'>
     <input name='co_tinh_tich_luy'  type="checkbox" class="input"rules='required' value="1" />
@@ -126,21 +126,21 @@ export class Subject {
                 <label for=""> Phần trăm cuối kỳ</label>
                 <input value="${data.phan_tram_cuoi_ki}" name='phan_tram_cuoi_ki'  type="text" class="input"rules='required|number' value="" />
             </div>
-    
+
             <!-- select -->
             <div class="grid-item form-group">
                 <label>Học phần tương đương</label>
-    
+
                 <select name="hoc_phan_tuong_duong_id" rules='required'>
-            
+
                 </select>
             </div>
-    
-            
-    
+
+
+
         </div>
-    
-           
+
+
         </div>
         <div class="form-group" style='text-align:left;'>
         <input name='co_tinh_tich_luy'  type="checkbox" class="input"rules='required' value="1" />

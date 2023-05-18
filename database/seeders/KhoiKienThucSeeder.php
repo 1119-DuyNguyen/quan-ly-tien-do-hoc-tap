@@ -20,16 +20,16 @@ class KhoiKienThucSeeder extends Seeder
         //
         for ($i = 0; $i < 4; $i++) {
             DB::table('muc_luc')
-            ->insert(array(
-                'ten' => fake()->word,
-            ));
+                ->insert(array(
+                    'ten' => "Mục lục " . fake()->word,
+                ));
         }
         for ($i = 0; $i < 4; $i++) {
             KhoiKienThuc::create([
                 'ten' => fake()->word,
-                'loai_kien_thuc_id' => $i+1,
+                'loai_kien_thuc_id' => $i + 1,
                 'chuong_trinh_dao_tao_id' => 1,
-                'muc_luc_id' => $i+1
+                'muc_luc_id' => $i + 1
             ]);
         }
     }

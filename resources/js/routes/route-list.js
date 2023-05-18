@@ -16,7 +16,6 @@ import { UserPermissions } from '../pages/admin/user-permissons.js';
 import { AdministrativeClasses } from '../pages/admin/AdministrativeClasses.js';
 
 const route = new Route();
-console.log('hi');
 route.addRoute('/', Authentication.login, { title: 'Login' }, 'templates/login.html');
 route.addRoute('404', '', { title: '404' }, 'templates/404.html');
 
@@ -27,7 +26,12 @@ route.addRoute('sinh-vien/dashboard', DashBoard.index, { title: 'DashBoard' }, '
 route.addRoute('sinh-vien/info', Info.index, {}, 'templates/info.html');
 route.addRoute('sinh-vien/graduate', Graduate.index, { title: 'Tốt nghiệp' }, 'templates/gradute.html');
 route.addRoute('sinh-vien/graduate/suggest', Graduate.suggest, { title: 'Gợi ý' }, 'templates/suggest_graduate.html');
-route.addRoute('sinh-vien/graduate/edu_program', Graduate.edu_program, { title: 'Kết quả theo tiến độ' }, 'templates/graduate_on_edu_program.html');
+route.addRoute(
+    'sinh-vien/graduate/edu_program',
+    Graduate.edu_program,
+    { title: 'Kết quả theo tiến độ' },
+    'templates/graduate_on_edu_program.html'
+);
 route.addRoute('sinh-vien/classroom', ClassroomStudent.index, { title: 'Nhóm học' }, 'templates/student/class.html');
 route.addRoute(
     'sinh-vien/classroom/$id',
@@ -120,11 +124,18 @@ route.addRoute(
 );
 
 route.addRoute('quan-tri-vien/program', Program.index, { title: 'Chương trình đào tạo' }, '');
+route.addRoute('quan-tri-vien/program/add', Program.add, { title: 'Chương trình đào tạo' }, '');
+
 route.addRoute('quan-tri-vien/program/$id', Program.view, { title: 'Chương trình đào tạo' }, '');
 
 route.addRoute('quan-tri-vien/role', Role.index, { title: 'Quyền' }, '');
 route.addRoute('quan-tri-vien/role/edit', Role.edit, { title: 'Quyền' }, 'templates/admin/role-edit.html');
-route.addRoute('quan-tri-vien/role/edit/$id', UserPermissions.edit, { title: 'Quyền' }, 'templates/admin/role-edit.html');
+route.addRoute(
+    'quan-tri-vien/role/edit/$id',
+    UserPermissions.edit,
+    { title: 'Quyền' },
+    'templates/admin/role-edit.html'
+);
 // route.addRoute('quan-tri-vien/subject', Sub.edit, { title: 'Quyền' }, 'templates/admin/role-edit.html');
 route.addRoute('quan-tri-vien/subject', Subject.index, { title: 'Học phần' }, '');
 

@@ -1,4 +1,4 @@
-import { Validator } from '../components/helper/Validator.js';
+import { Validator } from '../components/helper/validator.js';
 import { toast } from '../components/helper/toast.js';
 import { routeHref } from '../routes/route.js';
 
@@ -10,6 +10,8 @@ export class Authentication {
     static login() {
         var form = document.getElementById('login-form');
         let formValidate = new Validator(form);
+        let isSubmit = false;
+
         formValidate.onSubmit = function (formData) {
             // var inputs = form.querySelectorAll('input');
             //var formData = new FormData(form);
@@ -19,6 +21,10 @@ export class Authentication {
             // for (const [key, value] of data) {
             //     formData[key] = value;
             // }
+            if (isSubmit) return;
+            isSubmit = true;
+            var submitBtn = form.querySelector('[type="submit"]');
+            submitBtn.classList.add('process');
             axios
                 .post(Authentication.URL_LOGIN, formData, {
                     headers: {
@@ -55,6 +61,9 @@ export class Authentication {
                     //console.log(error.response.data);
                 })
                 .finally(() => {
+                    submitBtn.classList.remove('process');
+                    isSubmit = false;
+
                     routeHref('/');
                 });
         };

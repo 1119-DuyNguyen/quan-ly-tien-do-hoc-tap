@@ -1,3 +1,4 @@
+import NiceSelect from '../components/helper/nice-select';
 window.customFuncs = {};
 customFuncs.$ = function (selector, callback) {
     var selectors = document.querySelectorAll(selector);
@@ -68,6 +69,7 @@ window.getCookie = function (cname) {
     }
     return '';
 };
+window.NiceSelect = NiceSelect;
 
 // function checkCookie() {
 //     let user = getCookie('username');

@@ -1,9 +1,10 @@
 <?php
 
+namespace App\Http\Controllers;
 
+use App\Http\Controllers\ApiController;
 use App\Models\Nganh;
 use Illuminate\Http\Request;
-use App\Http\Controllers\ApiController;
 
 class MajorController extends ApiController
 {
@@ -16,7 +17,7 @@ class MajorController extends ApiController
     }
     public function all()
     {
-        return Nganh::all();
+        return $this->success(Nganh::all(), 200);
     }
     /**
      * Store a newly created resource in storage.
