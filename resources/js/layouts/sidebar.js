@@ -10,6 +10,11 @@ let navPage = {
         icon: 'fa-solid fa-house icon',
         text: 'Trang chủ',
     },
+    classes:{
+        role:['quan-tri-vien'],
+        icon:"",
+        text:"Lớp học"
+    },
     // chart: {
     //     role: ['quan-tri-vien'],
     //     icon: 'fa-solid fa-chart-simple icon',
@@ -36,7 +41,7 @@ let navPage = {
     },
 
     classroom: {
-        role: ['sinh-vien', 'giang-vien', ''],
+        role: ['sinh-vien', 'giang-vien'],
         icon: 'fa-solid fa-chalkboard icon',
         text: 'Lớp học',
     },

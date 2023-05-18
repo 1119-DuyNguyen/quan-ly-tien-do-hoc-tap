@@ -1,5 +1,6 @@
 import { alertComponent } from "../../components/helper/alert-component";
 import { toast } from "../../components/helper/toast";
+import { SmartTableTemplate } from "../../components/smart-table-template/SmartTableTemplate";
 import { PaginationService } from "../../components/smart-table-template/services/PaginationService";
 import { TableTree } from "../../components/table-tree";
 import { routeHref } from "../../routes/route";
@@ -79,7 +80,7 @@ export class AdministrativeClasses {
                     </tbody>
                 </table>
             </div>`;
-            
+            // new SmartTableTemplate
             const paginateContainer = new PaginationService(document.querySelector('#ds_lop'), renderDSLop, data.paginationOption);
             paginateContainer.renderPagination();
             renderDSLop();
