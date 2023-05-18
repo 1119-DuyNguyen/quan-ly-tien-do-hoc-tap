@@ -9,6 +9,7 @@ routeObj.listRoutes = routeList ? routeList : [];
 routeObj.currentPage = '';
 routeObj.previousPage = '';
 const SIGN_VARIABLE_URL = '$';
+
 /**
  *
  * @param {String} href
@@ -102,12 +103,11 @@ async function routeTo(route, _params, is404 = false) {
         // sidebarEl.dataset.isInit = '';
     }
     rootEl.innerHTML = '';
-
+    if (!is404) {
+        let briefContainer = generateBriefMap(rootEl);
+        if (briefContainer) rootEl.appendChild(briefContainer);
+    }
     if (html) {
-        if (!is404) {
-            let briefContainer = generateBriefMap(rootEl);
-            if (briefContainer) rootEl.appendChild(briefContainer);
-        }
         rootEl.insertAdjacentHTML('beforeend', html);
     }
 
@@ -147,7 +147,6 @@ const generateBriefMap = (element) => {
             href += location[i] + '/';
             if (index === i) break;
         }
-        href = href.replace(/^\/+|\/+$/g, '');
         return href;
     };
     let containerLink = document.createElement('div');
@@ -156,21 +155,17 @@ const generateBriefMap = (element) => {
     for (let i = 0; i < arrayPathname.length; ++i) {
         let a = document.createElement('a');
 
+        a.innerText = convertHrefToText(arrayPathname[i]) + '/';
+        a.classList.add('btn');
         if (i === arrayPathname.length - 1) {
-            a.innerText = convertHrefToText(arrayPathname[i]);
-
             a.classList.add('btn--link');
             a.classList.add('disabled');
         } else {
-            a.innerText = convertHrefToText(arrayPathname[i]) + '/';
-
             a.href = DOMAIN + '/' + getHrefBrief(arrayPathname, i);
             a.addEventListener('click', urlRoute);
 
             a.classList.add('btn--link');
         }
-        a.classList.add('btn');
-
         containerLink.append(a);
     }
     return containerLink;

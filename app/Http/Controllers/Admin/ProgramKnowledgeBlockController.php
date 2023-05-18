@@ -19,20 +19,26 @@ class ProgramKnowledgeBlockController extends ApiController
      */
     public function index($id)
     {
-        $lktList = [];
+        $mucLucList = [];
         $kktList = DB::table('khoi_kien_thuc')
             ->whereIn('chuong_trinh_dao_tao_id', [$id])
+            ->join('muc_luc', 'khoi_kien_thuc.muc_luc_id', 'muc_luc.id')
             ->leftJoin(
                 'loai_kien_thuc',
                 'khoi_kien_thuc.loai_kien_thuc_id',
                 'loai_kien_thuc.id'
             )
             ->orderBy('loai_kien_thuc.id')
-            ->get(['khoi_kien_thuc.*', 'loai_kien_thuc.ten as ten_loai_kien_thuc']);
+            ->get(['khoi_kien_thuc.*', 'loai_kien_thuc.ten as ten_loai_kien_thuc', 'muc_luc.ten as ten_muc_luc']);
 
 
         foreach ($kktList as $kkt) {
+            if (isset($mucLucList[$kkt->muc_luc_id])) {
 
+                $mucLucList[$kkt->muc_luc_id] = array_merge($mucLucList[$kkt->muc_luc_id], [$kkt]);
+            } else {
+                $mucLucList[$kkt->muc_luc_id] =  [$kkt];
+            }
             $hpBatBuoc = DB::table('hoc_phan_kkt_bat_buoc')
                 ->whereIn('khoi_kien_thuc_id', [$kkt->id])
                 ->join('hoc_phan', 'hoc_phan_kkt_bat_buoc.hoc_phan_id', 'hoc_phan.id')
@@ -81,7 +87,7 @@ class ProgramKnowledgeBlockController extends ApiController
         }
 
 
-        return $this->success($kktList, 200);
+        return $this->success($mucLucList, 200);
     }
 
     /**
