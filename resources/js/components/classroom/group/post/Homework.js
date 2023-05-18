@@ -12,15 +12,22 @@ export class Homework {
         this.#container = element;
     }
 
-    async getTeacherBaiTapData(id, sortBaiTap) {
+    async getTeacherBaiTapData(id, sortBaiTap, navClick) {
         this.#container.innerHTML = `<loader-component></loader-component>`;
         var BaiTapData;
         let html = '';
         let _this = this;
-        let url = new URL(window.location.href);
-        let params = new URLSearchParams(url.search);
-        const urlNew = new URL(Homework.URL_EXCERCISE + `/${id}`);
-        urlNew.searchParams.set('page', url.searchParams.get('page'));
+        if (navClick) {
+            let url = new URL(window.location.href);
+            var urlNew = new URL(Homework.URL_EXCERCISE + `/${id}`);
+            url.searchParams.set('page', 1);
+            urlNew.searchParams.set('page', 1);
+            window.history.replaceState(null, null, url);
+        } else {
+            let url = new URL(window.location.href);
+            var urlNew = new URL(Homework.URL_EXCERCISE + `/${id}`);
+            urlNew.searchParams.set('page', url.searchParams.get('page'));
+        }
         axios
             .get(urlNew.href, {
                 params: {
@@ -90,16 +97,23 @@ export class Homework {
             });
     }
 
-    async getStudentBaiTapData(id, sortBaiTap) {
+    async getStudentBaiTapData(id, sortBaiTap, navClick) {
         this.#container.innerHTML = `<loader-component></loader-component>`;
         var BaiTapData;
         var tungBaiTapData;
         let html = '';
         let _this = this;
-        let url = new URL(window.location.href);
-        let params = new URLSearchParams(url.search);
-        const urlNew = new URL(Homework.URL_EXCERCISE + `/${id}`);
-        urlNew.searchParams.set('page', url.searchParams.get('page'));
+        if (navClick) {
+            let url = new URL(window.location.href);
+            var urlNew = new URL(Homework.URL_EXCERCISE + `/${id}`);
+            url.searchParams.set('page', 1);
+            urlNew.searchParams.set('page', 1);
+            window.history.replaceState(null, null, url);
+        } else {
+            let url = new URL(window.location.href);
+            var urlNew = new URL(Homework.URL_EXCERCISE + `/${id}`);
+            urlNew.searchParams.set('page', url.searchParams.get('page'));
+        }
         axios
             .get(urlNew.href, {
                 params: {

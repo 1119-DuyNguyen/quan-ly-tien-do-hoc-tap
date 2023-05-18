@@ -4,6 +4,7 @@
 @use '../components/popup';
 @use '../components/people';
 @use '../components/graduate';
+@use '../base/color';
 
 .home-container {
     @include abstract.gridViewTemplateTwoCol(70%, 30%);
@@ -11,7 +12,7 @@
 
 .home-center-container {
     padding-left: 12px;
-    background: #f7fafb;
+    background: var(--home-center-container);
     grid-area: center;
     display: flex;
     flex-wrap: wrap;
@@ -30,7 +31,7 @@
                 //font-weight: 500;
                 line-height: 35px;
                 text-align: center;
-                color: #000000;
+                color: var(--color-black);
                 //color: #3218db;
                 margin-bottom: 8px;
             }
@@ -77,14 +78,14 @@
                 -webkit-box-orient: vertical;
 
                 text-align: center;
-                color: #ffffff;
+                color: var(--secondary-color);
                 margin: 0 auto;
             }
             .class-item__bar {
                 position: absolute;
                 width: 90%;
                 height: 0.3125rem;
-                background-color: #ffffff;
+                background-color: var(--secondary-color);
                 bottom: 1.5rem;
                 border-radius: 15px;
                 transform: translate(10px);
@@ -95,7 +96,7 @@
                     border-radius: 15px;
                 }
                 > span {
-                    color: white;
+                    color: var(--secondary-color);
                     font-size: 0.8rem;
                 }
             }
@@ -105,8 +106,8 @@
         a {
             text-decoration: none;
             padding: 1rem;
-            background-color: #45bfff;
-            color: white;
+            background-color: var(--color-item-5);
+            color: var(--secondary-color);
             float: left;
             margin-top: 1rem;
         }
@@ -123,7 +124,7 @@
     .progress-container {
         display: flex;
         flex-direction: column;
-        background-color: #ffffff;
+        background-color: var(--secondary-color);
         .progress-container__heading {
             margin-top: 1rem;
             margin-left: 0.8rem;
@@ -138,7 +139,7 @@
             .percentage__circle {
                 grid-row: 1 / span 2;
 
-                background: #ffffff;
+                background: var(--secondary-color);
                 box-shadow: -0.125rem 1.5625rem 3.0625rem -0.625rem rgba(0, 0, 0, 0.08);
                 border-radius: 1.0625rem;
                 text-align: center;
@@ -155,7 +156,7 @@
                     font-size: 0.8rem;
                     line-height: 15px;
 
-                    color: #6b6d78;
+                    color: var(--color-item-6);
                 }
                 .percentage__text--completed {
                     margin-top: 1rem;
@@ -170,7 +171,7 @@
                     font-size: 12px;
                     line-height: 15px;
 
-                    color: #6b6d78;
+                    color: var(--color-item-6);
                 }
             }
             .percentage__taskHours {
@@ -178,7 +179,7 @@
                 justify-content: space-around;
                 grid-template-columns: 100%;
                 .percentage__taskHours--item {
-                    background: #ffffff;
+                    background: var(--secondary-color);
                     box-shadow: -0.125rem 1.875rem 3.125rem -0.75rem rgba(0, 0, 0, 0.1);
                     border-radius: 0.8125rem;
                     min-height: 104px;
@@ -209,7 +210,7 @@
                         font-size: 12px;
                         line-height: 15px;
 
-                        color: #6b6d78;
+                        color: var(--color-item-6);
                     }
                 }
             }
@@ -227,7 +228,7 @@
                 a {
                     margin-left: 0.5rem;
                     text-decoration: none;
-                    color: #6b6d78;
+                    color: var(--color-item-6);
                 }
                 img {
                     margin-left: 0.4rem;
@@ -241,7 +242,7 @@
                 }
 
                 .deadline__item {
-                    background: #ffffff;
+                    background: var(--secondary-color);
                     box-shadow: -0.125rem 1.625rem 3.125rem -0.625rem rgba(0, 0, 0, 0.08);
                     border-radius: 0.75rem;
 
@@ -269,7 +270,7 @@
                     .deadline__item--time {
                         padding: 8px;
                         background: #ffbb55;
-                        color: #ffffff;
+                        color: var(--secondary-color);
                         border-radius: 25px;
                         margin-top: 8px;
                         align-self: flex-start;
@@ -286,7 +287,7 @@
             display: flex;
             flex-direction: column;
 
-            background: #ffffff;
+            background: var(--secondary-color);
             box-shadow: -0.125rem 1.625rem 3.125rem -0.5rem rgba(0, 0, 0, 0.08);
             border-radius: 0.75rem;
 
@@ -298,7 +299,7 @@
                 padding-left: 16px;
             }
             .calendar__item {
-                background: #ffffff;
+                background: var(--secondary-color);
                 box-shadow: -0.125rem 1.625rem 3.125rem -0.625rem rgba(0, 0, 0, 0.08);
                 padding-top: 0.6rem;
                 border-radius: 0.75rem;

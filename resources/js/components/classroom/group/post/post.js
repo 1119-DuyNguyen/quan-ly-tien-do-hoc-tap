@@ -8,15 +8,22 @@ export class Post {
         this.#container = element;
     }
 
-    async getTeacherPostData(id) {
+    async getTeacherPostData(id, navClick) {
         this.#container.innerHTML = `<loader-component></loader-component>`;
         var postData;
         let html = '';
         let _this = this;
-        let url = new URL(window.location.href);
-        let params = new URLSearchParams(url.search);
-        const urlNew = new URL(Post.URL_CLASS_POST + `/${id}/post/${id}`);
-        urlNew.searchParams.set('page', url.searchParams.get('page'));
+        if (navClick) {
+            let url = new URL(window.location.href);
+            var urlNew = new URL(Post.URL_CLASS_POST + `/${id}/post/${id}`);
+            url.searchParams.set('page', 1);
+            urlNew.searchParams.set('page', 1);
+            window.history.replaceState(null, null, url);
+        } else {
+            let url = new URL(window.location.href);
+            var urlNew = new URL(Post.URL_CLASS_POST + `/${id}/post/${id}`);
+            urlNew.searchParams.set('page', url.searchParams.get('page'));
+        }
         axios
             .get(urlNew.href)
             .then((response) => {
@@ -62,15 +69,22 @@ export class Post {
             });
     }
 
-    getStudentPostData(id) {
+    getStudentPostData(id, navClick) {
         this.#container.innerHTML = `<loader-component></loader-component>`;
         var postData;
         let html = '';
         let _this = this;
-        let url = new URL(window.location.href);
-        let params = new URLSearchParams(url.search);
-        const urlNew = new URL(Post.URL_CLASS_POST + `/${id}/post/${id}`);
-        urlNew.searchParams.set('page', url.searchParams.get('page'));
+        if (navClick) {
+            let url = new URL(window.location.href);
+            var urlNew = new URL(Post.URL_CLASS_POST + `/${id}/post/${id}`);
+            url.searchParams.set('page', 1);
+            urlNew.searchParams.set('page', 1);
+            window.history.replaceState(null, null, url);
+        } else {
+            let url = new URL(window.location.href);
+            var urlNew = new URL(Post.URL_CLASS_POST + `/${id}/post/${id}`);
+            urlNew.searchParams.set('page', url.searchParams.get('page'));
+        }
         axios
             .get(urlNew.href)
             .then((response) => {

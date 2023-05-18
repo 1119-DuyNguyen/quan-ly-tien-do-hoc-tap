@@ -18,7 +18,7 @@ export class ClassroomStudent {
         //render data bài đăng khi vừa bắt đầu load
         let groupPostContainer = document.getElementById('class-center-container__class-dashboard--post-feed');
         let groupPost = new Post(groupPostContainer);
-        groupPost.getStudentPostData(id);
+        groupPost.getStudentPostData(id, true);
 
         //render  header của group page
         let groupHeaderContainer = document.getElementById('class-center-container__class-header');
@@ -30,7 +30,7 @@ export class ClassroomStudent {
         baiDangBtn.addEventListener('click', (e) => {
             let groupPostContainer = document.getElementById('class-center-container__class-dashboard--post-feed');
             let groupPost = new Post(groupPostContainer);
-            groupPost.getStudentPostData(id);
+            groupPost.getStudentPostData(id, true);
         });
 
         //Render bài tập
@@ -38,17 +38,17 @@ export class ClassroomStudent {
         let taskContainer = new Homework(taskContainerContainer);
         let baiTapBtn = navBarBtn[1];
         baiTapBtn.addEventListener('click', (e) => {
-            taskContainer.getStudentBaiTapData(id, 'moiNhat');
+            taskContainer.getStudentBaiTapData(id, 'moiNhat', true);
         });
 
         let sortBaiTapMoiBtn = document.getElementById('sinh_vien_new_bai_tap_btn');
         sortBaiTapMoiBtn.addEventListener('click', (e) => {
-            taskContainer.getStudentBaiTapData(id, 'moiNhat');
+            taskContainer.getStudentBaiTapData(id, 'moiNhat', true);
         });
 
         let sortBaiTapDeadlineBtn = document.getElementById('sinh_vien_deadline_bai_tap_btn');
         sortBaiTapDeadlineBtn.addEventListener('click', (e) => {
-            taskContainer.getStudentBaiTapData(id, 'deadline');
+            taskContainer.getStudentBaiTapData(id, 'deadline', true);
         });
 
         //render danh sách thành viên của group page

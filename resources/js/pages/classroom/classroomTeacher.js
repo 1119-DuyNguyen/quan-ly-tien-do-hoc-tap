@@ -12,43 +12,64 @@ export class ClassroomTeacher {
     }
 
     static show({ id }) {
+        let navBarBtn = document.querySelectorAll('.class-center-container__class-dashboard-tab-btn');
+        console.log(navBarBtn);
+
         //render  header của group page
         let groupHeaderContainer = document.getElementById('class-center-container__class-header');
         let groupHeader = new Group(groupHeaderContainer);
         groupHeader.getGroupData(id);
 
-        //render bài đăng của group page
+        //render data bài đăng khi vừa bắt đầu load
         let groupPostContainer = document.getElementById('class-center-container__class-dashboard--post-feed');
         let groupPost = new Post(groupPostContainer);
-        groupPost.getTeacherPostData(id);
+        groupPost.getTeacherPostData(id, true);
+
+        //render bài đăng của group page
+        let baiDangBtn = navBarBtn[0];
+        baiDangBtn.addEventListener('click', (e) => {
+            let url = new URL(window.location.href);
+            url.searchParams.set('page', 1);
+            let groupPostContainer = document.getElementById('class-center-container__class-dashboard--post-feed');
+            let groupPost = new Post(groupPostContainer);
+            groupPost.getTeacherPostData(id, true);
+        });
 
         //render danh sách thành viên của group page
-        let everyoneContainer = document.getElementById(
-            'class-center-container__class-dashboard--everyone tab-content'
-        );
-        let everyone = new Everyone(everyoneContainer);
-        everyone.getEveryoneData(id);
+        let moiNguoiBtn = navBarBtn[2];
+        moiNguoiBtn.addEventListener('click', (e) => {
+            let everyoneContainer = document.getElementById(
+                'class-center-container__class-dashboard--everyone tab-content'
+            );
+            let everyone = new Everyone(everyoneContainer);
+            everyone.getEveryoneData(id);
+        });
 
         //add bài đăng mới sau khi submit form
         let newPostForm = document.getElementById('class-center-container__class-dashboard--new-post');
         newPostForm.addEventListener('submit', (e) => {
             e.preventDefault();
+            let groupPostContainer = document.getElementById('class-center-container__class-dashboard--post-feed');
+            let groupPost = new Post(groupPostContainer);
             groupPost.addPost(id);
         });
 
         //Render bài tập
         let taskContainerContainer = document.getElementById('task-container');
         let taskContainer = new Homework(taskContainerContainer);
-        taskContainer.getTeacherBaiTapData(id, 'moiNhat');
+        let baiTapBtn = navBarBtn[1];
+        baiTapBtn.addEventListener('click', (e) => {
+            taskContainer.getTeacherBaiTapData(id, 'moiNhat', true);
+        });
 
         let sortBaiTapMoiBtn = document.getElementById('giao_vien_new_bai_tap_btn');
         sortBaiTapMoiBtn.addEventListener('click', (e) => {
-            taskContainer.getTeacherBaiTapData(id, 'moiNhat');
+            taskContainer.getTeacherBaiTapData(id, 'moiNhat', true);
         });
 
         let sortBaiTapDeadlineBtn = document.getElementById('giao_vien_deadline_bai_tap_btn');
         sortBaiTapDeadlineBtn.addEventListener('click', (e) => {
-            taskContainer.getTeacherBaiTapData(id, 'deadline');
+            taskContainer.getTeacherBaiTapData(id, 'deadline', true);
         });
 
         //add bài tập
