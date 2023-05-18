@@ -374,6 +374,8 @@ export class Program {
                         }
                     });
             };
+
+            // render chương trình đào tạo
         });
 
         // Program.getDetailProgram()
@@ -638,9 +640,7 @@ export class Program {
         knowledgeBlockContainer.classList.add('child-program-container');
         let programContainer = document.createElement('div');
 
-        knowledgeBlockContainer.appendChild(programContainer);
-
-        Program.getDetailProgram(id)
+        let promiseProgram = Program.getDetailProgram(id)
             .then((data) => {
                 programContainer.classList.add('program-container');
 
@@ -649,71 +649,137 @@ export class Program {
                     return;
                 }
 
-                programContainer.innerHTML = `
-        <div class="program-container__item program-container__item--primary">
-        <form class="">
+                let errorMessage = [];
+                let promiseListMajor = axios
+                    .get(Program.URL_MAJOR)
+                    .then((res) => res.data.data)
+                    .then((data) => {
+                        if (data.length < 1) {
+                            errorMessage.push('Chưa khởi tạo ngành');
+                            return;
+                        }
+                        return data;
+                    })
+                    .catch((e) => {
+                        errorMessage.push('Có lỗi khi lấy danh sách ngành');
+                    });
+                let promiseListPeriod = axios
+                    .get(Program.URL_PERIOD)
+                    .then((res) => res.data.data)
+                    .then((data) => {
+                        if (data.length < 1) {
+                            errorMessage.push('Chưa khởi tạo chu kỳ');
+                            return;
+                        }
+                        return data;
+                    })
+                    .catch((e) => {
+                        errorMessage.push('Có lỗi khi lấy danh sách ngành');
+                    });
+                Promise.all([promiseListMajor, promiseListPeriod]).then(function (values) {
+                    if (errorMessage.length > 0) {
+                        errorMessage = errorMessage.join(' ,');
+                        programContainer.innerHTML = errorMessage.slice(0, errorMessage.length - 1);
+                        return;
+                    }
+                    let listMajor = values[0];
+                    let htmlOptionMajor = '';
+                    listMajor.forEach((major) => {
+                        htmlOptionMajor += `<option value="${major.id}" ${
+                            major.id === data.nganh_id ? 'selected' : ''
+                        }>${major.ten} ( ${major.ma_nganh} ) </option>`;
+                    });
+                    let listPeriod = values[1];
+                    let htmlOptionPeriod = '';
+                    listPeriod.forEach((period) => {
+                        htmlOptionPeriod += `<option value="${period.id}" ${
+                            period.id === data.chu_ky_id ? 'selected' : ''
+                        }> ${period.ten} ( ${period.nam_bat_dau} - ${period.nam_ket_thuc})</option>`;
+                    });
+                    programContainer.innerHTML = `
+                    <div class="program-container__item program-container__item--primary">
+                    <form class="">
 
-        <div class="form-group">
-        <label for=""> Tên</label>
-        <input rules='required' type="text" name='ten' class="input" value="${data.ten}" />
-        </div>
+                    <div class="form-group">
+                    <label for=""> Tên</label>
+                    <input rules='required' type="text" name='ten' class="input" value="${data.ten}" />
+                    </div>
 
-        <div class="form-group">
-        <label>Trình độ đào tạo: </label>
-        <input  rules='required'  name='trinh_do_dao_tao' value="${data.trinh_do_dao_tao ?? ''}">
-        </div>
+                    <div class="form-group">
+                    <label>Trình độ đào tạo: </label>
+                    <input  rules='required'  name='trinh_do_dao_tao' value="${data.trinh_do_dao_tao ?? ''}">
+                    </div>
 
-        <div class="form-group">
-        <label>Ngành đào tạo: </label>
-        <input  rules='required'  name='ten_nganh' value="${data.ten_nganh ?? ''}">
-        </div>
+                    <div class="form-group">
+                    <label>Ngành đào tạo: </label>
+                    <select  class="full-width" name='nganh_id' placeHolder="Lựa chọn ngành đào tạo" rules='required'>
+                    <option value="" selected disabled hidden></option>
+                    ${htmlOptionMajor}
+                    </select >
+                    </div>
 
-        <div class="form-group">
-        <label>Mã ngành: </label>
-        <input  rules='required'  name='nganh_id' value="${data.nganh_id ?? ''}">
-        </div>
+                    <div class="form-group">
+                    <label>Chu kỳ:</label>
+                    <select class="full-width" name='chu_ky_id' placeHolder="Lựa chọn chu kỳ" rules='required'>
+                    <option value="" selected disabled hidden></option>
+                    ${htmlOptionPeriod}
+                    </select >
+                    </div>
 
-        <div class="form-group">
-        <label>Hình thức đào tạo: </label>
-        <input  rules='required'  name='hinh_thuc_dao_tao' value="${data.hinh_thuc_dao_tao ?? ''}">
-        </div>
+                    <div class="form-group">
+                    <label>Hình thức đào tạo: </label>
+                    <input  rules='required'  name='hinh_thuc_dao_tao' value="${data.hinh_thuc_dao_tao ?? ''}">
+                    </div>
 
-        <div class="form-group">
-        <label>Thời gian đào tạo(năm): </label>
-        <input  rules='required'  name='thoi_gian_dao_tao' value="${data.thoi_gian_dao_tao ?? '0'}">
-        </div>
+                    <div class="form-group">
+                    <label>Thời gian đào tạo(năm): </label>
+                    <input  rules='required|number|minNum:0'  name='thoi_gian_dao_tao' value="${
+                        data.thoi_gian_dao_tao ?? ''
+                    }">
+                    </div>
 
-        <div class="form-group">
-        <label>Chu kỳ:</label>
-        <input  rules='required'  name='ten_chu_ky' value="${data.ten_chu_ky}">
-        </div>
 
-        <div class="form-group">
-        <label>Tín chỉ tối thiểu: </label>
-        <input  rules='required'  name='tong_tin_chi' value="${data.tong_tin_chi ?? 0}">
-        </div>
 
-        <div class="form-group">
-        <label>Ghi chú:</label>
-        <input  rules='required'  name='tong_tin_chi' value="${data.ghi_chu ?? ''}">
-        </div>
-        <input type="submit" class="btn-submit" value="Cập nhập">
-        </form>
-        </div>
-        `;
-                let formSubmit = new Validator(programContainer.querySelector('form'));
-                formSubmit.onSubmit = function (data) {
-                    console.log(data);
-                };
+                    <div class="form-group">
+                    <label>Tín chỉ tối thiểu: </label>
+                    <input  rules='required|number|minNum:0'  name='tong_tin_chi' value="${data.tong_tin_chi ?? ''}">
+                    </div>
+
+                    <div class="form-group">
+                    <label>Ghi chú:</label>
+                    <input  name='ghi_chu' value="${data.ghi_chu ?? ''}">
+                    </div>
+                    <input type="submit" class="btn-submit" value="Cập nhập chương trình đào tao">
+                    </form>
+                    </div>
+                    `;
+                    let selectElements = programContainer.querySelectorAll('select[name]');
+                    selectElements.forEach((el) => {
+                        new NiceSelect(el, { searchable: true });
+                    });
+                    let formSubmit = new Validator(programContainer.querySelector('form'));
+                    formSubmit.onSubmit = function (data) {
+                        console.log(data);
+                        axios
+                            .post(Program.URL_PROGRAM, data)
+                            .then((res) => routeHref(location.protocol + '//' + location.host + '/program'))
+                            .catch((err) => {
+                                if (err?.response?.data?.message) {
+                                    alertComponent('Có lỗi khi gửi yêu cầu lên máy chủ', err.response.data.message);
+                                }
+                            });
+                    };
+
+                    // render chương trình đào tạo
+                });
             })
             .catch((err) => {
                 alertComponent('Tìm kiếm dữ liệu chương trình đào tạo thất bại');
             });
-
+        // ----------------------RENDER TREE TABLE ------------------------------------------
         let tableContainer = document.createElement('div');
-        knowledgeBlockContainer.appendChild(tableContainer);
         let index = 1;
-        Program.getDetailKnowledgeBlock(id)
+        let promiseKnowledge = Program.getDetailKnowledgeBlock(id)
             .then((data) => {
                 //create Loại & Khối kiến thức
                 let html = '';
@@ -743,89 +809,101 @@ export class Program {
                     let htmlKKT = '';
 
                     htmlKKT += `
-                    <tr data-depth="${depthKKT}" class='collapse'>
-                    <td colspan="3" class='toggle'>${kkt.ten}</td>
-                    <td colspan="1">${kkt.tong_tin_chi_ktt_bat_buoc + kkt.tong_tin_chi_ktt_tu_chon}/${
+                                    <tr data-depth="${depthKKT}" class='collapse'>
+                                    <td colspan="3" class='toggle'>${kkt.ten}</td>
+                                    <td colspan="1">${kkt.tong_tin_chi_ktt_bat_buoc + kkt.tong_tin_chi_ktt_tu_chon}/${
                         kkt.tong_tin_chi_ktt_bat_buoc + kkt.tong_tin_chi_ktt_tu_chon
                     }</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    </tr>
-                    `;
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    </tr>
+                                    `;
 
                     if (kkt.hpBatBuoc) {
                         htmlKKT += `
-                        <tr data-depth="${depthKKT + 1}" class='collapse'>
-                        <td colspan="3" class='toggle'>Các học phần bắt buộc</td>
-                        <td colspan="1">${kkt.tong_tin_chi_ktt_bat_buoc}/${kkt.tong_tin_chi_ktt_bat_buoc}</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        </tr>
-                        `;
+                                        <tr data-depth="${depthKKT + 1}" class='collapse'>
+                                        <td colspan="3" class='toggle'>Các học phần bắt buộc</td>
+                                        <td colspan="1">${kkt.tong_tin_chi_ktt_bat_buoc}/${
+                            kkt.tong_tin_chi_ktt_bat_buoc
+                        }</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        </tr>
+                                        `;
                         let curHp = undefined;
                         let hkGoiY = [];
                         console.log(kkt.hpBatBuoc);
                         Object.keys(kkt.hpBatBuoc).forEach((key) => {
                             let hp = kkt.hpBatBuoc[key];
                             htmlKKT += `
-                                    <tr data-depth="${depthKKT + 2}" class='collapse' data-hp="${hp.id}">
-                                    <td rowspan="1">${index++}</td>
-                                    <td rowspan="1">${hp.ma_hoc_phan}</td>
-                                    <td rowspan="1">${hp.ten}</td>
-                                    <td rowspan="1">${hp.so_tin_chi}</td>
-                                    ${generateTdHocKy(9, hp.hoc_ky_goi_y)}
-                                    <td rowspan="1">${hp.hoc_phan_tuong_duong_id ? hp.hoc_phan_tuong_duong_id : ''}</td>
-                                    </tr>
-                                    `;
+                                                    <tr data-depth="${depthKKT + 2}" class='collapse' data-hp="${
+                                hp.id
+                            }">
+                                                    <td rowspan="1">${index++}</td>
+                                                    <td rowspan="1">${hp.ma_hoc_phan}</td>
+                                                    <td rowspan="1">${hp.ten}</td>
+                                                    <td rowspan="1">${hp.so_tin_chi}</td>
+                                                    ${generateTdHocKy(9, hp.hoc_ky_goi_y)}
+                                                    <td rowspan="1">${
+                                                        hp.hoc_phan_tuong_duong_id ? hp.hoc_phan_tuong_duong_id : ''
+                                                    }</td>
+                                                    </tr>
+                                                    `;
                         });
                     }
 
                     if (kkt.hpTuChon) {
                         htmlKKT += `
-                        <tr data-depth="${depthKKT + 1}" class='collapse'>
-                        <td colspan="3" class='toggle'>Các học phần tự chọn</td>
-                        <td colspan="1">${kkt.tong_tin_chi_ktt_tu_chon}/${kkt.tong_tin_chi_ktt_tu_chon}</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        </tr>
-                        `;
+                                        <tr data-depth="${depthKKT + 1}" class='collapse'>
+                                        <td colspan="3" class='toggle'>Các học phần tự chọn</td>
+                                        <td colspan="1">${kkt.tong_tin_chi_ktt_tu_chon}/${
+                            kkt.tong_tin_chi_ktt_tu_chon
+                        }</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        </tr>
+                                        `;
 
                         Object.keys(kkt.hpTuChon).forEach((key) => {
                             let hp = kkt.hpTuChon[key];
                             htmlKKT += `
-                                    <tr data-depth="${depthKKT + 2}" class='collapse' data-hp="${hp.id}">
-                                    <td rowspan="1">${index++}</td>
-                                    <td rowspan="1">${hp.ma_hoc_phan}</td>
-                                    <td rowspan="1">${hp.ten}</td>
-                                    <td rowspan="1">${hp.so_tin_chi}</td>
-                                    ${generateTdHocKy(9, hp.hoc_ky_goi_y)}
-                                    <td rowspan="1">${hp.hoc_phan_tuong_duong_id ? hp.hoc_phan_tuong_duong_id : ''}</td>
-                                    </tr>
-                                    `;
+                                                    <tr data-depth="${depthKKT + 2}" class='collapse' data-hp="${
+                                hp.id
+                            }">
+                                                    <td rowspan="1">${index++}</td>
+                                                    <td rowspan="1">${hp.ma_hoc_phan}</td>
+                                                    <td rowspan="1">${hp.ten}</td>
+                                                    <td rowspan="1">${hp.so_tin_chi}</td>
+                                                    ${generateTdHocKy(9, hp.hoc_ky_goi_y)}
+                                                    <td rowspan="1">${
+                                                        hp.hoc_phan_tuong_duong_id ? hp.hoc_phan_tuong_duong_id : ''
+                                                    }</td>
+                                                    </tr>
+                                                    `;
                         });
                     }
 
@@ -834,22 +912,22 @@ export class Program {
 
                         if (currentLKT.id) {
                             html += `
-                            <tr data-depth="0" class='collapse'>
-                            <td colspan="3" class='toggle' value="${currentLKT.id}">
-                            ${currentLKT.ten ?? ''}</td>
-                            <td colspan="1">${stcKKT + '/' + stcKKT}</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            </tr>
-                            `;
+                                            <tr data-depth="0" class='collapse'>
+                                            <td colspan="3" class='toggle' value="${currentLKT.id}">
+                                            ${currentLKT.ten ?? ''}</td>
+                                            <td colspan="1">${stcKKT + '/' + stcKKT}</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            </tr>
+                                            `;
                             html += htmlLKT;
                             resetCurrrentLKT();
                         }
@@ -864,22 +942,22 @@ export class Program {
                         //in khi chuyển tiếp kkt sang lkt
                         if (currentLKT.id) {
                             html += `
-                            <tr data-depth="0" class='collapse'>
-                            <td colspan="3" class='toggle' value="${currentLKT.id}">
-                            ${currentLKT.ten ?? ''}</td>
-                            <td colspan="1">${stcKKT + '/' + stcKKT}</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            </tr>
-                            `;
+                                            <tr data-depth="0" class='collapse'>
+                                            <td colspan="3" class='toggle' value="${currentLKT.id}">
+                                            ${currentLKT.ten ?? ''}</td>
+                                            <td colspan="1">${stcKKT + '/' + stcKKT}</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            </tr>
+                                            `;
                             html += htmlLKT;
                         }
                         resetCurrrentLKT();
@@ -895,57 +973,57 @@ export class Program {
                 // in lần cuối
                 if (currentLKT.id) {
                     html += `
-                    <tr data-depth="0" class='collapse'>
-                    <td colspan="3" class='toggle' value="${currentLKT.id}">
-                    ${currentLKT.ten ?? ''}</td>
-                    <td colspan="1">${stcKKT + '/' + stcKKT}</td>
-                    <td colspan="10"></td>
+                                    <tr data-depth="0" class='collapse'>
+                                    <td colspan="3" class='toggle' value="${currentLKT.id}">
+                                    ${currentLKT.ten ?? ''}</td>
+                                    <td colspan="1">${stcKKT + '/' + stcKKT}</td>
+                                    <td colspan="10"></td>
 
-                    </tr>
-                    `;
+                                    </tr>
+                                    `;
                     html += htmlLKT;
                 }
                 tableContainer.innerHTML = `
 
-                        <div class="table-container">
-                        <table class="table-graduate">
-                        <colgroup>
-                        <col span="1" style="width: 5%; min-width:40px;">
-                        <col span="1" style="width: 10%; min-width:60px;">
-                        <col span="1" style="width: 40%; min-width:320px;">
-                        <col span="1" style="width: 10%;min-width:80px;">
-                        <col span="9" style="width: 15px; ">
-                        <col span="1" style="width: 10%; min-width:60px;">
-                        </colgroup>
-                        <thead>
-                        <tr>
-                            <th rowspan="2">TT</th>
-                            <th rowspan="2">Mã học phần</th>
-                            <th rowspan="2">Tên Học phần</th>
-                            <th rowspan="2">Số tín chỉ</th>
-                            <th rowspan="1" colspan="9">HỌC KỲ</th>
-                            <th rowspan="2">Mã học phần trước</th>
-                        </tr>
-                        <tr>
+                                        <div class="table-container">
+                                        <table class="table-graduate">
+                                        <colgroup>
+                                        <col span="1" style="width: 5%; min-width:40px;">
+                                        <col span="1" style="width: 10%; min-width:60px;">
+                                        <col span="1" style="width: 40%; min-width:320px;">
+                                        <col span="1" style="width: 10%;min-width:80px;">
+                                        <col span="9" style="width: 15px; ">
+                                        <col span="1" style="width: 10%; min-width:60px;">
+                                        </colgroup>
+                                        <thead>
+                                        <tr>
+                                            <th rowspan="2">TT</th>
+                                            <th rowspan="2">Mã học phần</th>
+                                            <th rowspan="2">Tên Học phần</th>
+                                            <th rowspan="2">Số tín chỉ</th>
+                                            <th rowspan="1" colspan="9">HỌC KỲ</th>
+                                            <th rowspan="2">Mã học phần trước</th>
+                                        </tr>
+                                        <tr>
 
-                        <th rowspan="1">1</th>
-                        <th rowspan="1">2</th>
-                        <th rowspan="1">3</th>
-                        <th rowspan="1">4</th>
-                        <th rowspan="1">5</th>
-                        <th rowspan="1">6</th>
-                        <th rowspan="1">7</th>
-                        <th rowspan="1">8</th>
-                        <th rowspan="1">9</th>
+                                        <th rowspan="1">1</th>
+                                        <th rowspan="1">2</th>
+                                        <th rowspan="1">3</th>
+                                        <th rowspan="1">4</th>
+                                        <th rowspan="1">5</th>
+                                        <th rowspan="1">6</th>
+                                        <th rowspan="1">7</th>
+                                        <th rowspan="1">8</th>
+                                        <th rowspan="1">9</th>
 
-                        </tr>
-                        </thead>
-                        <tbody>
-                        ${html}
-                        </tbody>
-                    </table>
-                </div>
-                        `;
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        ${html}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                        `;
 
                 //         tableContainer.innerHTML = `
 
@@ -1039,12 +1117,15 @@ export class Program {
                 tableContainer.querySelectorAll('table').forEach((table) => {
                     TableTree.bind(table);
                 });
-                console.log(data);
             })
             .catch((err) => {
                 console.error(err);
                 alertComponent('khởi tạo khối kiến thức chương trình đào tạo thất bại');
             });
+        Promise.all([promiseProgram, promiseKnowledge]).then((values) => {
+            knowledgeBlockContainer.appendChild(programContainer);
+            knowledgeBlockContainer.appendChild(tableContainer);
+        });
         return knowledgeBlockContainer;
     }
     static renderViewCTDT(id) {
