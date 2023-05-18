@@ -11,6 +11,7 @@ use App\Models\Users\Students\TrainingProgram\Subjects\HocPhan;
 use App\Models\Users\Students\TrainingProgram\ChuKy;
 use App\Models\Nganh;
 use App\Models\Khoa;
+use App\Models\Users\Students\TrainingProgram\Subjects\MucLuc;
 use Str;
 class KhoiKienThucImportInfo extends ImportInfo
 {
@@ -23,6 +24,7 @@ class KhoiKienThucImportInfo extends ImportInfo
         $nganh_dao_tao = false;
         $ma_nganh = false;
         $khoa = false;
+        $hinh_thuc_dao_tao = false;
         $trinh_do_dao_tao = false;
         $thoi_gian_dao_tao = false;
         $chu_ky = false;
@@ -42,6 +44,8 @@ class KhoiKienThucImportInfo extends ImportInfo
 
                     $this->setValueFromKeyStr($ma_nganh, $row[0], 'Mã ngành: ');
 
+                    $this->setValueFromKeyStr($hinh_thuc_dao_tao, $row[0], 'Hình thức đào tạo: ');
+
                     $this->setValueFromKeyStr($khoa, $row[0], 'Khoa: ');
 
                     $this->setValueFromKeyStr($trinh_do_dao_tao, $row[0], 'Trình độ đào tạo: ');
@@ -54,7 +58,7 @@ class KhoiKienThucImportInfo extends ImportInfo
 
                     $this->setValueFromKeyStr($chu_ky, $row[0], 'Chu kỳ: ');
 
-                    if (!$this->checkTrueAndSet([$nganh_dao_tao, $khoa, $ma_nganh, $trinh_do_dao_tao, $thoi_gian_dao_tao, $chu_ky, $tong_tin_chi], $firstData))
+                    if (!$this->checkTrueAndSet([$nganh_dao_tao, $khoa, $ma_nganh, $trinh_do_dao_tao, $thoi_gian_dao_tao, $chu_ky, $tong_tin_chi, $hinh_thuc_dao_tao], $firstData))
                         continue;
                     else {
                         $nam_bd = intval(explode('-', $chu_ky)[0]);
@@ -64,11 +68,14 @@ class KhoiKienThucImportInfo extends ImportInfo
 
 
                 //Loai
-                if ($this->setValueFromKeyStr($ten_loai, $row[0], '/')){
+                if ($this->setValueFromKeyStr($ten_muc_luc, $row[0], '~')){
                     $ten_KKT = null;
                     // $isTuChon = true;
                     continue;
                 };
+
+                if ($this->setValueFromKeyStr($ten_loai, $row[0], '/'))
+                    continue;
                 // if (!isset($ten_loai))
                 //     continue;
 
@@ -78,39 +85,40 @@ class KhoiKienThucImportInfo extends ImportInfo
                 }
 
                 if ($ten_KKT == null){
-                    if ($this->setLoai($row, $tmp, $tin_chi)){
-                        $ten_KKT = $ten_loai;
-                        // if ()
-                        $CTDT[$ten_loai][$ten_KKT]['Tin-chi-tu-chon'] = $tin_chi;
-                    }
+                    // if ($this->setLoai($row, $tmp, $tin_chi)){
+                    //     $ten_KKT = $ten_loai;
+                    //     // if ()
+                    //     $CTDT[$ten_loai][$ten_KKT]['Tin-chi-tu-chon'] = $tin_chi;
+                    // }
                     continue;
                 }
 
                 if ($this->setLoai($row, $tmp, $tin_chi)) {
-                    $CTDT[$ten_loai][$ten_KKT]['Tin-chi-tu-chon'] = $tin_chi;
+                    $CTDT[$ten_muc_luc][$ten_KKT]['Tin-chi-tu-chon'] = $tin_chi;
                 // if (!$tin_chi != 0)
                 //     // dd($tin_chi);
                 //     // $isTuChon = !$isTuChon;
                     continue;
                 }
 
-                if (!isset($CTDT[$ten_loai][$ten_KKT]['Bat-buoc'])){
+                if (!isset($CTDT[$ten_muc_luc][$ten_KKT]['Bat-buoc'])){
                     // $CTDT[$ten_loai] = [];
                     // $CTDT[$ten_loai][$ten_KKT] = [];
-                    $CTDT[$ten_loai][$ten_KKT]['Bat-buoc'] = [];
-                    $CTDT[$ten_loai][$ten_KKT]['Tu-chon'] = [
+                    $CTDT[$ten_muc_luc][$ten_KKT]['Bat-buoc'] = [];
+                    $CTDT[$ten_muc_luc][$ten_KKT]['Tu-chon'] = [
                         // 'Tin-chi' => $tin_chi
                     ];
-                    $CTDT[$ten_loai][$ten_KKT]['Tin-chi-tu-chon'] = 0;
+                    $CTDT[$ten_muc_luc][$ten_KKT]['Tin-chi-tu-chon'] = 0;
+                    $CTDT[$ten_muc_luc][$ten_KKT]['Ten-loai'] = $ten_loai;
                 // dd([$ten_loai, $ten_KKT]);
                 }
                 // dd($getHP($row), $row);
                 // dd($CTDT);
                 if (strpos($tmp, 'tự chọn') === false){
-                    array_push($CTDT[$ten_loai][$ten_KKT]['Bat-buoc'], $this->getHP($row));
+                    array_push($CTDT[$ten_muc_luc][$ten_KKT]['Bat-buoc'], $this->getHP($row));
                     // dd($CTDT[$ten_loai][$ten_KKT]['Tu-chon'], $getHP($row));
                 }else
-                array_push($CTDT[$ten_loai][$ten_KKT]['Tu-chon'], $this->getHP($row));
+                array_push($CTDT[$ten_muc_luc][$ten_KKT]['Tu-chon'], $this->getHP($row));
 
             }
 
@@ -160,75 +168,87 @@ class KhoiKienThucImportInfo extends ImportInfo
             [
                 'trinh_do_dao_tao' => $trinh_do_dao_tao,
                 'thoi_gian_dao_tao' => $thoi_gian_dao_tao,
+                'hinh_thuc_dao_tao' => $hinh_thuc_dao_tao,
                 'nganh_id' => $nganh->id,
                 'tong_tin_chi' => intval($tong_tin_chi)
             ]);
 
             // dd($CTDT);
             $dai_cuong = 1;
-            foreach($CTDT as $key=>$value){
-                if (gettype($key) == 'integer') continue;
 
-                $ten_KKT = key($value);
-                $value = array_pop($value);
+            foreach($CTDT as $ten_muc_luc=>$cac_kkt){
+                if (gettype($ten_muc_luc) == 'integer') continue;
+                foreach($cac_kkt as $ten_KKT=>$value){
+                    // dd($value);
+                    // $value = array_pop($value);
 
-                $loai_kt = LoaiKienThuc::updateOrCreate([
-                    'ten' => $key,
-                ],[
+                    $muc_luc = MucLuc::updateOrCreate([
+                        'ten' => $ten_muc_luc,
+                    ],[
 
-                ]);
+                    ]);
+                    $loai_kt_id = $value['Ten-loai'];
+                    if ($loai_kt_id != null)
+                        $loai_kt_id = LoaiKienThuc::updateOrCreate([
+                            'ten' => $value['Ten-loai']
+                        ],[
 
-                // dd($value['Tin-chi-tu-chon']);
+                        ])->id;
 
-                $kkt = KhoiKienThuc::updateOrCreate([
-                    'loai_kien_thuc_id' => $loai_kt->id,
-                    'chuong_trinh_dao_tao_id' => $ctdt->id
-                ],[
-                    'ten' => $ten_KKT,
-                    'tong_tin_chi_ktt_tu_chon' => $value['Tin-chi-tu-chon'],
-                    'dai_cuong' => $dai_cuong
-                ]);
-                if ($dai_cuong == 1)
-                    $dai_cuong = 0;
-                HocPhanKKTBatBuoc::where('khoi_kien_thuc_id', $kkt->id)->delete();
-                HocPhanKKTTuChon::where('khoi_kien_thuc_id', $kkt->id)->delete();
 
-                // dd($ctdt->id, $loai_kt->id);
-                // if ($value['Bat-buoc'] != null)
-                foreach($value['Bat-buoc'] as $hp){
-                    if ($hp[1] == null)
-                        HocPhanKKTBatBuoc::create([
-                            'hoc_phan_id' => $hp[0]->id,
-                            'hoc_ky_goi_y' => -1,
-                            'khoi_kien_thuc_id' => $kkt->id
-                        ]);
-                    else
-                    foreach($hp[1] as $hk){
-                        // dd($hp[0]);
-                        HocPhanKKTBatBuoc::create([
-                            'hoc_phan_id' => $hp[0]->id,
-                            'hoc_ky_goi_y' => $hk,
-                            'khoi_kien_thuc_id' => $kkt->id
-                        ]);
-                        // dd($bat_buoc);
+                    // dd($value['Tin-chi-tu-chon']);
+
+                    $kkt = KhoiKienThuc::updateOrCreate([
+                        'chuong_trinh_dao_tao_id' => $ctdt->id,
+                        'muc_luc_id' => $muc_luc->id,
+                        'ten' => $ten_KKT,
+                    ],[
+                        'loai_kien_thuc_id' => $loai_kt_id,
+                        'tong_tin_chi_ktt_tu_chon' => $value['Tin-chi-tu-chon'],
+                        'dai_cuong' => $dai_cuong,
+                    ]);
+                    if ($dai_cuong == 1)
+                        $dai_cuong = 0;
+                    HocPhanKKTBatBuoc::where('khoi_kien_thuc_id', $kkt->id)->delete();
+                    HocPhanKKTTuChon::where('khoi_kien_thuc_id', $kkt->id)->delete();
+
+                    // dd($ctdt->id, $loai_kt->id);
+                    // if ($value['Bat-buoc'] != null)
+                    foreach($value['Bat-buoc'] as $hp){
+                        if ($hp[1] == null)
+                            HocPhanKKTBatBuoc::create([
+                                'hoc_phan_id' => $hp[0]->id,
+                                'hoc_ky_goi_y' => -1,
+                                'khoi_kien_thuc_id' => $kkt->id
+                            ]);
+                        else
+                        foreach($hp[1] as $hk){
+                            // dd($hp[0]);
+                            HocPhanKKTBatBuoc::create([
+                                'hoc_phan_id' => $hp[0]->id,
+                                'hoc_ky_goi_y' => $hk,
+                                'khoi_kien_thuc_id' => $kkt->id
+                            ]);
+                            // dd($bat_buoc);
+                        }
                     }
-                }
-                // if ($value['Tu-chon'] != null)
-                foreach($value['Tu-chon'] as $hp){
-                    if ($hp[1] == null)
-                        HocPhanKKTTuChon::create([
-                            'hoc_phan_id' => $hp[0]->id,
-                            'hoc_ky_goi_y' => -1,
-                            'khoi_kien_thuc_id' => $kkt->id
-                        ]);
-                    else
-                    foreach($hp[1] as $hk){
+                    // if ($value['Tu-chon'] != null)
+                    foreach($value['Tu-chon'] as $hp){
+                        if ($hp[1] == null)
+                            HocPhanKKTTuChon::create([
+                                'hoc_phan_id' => $hp[0]->id,
+                                'hoc_ky_goi_y' => -1,
+                                'khoi_kien_thuc_id' => $kkt->id
+                            ]);
+                        else
+                        foreach($hp[1] as $hk){
 
-                        HocPhanKKTTuChon::create([
-                            'hoc_phan_id' => $hp[0]->id,
-                            'hoc_ky_goi_y' => $hk,
-                            'khoi_kien_thuc_id' => $kkt->id
-                        ]);
+                            HocPhanKKTTuChon::create([
+                                'hoc_phan_id' => $hp[0]->id,
+                                'hoc_ky_goi_y' => $hk,
+                                'khoi_kien_thuc_id' => $kkt->id
+                            ]);
+                        }
                     }
                 }
             }

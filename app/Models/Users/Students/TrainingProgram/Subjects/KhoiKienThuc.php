@@ -19,6 +19,7 @@ class KhoiKienThuc extends Model
 		'so_tin_chi' => 'int',
 		'id' => 'int',
 		'loai_kien_thuc_id' => 'int',
+        'muc_luc_id' => 'int',
 		'tong_tin_chi_kkt_tu_chon' => 'int',
 		'tong_tin_chi_kkt_bat_buoc' => 'int',
 		'chuong_trinh_dao_tao_id' => 'int',
@@ -36,7 +37,8 @@ class KhoiKienThuc extends Model
 		'tong_tin_chi_ktt_tu_chon',
 		'loai_kien_thuc_id',
 		'chuong_trinh_dao_tao_id',
-        'dai_cuong'
+        'dai_cuong',
+        'muc_luc_id'
 	];
 
 	public function khoa()

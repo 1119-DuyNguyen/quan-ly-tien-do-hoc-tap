@@ -1,0 +1,17 @@
+<table>
+    <tr>
+        <td>
+            $ctdt->trinh_do_dao_tao
+        </td>
+    </tr>
+    <tr>
+        <td>
+            $ctdt->khoa
+        </td>
+    </tr>
+    <tr>
+        <td>
+            $ctdt->nganh
+        </td>
+    </tr>
+</table>

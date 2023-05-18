@@ -21,13 +21,15 @@ class ChuongTrinhDaoTao extends Model
 		'tong_tin_chi' => 'int',
 		'thoi_gian_dao_tao' => 'float',
 		'nganh_id' => 'int',
-		'chu_ky_id' => 'int'
+		'chu_ky_id' => 'int',
+        'hinh_thuc_dao_tao' => 'int'
 	];
 
 	protected $fillable = [
 		'ten',
 		'thoi_gian_dao_tao',
 		'trinh_do_dao_tao',
+        'hinh_thuc_dao_tao',
 		'nganh_id',
 		'chu_ky_id',
 		'tong_tin_chi',
