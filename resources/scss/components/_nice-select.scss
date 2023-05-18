@@ -50,7 +50,7 @@ $foregroundColor: var(--color);
     min-height: $input_height;
     height: auto;
     padding: 4px $dropdown_padding 4px math.div($dropdown_padding, 2);
-    min-width: 240px;
+    min-width: 100px;
 
     outline: none;
 
