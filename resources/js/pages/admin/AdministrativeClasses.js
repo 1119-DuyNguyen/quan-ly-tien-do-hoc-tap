@@ -37,12 +37,15 @@ export class AdministrativeClasses {
 
             let ds_lop = await axios.get(AdministrativeClasses.URL_LIST + '?class_idn='+class_idn+'&page='+page).then(response => response.data.data)
 
-            document.querySelector("#ds_lop tbody").innerHTML = `<tr>
-                <th>Mã lớp</th>
-                <th>Tên lớp</th>
-                <th>Số lượng sinh viên</th>
-                <th>Hành động</th>
-            </tr>`
+            document.querySelector("#ds_lop table").innerHTML = `<thead>
+                <tr>
+                    <th>Mã lớp</th>
+                    <th>Tên lớp</th>
+                    <th>Số lượng sinh viên</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody></tbody>`
             ds_lop.dataObject.forEach(element => {
                 let html = `<tr>
                     <td>${element.ma_lop}</td>
@@ -68,15 +71,17 @@ export class AdministrativeClasses {
         }
         
         const renderTblLop = (data) => {
-            document.querySelector('#ds_lop').innerHTML = `<div class="graduate__item__content">
+            document.querySelector('#ds_lop').innerHTML = `<div>
                 <table>
+                    <thead>
+                        <tr>
+                            <th>Mã lớp</th>
+                            <th>Tên lớp</th>
+                            <th>Số lượng sinh viên</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
                     <tbody>
-                            <tr>
-                                <th>Mã lớp</th>
-                                <th>Tên lớp</th>
-                                <th>Số lượng sinh viên</th>
-                                <th>Hành động</th>
-                            </tr>
                     </tbody>
                 </table>
             </div>`;
@@ -388,15 +393,16 @@ export class AdministrativeClasses {
         const dssv_table = document.querySelector('#dssv_table');
         if (dssv_table === null)
             return;
-        dssv_table.innerHTML = `<div class="graduate__item__content">
+        dssv_table.innerHTML = `<div class='dssv_table'>
             <table>
-                <tbody>
+                <thead>
                     <tr>
                         <th>Mã sinh viên</th>
                         <th>Tên sinh viên</th>
                         <th>Hành động</th>
                     </tr>
-                </tbody>
+                </thead>
+                <tbody></tbody>
             </table>
         </div>`;
     }

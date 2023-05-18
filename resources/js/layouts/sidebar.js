@@ -11,8 +11,8 @@ let navPage = {
         text: 'Trang chủ',
     },
     classes:{
-        role:['quan-tri-vien'],
-        icon:"",
+        role: ['quan-tri-vien'],
+        icon: "fa-solid fa-screen-users icon",
         text:"Lớp học"
     },
     // chart: {
