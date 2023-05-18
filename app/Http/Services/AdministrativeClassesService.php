@@ -27,6 +27,12 @@ class AdministrativeClassesService {
     }
 
     public function getCvht(string $cvht_idn) {
+
+        if ($cvht_idn == '')
+            return $this->success(DB::table('tai_khoan')
+            ->where('quyen_id', '=', 3)
+            ->get(array('id', 'ten', 'ten_dang_nhap')),200,'');
+
         return $this->success(DB::table('tai_khoan')
         ->where('quyen_id', '=', 3)
         ->where('ten_dang_nhap', '=', $cvht_idn)

@@ -1,15 +1,20 @@
+#lop_can_tim {
+    padding: .5rem;
+    margin: .5rem 0;
+}
+
 .administrative__item {
     table {
         width: 100%;
         background-color: #fff;
         border-spacing: 0;
         th, td {
-            border: 1px solid #2A83FF;
+            border: 1px solid var(--color-item-1);
         }
 
         thead {
             tr {
-                background-color: #2A83FF;
+                background-color: var(--color-item-1);
                 color: white;
             }
         }
@@ -34,10 +39,15 @@
         }
     }
 
-    input, select {
+    input {
         padding: .5rem;
         margin: .5rem 0;
         width: 100%;
+    }
+
+    .nice-select {
+        max-width: 100%;
+        margin: .5rem 0;
     }
 
     width: 64rem;
@@ -90,7 +100,7 @@ only screen and (max-width: 760px),
         }
 
         td:nth-of-type(1) {
-            background-color: #2A83FF;
+            background-color: var(--color-item-5);
             color: white;
         }
         

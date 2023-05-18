@@ -23,19 +23,19 @@
         border-radius: 1rem;
         padding: 3rem;
         &--red {
-            background-color: #ff7782;
+            background-color: var(--color-item-4);
             color: white;
         }
         &--green {
-            background-color: #84d295;
+            background-color: var(--color-item-2);
             color: white;
         }
         &--orange {
-            background-color: #ffbb55;
+            background-color: var(--color-item-3);
             color: white;
         }
         &--blue {
-            background-color: #45bfff;
+            background-color: var(--color-item-5);
             color: white;
         }
     }

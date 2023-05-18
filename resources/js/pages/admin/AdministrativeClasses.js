@@ -1,4 +1,5 @@
 import { alertComponent } from "../../components/helper/alert-component";
+import NiceSelect from "../../components/helper/nice-select";
 import { toast } from "../../components/helper/toast";
 import { SmartTableTemplate } from "../../components/smart-table-template/SmartTableTemplate";
 import { PaginationService } from "../../components/smart-table-template/services/PaginationService";
@@ -128,11 +129,14 @@ export class AdministrativeClasses {
         }
 
         const chon_ctdt = document.querySelector("#chon_ctdt");
+        const chon_cvht = document.querySelector("#chon_cvht");
         const chon_bat_dau = document.querySelector("#bat_dau");
         const chon_ket_thuc = document.querySelector("#ket_thuc");
 
         axios.get(AdministrativeClasses.URL_ADMIN + '/classes-program').then(response => {
             const data = response.data.data;
+
+            if (data === null) return;
 
             data.forEach(ctdt => {
                 const option = document.createElement("option");
@@ -140,12 +144,41 @@ export class AdministrativeClasses {
                 option.text = `${ctdt.ten} - ${ctdt.ten_nganh} - ${ctdt.ten_khoa} - ${ctdt.nam_bat_dau}-${ctdt.nam_ket_thuc}`;
                 chon_ctdt.add(option);
             })
+
+            const chonCTDTNiceSelector = new NiceSelect(chon_ctdt, {
+                searchable: true,
+                maxSelectedOption: 1
+            })
         }).catch(error => {
             console.error(error);
         })
 
+        axios.get(AdministrativeClasses.URL_ADMIN + '/classes-advisor').then(response => {
+            const data = response.data.data;
+            if (data === null) return;
+
+            data.forEach(cvht => {
+                const option = document.createElement("option");
+                option.value = cvht.id;
+                option.text = `${cvht.ten_dang_nhap} - ${cvht.ten}`;
+                chon_cvht.add(option);
+            });
+
+            const chonCVHTNiceSelector = new NiceSelect(chon_cvht, {
+                searchable: true,
+                maxSelectedOption: 1
+            })
+        })
+
         chon_ctdt.addEventListener('change', () => {
             obj_lop.ma_ctdt = parseInt(chon_ctdt.value);
+
+            console.log('chon_ctdt changed');
+        })
+        chon_cvht.addEventListener('change', () => {
+            obj_lop.ma_cvht = parseInt(chon_cvht.value);
+
+            if (parseInt(chon_cvht.value) == -1) obj_lop.ma_cvht = null;
         })
 
         chon_bat_dau.addEventListener('change', () => {
@@ -153,30 +186,6 @@ export class AdministrativeClasses {
         })
         chon_ket_thuc.addEventListener('change', () => {
             obj_lop.ket_thuc = chon_ket_thuc.value + " 23:59:59";
-        })
-
-        document.querySelector("#cvht").addEventListener('submit', e => {
-            e.preventDefault();
-
-            let cvht_to_check = 'none';
-
-            if (document.querySelector("#co_van").value.length > 0)
-                cvht_to_check = document.querySelector("#co_van").value;
-
-            document.querySelector("#advisor").innerHTML = '<loader-component></loader-component>';
-            axios.get(AdministrativeClasses.URL_ADMIN + '/classes-advisor?cvht='+cvht_to_check).then(response => {
-                const data = response.data.data;
-                if (data !== null) {
-                    document.querySelector("#advisor").innerHTML = `
-                        <p>Mã cố vấn: ${data.ten_dang_nhap}</p>
-                        <p>Tên cố vấn: ${data.ten}</p>
-                    `;
-                    obj_lop.ma_cvht = data.id;
-                } else {
-                    obj_lop.ma_cvht = null;
-                    document.querySelector("#advisor").innerHTML = `Không tìm thấy thông tin cố vấn học tập.`;
-                }
-            })
         })
 
         document.querySelector('#tao_moi').addEventListener('click', () => {
@@ -233,6 +242,17 @@ export class AdministrativeClasses {
 
     static async view({id}) {
         const chon_ctdt = document.querySelector("#chon_ctdt");
+        const chonCTDTNiceSelector = new NiceSelect(chon_ctdt, {
+            searchable: true,
+            maxSelectedOption: 1
+        })
+
+        const chon_cvht = document.querySelector("#chon_cvht");
+        const chonCVHTNiceSelector = new NiceSelect(chon_cvht, {
+            searchable: true,
+            maxSelectedOption: 1
+        })
+
         const chon_bat_dau = document.querySelector("#bat_dau");
         const chon_ket_thuc = document.querySelector("#ket_thuc");
 
@@ -255,6 +275,19 @@ export class AdministrativeClasses {
             })
         })
 
+        await axios.get(AdministrativeClasses.URL_ADMIN + '/classes-advisor').then(response => {
+            const data = response.data.data;
+            if (data === null) return;
+
+            data.forEach(cvht => {
+                const option = document.createElement("option");
+                option.value = cvht.id;
+                option.text = `${cvht.ten_dang_nhap} - ${cvht.ten}`;
+                chon_cvht.add(option);
+            });
+            chonCVHTNiceSelector.update();
+        })
+
         await axios.get(AdministrativeClasses.URL_LIST + '/' + id).then(response => {
             const data = response.data.data;
 
@@ -263,24 +296,20 @@ export class AdministrativeClasses {
             else
                 chon_ctdt.value = data.chuong_trinh_dao_tao_id;
 
+            chon_ctdt.options[chon_ctdt.selectedIndex].setAttribute('selected', 'selected');
+
+            chonCTDTNiceSelector.update();
+
             document.querySelector("#ma_lop").value = data.ma_lop;
             document.querySelector("#ten_lop").value = data.ten_lop;
 
             if (data.co_van_hoc_tap_id === null) 
-                document.querySelector("#advisor").innerHTML = 'Chưa chọn cố vấn học tập';
-            else {
-                axios.get(AdministrativeClasses.URL_LIST + '-advisor/'+data.co_van_hoc_tap_id).then(response => {
-                    const data = response.data.data;
-                    document.querySelector("#co_van").value = data.ten_dang_nhap
+                chon_cvht.value = -1;
+            else chon_cvht.value = data.co_van_hoc_tap_id;
 
-                    if (data !== null) {
-                        document.querySelector("#advisor").innerHTML = `
-                            <p>Mã cố vấn: ${data.ten_dang_nhap}</p>
-                            <p>Tên cố vấn: ${data.ten}</p>
-                        `;
-                    } else document.querySelector("#advisor").innerHTML = `Không tìm thấy thông tin cố vấn học tập.`;
-                })
-            }
+            chon_cvht.options[chon_cvht.selectedIndex].setAttribute('selected', 'selected');
+
+            chonCVHTNiceSelector.update();
             
             chon_bat_dau.value = formatDate(data.thoi_gian_vao_hoc)
             chon_ket_thuc.value = formatDate(data.thoi_gian_ket_thuc)
@@ -328,48 +357,15 @@ export class AdministrativeClasses {
             ket_thuc: null,
         }
 
-        document.querySelector("#cvht").addEventListener('submit', e => {
-            e.preventDefault();
-
-            let cvht_to_check = 'none';
-
-            if (document.querySelector("#co_van").value.length > 0)
-                cvht_to_check = document.querySelector("#co_van").value;
-
-            document.querySelector("#advisor").innerHTML = '<loader-component></loader-component>';
-            axios.get(AdministrativeClasses.URL_ADMIN + '/classes-advisor?cvht='+cvht_to_check).then(response => {
-                const data = response.data.data;
-                if (data !== null) {
-                    document.querySelector("#advisor").innerHTML = `
-                        <p>Mã cố vấn: ${data.ten_dang_nhap}</p>
-                        <p>Tên cố vấn: ${data.ten}</p>
-                    `;
-                    obj_lop.ma_cvht = data.id;
-                } else {
-                    obj_lop.ma_cvht = null;
-                    document.querySelector("#advisor").innerHTML = `Không tìm thấy thông tin cố vấn học tập.`;
-                }
-            })
-        })
-
         document.querySelector("#chinh_sua").addEventListener('click', async () => {
             const chon_bat_dau = document.querySelector("#bat_dau");
             const chon_ket_thuc = document.querySelector("#ket_thuc");
-
-            let ma_cvht = 0;
-
-            ma_cvht = await axios.get(AdministrativeClasses.URL_ADMIN + '/classes-advisor?cvht='+document.querySelector('#co_van').value).then(response => {
-                const data = response.data.data;
-                if (data === null)
-                    return null;
-                return data.id;
-            })
 
             obj_lop = {
                 ma_lop: document.querySelector('#ma_lop').value,
                 ten_lop: document.querySelector('#ten_lop').value,
                 ma_ctdt: document.querySelector('#chon_ctdt').value,
-                ma_cvht: ma_cvht,
+                ma_cvht: (document.querySelector('#chon_cvht').value == -1) ? null : document.querySelector('#chon_cvht').value,
                 bat_dau: chon_bat_dau.value + " 00:00:00",
                 ket_thuc: chon_ket_thuc.value + " 23:59:59",
             }

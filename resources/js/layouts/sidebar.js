@@ -12,7 +12,7 @@ let navPage = {
     },
     classes:{
         role: ['quan-tri-vien'],
-        icon: "fa-solid fa-screen-users icon",
+        icon: "fa-solid fa-chalkboard icon",
         text:"Lớp học"
     },
     // chart: {
