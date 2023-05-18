@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\Admin\AdministrativeClassController;
+use App\Http\Controllers\Admin\AdministrativeClassStudentsController;
+use App\Http\Controllers\Admin\AdvisorController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Test\TestApi;
 use App\Http\Controllers\MajorController;
@@ -22,6 +25,9 @@ use App\Http\Controllers\Class\Post\BaitapController;
 use App\Http\Controllers\Admin\LateGraduatedController;
 use App\Http\Controllers\Auth\UserPermissionsController;
 use App\Http\Controllers\Class\BaiTapSinhVienController;
+
+use App\Http\Controllers\Admin\ProgramsListController;
+
 use App\Http\Controllers\Admin\StudentsInClassController;
 use App\Http\Controllers\Class\Everyone\EveryoneController;
 use App\Http\Controllers\Admin\ProgramKnowledgeBlockController;
@@ -94,6 +100,11 @@ Route::middleware('auth:api')->group(function () {
 
             Route::apiResource('/program', ProgramController::class);
             Route::apiResource('program.knowledge_block', ProgramKnowledgeBlockController::class);
+
+            Route::apiResource('/classes', AdministrativeClassController::class);
+            Route::apiResource('/classes.student', AdministrativeClassStudentsController::class);
+            Route::apiResource('/classes-program', ProgramsListController::class);
+            Route::apiResource('/classes-advisor', AdvisorController::class);
 
             //      Route::get('/child-program/subject', [KnowledgeBlockController::class, 'getSubject']);
         });

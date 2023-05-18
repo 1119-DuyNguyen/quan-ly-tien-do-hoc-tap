@@ -128,7 +128,10 @@ class SuggestGraduateService {
             }
         } else {
             // kỳ kế tiếp là hk hè
-            $kkt_gddc_id = DB::table('khoi_kien_thuc')->join('loai_kien_thuc', 'khoi_kien_thuc.loai_kien_thuc_id', '=', 'loai_kien_thuc.id')->where('chuong_trinh_dao_tao_id', $chtr_dao_tao_id)->get('khoi_kien_thuc.id')[0]->id;
+            if (DB::table('khoi_kien_thuc')->join('loai_kien_thuc', 'khoi_kien_thuc.loai_kien_thuc_id', '=', 'loai_kien_thuc.id')->where('chuong_trinh_dao_tao_id', $chtr_dao_tao_id)->get('khoi_kien_thuc.id')->count() == 0)
+                $kkt_gddc_id = -1;
+            else
+                $kkt_gddc_id = DB::table('khoi_kien_thuc')->join('loai_kien_thuc', 'khoi_kien_thuc.loai_kien_thuc_id', '=', 'loai_kien_thuc.id')->where('chuong_trinh_dao_tao_id', $chtr_dao_tao_id)->get('khoi_kien_thuc.id')->first()->id;
 
             $dshp_bb = DB::table('hoc_phan_kkt_bat_buoc')->where('khoi_kien_thuc_id', $kkt_gddc_id)->get('hoc_phan_id');
             $dshp_tuchon = DB::table('hoc_phan_kkt_tu_chon')->where('khoi_kien_thuc_id', $kkt_gddc_id)->get('hoc_phan_id');
