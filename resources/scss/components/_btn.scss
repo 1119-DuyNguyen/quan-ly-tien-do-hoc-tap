@@ -1,3 +1,4 @@
+@use '../abstract';
 .btn {
     display: inline-block;
     font-weight: 400;
@@ -30,13 +31,16 @@
     //     // box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
     // }
     &--primary {
-        color: #fff;
-        background-color: #00b0ff;
-        border-color: #00b0ff;
-        &:hover {
-            color: #fff;
-            background-color: #0069d9;
-            border-color: #0062cc;
+        color: var(--primary-color-text);
+        background-color: var(--primary-color);
+
+        border: none;
+        &:hover,
+        &:active,
+        &:focus,
+        &.focus {
+            opacity: 0.9;
+            transition: opacity 0.2s;
         }
         // &.focus,
         // &:focus {
@@ -50,11 +54,12 @@
         // }
     }
     &--secondary {
-        color: #fff;
+        color: var(--color);
+
         background-color: #6c757d;
         border-color: #6c757d;
         &:hover {
-            color: #fff;
+            color: var(--color);
             background-color: #5a6268;
             border-color: #545b62;
         }
@@ -70,13 +75,16 @@
         // }
     }
     &--success {
-        color: #fff;
-        background-color: #28a745;
-        border-color: #28a745;
-        &:hover {
-            color: #fff;
-            background-color: #218838;
-            border-color: #1e7e34;
+        color: var(--primary-color-text);
+
+        background-color: var(--success-color);
+        border: none;
+        &:hover,
+        &:active,
+        &:focus,
+        &.focus {
+            opacity: 0.9;
+            transition: opacity 0.2s;
         }
         // &.focus,
         // &:focus {
@@ -96,41 +104,25 @@
         // background: #ff7782;
         // border-color: #ff7782;
 
-        &:hover {
-            color: #fff;
-            background-color: #c82333;
-            border-color: #bd2130;
+        &:hover,
+        &:active,
+        &:focus,
+        &.focus {
+            opacity: 0.9;
+            transition: opacity 0.2s;
         }
-        // &.focus,
-        // &:focus {
-        //     box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.5);
-        // }
-        // &.disabled,
-        // &:disabled {
-        //     color: #fff;
-        //     background-color: #dc3545;
-        //     border-color: #dc3545;
-        // }
     }
     &--warning {
         color: #212529;
         background-color: #ffc107;
         border-color: #ffc107;
-        &:hover {
-            color: #212529;
-            background-color: #e0a800;
-            border-color: #d39e00;
+        &:hover,
+        &:active,
+        &:focus,
+        &.focus {
+            opacity: 0.9;
+            transition: opacity 0.2s;
         }
-        // &.focus,
-        // &:focus {
-        //     box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.5);
-        // }
-        // &.disabled,
-        // &:disabled {
-        //     color: #212529;
-        //     background-color: #ffc107;
-        //     border-color: #ffc107;
-        // }
     }
     &--info {
         color: #fff;
@@ -141,51 +133,51 @@
             background-color: #138496;
             border-color: #117a8b;
         }
-        // .btn-info.focus,
-        // .btn-info:focus {
-        //     box-shadow: 0 0 0 0.2rem rgba(23, 162, 184, 0.5);
-        // }
+        &:hover,
+        &:active,
+        &:focus,
+        &.focus {
+            opacity: 0.9;
+            transition: opacity 0.2s;
+        }
     }
     &--light {
         color: #212529;
         background-color: #f8f9fa;
         border-color: #f8f9fa;
 
-        &:hover {
-            color: #212529;
-            background-color: #e2e6ea;
-            border-color: #dae0e5;
+        &:hover,
+        &:active,
+        &:focus,
+        &.focus {
+            opacity: 0.9;
+            transition: opacity 0.2s;
         }
-        // &.focus,
-        // &:focus {
-        //     box-shadow: 0 0 0 0.2rem rgba(248, 249, 250, 0.5);
-        // }
     }
     &--dark {
         color: #fff;
         background-color: #343a40;
         border-color: #343a40;
 
-        &:hover {
-            color: #fff;
-            background-color: #23272b;
-            border-color: #1d2124;
+        &:hover,
+        &:active,
+        &:focus,
+        &.focus {
+            opacity: 0.9;
+            transition: opacity 0.2s;
         }
-        // &.focus,
-        // &:focus {
-        //     box-shadow: 0 0 0 0.2rem rgba(52, 58, 64, 0.5);
-        // }
     }
     &--link {
         font-weight: 400;
-        color: #007bff;
+        color: var(--primary-color);
         background-color: transparent;
 
-        &:hover {
-            color: #0056b3;
-            //  text-decoration: underline;
-            background-color: transparent;
-            border-color: transparent;
+        &:hover,
+        &:active,
+        &:focus,
+        &.focus {
+            opacity: 0.9;
+            transition: opacity 0.2s;
         }
         // &.focus,
         // &:focus {
@@ -196,7 +188,16 @@
 
         &.disabled,
         &:disabled {
-            color: #6c757d;
+            color: abstract.$gray;
+            cursor: default;
+
+            &:hover,
+            &:active,
+            &:focus,
+            &.focus {
+                opacity: 1;
+                transition: opacity 0.2s;
+            }
         }
     }
 }

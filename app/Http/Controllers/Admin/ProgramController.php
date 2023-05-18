@@ -125,11 +125,10 @@ class ProgramController extends ApiController
             $data = ChuongTrinhDaoTao::findOrFail($id);
             $data->delete();
             //
-
-            return $this->success(null, 200, 'Xóa chương trình đào tạo thành công');
+            return $this->success(null, 200, 'Xóa thành công');
         } catch (\Throwable $th) {
             //throw $th;
-            return $this->error(null, 400, $th->getMessage());
+            return $this->error(null, 400, 'Xóa thất bại');
         }
     }
 }

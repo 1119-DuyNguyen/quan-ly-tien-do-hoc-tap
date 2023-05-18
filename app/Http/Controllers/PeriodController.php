@@ -17,7 +17,7 @@ class PeriodController extends ApiController
     }
     public function all()
     {
-        return ChuKy::all();
+        return $this->success(ChuKy::all(), 200);
     }
     /**
      * Store a newly created resource in storage.

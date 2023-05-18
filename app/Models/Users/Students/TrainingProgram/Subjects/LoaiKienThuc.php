@@ -15,7 +15,6 @@ class LoaiKienThuc extends Model
 
 	protected $fillable = [
 		'ten',
-        'dai_cuong'
 	];
 
 	public function khoi_kien_thucs()

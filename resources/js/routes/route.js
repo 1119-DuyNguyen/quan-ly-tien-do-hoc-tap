@@ -147,6 +147,7 @@ const generateBriefMap = (element) => {
             href += location[i] + '/';
             if (index === i) break;
         }
+        href = href.replace(/^\/+|\/+$/g, '');
         return href;
     };
     let containerLink = document.createElement('div');
@@ -155,17 +156,21 @@ const generateBriefMap = (element) => {
     for (let i = 0; i < arrayPathname.length; ++i) {
         let a = document.createElement('a');
 
-        a.innerText = convertHrefToText(arrayPathname[i]) + '/';
-        a.classList.add('btn');
         if (i === arrayPathname.length - 1) {
+            a.innerText = convertHrefToText(arrayPathname[i]);
+
             a.classList.add('btn--link');
             a.classList.add('disabled');
         } else {
+            a.innerText = convertHrefToText(arrayPathname[i]) + '/';
+
             a.href = DOMAIN + '/' + getHrefBrief(arrayPathname, i);
             a.addEventListener('click', urlRoute);
 
             a.classList.add('btn--link');
         }
+        a.classList.add('btn');
+
         containerLink.append(a);
     }
     return containerLink;

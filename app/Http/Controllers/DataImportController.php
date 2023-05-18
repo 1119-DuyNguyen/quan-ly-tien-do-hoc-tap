@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ExportExcelFromModel;
 use App\Http\Controllers\DataImportInfo\GiangVienImportInfo;
 use App\Http\Controllers\DataImportInfo\HocPhanImportInfo;
 use App\Http\Controllers\DataImportInfo\KhoaImportInfo;
 use App\Http\Controllers\DataImportInfo\KhoiKienThucImportInfo;
 use App\Http\Controllers\DataImportInfo\NganhImportInfo;
-       use App\Http\Controllers\DataImportInfo\SinhVienImportInfo;
+use App\Http\Controllers\DataImportInfo\SinhVienImportInfo;
 
 use App\Models\Nganh;
+use App\Models\Users\Students\TrainingProgram\Subjects\HocPhan;
 use Exception;
 use App\Http\Controllers\ApiController;
 use Illuminate\Http\Request;
@@ -137,6 +139,13 @@ class DataImportController extends ApiController
             'res' => []
         ];
 
+    }
+
+    function export(){
+        return new ExportExcelFromModel(
+            HocPhan::class,
+            []
+        );
     }
 
 }

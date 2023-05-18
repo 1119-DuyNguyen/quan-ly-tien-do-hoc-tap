@@ -22,11 +22,12 @@ class ProgramKnowledgeBlockController extends ApiController
         $lktList = [];
         $kktList = DB::table('khoi_kien_thuc')
             ->whereIn('chuong_trinh_dao_tao_id', [$id])
-            ->join(
+            ->leftJoin(
                 'loai_kien_thuc',
                 'khoi_kien_thuc.loai_kien_thuc_id',
                 'loai_kien_thuc.id'
             )
+            ->orderBy('loai_kien_thuc.id')
             ->get(['khoi_kien_thuc.*', 'loai_kien_thuc.ten as ten_loai_kien_thuc']);
 
 
@@ -34,22 +35,53 @@ class ProgramKnowledgeBlockController extends ApiController
 
             $hpBatBuoc = DB::table('hoc_phan_kkt_bat_buoc')
                 ->whereIn('khoi_kien_thuc_id', [$kkt->id])
-                ->join('hoc_phan', 'hoc_phan_kkt_bat_buoc.hoc_phan_id', 'hoc_phan.id')->get(['hoc_phan.*', 'hoc_ky_goi_y']);
+                ->join('hoc_phan', 'hoc_phan_kkt_bat_buoc.hoc_phan_id', 'hoc_phan.id')
+                ->orderBy('hoc_phan.ma_hoc_phan')
+                ->get(['hoc_phan.*', 'hoc_ky_goi_y']);
+            foreach ($hpBatBuoc as $key => $hp) {
+                $hp->hoc_ky_goi_y = [$hp->hoc_ky_goi_y];
+                if (!isset($curHp)) {
+                    $curHp = $hp;
+                } else if ($curHp->id == $hp->id) {
+                    $curHp->hoc_ky_goi_y = array_merge($curHp->hoc_ky_goi_y, $hp->hoc_ky_goi_y);
+                    unset($hpBatBuoc[$key]);
+                } else {
+                    $curHp = null;
+                }
+            }
             $kkt->hpBatBuoc = $hpBatBuoc;
             $hpTuChon = DB::table('hoc_phan_kkt_tu_chon')
                 ->whereIn('khoi_kien_thuc_id', [$kkt->id])
-                ->join('hoc_phan', 'hoc_phan_kkt_tu_chon.hoc_phan_id', 'hoc_phan.id')->get(['hoc_phan.*', 'hoc_ky_goi_y']);
-            $kkt->hpTuChon = $hpTuChon;
-            if (!isset($lktList[$kkt->loai_kien_thuc_id])) {
-                $lktList[$kkt->loai_kien_thuc_id] = [$kkt];
-            } else {
-                // tương đương push
-                $lktList[$kkt->loai_kien_thuc_id] = [$lktList[$kkt->loai_kien_thuc_id],  [$kkt]];
+                ->join('hoc_phan', 'hoc_phan_kkt_tu_chon.hoc_phan_id', 'hoc_phan.id')
+                ->orderBy('ma_hoc_phan')
+                ->get(['hoc_phan.*', 'hoc_ky_goi_y']);
+            foreach ($hpTuChon as $key => $hp) {
+                $hp->hoc_ky_goi_y = [$hp->hoc_ky_goi_y];
+                if (!isset($curHp)) {
+                    $curHp = $hp;
+                } else if ($curHp->id == $hp->id) {
+                    $curHp->hoc_ky_goi_y = array_merge($curHp->hoc_ky_goi_y, $hp->hoc_ky_goi_y);
+                    unset($hpTuChon[$key]);
+                } else {
+                    $curHp = null;
+                }
             }
+            $kkt->hpTuChon = $hpTuChon;
+            // if (isset($kkt->loai_kien_thuc_id)) {
+            //     if (!isset($lktList[$kkt->loai_kien_thuc_id])) {
+            //         $lktList[$kkt->loai_kien_thuc_id] = [$kkt];
+            //     } else {
+            //         // tương đương push
+            //         $lktList[$kkt->loai_kien_thuc_id] = [$lktList[$kkt->loai_kien_thuc_id],  [$kkt]];
+            //     }
+            // }
+            // else{
+
+            // }
         }
 
 
-        return $this->success($lktList, 200);
+        return $this->success($kktList, 200);
     }
 
     /**
@@ -64,7 +96,7 @@ class ProgramKnowledgeBlockController extends ApiController
             return $this->success(null, 200, 'Thêm dữ liệu thành công');
         } catch (Exception $e) {
             //catch exception
-            return $this->error(null, 400, 'Máy chủ thêm không thành công' . ' ' . $e->getMessage());
+            return $this->error(null, 400, 'Máy chủ thêm không thành công');
         }
     }
 
