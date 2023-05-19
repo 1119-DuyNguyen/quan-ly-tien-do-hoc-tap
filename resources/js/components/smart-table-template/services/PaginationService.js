@@ -96,9 +96,11 @@ export class PaginationService {
      */
     updatePageUrl(page) {
         const url = new URL(window.location.href);
+        page = page > this.option['totalPage'] ? this.option['totalPage'] : page;
+        page =page < 1 ? 1 :page;
 
         // so sánh string
-        if (page && page != url.searchParams.get('page')) {
+        if (page && page !=this.currentPage) {
             url.searchParams.set('page', page);
             window.history.replaceState(null, null, url);
             this.renderPagination();
@@ -109,8 +111,7 @@ export class PaginationService {
 
     nextPage() {
         let currentPage = Number.parseInt(this.currentPage) + 1;
-        let page = currentPage > this.option['totalPage'] ? this.option['totalPage'] : currentPage;
-        if (this.updatePageUrl(page)) {
+        if (this.updatePageUrl(currentPage)) {
             this.#reRenderTableCallBack();
         }
 
@@ -118,9 +119,8 @@ export class PaginationService {
     }
     prevPage() {
         let currentPage = Number.parseInt(this.currentPage) - 1;
-        let page = currentPage < 1 ? 1 : currentPage;
 
-        if (this.updatePageUrl(page)) {
+        if (this.updatePageUrl(currentPage)) {
             this.#reRenderTableCallBack();
         }
 

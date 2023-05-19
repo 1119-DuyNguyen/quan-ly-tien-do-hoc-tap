@@ -414,7 +414,13 @@ export class SmartTableTemplate {
                                     let url = new URL(this.#option.urlAPI);
                                     axios
                                         .delete(url.origin + url.pathname + '/' + rowId.getAttribute('data-content'))
-                                        .then((res) => this.reRenderTable());
+                                        .then((res) => {
+                                            let url = new URL(window.location.href);
+                                            url.searchParams.set('page',1);
+                                            window.replaceState(null,null,url);
+                                            this.reRenderTable()
+                                        })
+                                        .catch(e=> console.error(e));
                                 }
                             });
                         } catch (e) {
