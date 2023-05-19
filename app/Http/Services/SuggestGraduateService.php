@@ -115,7 +115,7 @@ class SuggestGraduateService {
                 if ($dshp_truoc !== null) {
                     $check = false;
                     foreach($dshp_truoc as $hp_truoc) {
-                        if ($hp_truoc->qua_mon == 1 && intval($hp->hoc_ky_goi_y) % 2 == intval($hk_ke) % 2)
+                        if ($hp_truoc->qua_mon == 1 && intval($hp->hoc_ky_goi_y) % 2 == intval($hk_ke) % 2 && intval($hp->hoc_ky_goi_y) - intval($hk_ke) <= 2)
                         {
                             $dshp->add($hp);
                             $check = true;
@@ -130,7 +130,7 @@ class SuggestGraduateService {
                     if ($check) continue;
                 }
 
-                if (intval($hp->hoc_ky_goi_y) % 2 == intval($hk_ke) % 2) {
+                if (intval($hp->hoc_ky_goi_y) % 2 == intval($hk_ke) % 2 && intval($hp->hoc_ky_goi_y) - intval($hk_ke) <= 2) {
                     $dshp->add($hp);
                     continue;
                 }
