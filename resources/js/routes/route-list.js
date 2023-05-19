@@ -14,6 +14,7 @@ import { Subject } from '../pages/admin/subject.js';
 import { Authentication } from '../pages/authentication.js';
 import { UserPermissions } from '../pages/admin/user-permissons.js';
 import { AdministrativeClasses } from '../pages/admin/AdministrativeClasses.js';
+import { MarksTable } from '../components/classroom/group/marksTable.js';
 
 const route = new Route();
 route.addRoute('/', Authentication.login, { title: 'Login' }, 'templates/login.html');
@@ -54,6 +55,7 @@ route.addRoute(
     { title: 'Bài tập $id' },
     'templates/teacher/homework.html'
 );
+route.addRoute('giang-vien/classroom/bang-diem/$id', MarksTable.show, { title: 'Bảng điểm $id' }, '');
 
 route.addRoute('quan-tri-vien/dashboard', Analytics.index, { title: 'Thống kê' }, 'templates/admin/dashboard.html');
 route.addRoute(
