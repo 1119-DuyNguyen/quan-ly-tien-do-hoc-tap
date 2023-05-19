@@ -1,18 +1,19 @@
 import { Route } from '../abstract/classes.js';
+import { ClassroomStudent } from '../pages/classroom/classroomStudent.js';
+import { ClassroomTeacher } from '../pages/classroom/classroomTeacher.js';
 import { DashBoard } from '../pages/dashboard.js';
 import { Graduate } from '../pages/graduate/graduate.js';
 import { Info } from '../pages/info.js';
-import { ClassroomStudent } from '../pages/classroom/classroomStudent.js';
-import { ClassroomTeacher } from '../pages/classroom/classroomTeacher.js';
 
-import { Role } from '../pages/admin/role.js';
-import { Analytics } from '../pages/admin/analytics.js';
 import { HomeworkMark } from '../components/classroom/group/post/HomeworkMark.js';
 import { User } from '../pages/admin/User.js';
+import { Analytics } from '../pages/admin/analytics.js';
 import { Program } from '../pages/admin/program.js';
+import { Role } from '../pages/admin/role.js';
 import { Subject } from '../pages/admin/subject.js';
-import { Authentication } from '../pages/authentication.js';
 import { UserPermissions } from '../pages/admin/user-permissons.js';
+import { Authentication } from '../pages/authentication.js';
+import { import_file } from '../pages/import-file.js';
 
 const route = new Route();
 console.log('hi');
@@ -100,5 +101,7 @@ route.addRoute('quan-tri-vien/role/edit/$id', UserPermissions.edit, { title: 'Qu
 route.addRoute('quan-tri-vien/subject', Subject.index, { title: 'Học phần' }, '');
 
 route.addRoute('quan-tri-vien/user', User.index, { title: 'Người dùng' }, '');
+
+route.addRoute('import-file', import_file.index, {title: 'Nhập dữ liệu'}, '');
 
 export var routeList = route.getUrlRoutes();

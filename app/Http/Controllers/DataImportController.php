@@ -15,6 +15,7 @@ use App\Models\Users\Students\TrainingProgram\Subjects\HocPhan;
 use Exception;
 use App\Http\Controllers\ApiController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 
 class DataImportController extends ApiController
@@ -146,6 +147,10 @@ class DataImportController extends ApiController
             HocPhan::class,
             []
         );
+    }
+
+    function info(){
+        return Auth::user();
     }
 
 }

@@ -18,6 +18,12 @@ export class Info {
             ]
         }
 
+        // axios.get('/api/info')
+        // .then((res) =>{
+        //     let data = res.data
+        //     console.log(data);
+        // });
+
         Info.renderInfo(info)
 
 
