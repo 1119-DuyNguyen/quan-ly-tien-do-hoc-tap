@@ -1,11 +1,13 @@
 import { SmartTableTemplate } from '../../components/smart-table-template/SmartTableTemplate';
-import { Validator } from '../../components/helper/Validator';
+import { Validator } from '../../components/helper/validator';
 import { alertComponent } from '../../components/helper/alert-component';
 import { ConfirmComponent } from '../../components/helper/confirm-component';
 import { ModalComponent } from '../../components/helper/modal-component';
 import { toast } from '../../components/helper/toast';
 
 export class User {
+    static URL_FACULTY = location.protocol + '//' + location.host + '/api/admin/faculty';
+    static URL_ROLES = location.protocol + '//' + location.host + '/api/admin/roles';
     static URL_USER = location.protocol + '//' + location.host + '/api/admin/user';
 
     static getAddFormElement(textSubmit = '', tableTem, idProgram) {
@@ -39,7 +41,7 @@ export class User {
         </div>
             <div class="grid-item form-group">
             <label for=""> Số điện thoại</label>
-            <input name='sdt'  type="text" class="input"rules='required' value="" />
+            <input name='sdt'  type="text" class="input" rules='required|phone' value="" />
         </div>
         <div class="grid-item form-group">
         <label for=""> Ngày sinh</label>
@@ -80,11 +82,42 @@ export class User {
         //         }
         //     });
         // }
+
+        let khoaList = formContainer.querySelector('[name="khoa_id"]');
+
+        axios.get(User.URL_FACULTY).then((response) => {
+            const data = response.data.data
+
+            if (data === null) return;
+
+            data.forEach(khoa => {
+                const opt = document.createElement('option');
+                opt.text = khoa.ten;
+                opt.value = khoa.id;
+                khoaList.add(opt);
+            })
+        })
+
+        let vaitroList = formContainer.querySelector('[name="role_id"]');
+
+        axios.get(User.URL_ROLES).then((response) => {
+            const data = response.data.data
+
+            if (data === null) return;
+
+            data.forEach(vai_tro => {
+                const opt = document.createElement('option');
+                opt.text = vai_tro.ten;
+                opt.value = vai_tro.id;
+                vaitroList.add(opt);
+            })
+        })
+
         let handleValidator = new Validator(formContainer);
         handleValidator.onSubmit = function (data) {
             //  console.log(data);
             axios
-                .post(ChildProgram.URL_Program, data)
+                .post(User.URL_USER, data)
                 .then((res) => tableTem.reRenderTable())
                 .catch((err) => {
                     console.log(err.response);
@@ -100,71 +133,109 @@ export class User {
         let formContainer = document.createElement('form');
 
         axios
-            .get(User.URL_Program + '/' + rowId)
+            .get(User.URL_USER + '/' + rowId)
             .then((res) => res.data.data)
             .then((data) => {
                 formContainer.classList.add('form');
 
                 formContainer.innerHTML = `
-                <div class="grid-container-half">
-                <div class="grid-item form-group">
-                    <label for="">Tên</label>
-                    <input rules='required' type="text" name='ten' class="input" 
-                    value="${data.ten}"
-                    />
+                    <div class="grid-container-half">
+                    <div class="grid-item form-group">
+                        <label for="">Tên</label>
+                        <input rules='required' type="text" name='ten' class="input" value="${data.ten}"/>
+                    </div>
+                    <div class="grid-item form-group">
+                        <label for=""> Tên đăng nhập</label>
+                        <input disabled type="text" class="input"  value="${data.ten_dang_nhap}" />
+                    </div>
+                    <div class="grid-item form-group">
+                        <label for=""> email</label>
+                        <input name='email'  type="email" class="input"rules='required' value="${data.email}" />
+                    </div>
+                        <div class="grid-item form-group">
+                        <label for=""> Số điện thoại</label>
+                        <input name='sdt'  type="text" class="input"rules='required|phone' value="${data.sdt}" />
+                    </div>
+                    <div class="grid-item form-group">
+                    <label for=""> Ngày sinh</label>
+                    <input name='ngay_sinh'  type="date" class="input"rules='required' value="${data.ngay_sinh.split(' ')[0]}" />
                 </div>
-                <div class="grid-item form-group">
-                    <label for=""> Tổng tín chỉ tự chọn</label>
-                    <input name='tong_tin_chi'  type="text" class="input"rules='required|number' value="${data.tong_tin_chi_ktt_tu_chon}" />
-                </div>
-        
-                <!-- select -->
-                <div class="grid-item form-group">
-                    <label>Loại kiến thức</label>
-        
-                    <select name="loai_kien_thuc_id" rules='required'>
-        
+
+                    <!-- select -->
+                    <div class="grid-item form-group">
+                        <label>Khoa</label>
+
+                        <select name="khoa_id" rules='required' value="${data.khoa_id}">
+                    
+                        </select>
+                        
+
+                    </div>
+                    <div class="grid-item form-group">
+                    <label>Vai trò</label>
+
+                    <select name="role_id" rules='required' value="${data.quyen_id}">
+
                     </select>
+                    
+
                 </div>
-                 <input type="hidden" name="chuong_trinh_dao_tao_id" value="${idProgram}"/>
+                <input type="hidden" name="chuong_trinh_dao_tao_id" value="${idProgram}"/>
+                
+                </div>
+                <button class="form-submit">${textSubmit}</button>
+                    `;
 
-            </div>
-            <button class="form-submit">${textSubmit}</button>
-                `;
-                let selectContainer = tableTem.renderSelectList(tableTem.getDataSelectList);
+                let khoaList = formContainer.querySelector('[name="khoa_id"]');
 
-                if (selectContainer) {
-                    let selectList = selectContainer.querySelectorAll('select') ?? [];
-                    selectList.forEach((select) => {
-                        let selectForm = formContainer.querySelector(`select[name="${select.getAttribute('name')}"`);
-                        if (selectForm) {
-                            selectForm.innerHTML = select.innerHTML;
-                        }
-                    });
-
-                    formContainer.querySelectorAll(`select[name="loai_kien_thuc_id"] option`).forEach((option) => {
-                        if (option.value == data.loai_kien_thuc_id) {
-                            option.selected = true;
-                        } else option.selected = false;
-                    });
-                }
+                axios.get(User.URL_FACULTY).then((response) => {
+                    const data = response.data.data
+    
+                    if (data === null) return;
+    
+                    data.forEach(khoa => {
+                        const opt = document.createElement('option');
+                        opt.text = khoa.ten;
+                        opt.value = khoa.id;
+                        khoaList.add(opt);
+                    })
+                })
+    
+                let vaitroList = formContainer.querySelector('[name="role_id"]');
+    
+                axios.get(User.URL_ROLES).then((response) => {
+                    const data = response.data.data
+    
+                    if (data === null) return;
+    
+                    data.forEach(vai_tro => {
+                        const opt = document.createElement('option');
+                        opt.text = vai_tro.ten;
+                        opt.value = vai_tro.id;
+                        vaitroList.add(opt);
+                    })
+                })
+                let handleValidator = new Validator(formContainer);
+                console.log(handleValidator);
+                handleValidator.onSubmit = function (data) {
+                    //  console.log(data);
+                    axios
+                        .put(User.URL_USER + '/' + rowId, data)
+                        .then((res) => tableTem.reRenderTable())
+                        .catch((err) => {
+                            console.log(err.response);
+                            if (err?.response?.data?.message) {
+                                alertComponent('Có lỗi khi gửi yêu cầu lên máy chủ', err.response.data.message);
+                            }
+                        });
+                };
             })
             .catch((e) => {
+                console.log(e);
                 formContainer.innerHTML = `Có lỗi khi lấy dữ liệu từ máy chủ`;
             });
-        let handleValidator = new Validator(formContainer);
-        handleValidator.onSubmit = function (data) {
-            //  console.log(data);
-            axios
-                .put(ChildProgram.URL_Program + '/' + rowId, data)
-                .then((res) => tableTem.reRenderTable())
-                .catch((err) => {
-                    console.log(err.response);
-                    if (err?.response?.data?.message) {
-                        alertComponent('Có lỗi khi gửi yêu cầu lên máy chủ', err.response.data.message);
-                    }
-                });
-        };
+            
+  
         return formContainer;
     }
     static index() {
@@ -236,6 +307,7 @@ export class User {
                 let rowId = e.target.closest('tr')?.querySelector('[data-attr="id"]')?.getAttribute('data-content');
                 if (rowId) new ModalComponent(User.getEditFormElement('Cập nhập', tableTem, rowId));
             },
+            
         });
         // let tableTem = new SmartTableTemplate(tableTest, response.pokedata, {
         //     formatAttributeHeader: {

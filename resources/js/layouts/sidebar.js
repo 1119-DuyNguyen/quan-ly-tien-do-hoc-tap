@@ -10,17 +10,22 @@ let navPage = {
         icon: 'fa-solid fa-house icon',
         text: 'Trang chủ',
     },
+    classes:{
+        role: ['quan-tri-vien'],
+        icon: "fa-solid fa-chalkboard icon",
+        text:"Lớp học"
+    },
     // chart: {
     //     role: ['quan-tri-vien'],
     //     icon: 'fa-solid fa-chart-simple icon',
     //     text: 'Thống kê',
     // },
-    info: {
-        // role: ['sinh-vien', 'giang-vien', 'quan-tri-vien', 'co-van-hoc-tap'],
-        role: ['*'],
-        icon: 'fa-regular fa-address-card icon',
-        text: 'Thông tin cá nhân',
-    },
+    // info: {
+    //     // role: ['sinh-vien', 'giang-vien', 'quan-tri-vien', 'co-van-hoc-tap'],
+    //     role: ['*'],
+    //     icon: 'fa-regular fa-address-card icon',
+    //     text: 'Thông tin cá nhân',
+    // },
 
     graduate: {
         // role: ['sinh-vien', 'giang-vien', 'quan-tri-vien', 'co-van-hoc-tap'],
@@ -36,7 +41,7 @@ let navPage = {
     },
 
     classroom: {
-        role: ['sinh-vien', 'giang-vien', ''],
+        role: ['sinh-vien', 'giang-vien'],
         icon: 'fa-solid fa-chalkboard icon',
         text: 'Lớp học',
     },
@@ -118,7 +123,6 @@ export class Sidebar {
             // this.#slider = document.createElement('aside');
             // this.#slider.classList.add('main-sidebar');
             //    document.getElementById('main-sidebar');
-            console.log('here');
             this.#sidebar.innerHTML = '';
             let containerSidebar = this.createElementSidebar(params, user);
             let btnControlSidebar = document.getElementById('btn-control-sidebar');

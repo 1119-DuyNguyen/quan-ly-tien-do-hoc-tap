@@ -1,4 +1,5 @@
 import { alertComponent } from "../../components/helper/alert-component";
+import NiceSelect from "../../components/helper/nice-select";
 import { toast } from "../../components/helper/toast";
 import { PaginationService } from "../../components/smart-table-template/services/PaginationService";
 import { TableTree } from "../../components/table-tree";
@@ -182,6 +183,11 @@ export class Analytics {
                 elem.value = moc_tg.id;
                 analytics__selector.add(elem);
             });
+
+            let niceSelectorDot = new NiceSelect(analytics__selector, {
+                searchable: true,
+                maxSelectedOption: 1
+            })
             data.khoa.forEach(khoa => {
                 let elem;
                 elem = document.createElement('option');
@@ -203,7 +209,18 @@ export class Analytics {
                         analytics__nganh__selector.add(elem);
                     }
                 });
+
+                niceSelectorNganh.destroy();
+                niceSelectorNganh = new NiceSelect(analytics__nganh__selector, {
+                    searchable: true,
+                    maxSelectedOption: 1
+                })
             }
+
+            let niceSelectorKhoa = new NiceSelect(analytics__khoa__selector, {
+                searchable: true,
+                maxSelectedOption: 1
+            })
 
             analytics__nganh__selector.onchange = () => {
                 chon_nganh = analytics__nganh__selector.value;
@@ -212,6 +229,11 @@ export class Analytics {
             analytics__selector.onchange = () => {
                 chon_dot = analytics__selector.value;
             }
+
+            let niceSelectorNganh = new NiceSelect(analytics__nganh__selector, {
+                searchable: true,
+                maxSelectedOption: 1
+            })
 
             document.querySelector("#filter").onclick = () => {
                 Analytics.callData(parseInt(chon_khoa), parseInt(chon_nganh)).then(async () => {

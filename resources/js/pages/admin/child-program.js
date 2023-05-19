@@ -1,141 +1,250 @@
 import { SmartTableTemplate } from '../../components/smart-table-template/SmartTableTemplate';
-import { Validator } from '../../components/helper/Validator';
 import { alertComponent } from '../../components/helper/alert-component';
 import { ConfirmComponent } from '../../components/helper/confirm-component';
 import { ModalComponent } from '../../components/helper/modal-component';
 import { toast } from '../../components/helper/toast';
 import { TreeTable } from '../../components/helper/tree-table';
-
+import { Program } from './program';
+import { Validator } from '../../components/helper/validator';
 export class ChildProgram {
-    static URL_Program = location.protocol + '//' + location.host + '/api/admin/child-program';
+    static URL_Program = location.protocol + '//' + location.host + '/api/admin/program';
+    static URL_LKT = location.protocol + '//' + location.host + '/api/admin/loai-kien-thuc/all';
+    static URL_MUCLUC = location.protocol + '//' + location.host + '/api/admin/muc-luc/all';
+
     static export() {}
     static edit() {}
-    static getAddFormElement(textSubmit = '', tableTem, idProgram) {
+    static getAddFormElement(textSubmit = '', callback, idProgram) {
         let formContainer = document.createElement('form');
         formContainer.classList.add('form');
-        formContainer.innerHTML = `
-        <div class="grid-container-half">
-        <div class="grid-item form-group">
-            <label for=""> Tên</label>
-            <input rules='required' type="text" name='ten' class="input" />
-        </div>
-        <div class="grid-item form-group">
-            <label for=""> Tổng tín chỉ tự chọn</label>
-            <input name='tong_tin_chi_ktt_tu_chon'  type="text" class="input"rules='required|number' value="" />
-        </div>
-
-        <!-- select -->
-        <div class="grid-item form-group">
-            <label>Loại kiến thức</label>
-
-            <select name="loai_kien_thuc_id" rules='required'>
-
-            </select>
-            
-
-        </div>
-    <input type="hidden" name="chuong_trinh_dao_tao_id" value="${idProgram}"/>
-       
-    </div>
-    <button class="form-submit">${textSubmit}</button>
-        `;
-        let selectContainer = tableTem.renderSelectList(tableTem.getDataSelectList);
-        if (selectContainer) {
-            let selectList = selectContainer.querySelectorAll('select') ?? [];
-            selectList.forEach((select) => {
-                let selectForm = formContainer.querySelector(`select[name="${select.getAttribute('name')}"`);
-                if (selectForm) {
-                    selectForm.innerHTML = select.innerHTML;
-                }
-            });
-        }
-        let handleValidator = new Validator(formContainer);
-        handleValidator.onSubmit = function (data) {
-            //  console.log(data);
-            axios
-                .post(ChildProgram.URL_Program, data)
-                .then((res) => tableTem.reRenderTable())
-                .catch((err) => {
-                    console.log(err.response);
-                    if (err?.response?.data?.message) {
-                        alertComponent('Có lỗi khi gửi yêu cầu lên máy chủ', err.response.data.message);
-                    }
-                });
-        };
-
-        return formContainer;
-    }
-    static getEditFormElement(textSubmit = '', tableTem, rowId, idProgram) {
-        let formContainer = document.createElement('form');
-
-        axios
-            .get(ChildProgram.URL_Program + '/' + rowId)
+        let errorMessage = [];
+        let promiseListLKT = axios
+            .get(ChildProgram.URL_LKT)
             .then((res) => res.data.data)
             .then((data) => {
-                formContainer.classList.add('form');
-
-                formContainer.innerHTML = `
-                <div class="grid-container-half">
-                <div class="grid-item form-group">
-                    <label for="">Tên</label>
-                    <input rules='required' type="text" name='ten' class="input" 
-                    value="${data.ten}"
-                    />
-                </div>
-                <div class="grid-item form-group">
-                    <label for=""> Tổng tín chỉ tự chọn</label>
-                    <input name='tong_tin_chi'  type="text" class="input"rules='required|number' value="${data.tong_tin_chi_ktt_tu_chon}" />
-                </div>
-        
-                <!-- select -->
-                <div class="grid-item form-group">
-                    <label>Loại kiến thức</label>
-        
-                    <select name="loai_kien_thuc_id" rules='required'>
-        
-                    </select>
-                </div>
-                 <input type="hidden" name="chuong_trinh_dao_tao_id" value="${idProgram}"/>
-
-            </div>
-            <button class="form-submit">${textSubmit}</button>
-                `;
-                let selectContainer = tableTem.renderSelectList(tableTem.getDataSelectList);
-
-                if (selectContainer) {
-                    let selectList = selectContainer.querySelectorAll('select') ?? [];
-                    selectList.forEach((select) => {
-                        let selectForm = formContainer.querySelector(`select[name="${select.getAttribute('name')}"`);
-                        if (selectForm) {
-                            selectForm.innerHTML = select.innerHTML;
-                        }
-                    });
-
-                    formContainer.querySelectorAll(`select[name="loai_kien_thuc_id"] option`).forEach((option) => {
-                        if (option.value == data.loai_kien_thuc_id) {
-                            option.selected = true;
-                        } else option.selected = false;
-                    });
-                }
+                return data;
             })
             .catch((e) => {
-                formContainer.innerHTML = `Có lỗi khi lấy dữ liệu từ máy chủ`;
+                errorMessage.push('Có lỗi khi lấy danh sách loại kiến thức');
             });
-        let handleValidator = new Validator(formContainer);
-        handleValidator.onSubmit = function (data) {
-            //  console.log(data);
-            axios
-                .put(ChildProgram.URL_Program + '/' + rowId, data)
-                .then((res) => tableTem.reRenderTable())
-                .catch((err) => {
-                    console.log(err.response);
-                    if (err?.response?.data?.message) {
-                        alertComponent('Có lỗi khi gửi yêu cầu lên máy chủ', err.response.data.message);
-                    }
-                });
-        };
+        let promiseListMucLuc = axios
+            .get(ChildProgram.URL_MUCLUC)
+            .then((res) => res.data.data)
+            .then((data) => {
+                return data;
+            })
+            .catch((e) => {
+                errorMessage.push('Có lỗi khi lấy danh sách mục lục');
+            });
+        Promise.all([promiseListLKT, promiseListMucLuc]).then(function (values) {
+            if (errorMessage.length > 0) {
+                errorMessage = errorMessage.join(' ,');
+                formContainer.innerHTML = errorMessage.slice(0, errorMessage.length - 1);
+                return;
+            }
+            let listLKT = values[0];
+            let htmlLKT = '';
+            listLKT.forEach(
+                (lkt) =>
+                    (htmlLKT += `
+            <option value="${lkt.id}">
+            ${lkt.ten}</option>`)
+            );
+            let listMucLuc = values[1];
+            let htmlML = '';
+
+            listMucLuc.forEach(
+                (ml) =>
+                    (htmlML += `
+            <option value="${ml.id}">
+            ${ml.ten}</option>`)
+            );
+            formContainer.innerHTML = `
+            <div class="grid-container-half">
+            <div class="grid-item form-group">
+                <label for=""> Tên</label>
+                <input rules='required' type="text" name='ten' class="input" />
+            </div>
+            <div class="grid-item form-group">
+                <label for=""> Tổng tín chỉ tự chọn</label>
+                <input name='tong_tin_chi_ktt_tu_chon'  type="text" class="input"rules='required|number|minNum:0' value="" />
+            </div>
+
+            <!-- select -->
+            <div class="grid-item form-group">
+                <label>Loại kiến thức</label>
+
+                <select name="loai_kien_thuc_id" rules=''>
+            <option value=""></option>
+
+                ${htmlLKT}
+                </select>
+
+
+            </div>
+            <div class="grid-item form-group">
+            <label>Mục lục</label>
+
+            <select name="muc_luc_id" rules='required'>
+            <option value=""></option>
+            ${htmlML}
+            </select>
+
+
+             </div>
+        <input type="hidden" name="chuong_trinh_dao_tao_id" value="${idProgram}"/>
+
+        </div>
+        <div class="grid-item form-group" style="text-align: left;">
+        <label for=""> Đại cương</label>
+        <input name='dai_cuong'  type="checkbox" class="input" rules='required' value="0" />
+        </div>
+        <button class="form-submit">${textSubmit}</button>
+            `;
+            let selectElements = formContainer.querySelectorAll('select[name]');
+            selectElements.forEach((el) => {
+                new NiceSelect(el, { searchable: true, searchOrCreate: true });
+            });
+            let handleValidator = new Validator(formContainer);
+            handleValidator.onSubmit = function (data) {
+                //  console.log(data);
+                axios
+                    .post(ChildProgram.URL_Program + `/${idProgram}/knowledge-block`, data)
+                    .then((res) => {
+                        if (callback) callback();
+                        console.log(callback);
+                    })
+                    .catch((err) => {
+                        console.log(err.response);
+                        if (err?.response?.data?.message) {
+                            alertComponent('Có lỗi khi gửi yêu cầu lên máy chủ', err.response.data.message);
+                        }
+                    });
+            };
+        });
+
         return formContainer;
     }
+    static getEditFormElement(textSubmit = '', callback, idProgram, rowId) {
+        let formContainer = document.createElement('form');
+        formContainer.classList.add('form');
+        let errorMessage = [];
+
+        axios
+            .get(ChildProgram.URL_Program + '/' + idProgram + '/knowledge-block/' + rowId)
+            .then((res) => res.data.data)
+            .then((data) => {
+                console.log(data);
+
+                let promiseListLKT = axios
+                    .get(ChildProgram.URL_LKT)
+                    .then((res) => res.data.data)
+                    .then((data) => {
+                        return data;
+                    })
+                    .catch((e) => {
+                        errorMessage.push('Có lỗi khi lấy danh sách loại kiến thức');
+                    });
+                let promiseListMucLuc = axios
+                    .get(ChildProgram.URL_MUCLUC)
+                    .then((res) => res.data.data)
+                    .then((data) => {
+                        return data;
+                    })
+                    .catch((e) => {
+                        errorMessage.push('Có lỗi khi lấy danh sách mục lục');
+                    });
+                Promise.all([promiseListLKT, promiseListMucLuc]).then(function (values) {
+                    if (errorMessage.length > 0) {
+                        errorMessage = errorMessage.join(' ,');
+                        formContainer.innerHTML = errorMessage.slice(0, errorMessage.length - 1);
+                        return;
+                    }
+                    let listLKT = values[0];
+                    let htmlLKT = '';
+                    listLKT.forEach(
+                        (lkt) =>
+                            (htmlLKT += `
+            <option value="${lkt.id}" ${data.loai_kien_thuc_id === lkt.id ? 'selected' : ''}>
+            ${lkt.ten}</option>`)
+                    );
+                    let listMucLuc = values[1];
+                    let htmlML = '';
+
+                    listMucLuc.forEach(
+                        (ml) =>
+                            (htmlML += `
+            <option value="${ml.id}"  ${data.muc_luc_id === ml.id ? 'selected' : ''}>
+            ${ml.ten}
+
+            </option>`)
+                    );
+                    formContainer.innerHTML = `
+                    <div class="grid-container-half">
+                    <div class="grid-item form-group">
+                        <label for=""> Tên</label>
+                        <input rules='required' value="${data.ten}" type="text" name='ten' class="input" />
+                    </div>
+                    <div class="grid-item form-group">
+                        <label for=""> Tổng tín chỉ tự chọn</label>
+                        <input name='tong_tin_chi_ktt_tu_chon' value="${data.tong_tin_chi_ktt_tu_chon}"  type="text" class="input"rules='required|number|minNum:0' value="" />
+                    </div>
+
+                    <!-- select -->
+                    <div class="grid-item form-group">
+                        <label>Loại kiến thức</label>
+
+                        <select name="loai_kien_thuc_id" rules=''>
+                    <option value=""></option>
+
+                        ${htmlLKT}
+                        </select>
+
+
+                    </div>
+                    <div class="grid-item form-group">
+                    <label>Mục lục</label>
+
+                    <select name="muc_luc_id" rules='required'>
+                    <option value=""></option>
+                    ${htmlML}
+                    </select>
+
+
+                     </div>
+                <input type="hidden" name="chuong_trinh_dao_tao_id" value="${idProgram}"/>
+
+                </div>
+                <div class="grid-item form-group" style="text-align: left;">
+                <label for=""> Đại cương</label>
+                <input name='dai_cuong'  type="checkbox" class="input" rules='required' value="0" />
+                </div>
+                <button class="form-submit">${textSubmit}</button>
+                    `;
+                    let selectElements = formContainer.querySelectorAll('select[name]');
+                    selectElements.forEach((el) => {
+                        new NiceSelect(el, { searchable: true, searchOrCreate: true });
+                    });
+                    let handleValidator = new Validator(formContainer);
+                    handleValidator.onSubmit = function (data) {
+                        //  console.log(data);
+                        axios
+                            .put(ChildProgram.URL_Program + `/${idProgram}/knowledge-block/${rowId}`, data)
+                            .then((res) => {
+                                if (callback) callback();
+                                console.log(callback);
+                            })
+                            .catch((err) => {
+                                console.log(err.response);
+                                if (err?.response?.data?.message) {
+                                    alertComponent('Có lỗi khi gửi yêu cầu lên máy chủ', err.response.data.message);
+                                }
+                            });
+                    };
+                });
+            });
+        return formContainer;
+    }
+
     static index(idProgram) {
         // let smartTable = new SmartTableTemplate();
         //helper function
@@ -151,16 +260,16 @@ export class ChildProgram {
         <div class="program-container__item program-container__item--primary">
         <h4 style="text-align:center;">CHƯƠNG TRÌNH ĐÀO TẠO NGÀNH KỸ THUẬT PHẦN MỀM</h4>
         <p>Trình độ đào tạo: Đại học</p>
- 												
-        <p>Ngành đào tạo: Công nghệ thông tin (cấp bằng Kỹ sư ngành Công nghệ thông tin)</p>													
-        <p>Mã ngành: 7480201</p>													
-        <p>Hình thức đào tạo: Chính quy, Hệ đào tạo Chất lượng cao</p>													
-        <p>Thời gian đào tạo: 4.5 năm</p>													
-        <p>Chu kỳ: 2020-2021</p>													
-        <p>Tín chỉ tối thiểu: 140</p>													
-        <p>Ghi chú: Giáo dục thể chất và GDQP bắt buộc phải học và cấp chứng chỉ trước khi ra trường</p>													
 
-        										
+        <p>Ngành đào tạo: Công nghệ thông tin (cấp bằng Kỹ sư ngành Công nghệ thông tin)</p>
+        <p>Mã ngành: 7480201</p>
+        <p>Hình thức đào tạo: Chính quy, Hệ đào tạo Chất lượng cao</p>
+        <p>Thời gian đào tạo: 4.5 năm</p>
+        <p>Chu kỳ: 2020-2021</p>
+        <p>Tín chỉ tối thiểu: 140</p>
+        <p>Ghi chú: Giáo dục thể chất và GDQP bắt buộc phải học và cấp chứng chỉ trước khi ra trường</p>
+
+
         </div>
         </div>
         <div class="table-container"></div>
@@ -172,7 +281,7 @@ export class ChildProgram {
         <col span="1" style="width: 10%;">
         <col span="1" style="width: 15%;">
         <col span="1" style="width: 15%;">
-        
+
 
         </colgroup>
         <thead>

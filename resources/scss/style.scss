@@ -1,9 +1,10 @@
 // tổ chức lại thư mục
 @use './base/normalize';
+@use './base/color';
 @use './base/customNormalize';
 @use './base/animation';
 @use './base/fonts';
-@use './base/color';
+@use './base/utils';
 
 //import file scss của m vào dưới
 @use './layouts/aside';
@@ -22,6 +23,7 @@
 @use './pages/login';
 @use './pages/admin/role';
 @use './pages/admin/analytics';
+@use './pages/admin/administrative_classes';
 @use './theme/darkMode';
 //component
 @use './components/container-link';
@@ -34,3 +36,4 @@
 @use './components/child-program-template';
 @use './components/helper/drop-down-select';
 @use './components/table-tree';
+@use './components/nice-select';
