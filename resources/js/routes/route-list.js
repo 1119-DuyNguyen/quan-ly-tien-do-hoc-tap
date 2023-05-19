@@ -131,9 +131,9 @@ route.addRoute('quan-tri-vien/program/add', Program.add, { title: 'Chương trì
 route.addRoute('quan-tri-vien/program/$id', Program.view, { title: 'Chương trình đào tạo' }, '');
 
 route.addRoute('quan-tri-vien/role', Role.index, { title: 'Quyền' }, '');
-route.addRoute('quan-tri-vien/role/edit', Role.edit, { title: 'Quyền' }, 'templates/admin/role-edit.html');
+// route.addRoute('quan-tri-vien/role/edit', Role.edit, { title: 'Quyền' }, 'templates/admin/role-edit.html');
 route.addRoute(
-    'quan-tri-vien/role/edit/$id',
+    'quan-tri-vien/role/$id',
     UserPermissions.edit,
     { title: 'Quyền' },
     'templates/admin/role-edit.html'

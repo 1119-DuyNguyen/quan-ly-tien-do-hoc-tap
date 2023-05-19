@@ -1,4 +1,4 @@
-import { Validator } from '../../components/helper/Validator';
+import { Validator } from '../../components/helper/validator';
 import { alertComponent } from '../../components/helper/alert-component';
 import { SmartTableTemplate } from '../../components/smart-table-template/SmartTableTemplate';
 
@@ -61,8 +61,8 @@ export class Role {
     static edit() {
         try {
             let rootElement = document.getElementById('main-content');
-
-            let formValid = new Validator('#role-form');
+            let formContainer = document.querySelector('#role-form');
+            let formValid = new Validator(formContainer);
             formValid.onSubmit = (data) => {
                 console.log(data);
             };

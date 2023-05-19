@@ -417,7 +417,7 @@ export class SmartTableTemplate {
                                         .then((res) => {
                                             let url = new URL(window.location.href);
                                             url.searchParams.set('page',1);
-                                            window.replaceState(null,null,url);
+                                            window.history.replaceState(null,null,url);
                                             this.reRenderTable()
                                         })
                                         .catch(e=> console.error(e));
