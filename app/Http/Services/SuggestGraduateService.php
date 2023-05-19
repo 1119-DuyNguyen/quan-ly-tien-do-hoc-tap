@@ -25,8 +25,6 @@ class SuggestGraduateService {
         $ngayHienTai = date('Y-m-d h:i:s');
         $ngayHienTai = date('Y-m-d h:i:s', strtotime($ngayHienTai));
 
-        // $ds_bien_che_theo_ngay_vao_hoc = DB::table('bien_che')->where('ngay_bat_dau', '>', $thoi_gian_vao_hoc, 'and')->where('ngay_ket_thuc', '<', $ngayHienTai)->get();
-
         $hk_hien_tai = null;
         $hk_ke_tiep = null;
 
@@ -107,9 +105,31 @@ class SuggestGraduateService {
                 $dshp_goiy_tuchon = $dshp_goiy_tuchon->merge($dshp_goiy_tuchon_theokkt->filter($filter_hp));
             }
 
-            // dd($dshp_goiy_bb, $dshp_goiy_tuchon);
-
             foreach ($dshp_goiy_bb as $hp) {
+                $dshp_truoc = DB::table('dieu_kien_tien_quyet')
+                ->join('ket_qua', 'dieu_kien_tien_quyet.hoc_phan_truoc_id', '=', 'ket_qua.hoc_phan_id')
+                ->where('dieu_kien_tien_quyet.hoc_phan_id', '=', $hp->hoc_phan_id)
+                ->where('sinh_vien_id', '=', $request->user()->id)
+                ->get(array('ket_qua.hoc_phan_id', 'qua_mon'));
+
+                if ($dshp_truoc !== null) {
+                    $check = false;
+                    foreach($dshp_truoc as $hp_truoc) {
+                        if ($hp_truoc->qua_mon == 1 && intval($hp->hoc_ky_goi_y) % 2 == intval($hk_ke) % 2)
+                        {
+                            $dshp->add($hp);
+                            $check = true;
+                            break;
+                        }
+                        if ($hp_truoc->qua_mon == 0)
+                        {
+                            $check = true;
+                            break;
+                        }
+                    }
+                    if ($check) continue;
+                }
+
                 if (intval($hp->hoc_ky_goi_y) % 2 == intval($hk_ke) % 2) {
                     $dshp->add($hp);
                     continue;
@@ -128,10 +148,17 @@ class SuggestGraduateService {
             }
         } else {
             // kỳ kế tiếp là hk hè
-            if (DB::table('khoi_kien_thuc')->join('loai_kien_thuc', 'khoi_kien_thuc.loai_kien_thuc_id', '=', 'loai_kien_thuc.id')->where('chuong_trinh_dao_tao_id', $chtr_dao_tao_id)->get('khoi_kien_thuc.id')->count() == 0)
+            if (DB::table('khoi_kien_thuc')->join('loai_kien_thuc', 'khoi_kien_thuc.loai_kien_thuc_id', '=', 'loai_kien_thuc.id')
+            ->where('chuong_trinh_dao_tao_id', $chtr_dao_tao_id)
+            ->where('dai_cuong', '=', 1)
+            ->get('khoi_kien_thuc.id')->count() == 0)
                 $kkt_gddc_id = -1;
             else
-                $kkt_gddc_id = DB::table('khoi_kien_thuc')->join('loai_kien_thuc', 'khoi_kien_thuc.loai_kien_thuc_id', '=', 'loai_kien_thuc.id')->where('chuong_trinh_dao_tao_id', $chtr_dao_tao_id)->get('khoi_kien_thuc.id')->first()->id;
+                $kkt_gddc_id = DB::table('khoi_kien_thuc')
+                ->join('loai_kien_thuc', 'khoi_kien_thuc.loai_kien_thuc_id', '=', 'loai_kien_thuc.id')
+                ->where('chuong_trinh_dao_tao_id', $chtr_dao_tao_id)
+                ->where('dai_cuong', '=', 1)
+                ->get('khoi_kien_thuc.id')->first()->id;
 
             $dshp_bb = DB::table('hoc_phan_kkt_bat_buoc')->where('khoi_kien_thuc_id', $kkt_gddc_id)->get('hoc_phan_id');
             $dshp_tuchon = DB::table('hoc_phan_kkt_tu_chon')->where('khoi_kien_thuc_id', $kkt_gddc_id)->get('hoc_phan_id');
@@ -144,12 +171,13 @@ class SuggestGraduateService {
         }
 
         foreach ($dshp as $hp) {
-            $kq_tu_db = DB::table('hoc_phan')->where('id', $hp->hoc_phan_id)->get()[0];
+            $kq_tu_db = DB::table('hoc_phan')->where('id', $hp->hoc_phan_id)->get()->first();
 
             $hp->ten = $kq_tu_db->ten;
             $hp->so_tin_chi = $kq_tu_db->so_tin_chi;
             $hp->phan_tram_giua_ki = $kq_tu_db->phan_tram_giua_ki;
             $hp->phan_tram_cuoi_ki = $kq_tu_db->phan_tram_cuoi_ki;
+            $hp->ma_hoc_phan = $kq_tu_db->ma_hoc_phan;
         }
 
         $object = (object) array(
