@@ -3,8 +3,10 @@ import { Everyone } from '../../components/classroom/group/everyone/everyone';
 import { Group } from '../../components/classroom/group/group';
 import { Homework } from '../../components/classroom/group/post/Homework';
 import { Post } from '../../components/classroom/group/post/post';
+import { routeHref } from '../../routes/route';
 
 export class ClassroomTeacher {
+    static URL_Classroom = location.protocol + '//' + location.host + '/classroom';
     static index() {
         let classroomItemContainer = document.getElementById('classroom-item-container');
         let classroomItem = new ClassroomItem(classroomItemContainer);
@@ -83,5 +85,11 @@ export class ClassroomTeacher {
         let rightPanel = document.getElementById('exercise__content');
         let rightPanelItem = new ClassroomItem(rightPanel);
         rightPanelItem.getTeacherClassData(1);
+
+        const classroomRightpanelBtn = document.getElementById('classroom-rightpanel-btn');
+        classroomRightpanelBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            routeHref(ClassroomTeacher.URL_Classroom);
+        });
     }
 }
