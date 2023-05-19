@@ -14,27 +14,29 @@
 
 .info-header {
     text-align: center;
-    background-color: #2A83FF;
+    background-color: var(--primary-color);
     color: white;
     width: 60%;
-    height: 5rem;
+    min-height: 5rem;
     display: grid;
     border-radius: 0.8125rem;
-
+    word-wrap: break-word;
+    padding-block: 1rem;
 }
 
 .header-name {
     font-size: 1.75rem;
     margin: auto;
+    width: 80%;
 }
 
 .info-body {
     display: grid;
     gap: 3.125rem;
     grid-template-columns: auto;
-    margin-top: 48px;
+    margin-top: 3rem;
     margin-inline: 3.2rem;
-    margin-bottom: 0.625rem;
+    padding-bottom: 5rem;
 }
 
 .item__container {

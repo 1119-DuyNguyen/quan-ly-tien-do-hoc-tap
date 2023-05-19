@@ -93,7 +93,7 @@ route.addRoute(
 
 route.addRoute('quan-tri-vien/program', Program.index, { title: 'Chương trình đào tạo' }, '');
 route.addRoute('quan-tri-vien/program/$id', Program.view, { title: 'Chương trình đào tạo' }, '');
-
+route.addRoute('quan-tri-vien/info', Info.index, {title: 'Thông tin cá nhân'}, 'templates/info.html')
 route.addRoute('quan-tri-vien/role', Role.index, { title: 'Quyền' }, '');
 route.addRoute('quan-tri-vien/role/edit', Role.edit, { title: 'Quyền' }, 'templates/admin/role-edit.html');
 route.addRoute('quan-tri-vien/role/edit/$id', UserPermissions.edit, { title: 'Quyền' }, 'templates/admin/role-edit.html');
@@ -102,6 +102,6 @@ route.addRoute('quan-tri-vien/subject', Subject.index, { title: 'Học phần' }
 
 route.addRoute('quan-tri-vien/user', User.index, { title: 'Người dùng' }, '');
 
-route.addRoute('import-file', import_file.index, {title: 'Nhập dữ liệu'}, '');
+route.addRoute('quan-tri-vien/import', import_file.index, {title: 'Nhập dữ liệu'}, '/templates/import-file.html');
 
 export var routeList = route.getUrlRoutes();

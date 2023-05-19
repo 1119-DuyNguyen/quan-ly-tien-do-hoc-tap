@@ -1,28 +1,27 @@
+<div class="import-content" >
 
+    <div class="import-header">
+        <div class="header-name">
+            NHẬP DỮ LIỆU
+        </div>
+    </div>
 
-<div class="col-md-6 offset-md-3 mt-5">
+    <div class="import-body">
 
-    <br>
-    <form accept-charset="UTF-8" action="https://getform.io/f/{your-form-endpoint-goes-here}" method="POST" enctype="multipart/form-data" target="_blank">
-      <div class="form-group">
-        <label for="exampleInputName">Tên sheet</label>
-        <input type="text" name="fullname" class="form-control" id="exampleInputName" placeholder="Nhập tên sheet" required="required">
-      </div>
-      <div class="form-group">
-        <label for="exampleInputEmail1" required="required">Số hàng của header</label>
-        <input type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Nhập số hàng của header">
-      </div>
-      <hr>
-      <div class="form-group mt-3">
-        <label class="mr-2">Tải file excel:</label>
-        <input type="file" name="file">
-      </div>
-      <div class="form-group">
-        <label >Lỗi</label>
+        <div class="import-body--form">
+            <input type="text" placeholder="Tên bảng tính (sheet)">
+            <input type="text" placeholder="Số thứ tự dòng tiêu đề (header)">
+            <select name="" id="">
+                <option value="giang-vien">Giảng viên</option>
+                <option value="sinhvien">Sinh viên</option>
+                <option value="hocphan">Học phần</option>
+                <option value="ctdt">Chương trình đào tạo</option>
+                <option value="nganh">Ngành</option>
+                <option value="khoa">Khoa</option>
+            </select>
+            <input type="file">
+        </div>
 
-      </div>
-      <hr>
-      <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
+    </div>
+
 </div>
-

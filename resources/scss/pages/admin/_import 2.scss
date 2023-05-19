@@ -1,0 +1,15 @@
+.form__import-data{
+    margin-inline: auto;
+    width: 700px;
+
+    &__item {
+        display: grid;
+        grid-template-columns: 30% auto;
+    }
+
+    input {
+        // grid-column: ;
+    }
+}
+
+

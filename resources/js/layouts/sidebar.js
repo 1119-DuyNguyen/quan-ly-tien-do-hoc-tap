@@ -55,6 +55,11 @@ let navPage = {
         text: 'Học phần',
         icon: 'fa-regular fa-book-open"',
     },
+    import:{
+        role: ['quan-tri-vien'],
+        text: 'Nhập dữ liệu',
+        icon: 'fa-solid fa-cloud-arrow-up'
+    },
     logout: {
         role: ['*'],
         icon: 'fa-solid fa-arrow-right-from-bracket icon',
@@ -219,7 +224,7 @@ export class Sidebar {
                 <h3 class="sidebar__nav__title__header">
                     ${user.username}
                 </h3>  <span class="sidebar__nav__title__description">
-  
+
                      <i class="fa-solid fa-id-badge icon"></i>
                      </i>${user.role}</span>
 
