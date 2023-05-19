@@ -20,12 +20,12 @@ let navPage = {
     //     icon: 'fa-solid fa-chart-simple icon',
     //     text: 'Thống kê',
     // },
-    info: {
-        // role: ['sinh-vien', 'giang-vien', 'quan-tri-vien', 'co-van-hoc-tap'],
-        role: ['*'],
-        icon: 'fa-regular fa-address-card icon',
-        text: 'Thông tin cá nhân',
-    },
+    // info: {
+    //     // role: ['sinh-vien', 'giang-vien', 'quan-tri-vien', 'co-van-hoc-tap'],
+    //     role: ['*'],
+    //     icon: 'fa-regular fa-address-card icon',
+    //     text: 'Thông tin cá nhân',
+    // },
 
     graduate: {
         // role: ['sinh-vien', 'giang-vien', 'quan-tri-vien', 'co-van-hoc-tap'],
