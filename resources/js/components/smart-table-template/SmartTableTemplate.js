@@ -280,6 +280,9 @@ export class SmartTableTemplate {
                 if (options.ellipsis) {
                 }
                 if (options.sort) {
+                    if (!trHeader.dataset.shouldSort) {
+                        trHeader.dataset.shouldSort = true;
+                    }
                     th.classList.add('sort');
                     btn.dataset.key = header;
                     if (header === currentKey) {

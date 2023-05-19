@@ -31,20 +31,38 @@ $secondLight: #fff;
     //     content: '';
     //     padding-left: calc(attr(data-depth number) * 15px);
     // }
-    tr[data-depth='1'] td:first-child {
-        content: '';
-        padding-left: 15px;
-    }
-
-    tr[data-depth='2'] td:first-child {
-        content: '';
-        padding-left: 30px;
-    }
-
+    // tr[data-depth] {
+    //     --depth: attr(data-depth);
+    //     --data-depth: var(--depth);
+    // }
+    // tr[data-depth] .toggle::after {
+    //     content: var(--data-depth string);
+    //     padding-left: 8px;
+    // }
+    // tr[data-depth='2'] .toggle {
+    //     content: '';
+    //     padding-left: 16px;
+    // }
+    // tr[data-depth='2'] .toggle {
+    //     content: '';
+    //     padding-left: 16px;
+    // }
+    // tr[data-depth='3'] .toggle {
+    //     content: '';
+    //     padding-left: 24px;
+    // }
+    // tr[data-depth='4'] .toggle {
+    //     content: '';
+    //     padding-left: 32px;
+    // }
     .collapse .toggle::before {
-        content: '-';
+        color: var(--color);
+        content: attr(data-depth);
     }
     .expand .toggle::before {
+        color: var(--color);
+
+        content: attr(data-depth);
         content: '+';
     }
     .collapse .toggle,

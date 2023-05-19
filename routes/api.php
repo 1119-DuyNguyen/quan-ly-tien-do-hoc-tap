@@ -23,6 +23,8 @@ use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Class\FileBaiTapController;
 use App\Http\Controllers\Class\Post\BaitapController;
 use App\Http\Controllers\Admin\LateGraduatedController;
+use App\Http\Controllers\Admin\LoaiKienThucController;
+use App\Http\Controllers\Admin\MucLucController;
 use App\Http\Controllers\Auth\UserPermissionsController;
 use App\Http\Controllers\Class\BaiTapSinhVienController;
 
@@ -31,6 +33,10 @@ use App\Http\Controllers\Admin\ProgramsListController;
 use App\Http\Controllers\Admin\StudentsInClassController;
 use App\Http\Controllers\Class\Everyone\EveryoneController;
 use App\Http\Controllers\Admin\ProgramKnowledgeBlockController;
+use App\Http\Controllers\Admin\ProgramKnowledgeBlockSubject;
+use App\Http\Controllers\Admin\ProgramMucLuc;
+use App\Http\Controllers\Class\ClassroomPostController;
+use App\Http\Controllers\Class\SVRightPanelController;
 use App\Http\Controllers\Graduation\Student\SemesterController;
 use App\Http\Controllers\Graduation\Student\GraduateStudentController;
 use App\Http\Controllers\Graduation\Student\SuggestGraduateController;
@@ -58,10 +64,12 @@ Route::post('login', [UserAuthController::class, 'login']);
 Route::post('login/refresh', [UserAuthController::class, 'refresh']);
 
 Route::middleware('auth:api')->group(function () {
-    Route::apiResource('/classes', ClassroomController::class);
+    Route::apiResource('/class', ClassroomController::class);
+    Route::apiResource('/class.post', ClassroomPostController::class);
     Route::apiResource('/posts', PostController::class);
     Route::apiResource('/exercises', BaitapController::class);
     Route::apiResource('/bai-tap-sinh-vien', BaiTapSinhVienController::class);
+    Route::apiResource('/right-panel-sinh-vien', SVRightPanelController::class);
     Route::apiResource('/file-bai-tap', FileBaiTapController::class);
     Route::apiResource('/tham-gia-nhom-hoc', ThamGiaController::class);
     Route::apiResource('/cham-diem', ChamDiemController::class);
@@ -98,8 +106,20 @@ Route::middleware('auth:api')->group(function () {
             Route::get('/subject/all', [SubjectController::class, 'all']);
             Route::apiResource('/subject', SubjectController::class);
 
+            Route::get('/muc-luc/all', [MucLucController::class, 'all']);
+
+            Route::apiResource('/muc-luc', MucLucController::class);
+
+
+            Route::get('/loai-kien-thuc/all', [LoaiKienThucController::class, 'all']);
+
+            Route::apiResource('/loai-kien-thuc', LoaiKienThucController::class);
+
             Route::apiResource('/program', ProgramController::class);
-            Route::apiResource('program.knowledge_block', ProgramKnowledgeBlockController::class);
+            Route::apiResource('program.knowledge-block', ProgramKnowledgeBlockController::class);
+            Route::apiResource('program.knowledge-block.subject',   ProgramKnowledgeBlockSubject::class);
+
+            Route::apiResource('program.muc-luc', ProgramMucLuc::class);
 
             Route::apiResource('/classes', AdministrativeClassController::class);
             Route::apiResource('/classes.student', AdministrativeClassStudentsController::class);

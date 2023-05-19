@@ -70,6 +70,10 @@ const validatorRules = {
         var regex = /^-?\d+\.?\d*$/;
         return regex.test(value) ? undefined : 'Trường chỉ chấp nhận định dạng là số';
     },
+    firstLetter: function (value) {
+        var regex = /^[A-Za-z][A-Za-z0-9 -]*$/;
+        return regex.test(value) ? undefined : 'Kí tự đầu phải là chữ';
+    },
     file: function (value) {},
 };
 export class Validator {
