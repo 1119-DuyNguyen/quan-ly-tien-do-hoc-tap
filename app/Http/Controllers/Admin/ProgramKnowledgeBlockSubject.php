@@ -30,14 +30,14 @@ class ProgramKnowledgeBlockSubject extends ApiController
         try {
 
             $data = $request->all();
-            return $this->success($data, 200, 'Thêm dữ liệu thành công');
             $type = $request->input('loai_hoc_phan', 0);
             if ($type == 0) {
-                foreach ($request->hoc_ky_goi_y as $hk) {
+                foreach ($request->hoc_ky as $hk) {
                     DB::table('hoc_phan_kkt_tu_chon')
                         ->updateOrInsert([
-                            'hoc_phan_id', $request->hoc_phan_id,
-                            'khoi_kien_thuc_id' => $idKKT, 'hoc_ky_goi_y' => $hk
+                            'hoc_phan_id' => $request->hoc_phan_id,
+                            'khoi_kien_thuc_id' => $idKKT,
+                            'hoc_ky_goi_y' => $hk
                         ]);
                     # code...
                 }
@@ -47,23 +47,25 @@ class ProgramKnowledgeBlockSubject extends ApiController
                     ->whereNotIn('hoc_ky_goi_y', $request->hoc_ky_goi_y)
                     ->delete();
             } else if ($type == 1) {
-                foreach ($request->hoc_ky_goi_y as $hk) {
+                foreach ($request->hoc_ky as $hk) {
                     DB::table('hoc_phan_kkt_bat_buoc')
                         ->updateOrInsert([
-                            'hoc_phan_id', $request->hoc_phan_id,
-                            'khoi_kien_thuc_id' => $idKKT, 'hoc_ky_goi_y' => $hk
+                            'hoc_phan_id' => $request->hoc_phan_id,
+                            'khoi_kien_thuc_id' => $idKKT, 
+                            'hoc_ky_goi_y' => $hk
                         ]);
 
                     # code...
                 }
+                
                 DB::table('hoc_phan_kkt_bat_buoc')
                     ->where('hoc_phan_id', '=', $request->hoc_phan_id)
                     ->where('khoi_kien_thuc_id', '=', $idKKT)
-                    ->whereNotIn('hoc_ky_goi_y', $request->hoc_ky_goi_y)
+                    ->whereNotIn('hoc_ky_goi_y', $request->hoc_ky)
                     ->delete();
             }
             // KhoiKienThuc::create($data);
-            return $this->success(null, 200, 'Thêm dữ liệu thành công');
+            return $this->success($data, 200, 'Thêm dữ liệu thành công');
         } catch (Exception $e) {
             //catch exception
             return $this->error(null, 400, 'Máy chủ thêm không thành công' . $e->getMessage());
@@ -89,8 +91,21 @@ class ProgramKnowledgeBlockSubject extends ApiController
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($idCTDT, $id_kkt, $id_hp)
     {
-        //
+        try {
+            //code...
+            // db::table('khoi_kien_thuc')
+            if (db::table('hoc_phan_kkt_bat_buoc')->where('hoc_phan_id', '=', $id_hp)->count() > 0)
+                db::table('hoc_phan_kkt_bat_buoc')->where('hoc_phan_id', '=', $id_hp)->delete();
+            
+            if (db::table('hoc_phan_kkt_tu_chon')->where('hoc_phan_id', '=', $id_hp)->count() > 0)
+                db::table('hoc_phan_kkt_tu_chon')->where('hoc_phan_id', '=', $id_hp)->delete();
+
+            return $this->success(null, 200, 'Xóa dữ liệu thành công');
+        } catch (\Throwable $th) {
+            //throw $th;
+            return $this->error(null, 400, $th->getMessage());
+        }
     }
 }

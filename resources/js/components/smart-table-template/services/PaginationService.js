@@ -25,7 +25,6 @@ export class PaginationService {
         assignOption(this.option, option);
         this.option.totalPage = Math.ceil(this.option.total / this.option.perPage);
         if (this.option.totalPage >= 1) {
-            this.updatePageUrl(this.currentPage);
             // mặc định là append
             this.#pagination = createElement('ul', 'pagination');
             container.appendChild(this.#pagination);
@@ -57,7 +56,7 @@ export class PaginationService {
     get currentPage() {
         const url = new URL(window.location.href);
         let currentPage = url.searchParams.get('page');
-        if (currentPage && currentPage.match(/^\d+$/)) {
+        if (currentPage && currentPage.match(/^-?\d+$/)) {
             return currentPage;
         } else return '1';
     }
@@ -97,12 +96,9 @@ export class PaginationService {
      */
     updatePageUrl(page) {
         const url = new URL(window.location.href);
-        let currentPage = Number.parseInt(this.currentPage);
 
-        page = currentPage > this.option['totalPage'] ? this.option['totalPage'] : currentPage;
-        page = currentPage < 1 ? 1 : currentPage;
         // so sánh string
-        if (page && page != currentPage) {
+        if (page && page != url.searchParams.get('page')) {
             url.searchParams.set('page', page);
             window.history.replaceState(null, null, url);
             this.renderPagination();
@@ -110,7 +106,7 @@ export class PaginationService {
         }
         return false;
     }
-    checkCurrentPage() {}
+
     nextPage() {
         let currentPage = Number.parseInt(this.currentPage) + 1;
         let page = currentPage > this.option['totalPage'] ? this.option['totalPage'] : currentPage;
@@ -152,7 +148,7 @@ export class PaginationService {
         </li>`;
     }
     lastBtn() {
-        this.#btnsHtml += `
+        this.#btnsHtml += `    
         <li  class="pagination__item">
         <i class="pagination__item__link pagination__item__link--disabled" >...</i>
         </li>

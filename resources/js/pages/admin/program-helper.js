@@ -1,4 +1,5 @@
 import { alertComponent } from '../../components/helper/alert-component';
+import { ConfirmComponent } from '../../components/helper/confirm-component';
 import { ModalComponent } from '../../components/helper/modal-component';
 import { TableTree } from '../../components/table-tree';
 import { ChildProgram } from './child-program';
@@ -23,10 +24,12 @@ function htmlEdit(type) {
  * @param {*} isEdit
  * @returns
  */
+//    ${isEdit ? htmlEdit('hp-' + batBuoc) : ''}
 export function htmlMucLucHP(depthHP, stc, stcmax, batBuoc, isEdit = false) {
     return `
     <tr data-depth="${depthHP}" class='collapse'>
-    ${isEdit ? htmlEdit('hp-' + batBuoc) : ''}
+    ${isEdit ? htmlEdit() : ''}
+
     <td colspan="3" class='toggle'>${batBuoc ? 'Các học phần bắt buộc' : 'Các học phần tự chọn'}</td>
     <td colspan="1">${stc}/${stcmax}</td>
     <td></td>
@@ -531,11 +534,77 @@ export function renderEditTreeCTDT(tableContainer, idProgram) {
                                 alertComponent('Có lỗi xảy ra, hãy liên hệ hỗ trợ');
                             }
                             break;
-                        case 'hp-0':
+                        case 'hp':
+
                             break;
-                        case 'hp-1':
+                        case 'default':
+                            'Hãy chọn dòng để thêm hoặc sửa';
+                    }
+                });
+            });
+            let deleteBtn = document.createElement('div');
+            deleteBtn.classList.add('btn', 'btn--danger');
+            deleteBtn.innerHTML = "Xoá"
+            deleteBtn.addEventListener('click', (e) => {
+                let rowID;
+                e.preventDefault();
+                let allRadioCheckbox = tableContainer.querySelectorAll('input[type=radio][data-type]:checked');
+                if (allRadioCheckbox.length < 1) {
+                    alertComponent('Bạn chưa chọn ô, hãy chọn để thực hiện hành động');
+                }
+                allRadioCheckbox.forEach((radioEl) => {
+                    switch (radioEl.dataset.type) {
+                        case 'root':
+                            alertComponent('ô này không hỗ trợ xoá');
+                            break;
+                        case 'kkt':
+                            rowID = radioEl.closest('tr').dataset.value;
+                            if (rowID)
+                            {
+                                new ConfirmComponent({questionText:"Bạn chắc chắn muốn xoá",trueButtonText:"Chắc chắn",falseButtonText:"Để sau"}).then(data => {
+                                    if (data == 1) {
+                                        axios.delete(ChildProgram.URL_Program + '/' + idProgram + '/knowledge-block/' + rowID).then(() => {
+                                            renderEditTreeCTDT(tableContainer, idProgram)
+                                        }).catch(
+                                            error => {
+                                                console.error(error);
+                                            }
+                                        );
+                                    }
+                                })
+                            }
+                            else {
+                                alertComponent('Có lỗi xảy ra, hãy liên hệ hỗ trợ');
+                            }
                             break;
                         case 'hp':
+                            let tr = radioEl.closest('tr');
+                            let hp_id = tr.dataset.hp;
+                            let depth = tr.dataset.depth;
+                            let el = tr.previousElementSibling;
+                            while (el) {
+                                if (el.dataset.depth && parseInt(el.dataset.depth) == parseInt(depth) - 2)
+                                    break;
+                                el = el.previousElementSibling;
+                            }
+                            let kkt_id = el.dataset.value;
+                            if (hp_id && kkt_id)
+                            {
+                                new ConfirmComponent({questionText:"Bạn chắc chắn muốn xoá",trueButtonText:"Chắc chắn",falseButtonText:"Để sau"}).then(data => {
+                                    if (data == 1) {
+                                        axios.delete(ChildProgram.URL_Program + '/' + idProgram + '/knowledge-block/' + kkt_id + '/subject/' + hp_id).then(() => {
+                                            renderEditTreeCTDT(tableContainer, idProgram)
+                                        }).catch(
+                                            error => {
+                                                console.error(error);
+                                            }
+                                        );
+                                    }
+                                })
+                            }
+                            else {
+                                alertComponent('Có lỗi xảy ra, hãy liên hệ hỗ trợ');
+                            }
                             break;
                         case 'default':
                             'Hãy chọn dòng để thêm hoặc sửa';
@@ -544,6 +613,7 @@ export function renderEditTreeCTDT(tableContainer, idProgram) {
             });
             groupControl.appendChild(editBtn);
             groupControl.appendChild(addBtn);
+            groupControl.appendChild(deleteBtn);
 
             tableContainer.innerHTML = `
                                 <div class="table-container">

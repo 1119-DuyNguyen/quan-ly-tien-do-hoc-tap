@@ -102,9 +102,11 @@ export class Subject {
             console.log(data);
             axios
                 .post(Program.URL_PROGRAM + `/${idCTDT}/knowledge-block/${idKKT}/subject`, data)
-                .then((res) => tableTem.reRenderTable())
+                .then((res) => 
+                {
+                    if(callback) callback();
+                })
                 .catch((err) => {
-                    console.log(err.response);
                     if (err?.response?.data?.message) {
                         alertComponent('Có lỗi khi gửi yêu cầu lên máy chủ', err.response.data.message);
                     }

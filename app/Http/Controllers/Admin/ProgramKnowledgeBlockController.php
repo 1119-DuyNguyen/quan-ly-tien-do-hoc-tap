@@ -145,12 +145,13 @@ class ProgramKnowledgeBlockController extends ApiController
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $ctdt_id, string $id_kkt)
     {
         //
         try {
             //code...
-            $data = KhoiKienThuc::findOrFail($id);
+            // db::table('khoi_kien_thuc')
+            $data = KhoiKienThuc::findOrFail($id_kkt);
             $data->delete();
             //
 

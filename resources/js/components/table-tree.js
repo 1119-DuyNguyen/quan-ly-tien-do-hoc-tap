@@ -35,7 +35,7 @@ function previousUntilElement(elem, elements) {
         if (elements.includes(elem)) break;
 
         siblings.push(elem);
-        elem = elem.nextElementSibling;
+        elem = elem.previousElementSibling;
     }
     return siblings;
 }
