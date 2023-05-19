@@ -60,6 +60,11 @@ let navPage = {
         text: 'Học phần',
         icon: 'fa-regular fa-book-open"',
     },
+    import:{
+        role: ['quan-tri-vien'],
+        text: 'Nhập dữ liệu',
+        icon: 'fa-solid fa-cloud-arrow-up'
+    },
     logout: {
         role: ['*'],
         icon: 'fa-solid fa-arrow-right-from-bracket icon',

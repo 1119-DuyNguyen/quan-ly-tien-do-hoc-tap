@@ -10,11 +10,13 @@ use App\Http\Controllers\DataImportInfo\KhoiKienThucImportInfo;
 use App\Http\Controllers\DataImportInfo\NganhImportInfo;
 use App\Http\Controllers\DataImportInfo\SinhVienImportInfo;
 
+use App\Models\Authorization\TaiKhoan;
 use App\Models\Nganh;
 use App\Models\Users\Students\TrainingProgram\Subjects\HocPhan;
 use Exception;
 use App\Http\Controllers\ApiController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 
 class DataImportController extends ApiController
@@ -147,5 +149,67 @@ class DataImportController extends ApiController
             []
         );
     }
+
+    function info(Request $request){
+
+        $info = TaiKhoan::where('id', $request->user()->id)->first();
+        $data = [];
+        switch ($info->quyen_id){
+            case 1:
+                $data = [
+                    'Thông tin cá nhân' => [
+                        0 => 2,
+                        'Mã số sinh viên:' => $info->ten_dang_nhap,
+                        'Họ và tên:' => $info->ten,
+                        'Ngày sinh' => $info->ngay_sinh,
+                        'Email' => $info->email,
+                    ],
+                    // 'Ly do ...' => [
+                    //     1,
+                    //     "Thieu tieng anh",
+                    //     'Cac hoc phan chua hoan thanh'
+                    // ]
+                ];
+                break;
+            case 2:
+                $data = [
+                    'Thông tin cá nhân' => [
+                        0 => 2,
+                        'Mã số giảng viên:' => $info->ten_dang_nhap,
+                        'Họ và tên:' => $info->ten,
+                        'Ngày sinh' => $info->ngay_sinh,
+                        'Email' => $info->email,
+                    ],
+                    // 'Ly do ...' => [
+                    //     1,
+                    //     "Thieu tieng anh",
+                    //     'Cac hoc phan chua hoan thanh'
+                    // ]
+                ];
+                break;
+            case 4:
+                $data = [
+                    'Thông tin cá nhân' => [
+                        0 => 2,
+                        'Tên đăng nhập:' => $info->ten_dang_nhap,
+                        'Họ và tên:' => $info->ten,
+                        'Ngày sinh' => $info->ngay_sinh,
+                        'Email' => $info->email,
+                    ],
+                    // 'Ly do ...' => [
+                    //     1,
+                    //     "Thieu tieng anh",
+                    //     'Cac hoc phan chua hoan thanh'
+                    // ]
+                ];
+                break;
+
+        }
+
+        return $this->success($data);
+    }
+
+
+
 
 }
