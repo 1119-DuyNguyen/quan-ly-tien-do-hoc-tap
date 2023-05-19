@@ -1,0 +1,90 @@
+@use '../abstract';
+
+
+.import-content {
+    padding-top: 1.3125rem;
+    padding-left: 3.125rem;
+
+}
+
+
+.import-content > *{
+    margin-inline: auto;
+    // width: max-content;
+    box-sizing: border-box;
+}
+
+
+
+.import-header {
+    text-align: center;
+    background-color: #2A83FF;
+    color: white;
+    width: 60%;
+    min-height: 5rem;
+    display: grid;
+    border-radius: 0.8125rem;
+    word-wrap: break-word;
+    padding-block: 1rem;
+}
+
+.header-name {
+    font-size: 1.75rem;
+    margin: auto;
+    width: 80%;
+}
+
+.import-body {
+    display: grid;
+    gap: 3.125rem;
+    grid-template-columns: auto;
+    margin-top: 3rem;
+    margin-inline: 3.2rem;
+    padding-bottom: 5rem;
+
+    &--form {
+        display: flex;
+        gap: 30px;
+        row-gap: 50px;
+        flex-wrap: wrap;
+
+        & input[type = 'text']{
+            padding-inline: 10px;
+            width: calc(50% - 30px);
+            height: 50px;
+        }
+        & select {
+            padding-inline: 10px;
+            width: calc(50% - 30px);
+            height: 50px;
+        }
+        & input[type = 'file']{
+            width: calc(100%);
+        }
+    }
+
+}
+
+
+
+
+
+@media (max-width: 1023px){
+
+}
+
+@media (min-width: 768px){
+
+}
+
+@media (max-width: 620px){
+
+}
+
+@media (max-width: 450px){
+
+}
+
+@media (max-width: 387px){
+
+}

@@ -1,20 +1,24 @@
 import { Route } from '../abstract/classes.js';
+import { ClassroomStudent } from '../pages/classroom/classroomStudent.js';
+import { ClassroomTeacher } from '../pages/classroom/classroomTeacher.js';
 import { DashBoard } from '../pages/dashboard.js';
 import { Graduate } from '../pages/graduate/graduate.js';
 import { Info } from '../pages/info.js';
-import { ClassroomStudent } from '../pages/classroom/classroomStudent.js';
-import { ClassroomTeacher } from '../pages/classroom/classroomTeacher.js';
 
-import { Role } from '../pages/admin/role.js';
-import { Analytics } from '../pages/admin/analytics.js';
 import { HomeworkMark } from '../components/classroom/group/post/HomeworkMark.js';
 import { User } from '../pages/admin/User.js';
+import { Analytics } from '../pages/admin/analytics.js';
 import { Program } from '../pages/admin/program.js';
+import { Role } from '../pages/admin/role.js';
 import { Subject } from '../pages/admin/subject.js';
-import { Authentication } from '../pages/authentication.js';
 import { UserPermissions } from '../pages/admin/user-permissons.js';
+
+import { Authentication } from '../pages/authentication.js';
+import { import_file } from '../pages/import-file.js';
+
 import { AdministrativeClasses } from '../pages/admin/AdministrativeClasses.js';
 import { MarksTable } from '../components/classroom/group/marksTable.js';
+
 
 const route = new Route();
 route.addRoute('/', Authentication.login, { title: 'Login' }, 'templates/login.html');
@@ -129,7 +133,7 @@ route.addRoute('quan-tri-vien/program', Program.index, { title: 'Chương trình
 route.addRoute('quan-tri-vien/program/add', Program.add, { title: 'Chương trình đào tạo' }, '');
 
 route.addRoute('quan-tri-vien/program/$id', Program.view, { title: 'Chương trình đào tạo' }, '');
-
+route.addRoute('quan-tri-vien/info', Info.index, {title: 'Thông tin cá nhân'}, 'templates/info.html')
 route.addRoute('quan-tri-vien/role', Role.index, { title: 'Quyền' }, '');
 // route.addRoute('quan-tri-vien/role/edit', Role.edit, { title: 'Quyền' }, 'templates/admin/role-edit.html');
 route.addRoute(
@@ -142,5 +146,7 @@ route.addRoute(
 route.addRoute('quan-tri-vien/subject', Subject.index, { title: 'Học phần' }, '');
 
 route.addRoute('quan-tri-vien/user', User.index, { title: 'Người dùng' }, '');
+
+route.addRoute('quan-tri-vien/import', import_file.index, {title: 'Nhập dữ liệu'}, '/templates/import-file.html');
 
 export var routeList = route.getUrlRoutes();

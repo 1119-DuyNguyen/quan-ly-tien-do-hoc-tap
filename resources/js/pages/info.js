@@ -1,24 +1,28 @@
-import axios from "axios";
 
 export class Info {
     static index(){
-        let info = {
-            'Thong tin ca nhan' : {
-                0 : 2,
-                'Ma so sinh vien:' : '3121410304',
-                'Ho va ten:' : 'Tran Duong Dac Loc',
-                'Ngay sinh' : '6-5-2003',
-                'Email' : 'trandacloc123@gmail.com',
-                'Mat khau' : '12345'
-            },
-            'Ly do ...' : [
-                1,
-                "Thieu tieng anh",
-                'Cac hoc phan chua hoan thanh'
-            ]
-        }
-
-        Info.renderInfo(info)
+        // {
+        //     'Thong tin ca nhan' : {
+        //         0 : 2,
+        //         'Ma so sinh vien:' : '3121410304',
+        //         'Ho va ten:' : 'Tran Duong Dac Loc',
+        //         'Ngay sinh' : '6-5-2003',
+        //         'Email' : 'trandacloc123@gmail.com',
+        //         'Mat khau' : '12345'
+        //     },
+        //     'Ly do ...' : [
+        //         1,
+        //         "Thieu tieng anh",
+        //         'Cac hoc phan chua hoan thanh'
+        //     ]
+        // }
+        let info = null
+        axios.get('/api/info')
+        .then((res) =>{
+            info = res.data.data
+            // console.log(info);
+            Info.renderInfo(info)
+        });
 
 
     }
@@ -55,9 +59,12 @@ export class Info {
 
             }
 
-            body += `<div class="item__button">
-                        <div>Thay đổi</div>
-                    </div>
+            // body += `<div class="item__button">
+            //             <div>Thay đổi</div>
+            //         </div>
+            //     </div>
+            // </div>`
+            body += `
                 </div>
             </div>`
 

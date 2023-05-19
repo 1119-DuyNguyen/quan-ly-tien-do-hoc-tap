@@ -87,6 +87,7 @@ Route::middleware('auth:api')->group(function () {
     Route::apiResource('/suggestion', SuggestGraduateController::class);
 
     Route::apiResource('/semester', SemesterController::class);
+    Route::get('info', [DataImportController::class, 'info']);
 
     Route::middleware('role:Quản trị viên')
         ->name('admin.')
@@ -122,6 +123,7 @@ Route::middleware('auth:api')->group(function () {
             Route::apiResource('/loai-kien-thuc', LoaiKienThucController::class);
 
             Route::apiResource('/program', ProgramController::class);
+
             Route::apiResource('program.knowledge-block', ProgramKnowledgeBlockController::class);
             Route::apiResource('program.knowledge-block.subject',   ProgramKnowledgeBlockSubject::class);
 
@@ -131,6 +133,7 @@ Route::middleware('auth:api')->group(function () {
             Route::apiResource('/classes.student', AdministrativeClassStudentsController::class);
             Route::apiResource('/classes-program', ProgramsListController::class);
             Route::apiResource('/classes-advisor', AdvisorController::class);
+
 
             //      Route::get('/child-program/subject', [KnowledgeBlockController::class, 'getSubject']);
         });
@@ -174,3 +177,4 @@ Route::group(
 //Import data
 Route::post('import-data', DataImportController::class);
 Route::get('export-data', [DataImportController::class, 'export']);
+
