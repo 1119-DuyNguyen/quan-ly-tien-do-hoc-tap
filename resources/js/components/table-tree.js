@@ -63,9 +63,22 @@ export class TableTree {
             return next;
         }
         tableEl.querySelectorAll('.toggle').forEach((el) => {
+            var tr = el.closest('tr');
+            try {
+                var depth = Number.parseInt(tr.dataset.depth) + 1;
+
+                let content = '';
+
+                for (let i = 1; i <= depth; ++i) {
+                    content += '_';
+                }
+                el.dataset.depth = content;
+            } catch (error) {}
+
             el.addEventListener('click', (e) => {
-                var tr = el.closest('tr');
+                tr = el.closest('tr');
                 if (!tr) return;
+
                 var children = findChildren(tr);
                 var subnodes = children.filter((element) => {
                     return element.matches('.expand');

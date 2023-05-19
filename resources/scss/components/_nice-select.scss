@@ -64,7 +64,7 @@ $foregroundColor: var(--color);
     span.current {
         display: block;
         width: 100%;
-        text-align: center;
+        text-align: left;
     }
     &.has-multiple span.current {
         width: auto;

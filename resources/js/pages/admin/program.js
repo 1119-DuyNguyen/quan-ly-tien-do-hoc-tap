@@ -8,17 +8,54 @@ import { TableTree } from '../../components/table-tree';
 import { ChildProgram } from './child-program';
 import NiceSelect from '../../components/helper/nice-select';
 import { routeHref } from '../../routes/route';
-import { htmlLKT, htmlMucLucHP, htmlKKT, htmlHP, htmlMucLucKKT, renderTreeCTDT } from './program-helper';
+import {
+    htmlLKT,
+    htmlMucLucHP,
+    htmlKKT,
+    htmlHP,
+    htmlMucLucKKT,
+    renderTreeCTDT,
+    renderEditTreeCTDT,
+} from './program-helper';
 
 export class Program {
     static URL_PROGRAM = location.protocol + '//' + location.host + '/api/admin/program';
 
     static URL_MAJOR = location.protocol + '//' + location.host + '/api/major/all';
     static URL_PERIOD = location.protocol + '//' + location.host + '/api/period/all';
-
+    static URL_MUCLUC = location.protocol + '//' + location.host + '/api/admin/program/muc-luc';
     static export() {}
     static edit() {}
+    static addMucLucForm(callback) {
+        let formContainer = document.createElement('form');
+        formContainer.classList.add('form');
+        formContainer.innerHTML = `
+            <div class="grid-container-half">
+            <div class="grid-item form-group">
+                <label for=""> Tên</label>
+                <input rules='required' type="text" name='ten' class="input" />
+            </div>
+        </div>
+        <button class="form-submit">Cập nhập</button>
+            `;
+        let handleValidator = new Validator(formContainer);
+        handleValidator.onSubmit = function (data) {
+            //  console.log(data);
+            axios
+                .post(Program.URL_MUCLUC, data)
+                .then((res) => {
+                    if (callback) callback();
+                })
+                .catch((err) => {
+                    console.log(err.response);
+                    if (err?.response?.data?.message) {
+                        alertComponent('Có lỗi khi gửi yêu cầu lên máy chủ', err.response.data.message);
+                    }
+                });
+        };
 
+        return formContainer;
+    }
     static index() {
         // let smartTable = new SmartTableTemplate();
         //helper function
@@ -100,7 +137,9 @@ export class Program {
                 // ChildProgram.index(id);
 
                 let rootElement = document.getElementById('main-content');
-                rootElement.appendChild(Program.renderEditCTDT(id));
+                let containerProgram = document.createElement('div');
+                rootElement.appendChild(containerProgram);
+                Program.renderEditCTDT(containerProgram, id);
             } else {
             }
         } catch (err) {
@@ -126,7 +165,7 @@ export class Program {
         return axios.get(Program.URL_PROGRAM + '/' + id).then((res) => res.data.data);
     }
     static getDetailKnowledgeBlock(idProgram) {
-        return axios.get(Program.URL_PROGRAM + '/' + idProgram + '/knowledge_block').then((res) => res.data.data);
+        return axios.get(Program.URL_PROGRAM + '/' + idProgram + '/knowledge-block').then((res) => res.data.data);
     }
     static renderAddCTDT() {
         let knowledgeBlockContainer = document.createElement('div');
@@ -255,7 +294,8 @@ export class Program {
 
         return knowledgeBlockContainer;
     }
-    static renderEditCTDT(id) {
+    static renderEditCTDT(container, id) {
+        if (container) container.innerHTML = '';
         let knowledgeBlockContainer = document.createElement('div');
         knowledgeBlockContainer.classList.add('child-program-container');
         let programContainer = document.createElement('div');
@@ -399,19 +439,17 @@ export class Program {
         // ----------------------RENDER TREE TABLE ------------------------------------------
         let tableContainer = document.createElement('div');
 
-        let promiseKnowledge = Program.getDetailKnowledgeBlock(id)
-            .then((data) => {
-                renderTreeCTDT(tableContainer, data);
-            })
-            .catch((err) => {
-                console.error(err);
-                alertComponent('khởi tạo khối kiến thức chương trình đào tạo thất bại');
-            });
+        let promiseKnowledge =
+        renderEditTreeCTDT(tableContainer, id);
+
+
+
         Promise.all([promiseProgram, promiseKnowledge]).then((values) => {
             knowledgeBlockContainer.appendChild(programContainer);
             knowledgeBlockContainer.appendChild(tableContainer);
         });
-        return knowledgeBlockContainer;
+        // return knowledgeBlockContainer;
+        container.appendChild(knowledgeBlockContainer);
     }
     static renderViewCTDT(id) {
         let knowledgeBlockContainer = document.createElement('div');

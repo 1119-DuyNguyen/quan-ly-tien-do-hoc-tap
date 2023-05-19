@@ -11,6 +11,8 @@ use App\Http\Requests\Admin\ChildProgramRequest;
 use App\Http\Resources\Admin\ChildProgramResource;
 use App\Models\Users\Students\TrainingProgram\ChuongTrinhDaoTao;
 use App\Models\Users\Students\TrainingProgram\Subjects\KhoiKienThuc;
+use App\Models\Users\Students\TrainingProgram\Subjects\LoaiKienThuc;
+use Hamcrest\Type\IsNumeric;
 
 class ProgramKnowledgeBlockController extends ApiController
 {
@@ -73,17 +75,6 @@ class ProgramKnowledgeBlockController extends ApiController
                 }
             }
             $kkt->hpTuChon = $hpTuChon;
-            // if (isset($kkt->loai_kien_thuc_id)) {
-            //     if (!isset($lktList[$kkt->loai_kien_thuc_id])) {
-            //         $lktList[$kkt->loai_kien_thuc_id] = [$kkt];
-            //     } else {
-            //         // tương đương push
-            //         $lktList[$kkt->loai_kien_thuc_id] = [$lktList[$kkt->loai_kien_thuc_id],  [$kkt]];
-            //     }
-            // }
-            // else{
-
-            // }
         }
 
 
@@ -97,19 +88,20 @@ class ProgramKnowledgeBlockController extends ApiController
     {
         //
         try {
-            KhoiKienThuc::create($request->all());
+            $data = $request->all();
+            KhoiKienThuc::create($data);
 
             return $this->success(null, 200, 'Thêm dữ liệu thành công');
         } catch (Exception $e) {
             //catch exception
-            return $this->error(null, 400, 'Máy chủ thêm không thành công');
+            return $this->error(null, 400, 'Máy chủ thêm không thành công' . $e->getMessage());
         }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $ctdtID, string $id)
     {
         //
         $ctdt = KhoiKienThuc::find($id);
@@ -122,7 +114,7 @@ class ProgramKnowledgeBlockController extends ApiController
     /**
      * Update the specified resource in storage.
      */
-    public function update(ChildProgramRequest $request, string $id)
+    public function update(ChildProgramRequest $request, string $ctdtID, string $id)
     {
         //
         try {
