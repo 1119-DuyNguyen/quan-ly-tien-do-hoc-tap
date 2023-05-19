@@ -17,27 +17,28 @@ class ChuongTrinhDaoTao extends Model
 
     use HasFactory;
 
-    protected $casts = [
-        'tong_tin_chi' => 'int',
-        'thoi_gian_dao_tao' => 'float',
-        'nganh_id' => 'int',
-        'chu_ky_id' => 'int'
-    ];
+	protected $casts = [
+		'tong_tin_chi' => 'int',
+		'thoi_gian_dao_tao' => 'float',
+		'nganh_id' => 'int',
+		'chu_ky_id' => 'int',
+        'hinh_thuc_dao_tao' => 'int'
+	];
 
-    protected $fillable = [
-        'ten',
-        'trinh_do_dao_tao',
-        'thoi_gian_dao_tao',
-        'nganh_id',
-        'chu_ky_id',
-        'tong_tin_chi',
-        'ghi_chu',
-        'hinh_thuc_dao_tao'
-    ];
-    public function chu_ky()
-    {
-        return $this->belongsTo(ChuKy::class);
-    }
+	protected $fillable = [
+		'ten',
+		'thoi_gian_dao_tao',
+		'trinh_do_dao_tao',
+        'hinh_thuc_dao_tao',
+		'nganh_id',
+		'chu_ky_id',
+		'tong_tin_chi',
+		'ghi_chu'
+	];
+	public function chu_ky()
+	{
+		return $this->belongsTo(ChuKy::class);
+	}
 
 
     public function khoa()
