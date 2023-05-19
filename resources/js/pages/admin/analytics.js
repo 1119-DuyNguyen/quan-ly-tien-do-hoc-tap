@@ -526,7 +526,9 @@ export class Analytics {
         else url = Analytics.URL_SV;
 
         axios.get(url).then(response => {
-            let data = response.data.data;
+            const data = response.data.data;
+
+            console.log(data);
 
             let html = ``;
 
@@ -566,6 +568,7 @@ export class Analytics {
             
             data.dshp = Object.values(data.dshp)
             
+            let depth;
             data.dshp.forEach(kkt => {
 
                 if (typeof kkt == 'string')
@@ -574,15 +577,28 @@ export class Analytics {
                     return;
                 }
 
+                depth = 0;
+
+                list += `<tr data-depth="${depth++}" class='collapse'>
+                    <td colspan="8" style='text-align: left; font-weight: bold' class='toggle'>${kkt.ten_muc_luc}</td>
+                </tr>`;
+
+                if (kkt.ten_loai_kien_thuc !== null) {
+                    list += `<tr data-depth="${depth++}" class='collapse'>
+                        <td colspan="8" style='text-align: left; font-weight: bold' class='toggle'>${kkt.ten_loai_kien_thuc}</td>
+                    </tr>`;
+                }
+
                 if (typeof kkt.ds_hp_batbuoc != 'undefined')
                 {
                     sltc = 0;
                     kkt.ds_hp_batbuoc.forEach(hp => sltc += hp.so_tin_chi)
+
                     if (kkt.ds_hp_batbuoc.length > 0)
-                        list += `<tr data-depth="0" class='collapse'>
+                        list += `<tr data-depth="${depth}" class='collapse'>
                             <td colspan="8" style='text-align: left; font-weight: bold' class='toggle'>${kkt.ten}</td>
                         </tr>
-                        <tr data-depth="1" style="height: 2rem" class='collapse'>
+                        <tr data-depth="${depth+1}" style="height: 2rem" class='collapse'>
                             <td colspan="4" style="text-align: left" class='toggle'>Bắt buộc</td>
                             <td style="text-align: center"><i>${sltc}</i></td>
                             <td colspan="2"></td>
@@ -592,7 +608,7 @@ export class Analytics {
                         for (let i = 0; i < data.dshp_sv.length; i++) {
                             const hpsv = data.dshp_sv[i];
                             if (hpsv.id == hp.hoc_phan_id && hpsv.diem_tong_ket !== null) {
-                                list += `<tr data-depth="2">
+                                list += `<tr data-depth="${depth+2}">
                                     <td>${hp.ma_hoc_phan}</td>
                                     <td style='text-align: left'>${hp.ten}</td>
                                     <td style='text-align: center'>${hpsv.diem_tong_ket}</td>
@@ -606,7 +622,7 @@ export class Analytics {
                             }
                         }
                         if (!check) {
-                            list += `<tr data-depth="2">
+                            list += `<tr data-depth="${depth+2}">
                                 <td>${hp.ma_hoc_phan}</td>
                                 <td style='text-align: left'>${hp.ten}</td>
                                 <td></td>
@@ -624,7 +640,7 @@ export class Analytics {
                     sltc = 0;
                     kkt.ds_hp_tuchon.forEach(hp => sltc += hp.so_tin_chi)
                     if (kkt.ds_hp_tuchon.length > 0)
-                        list += `<tr data-depth="1" class='collapse'>
+                        list += `<tr data-depth="${depth+1}" class='collapse'>
                             <td colspan="4" style='text-align: left' class='toggle'>Tự chọn</td>
                             <td style="text-align: center;"><i>${sltc}</i></td>
                             <td colspan="2"></td>
@@ -634,7 +650,7 @@ export class Analytics {
                         for (let i = 0; i < data.dshp_sv.length; i++) {
                             const hpsv = data.dshp_sv[i];
                             if (hpsv.id == hp.hoc_phan_id && hpsv.diem_tong_ket !== null) {
-                                list += `<tr data-depth="2">
+                                list += `<tr data-depth="${depth+2}">
                                     <td>${hp.ma_hoc_phan}</td>
                                     <td style='text-align: left'>${hp.ten}</td>
                                     <td style='text-align: center'>${hpsv.diem_tong_ket}</td>
@@ -648,7 +664,7 @@ export class Analytics {
                             }
                         }
                         if (!check) {
-                            list += `<tr data-depth="2">
+                            list += `<tr data-depth="${depth+2}">
                                 <td>${hp.ma_hoc_phan}</td>
                                 <td style='text-align: left'>${hp.ten}</td>
                                 <td></td>

@@ -338,7 +338,7 @@ class AnalyticsService {
 
             $ds_khoi_kien_thuc = DB::table('khoi_kien_thuc')
             ->where('chuong_trinh_dao_tao_id', '=', $chuong_trinh_dao_tao_id)
-            ->get(array('id','ten'));
+            ->get(array('id','ten', 'loai_kien_thuc_id', 'muc_luc_id'));
 
             $object = array(
                 'ten_ctdt' => $ten_ctdt,
@@ -359,8 +359,18 @@ class AnalyticsService {
                 ->groupBy('hoc_phan_id')
                 ->get();
 
+                $ten_muc_luc = DB::table('muc_luc')
+                ->where('id', '=', $kkt->muc_luc_id)->get('ten')->first()->ten;
+
+                if ($kkt->loai_kien_thuc_id !== null) 
+                    $ten_loai_kien_thuc = DB::table('loai_kien_thuc')->where('id', '=', $kkt->loai_kien_thuc_id)->get('ten')->first()->ten;
+                else
+                    $ten_loai_kien_thuc = null;
+
                 $object[] = (object) array(
                     "ten" => $kkt->ten,
+                    "ten_muc_luc" => $ten_muc_luc,
+                    "ten_loai_kien_thuc" => $ten_loai_kien_thuc,
                     "ds_hp_batbuoc" => $ds_hp_batbuoc,
                     "ds_hp_tuchon" => $ds_hp_tuchon,
                 );
