@@ -3,6 +3,7 @@ export class HomeworkMark {
     static URL_THAMGIA = location.protocol + '//' + location.host + '/api/tham-gia-nhom-hoc';
     static URL_CHAMDIEM = location.protocol + '//' + location.host + '/api/cham-diem';
     static URL_FILE_BAI_TAP = location.protocol + '//' + location.host + '/api/file-bai-tap';
+    static URL_NHOM_HOC = location.protocol + '//' + location.host + '/classroom';
 
     static show({ id }) {
         axios
@@ -101,6 +102,11 @@ export class HomeworkMark {
                         console.error(err);
                     });
             }
+        });
+
+        document.querySelector('#homework__back').addEventListener('click', (e) => {
+            e.preventDefault();
+            history.back();
         });
 
         document.querySelectorAll('.bai_tap_sinh_vien').forEach((element) => {

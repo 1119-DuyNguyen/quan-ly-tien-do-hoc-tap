@@ -91,5 +91,11 @@ export class ClassroomTeacher {
             e.preventDefault();
             routeHref(ClassroomTeacher.URL_Classroom);
         });
+
+        const markTableBtn = document.getElementById('mark-table-student');
+        markTableBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            routeHref(ClassroomTeacher.URL_BANG_DIEM + `/${id}`);
+        });
     }
 }

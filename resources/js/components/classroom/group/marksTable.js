@@ -108,5 +108,11 @@ export class MarksTable {
         html += `</tbody></table>`;
 
         rootElement.innerHTML = html;
+
+        const chamDiemQuayVeBtn = document.getElementById('cham-diem-quay-ve-btn');
+        chamDiemQuayVeBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            history.back();
+        });
     }
 }
