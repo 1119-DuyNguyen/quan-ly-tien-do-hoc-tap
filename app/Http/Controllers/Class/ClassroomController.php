@@ -42,6 +42,6 @@ class ClassroomController extends ApiController
                 'hoc_phan.id as ma_hoc_phan'
             )
             ->get();
-        return $this->success($data, 200, 'Success');
+        return $this->success($data, 200, 'Đã lấy được thông tin nhóm học');
     }
 }

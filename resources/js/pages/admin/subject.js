@@ -1,13 +1,118 @@
-import { Validator } from '../../components/helper/Validator';
+import { Validator } from '../../components/helper/validator';
 import { alertComponent } from '../../components/helper/alert-component';
 import { SmartTableTemplate } from '../../components/smart-table-template/SmartTableTemplate';
 import { ConfirmComponent } from '../../components/helper/confirm-component';
 import { ModalComponent } from '../../components/helper/modal-component';
 import { toast } from '../../components/helper/toast';
+import { Program } from './program';
 
 export class Subject {
     static URL_SUBJECT = location.protocol + '//' + location.host + '/api/admin/subject';
+    static URL_KKT_SUBJECT = location.protocol + '//' + location.host + '/api/admin/subject';
 
+    static getAddKKTFormElement(textSubmit = '', callback, idKKT, idCTDT) {
+        function renderOption(num) {
+            let html = '';
+            for (let i = 1; i <= num; ++i) {
+                html += `
+                <label>
+                <input type="checkbox" name="hoc_ky[]" value=${i}
+                style="margin-right:8px;">
+                ${i}</label>`;
+            }
+            return html;
+        }
+        //     <div class="grid-item form-group">
+
+        //     <label>Học phần tương đương</label>
+
+        //     <select name="hoc_phan_tuong_duong_id" rules='required'>
+        //     <option></option>
+        //     </select>
+        // </div>
+        let formContainer = document.createElement('form');
+        formContainer.classList.add('form');
+        formContainer.innerHTML = `
+        <div class="grid-container-half">
+        <!-- select -->
+        <div class="grid-item form-group">
+
+        <label>Học phần </label>
+
+        <select name="hoc_phan_id" rules='required'>
+        <option></option>
+        </select>
+        </div>
+        <div class="grid-item form-group">
+
+        <label>Loại học phần</label>
+
+        <select name="loai_hoc_phan" rules='required'>
+        <option value="1">Bắt buộc</option>
+        <option value="0">Tự chọn</option>
+        </select>
+        </div>
+
+
+
+    </div>
+
+
+    </div>
+    <div class="grid-item form-group" style="
+    text-align: left;">
+
+    <label style="display: block;">Học kỳ</label>
+
+   ${renderOption(9)}
+        </div>
+    <button class="form-submit">${textSubmit}</button>
+        `;
+
+        //  let selectHPTD = formContainer.querySelector('select[name="hoc_phan_tuong_duong_id"]');
+        let selectHP = formContainer.querySelector('select[name="hoc_phan_id"]');
+
+        axios
+            .get(Subject.URL_SUBJECT + '/all')
+            .then((res) => {
+                return res.data.data;
+            })
+            .then((data) => {
+                let html = '';
+                data.forEach((hp) => {
+                    html += `<option value="${hp.id}">${hp.ten}</option>`;
+                });
+                selectHP.innerHTML = html;
+                //selectHPTD.innerHTML = html;
+            })
+            .catch((err) => console.log(err));
+
+        // let selectContainer = tableTem.renderSelectList(tableTem.getDataSelectList);
+        // if (selectContainer) {
+        //     let selectList = selectContainer.querySelectorAll('select') ?? [];
+        //     selectList.forEach((select) => {
+        //         let selectForm = formContainer.querySelector(`select[name="${select.getAttribute('name')}"`);
+        //         if (selectForm) {
+        //             selectForm.innerHTML = select.innerHTML;
+        //         }
+        //     });
+        // }
+        let handleValidator = new Validator(formContainer);
+        handleValidator.onSubmit = function (data) {
+            console.log(data);
+            axios
+                .post(Program.URL_PROGRAM + `/${idCTDT}/knowledge-block/${idKKT}/subject`, data)
+                .then((res) => tableTem.reRenderTable())
+                .catch((err) => {
+                    console.log(err.response);
+                    if (err?.response?.data?.message) {
+                        alertComponent('Có lỗi khi gửi yêu cầu lên máy chủ', err.response.data.message);
+                    }
+                });
+        };
+
+        return formContainer;
+    }
     static getAddFormElement(textSubmit = '', tableTem) {
         let formContainer = document.createElement('form');
         formContainer.classList.add('form');
@@ -34,20 +139,9 @@ export class Subject {
             <input name='phan_tram_cuoi_ki'  type="text" class="input"rules='required|number' value="" />
         </div>
 
-        <!-- select -->
-        <div class="grid-item form-group">
-            <label>Học phần tương đương</label>
-
-            <select name="hoc_phan_tuong_duong_id" rules='required'>
-        
-            </select>
-        </div>
-
-        
-
     </div>
 
-       
+
     </div>
     <div class="form-group" style='text-align:left;'>
     <input name='co_tinh_tich_luy'  type="checkbox" class="input"rules='required' value="1" />
@@ -126,21 +220,15 @@ export class Subject {
                 <label for=""> Phần trăm cuối kỳ</label>
                 <input value="${data.phan_tram_cuoi_ki}" name='phan_tram_cuoi_ki'  type="text" class="input"rules='required|number' value="" />
             </div>
-    
+
             <!-- select -->
-            <div class="grid-item form-group">
-                <label>Học phần tương đương</label>
-    
-                <select name="hoc_phan_tuong_duong_id" rules='required'>
-            
-                </select>
-            </div>
-    
-            
-    
+
+
+
+
         </div>
-    
-           
+
+
         </div>
         <div class="form-group" style='text-align:left;'>
         <input name='co_tinh_tich_luy'  type="checkbox" class="input"rules='required' value="1" />
@@ -148,25 +236,25 @@ export class Subject {
         </div>
         <button class="form-submit">${textSubmit}</button>
             `;
-                let selectHP = formContainer.querySelector('select[name="hoc_phan_tuong_duong_id"]');
-                axios
-                    .get(Subject.URL_SUBJECT + '/all')
-                    .then((res) => {
-                        return res.data.data;
-                    })
-                    .then((data) => {
-                        let html = '';
-                        html += `<option value="" >Tất cả</option>`;
+                // let selectHP = formContainer.querySelector('select[name="hoc_phan_tuong_duong_id"]');
+                // axios
+                //     .get(Subject.URL_SUBJECT + '/all')
+                //     .then((res) => {
+                //         return res.data.data;
+                //     })
+                //     .then((data) => {
+                //         let html = '';
+                //         html += `<option value="" >Tất cả</option>`;
 
-                        data.forEach((hp) => {
-                            if (data.ma_hoc_phan_tuong_duong_id == hp.ma_hoc_phan_tuong_duong_id) {
-                                html += `<option value="${hp.id}" selected>${hp.ten}</option>`;
-                            }
-                            html += `<option value="${hp.id}">${hp.ten}</option>`;
-                        });
-                        selectHP.innerHTML = html;
-                    })
-                    .catch((err) => console.log(err));
+                //         data.forEach((hp) => {
+                //             if (data.ma_hoc_phan_tuong_duong_id == hp.ma_hoc_phan_tuong_duong_id) {
+                //                 html += `<option value="${hp.id}" selected>${hp.ten}</option>`;
+                //             }
+                //             html += `<option value="${hp.id}">${hp.ten}</option>`;
+                //         });
+                //         selectHP.innerHTML = html;
+                //     })
+                //     .catch((err) => console.log(err));
             })
             .catch((e) => {
                 formContainer.innerHTML = 'Lấy dữ liệu học phần thất bại';

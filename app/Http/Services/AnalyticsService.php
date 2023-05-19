@@ -327,41 +327,49 @@ class AnalyticsService {
     }
 
     private function getHPList(int $sinh_vien_id) {
-        $chuong_trinh_dao_tao_id = $this->getChTrDaoTao($sinh_vien_id)->id;
+        if ($this->getChTrDaoTao($sinh_vien_id) !== null)
+            $chuong_trinh_dao_tao_id = $this->getChTrDaoTao($sinh_vien_id)->id;
+        else
+            $chuong_trinh_dao_tao_id = -1;
 
-        $ten_ctdt = DB::table("chuong_trinh_dao_tao")
-        ->where('id', '=', $chuong_trinh_dao_tao_id)->get('ten')->first()->ten;
+        if ($chuong_trinh_dao_tao_id != -1) {
+            $ten_ctdt = DB::table("chuong_trinh_dao_tao")
+            ->where('id', '=', $chuong_trinh_dao_tao_id)->get('ten')->first()->ten;
 
-        $ds_khoi_kien_thuc = DB::table('khoi_kien_thuc')
-        ->where('chuong_trinh_dao_tao_id', '=', $chuong_trinh_dao_tao_id)
-        ->get(array('id','ten'));
+            $ds_khoi_kien_thuc = DB::table('khoi_kien_thuc')
+            ->where('chuong_trinh_dao_tao_id', '=', $chuong_trinh_dao_tao_id)
+            ->get(array('id','ten'));
 
-        $object = array(
-            'ten_ctdt' => $ten_ctdt,
-        );
+            $object = array(
+                'ten_ctdt' => $ten_ctdt,
+            );
 
-        foreach($ds_khoi_kien_thuc as $kkt) {
-            $ds_hp_batbuoc = DB::table('hoc_phan_kkt_bat_buoc')
-            ->where('khoi_kien_thuc_id', '=', $kkt->id)
-            ->join('hoc_phan', 'hoc_phan_id', '=', 'hoc_phan.id')
-            ->select(array('hoc_phan_id', 'ma_hoc_phan', 'ten', 'so_tin_chi'))
-            ->groupBy('hoc_phan_id')
-            ->get();
-            
-            $ds_hp_tuchon = DB::table('hoc_phan_kkt_tu_chon')
-            ->where('khoi_kien_thuc_id', '=', $kkt->id)
-            ->join('hoc_phan', 'hoc_phan_id', '=', 'hoc_phan.id')
-            ->select(array('hoc_phan_id', 'ma_hoc_phan', 'ten', 'so_tin_chi'))
-            ->groupBy('hoc_phan_id')
-            ->get();
+            foreach($ds_khoi_kien_thuc as $kkt) {
+                $ds_hp_batbuoc = DB::table('hoc_phan_kkt_bat_buoc')
+                ->where('khoi_kien_thuc_id', '=', $kkt->id)
+                ->join('hoc_phan', 'hoc_phan_id', '=', 'hoc_phan.id')
+                ->select(array('hoc_phan_id', 'ma_hoc_phan', 'ten', 'so_tin_chi'))
+                ->groupBy('hoc_phan_id')
+                ->get();
+                
+                $ds_hp_tuchon = DB::table('hoc_phan_kkt_tu_chon')
+                ->where('khoi_kien_thuc_id', '=', $kkt->id)
+                ->join('hoc_phan', 'hoc_phan_id', '=', 'hoc_phan.id')
+                ->select(array('hoc_phan_id', 'ma_hoc_phan', 'ten', 'so_tin_chi'))
+                ->groupBy('hoc_phan_id')
+                ->get();
 
-            $object[] = (object) array(
-                "ten" => $kkt->ten,
-                "ds_hp_batbuoc" => $ds_hp_batbuoc,
-                "ds_hp_tuchon" => $ds_hp_tuchon,
+                $object[] = (object) array(
+                    "ten" => $kkt->ten,
+                    "ds_hp_batbuoc" => $ds_hp_batbuoc,
+                    "ds_hp_tuchon" => $ds_hp_tuchon,
+                );
+            }
+        } else {
+            $object = array(
+                'ten_ctdt' => "Chương trình đào tạo không xác định",
             );
         }
-
         return $object;
     }
 
