@@ -43,7 +43,7 @@ export class Info {
                                 ${itemKey}
                             </div>
                             <div class="item-line__text item-line__text--strong">
-                                ${itemValue}
+                                ${(itemValue === null) ? '' : itemValue}
                             </div>
                         </div>`
                         break
@@ -51,7 +51,7 @@ export class Info {
                         body +=
                         `<div class="item__line">
                             <div class="item-line__text">
-                                ${itemValue}
+                                ${(itemValue === null) ? '' : itemValue}
                             </div>
                         </div>`
                         break

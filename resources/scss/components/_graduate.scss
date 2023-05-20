@@ -47,6 +47,9 @@
                 td {
                     border: 1px solid var(--primary-color);
                 }
+                a {
+                    color: var(--secondary-color-text);
+                }
                 tbody {
                     tr {
                         &:first-child {

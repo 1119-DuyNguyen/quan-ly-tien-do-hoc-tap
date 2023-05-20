@@ -25,6 +25,13 @@ class UserPermissionsController extends ApiController
         $this->permissionsService = $permissionsService;
     }
     
+    public function index() {
+        $object = (object) array(
+            "ds_chuc_nang" => $this->permissionsService->getDanhSachChucNang(),
+        );
+        return $this->success($object, 200, '');
+    }
+
     public function show($quyen_id) {
         $object = (object) array(
             "tt_quyen" => $this->permissionsService->getQuyen($quyen_id),

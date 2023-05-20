@@ -8,9 +8,18 @@
         width: 100%;
         background-color: #fff;
         border-spacing: 0;
-        th,
+        th {
+            border: 1px solid var(--secondary-color);
+            background-color: var(--primary-color);
+            color: var(--secondary-color-text);
+        }
         td {
             border: 1px solid var(--secondary-color);
+            background-color: var(--secondary-color);
+            color: var(--secondary-color-text);
+        }
+        a {
+            color: var(--secondary-color-text);
         }
 
         thead {
