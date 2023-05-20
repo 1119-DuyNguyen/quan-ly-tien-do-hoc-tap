@@ -19,19 +19,23 @@ export class import_file {
             let file = import_file.files
 
             import_err.textContent = ""
+            import_err.style.color = "#0080ff"
 
             if (sheet.trim() == ""){
-                import_err.textContent = "Tên bảng tính không được trống!"
+                import_err.style.color = "#f33a58"
+                import_err.style.textContent = "Tên bảng tính không được trống!"
                 return
             }
 
             if (header.trim() == ""){
+                import_err.style.color = "#f33a58"
                 import_err.textContent = "Số thứ tự tiêu đề không được trống!"
                 return
             }
 
 
             if (file.length == 0){
+                import_err.style.color = "#f33a58"
                 import_err.textContent = "Tệp tải lên không được trống!"
                 return
             }
@@ -56,7 +60,9 @@ export class import_file {
                   }
             })
             .then((res)=>{
-                console.log(res.data.data);
+                console.log(res);
+                if (res.status == 200)
+                    import_err.textContent = "Nhập dữ liệu thành công!"
                 // import_err.textContent = res.data
                 // res.data.data.foreach((key ) =>{
 

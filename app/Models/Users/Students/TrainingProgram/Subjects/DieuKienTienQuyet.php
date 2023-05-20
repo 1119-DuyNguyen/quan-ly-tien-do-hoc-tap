@@ -16,8 +16,15 @@ class DieuKienTienQuyet extends Model
 
 	protected $casts = [
 		'hoc_phan_id' => 'int',
-		'hoc_phan_truoc_id' => 'int'
+		'hoc_phan_truoc_id' => 'int',
+        'chuong_trinh_dao_tao_id'
 	];
+
+    protected $fillable = [
+        'hoc_phan_id',
+		'hoc_phan_truoc_id',
+        'chuong_trinh_dao_tao_id'
+    ];
 
 	public function hoc_phan()
 	{

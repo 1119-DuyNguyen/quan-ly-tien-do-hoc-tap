@@ -51,7 +51,7 @@ class DataImportController extends ApiController
 
         $this->importEachType('sinh-vien', new SinhVienImportInfo());
 
-
+        // dd($this->res['ctdt']);
         return $this->success($this->res);
         // return Excel::download(new ExportExtelFromCollection(HocPhan::class), 'test.xlsx');
     }
