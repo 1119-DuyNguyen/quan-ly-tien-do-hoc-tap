@@ -18,6 +18,7 @@ use App\Http\Controllers\ApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\Console\Input\Input;
 
 class DataImportController extends ApiController
 {
@@ -28,9 +29,15 @@ class DataImportController extends ApiController
 
         $this->files = $request->file('files');
 
+        // return count($this->files);
         $this->input = $request->input();
 
         // dd($this->files);
+        // return $this->files[0]->getClientOriginalName();
+        // return $request->all();
+        if (!$request->hasFile('files')){
+            return $this->error([ 'err' => 'Thiếu tệp tin!' ], 500);
+        }
 
         $this->importEachType('khoa', new KhoaImportInfo());
 
@@ -45,7 +52,7 @@ class DataImportController extends ApiController
         $this->importEachType('sinh-vien', new SinhVienImportInfo());
 
 
-        return $this->res;
+        return $this->success($this->res);
         // return Excel::download(new ExportExtelFromCollection(HocPhan::class), 'test.xlsx');
     }
 
