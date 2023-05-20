@@ -140,7 +140,7 @@ export class Sidebar {
                         this.#sidebar.classList.remove('hide');
                         let widthDevice = customFuncs.detectWidth();
 
-                        if (widthDevice > 1550) {
+                        if (widthDevice >20000) {
                             if (widthDevice > 300 * 3) mainEl.style.marginLeft = '300px';
                             else mainEl.style.marginLeft = '30vw';
                         } else {

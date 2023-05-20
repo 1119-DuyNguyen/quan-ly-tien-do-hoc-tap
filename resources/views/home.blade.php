@@ -98,13 +98,7 @@
                     <a class="nav-link btn-control-sidebar" id='btn-control-sidebar'>&#9776; </a>
 
                 </li>
-                <li class="nav-item">
-                    <div class="nav-link">
-
-                        <i class="fa-regular fa-bell"></i>
-                        <span class="badge">3</span>
-                    </div>
-                </li>
+          
                 <li class="nav-item">
                     <div class="nav-link" id="navTheme">
                         {{-- <i class="fa-regular fa-moon"></i> --}}

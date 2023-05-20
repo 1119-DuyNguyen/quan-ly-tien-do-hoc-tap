@@ -48,7 +48,7 @@ export class Role {
                 },
             },
             pagination: true,
-            edit: true,
+            edit: false,
         });
         // let tableTem = new SmartTableTemplate(tableTest, response.pokedata, {
         //     formatAttributeHeader: {
