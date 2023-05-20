@@ -25,7 +25,7 @@ $screenMobile: '500px';
     align-items: center;
     font-weight: 400;
     background-color: var(--fourth-color);
-
+    color: var(--primary-color);
     &_overlay {
         position: absolute;
         left: 0;
@@ -75,9 +75,9 @@ $screenMobile: '500px';
             height: 60px;
             padding: 1rem;
             cursor: pointer;
-            background-color: var(--primary-color);
+            background-color: var(--third-color);
             //color: #fff;
-            color: var(--fourth-color-text);
+            color: var(--primary-color);
             font-size: 1.5rem;
             font-weight: 400;
             border-radius: 8px;

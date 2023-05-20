@@ -102,6 +102,7 @@ select {
     text-indent: 0.01px;
     text-overflow: '';
     background-color: var(--secondary-color);
+    color: var(--color);
     &:disabled {
         background-color: inherit;
     }

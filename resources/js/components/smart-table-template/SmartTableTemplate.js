@@ -4,6 +4,7 @@ import { formatDate } from './helpers/date.js';
 import { routeHref } from '../../routes/route.js';
 import { ConfirmComponent } from '../helper/confirm-component.js';
 import { toast } from '../helper/toast.js';
+import NiceSelect from '../helper/nice-select.js';
 // const decodeHtml = (str) =>
 //     str.replace(
 //         /[&<>'"]/g,
@@ -150,6 +151,7 @@ export class SmartTableTemplate {
                 window.history.replaceState(null, null, url);
                 this.reRenderTable();
             };
+            new NiceSelect(select, { searchable: true });
         });
         return selectContainer;
     }
@@ -416,11 +418,11 @@ export class SmartTableTemplate {
                                         .delete(url.origin + url.pathname + '/' + rowId.getAttribute('data-content'))
                                         .then((res) => {
                                             let url = new URL(window.location.href);
-                                            url.searchParams.set('page',1);
-                                            window.history.replaceState(null,null,url);
-                                            this.reRenderTable()
+                                            url.searchParams.set('page', 1);
+                                            window.history.replaceState(null, null, url);
+                                            this.reRenderTable();
                                         })
-                                        .catch(e=> console.error(e));
+                                        .catch((e) => console.error(e));
                                 }
                             });
                         } catch (e) {

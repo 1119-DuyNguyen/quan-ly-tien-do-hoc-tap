@@ -49,11 +49,11 @@
             border: 0;
             text-align: left;
             position: relative;
-            border-bottom: 2px solid $gray;
+            border-bottom: 2px solid var(--third-color);
             margin-bottom: 1rem;
             margin-top: 2rem;
             &:focus {
-                outline: 1px solid $gray;
+                outline: 1px solid var(--third-color);
             }
             .input {
                 padding: 0.625em 2em 0.625em 0;
@@ -85,7 +85,7 @@
         }
 
         .btn-submit {
-            background-color: var(--fourth-color);
+            background-color: var(--third-color);
             color: var(--primary-color);
             // background-color: #6371c5;
             @media screen and (max-width: 480px) {

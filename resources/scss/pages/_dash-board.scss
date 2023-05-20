@@ -31,7 +31,7 @@
                 //font-weight: 500;
                 line-height: 35px;
                 text-align: center;
-                color: var(--color-black);
+                color: var(--primary-color);
                 //color: #3218db;
                 margin-bottom: 8px;
             }
@@ -62,9 +62,9 @@
             display: inline-block;
             border-radius: 0.9375rem;
             text-align: center;
-            margin: 5px;
+            margin: 0.5rem;
             text-decoration: none;
-
+            color: var(--color);
             &:hover {
                 cursor: pointer;
                 opacity: 0.6;
@@ -78,14 +78,12 @@
                 -webkit-box-orient: vertical;
 
                 text-align: center;
-                color: var(--secondary-color);
                 margin: 0 auto;
             }
             .class-item__bar {
                 position: absolute;
                 width: 90%;
                 height: 0.3125rem;
-                background-color: var(--secondary-color);
                 bottom: 1.5rem;
                 border-radius: 15px;
                 transform: translate(10px);
@@ -96,7 +94,7 @@
                     border-radius: 15px;
                 }
                 > span {
-                    color: var(--secondary-color);
+                    color: inherit;
                     font-size: 0.8rem;
                 }
             }
@@ -106,8 +104,8 @@
         a {
             text-decoration: none;
             padding: 1rem;
-            background-color: var(--color-item-5);
-            color: var(--secondary-color);
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
             float: left;
             margin-top: 1rem;
         }
@@ -125,6 +123,7 @@
         display: flex;
         flex-direction: column;
         background-color: var(--secondary-color);
+        border-radius: 12px;
         .progress-container__heading {
             margin-top: 1rem;
             margin-left: 0.8rem;
@@ -139,7 +138,8 @@
             .percentage__circle {
                 grid-row: 1 / span 2;
 
-                background: var(--secondary-color);
+                background: var(--third-color);
+                color: var(--color);
                 box-shadow: -0.125rem 1.5625rem 3.0625rem -0.625rem rgba(0, 0, 0, 0.08);
                 border-radius: 1.0625rem;
                 text-align: center;
@@ -150,6 +150,7 @@
                 .percentage__circle--circle {
                     margin-top: 1rem;
                 }
+
                 .percentage__text--daily {
                     margin-top: 1rem;
 
@@ -179,7 +180,7 @@
                 justify-content: space-around;
                 grid-template-columns: 100%;
                 .percentage__taskHours--item {
-                    background: var(--secondary-color);
+                    background: var(--third-color);
                     box-shadow: -0.125rem 1.875rem 3.125rem -0.75rem rgba(0, 0, 0, 0.1);
                     border-radius: 0.8125rem;
                     min-height: 104px;
@@ -242,7 +243,8 @@
                 }
 
                 .deadline__item {
-                    background: var(--secondary-color);
+                    background: var(--third-color);
+                    color: var(--primary-color);
                     box-shadow: -0.125rem 1.625rem 3.125rem -0.625rem rgba(0, 0, 0, 0.08);
                     border-radius: 0.75rem;
 
@@ -256,9 +258,8 @@
                     flex-direction: column;
                     align-items: center;
                     .deadline__item--subject {
-                        background: rgba(255, 156, 33, 0.1);
+                        color: var(--color);
                         border-radius: 16px;
-                        color: orange;
                         padding: 10px;
                         align-self: flex-start;
                     }
@@ -269,14 +270,17 @@
                     }
                     .deadline__item--time {
                         padding: 8px;
-                        background: #ffbb55;
-                        color: var(--secondary-color);
+
+                        background: var(--fourth-color);
+
+                        color: var(--primary-color);
                         border-radius: 25px;
                         margin-top: 8px;
                         align-self: flex-start;
                     }
                     .deadline__item--bio {
-                        color: #94959a;
+                        color: var(--color);
+
                         margin-top: 8px;
                     }
                 }

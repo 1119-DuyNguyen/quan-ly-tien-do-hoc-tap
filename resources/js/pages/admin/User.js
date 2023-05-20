@@ -53,9 +53,9 @@ export class User {
             <label>Khoa</label>
 
             <select name="khoa_id" rules='required'>
-        
+
             </select>
-            
+
 
         </div>
         <div class="grid-item form-group">
@@ -64,11 +64,11 @@ export class User {
         <select name="role_id" rules='required'>
 
         </select>
-        
+
 
     </div>
     <input type="hidden" name="chuong_trinh_dao_tao_id" value="${idProgram}"/>
-       
+
     </div>
     <button class="form-submit">${textSubmit}</button>
         `;
@@ -86,32 +86,32 @@ export class User {
         let khoaList = formContainer.querySelector('[name="khoa_id"]');
 
         axios.get(User.URL_FACULTY).then((response) => {
-            const data = response.data.data
+            const data = response.data.data;
 
             if (data === null) return;
 
-            data.forEach(khoa => {
+            data.forEach((khoa) => {
                 const opt = document.createElement('option');
                 opt.text = khoa.ten;
                 opt.value = khoa.id;
                 khoaList.add(opt);
-            })
-        })
+            });
+        });
 
         let vaitroList = formContainer.querySelector('[name="role_id"]');
 
         axios.get(User.URL_ROLES).then((response) => {
-            const data = response.data.data
+            const data = response.data.data;
 
             if (data === null) return;
 
-            data.forEach(vai_tro => {
+            data.forEach((vai_tro) => {
                 const opt = document.createElement('option');
                 opt.text = vai_tro.ten;
                 opt.value = vai_tro.id;
                 vaitroList.add(opt);
-            })
-        })
+            });
+        });
 
         let handleValidator = new Validator(formContainer);
         handleValidator.onSubmit = function (data) {
@@ -150,15 +150,17 @@ export class User {
                     </div>
                     <div class="grid-item form-group">
                         <label for=""> email</label>
-                        <input name='email'  type="email" class="input"rules='required' value="${data.email}" />
+                        <input name='email'  type="email" class="input"rules='required' value="${data.email ?? ''}" />
                     </div>
                         <div class="grid-item form-group">
                         <label for=""> Số điện thoại</label>
-                        <input name='sdt'  type="text" class="input"rules='required|phone' value="${data.sdt}" />
+                        <input name='sdt'  type="text" class="input"rules='required|phone' value="${data.sdt ?? ''}" />
                     </div>
                     <div class="grid-item form-group">
                     <label for=""> Ngày sinh</label>
-                    <input name='ngay_sinh'  type="date" class="input"rules='required' value="${data.ngay_sinh.split(' ')[0]}" />
+                    <input name='ngay_sinh'  type="date" class="input"rules='required' value="${
+                        data.ngay_sinh?.split(' ')[0] ?? ''
+                    }" />
                 </div>
 
                     <!-- select -->
@@ -166,9 +168,9 @@ export class User {
                         <label>Khoa</label>
 
                         <select name="khoa_id" rules='required' value="${data.khoa_id}">
-                    
+
                         </select>
-                        
+
 
                     </div>
                     <div class="grid-item form-group">
@@ -177,11 +179,11 @@ export class User {
                     <select name="role_id" rules='required' value="${data.quyen_id}">
 
                     </select>
-                    
+
 
                 </div>
                 <input type="hidden" name="chuong_trinh_dao_tao_id" value="${idProgram}"/>
-                
+
                 </div>
                 <button class="form-submit">${textSubmit}</button>
                     `;
@@ -189,32 +191,32 @@ export class User {
                 let khoaList = formContainer.querySelector('[name="khoa_id"]');
 
                 axios.get(User.URL_FACULTY).then((response) => {
-                    const data = response.data.data
-    
+                    const data = response.data.data;
+
                     if (data === null) return;
-    
-                    data.forEach(khoa => {
+
+                    data.forEach((khoa) => {
                         const opt = document.createElement('option');
                         opt.text = khoa.ten;
                         opt.value = khoa.id;
                         khoaList.add(opt);
-                    })
-                })
-    
+                    });
+                });
+
                 let vaitroList = formContainer.querySelector('[name="role_id"]');
-    
+
                 axios.get(User.URL_ROLES).then((response) => {
-                    const data = response.data.data
-    
+                    const data = response.data.data;
+
                     if (data === null) return;
-    
-                    data.forEach(vai_tro => {
+
+                    data.forEach((vai_tro) => {
                         const opt = document.createElement('option');
                         opt.text = vai_tro.ten;
                         opt.value = vai_tro.id;
                         vaitroList.add(opt);
-                    })
-                })
+                    });
+                });
                 let handleValidator = new Validator(formContainer);
                 console.log(handleValidator);
                 handleValidator.onSubmit = function (data) {
@@ -234,8 +236,7 @@ export class User {
                 console.log(e);
                 formContainer.innerHTML = `Có lỗi khi lấy dữ liệu từ máy chủ`;
             });
-            
-  
+
         return formContainer;
     }
     static index() {
@@ -307,7 +308,6 @@ export class User {
                 let rowId = e.target.closest('tr')?.querySelector('[data-attr="id"]')?.getAttribute('data-content');
                 if (rowId) new ModalComponent(User.getEditFormElement('Cập nhập', tableTem, rowId));
             },
-            
         });
         // let tableTem = new SmartTableTemplate(tableTest, response.pokedata, {
         //     formatAttributeHeader: {

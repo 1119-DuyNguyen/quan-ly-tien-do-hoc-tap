@@ -105,7 +105,11 @@
                         <span class="badge">3</span>
                     </div>
                 </li>
-                <li class="nav-item"></li>
+                <li class="nav-item">
+                    <div class="nav-link" id="navTheme">
+                        {{-- <i class="fa-regular fa-moon"></i> --}}
+                    </div>
+                </li>
                 <li class="nav-item"></li>
                 <li class="nav-item"></li>
             </ul>
