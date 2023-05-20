@@ -389,22 +389,24 @@ export default class GraduateCrawler {
         let xacNhanBtn = document.querySelector("#xac_nhan_mh_goiy");
         let chon_mh_goiy = document.querySelectorAll(".chon_mh_goiy");
         
-        xacNhanBtn.addEventListener('click', () => {
-            this.listMHChon = this.getLocalStorage('listMHChon');
+        if (xacNhanBtn !== null)
+            xacNhanBtn.addEventListener('click', () => {
+                this.listMHChon = this.getLocalStorage('listMHChon');
 
-            this.renderDSMHchon(arr_kqdukien, this.listMHChon);
-        })
-
-        chon_mh_goiy.forEach(elem => {
-            elem.addEventListener('click', () => {
-
-                if (elem.checked) 
-                    this.listMHChon.push(parseInt(elem.dataset.hpid));
-                else
-                    this.listMHChon.splice(this.listMHChon.indexOf(elem.dataset.hpid), 1);
-
-                this.saveLocalStorage('listMHChon', this.listMHChon);
+                this.renderDSMHchon(arr_kqdukien, this.listMHChon);
             })
-        })
+
+        if (chon_mh_goiy !== null)
+            chon_mh_goiy.forEach(elem => {
+                elem.addEventListener('click', () => {
+
+                    if (elem.checked) 
+                        this.listMHChon.push(parseInt(elem.dataset.hpid));
+                    else
+                        this.listMHChon.splice(this.listMHChon.indexOf(elem.dataset.hpid), 1);
+
+                    this.saveLocalStorage('listMHChon', this.listMHChon);
+                })
+            })
     }
 }
