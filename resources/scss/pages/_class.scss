@@ -8,13 +8,12 @@
         margin: 1rem 32px;
         border-radius: 15px;
         align-self: flex-start;
-
+        color: var(--color);
         &__header {
             &__title {
                 //font-weight: 500;
                 line-height: 35px;
                 text-align: center;
-                color: var(--color-black);
                 //color: #3218db;
                 margin-bottom: 8px;
             }
@@ -47,7 +46,7 @@
             margin: 5px;
             width: 100%;
             text-decoration: none;
-
+            color: var(--color);
             &:hover {
                 cursor: pointer;
                 opacity: 0.6;
@@ -61,7 +60,6 @@
                 -webkit-box-orient: vertical;
 
                 text-align: center;
-                color: var(--secondary-color);
                 margin: 0 auto;
             }
             .class-item__bar {
@@ -79,7 +77,6 @@
                     border-radius: 15px;
                 }
                 > span {
-                    color: var(--secondary-color);
                     font-size: 0.8rem;
                 }
             }

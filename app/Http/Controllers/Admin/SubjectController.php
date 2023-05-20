@@ -37,7 +37,7 @@ class SubjectController extends ApiController
             if (HocPhan::where('ma_hoc_phan', $maHP)->exists()) {
                 return $this->error(null, 400, 'Đã tồn tại mã học phần');
             } else
-                HocPhan::updated($request->all());
+                HocPhan::create($request->all());
             return $this->success(null, 200, 'Thêm học phần thành công');
         } catch (Exception $e) {
             //catch exception

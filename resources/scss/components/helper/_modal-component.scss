@@ -1,4 +1,3 @@
-@use '../../abstract' as *;
 $screenMobile: '500px';
 $primaryColor: #007bff;
 $color: var(--color);
@@ -96,6 +95,7 @@ $btnCloseColor: var(--danger-color);
         display: flex;
         justify-content: center;
         align-items: center;
+        color: $color;
         i {
             text-align: center;
         }

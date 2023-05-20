@@ -102,6 +102,7 @@ select {
     text-indent: 0.01px;
     text-overflow: '';
     background-color: var(--secondary-color);
+    color: var(--color);
     &:disabled {
         background-color: inherit;
     }
@@ -212,4 +213,11 @@ select::-ms-expand {
 body {
     scrollbar-width: thin;
     scrollbar-color: $gray rgba($gray, 0.5);
+}
+html {
+    height: 100%;
+}
+body {
+    min-height: 100vh;
+    height: auto;
 }
