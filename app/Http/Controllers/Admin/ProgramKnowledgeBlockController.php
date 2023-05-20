@@ -35,12 +35,7 @@ class ProgramKnowledgeBlockController extends ApiController
 
 
         foreach ($kktList as $kkt) {
-            if (isset($mucLucList[$kkt->muc_luc_id])) {
 
-                $mucLucList[$kkt->muc_luc_id] = array_merge($mucLucList[$kkt->muc_luc_id], [$kkt]);
-            } else {
-                $mucLucList[$kkt->muc_luc_id] =  [$kkt];
-            }
             $hpBatBuoc = DB::table('hoc_phan_kkt_bat_buoc')
                 ->whereIn('khoi_kien_thuc_id', [$kkt->id])
                 ->join('hoc_phan', 'hoc_phan_kkt_bat_buoc.hoc_phan_id', 'hoc_phan.id')
@@ -75,6 +70,13 @@ class ProgramKnowledgeBlockController extends ApiController
                 }
             }
             $kkt->hpTuChon = $hpTuChon;
+
+            if (isset($mucLucList[$kkt->muc_luc_id])) {
+
+                $mucLucList[$kkt->muc_luc_id] = array_merge($mucLucList[$kkt->muc_luc_id], [$kkt]);
+            } else {
+                $mucLucList[$kkt->muc_luc_id] =  [$kkt];
+            }
         }
 
 

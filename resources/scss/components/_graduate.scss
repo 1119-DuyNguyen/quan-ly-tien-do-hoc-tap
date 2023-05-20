@@ -23,7 +23,7 @@
         }
         &__content {
             width: inherit;
-            overflow-x: auto;
+            overflow: auto;
             &--suggest {
                 table {
                     tbody {
@@ -71,12 +71,12 @@
                         }
                         &:last-child {
                             td {
-                                // &:first-child {
-                                //     border-radius: 0 0 0 1rem;
-                                // }
-                                // &:last-child {
-                                //     border-radius: 0 0 1rem 0;
-                                // }
+                                &:first-child {
+                                    border-radius: 0 0 0 1rem;
+                                }
+                                &:last-child {
+                                    border-radius: 0 0 1rem 0;
+                                }
                             }
                         }
                     }

@@ -54,14 +54,15 @@
 
     .table-container {
         min-height: 50vh;
-        height: auto;
         width: 100%;
-
         border-top-left-radius: 1rem;
         border-top-right-radius: 1rem;
 
         overflow: auto;
         background-color: inherit;
+        margin: 16px 0;
+        padding: 16px 0;
+        padding-bottom: 8rem;
     }
     .group-control {
         margin: 2rem 0;

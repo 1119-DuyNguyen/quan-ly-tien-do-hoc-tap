@@ -214,3 +214,10 @@ body {
     scrollbar-width: thin;
     scrollbar-color: $gray rgba($gray, 0.5);
 }
+html {
+    height: 100%;
+}
+body {
+    min-height: 100vh;
+    height: auto;
+}

@@ -198,28 +198,24 @@ export function renderTreeCTDT(tableContainer, data = {}) {
             };
             let stcKKT = 0;
             let htmlListKKT = '';
-            function resetCurrrentLKT() {
-                currentLKT = {
-                    id: undefined,
-                };
-                stcKKT = 0;
-                htmlListKKT = '';
-            }
+
             let depthMucLuc = 0;
             let depthLKT = depthMucLuc + 1;
 
             // Vì kkt có thể có hoặc không có loại kiến thức
-            let htmlCurrentKKT = '';
-            let shouldRenderMucLuc = true;
             // Để lần đầu render được mục lục
-            let idMucLuc;
-            data[mucLucID].forEach((kkt) => {
-                shouldRenderMucLuc = idMucLuc === kkt.muc_luc_id ? false : true;
+            let isRenderMucLuc = true;
 
-                if (shouldRenderMucLuc) {
-                    idMucLuc = mucLucID;
+            data[mucLucID].forEach((kkt) => {
+                if (!currentLKT.id && kkt.loai_kien_thuc_id) {
+                    currentLKT.id = kkt.loai_kien_thuc_id;
+                    currentLKT.ten = kkt.ten_loai_kien_thuc;
+                }
+                if (isRenderMucLuc) {
+                    isRenderMucLuc = false;
                     html += htmlMucLucKKT(depthMucLuc, kkt.ten_muc_luc);
                 }
+                let htmlCurrentKKT = '';
 
                 let depthKKT = kkt.loai_kien_thuc_id ? depthLKT + 1 : depthLKT;
                 let depthHP = depthKKT + 1;
@@ -255,27 +251,33 @@ export function renderTreeCTDT(tableContainer, data = {}) {
 
                 if (kkt.loai_kien_thuc_id && currentLKT.id != kkt.loai_kien_thuc_id) {
                     //in khi chuyển tiếp lkt sang lkt
-
                     if (currentLKT.id) {
                         html += htmlLKT(depthLKT, currentLKT.id, currentLKT.ten, stcKKT, stcKKT);
                         html += htmlListKKT;
-                        resetCurrrentLKT();
+                        currentLKT = {
+                            id: undefined,
+                        };
+                        stcKKT = 0;
                     }
                     currentLKT.id = kkt.loai_kien_thuc_id;
                     currentLKT.ten = kkt.ten_loai_kien_thuc;
-                    htmlListKKT += htmlCurrentKKT;
+                    htmlListKKT = htmlCurrentKKT;
+
                     stcKKT = kkt.tong_tin_chi_ktt_bat_buoc + kkt.tong_tin_chi_ktt_tu_chon;
-                } else if (kkt.loai_kien_thuc_id && currentLKT.id == kkt.loai_kien_thuc_id) {
+                } else if (kkt.loai_kien_thuc_id && currentLKT.id === kkt.loai_kien_thuc_id) {
                     stcKKT += kkt.tong_tin_chi_ktt_bat_buoc + kkt.tong_tin_chi_ktt_tu_chon;
                     htmlListKKT += htmlCurrentKKT;
                 } else {
-                    //in khi chuyển tiếp kkt sang lkt
+                    //in khi chuyển tiếp lkt sang kkt
                     if (currentLKT.id) {
                         html += htmlLKT(depthLKT, currentLKT.id, currentLKT.ten ?? '', stcKKT, stcKKT);
-
                         html += htmlListKKT;
                     }
-                    resetCurrrentLKT();
+                    currentLKT = {
+                        id: undefined,
+                    };
+                    stcKKT = 0;
+                    htmlListKKT = '';
                 }
 
                 if (depthKKT == depthLKT) {
@@ -285,7 +287,6 @@ export function renderTreeCTDT(tableContainer, data = {}) {
             // in lần cuối
             if (currentLKT.id) {
                 html += htmlLKT(depthLKT, currentLKT.id, currentLKT.ten, stcKKT, stcKKT);
-                html += htmlListKKT;
             }
         });
     } else {
@@ -352,28 +353,25 @@ export function renderEditTreeCTDT(tableContainer, idProgram) {
                     };
                     let stcKKT = 0;
                     let htmlListKKT = '';
-                    function resetCurrrentLKT() {
-                        currentLKT = {
-                            id: undefined,
-                        };
-                        stcKKT = 0;
-                        htmlListKKT = '';
-                    }
+
                     let depthMucLuc = 0;
                     let depthLKT = depthMucLuc + 1;
 
                     // Vì kkt có thể có hoặc không có loại kiến thức
-                    let htmlCurrentKKT = '';
                     let shouldRenderMucLuc = true;
                     // Để lần đầu render được mục lục
-                    let idMucLuc;
-                    data[mucLucID].forEach((kkt) => {
-                        shouldRenderMucLuc = idMucLuc === kkt.muc_luc_id ? false : true;
+                    let isRenderMucLuc = true;
 
-                        if (shouldRenderMucLuc) {
-                            idMucLuc = mucLucID;
+                    data[mucLucID].forEach((kkt) => {
+                        if (!currentLKT.id && kkt.loai_kien_thuc_id) {
+                            currentLKT.id = kkt.loai_kien_thuc_id;
+                            currentLKT.ten = kkt.ten_loai_kien_thuc;
+                        }
+                        if (isRenderMucLuc) {
+                            isRenderMucLuc = false;
                             html += htmlMucLucKKT(depthMucLuc, kkt.ten_muc_luc, true);
                         }
+                        let htmlCurrentKKT = '';
 
                         let depthKKT = kkt.loai_kien_thuc_id ? depthLKT + 1 : depthLKT;
                         let depthHP = depthKKT + 1;
@@ -395,7 +393,9 @@ export function renderEditTreeCTDT(tableContainer, idProgram) {
                                 true
                             );
                             htmlCurrentKKT += htmlHP(kkt.hpBatBuoc, depthHP + 1, index, true);
-                            index += kkt.hpBatBuoc.length;
+                            if (Array.isArray(kkt.hpBatBuoc)) {
+                                index = index + kkt.hpBatBuoc.length;
+                            } else index += 1;
                         }
 
                         if (kkt.hpTuChon) {
@@ -407,32 +407,40 @@ export function renderEditTreeCTDT(tableContainer, idProgram) {
                                 true
                             );
                             htmlCurrentKKT += htmlHP(kkt.hpTuChon, depthHP + 1, index, true);
-                            index += kkt.hpTuChon.length;
+                            if (Array.isArray(kkt.hpTuChon)) {
+                                index = index + kkt.hpTuChon.length;
+                            } else index += 1;
                         }
 
                         if (kkt.loai_kien_thuc_id && currentLKT.id != kkt.loai_kien_thuc_id) {
                             //in khi chuyển tiếp lkt sang lkt
-
                             if (currentLKT.id) {
                                 html += htmlLKT(depthLKT, currentLKT.id, currentLKT.ten, stcKKT, stcKKT, true);
                                 html += htmlListKKT;
-                                resetCurrrentLKT();
+                                currentLKT = {
+                                    id: undefined,
+                                };
+                                stcKKT = 0;
                             }
+
                             currentLKT.id = kkt.loai_kien_thuc_id;
                             currentLKT.ten = kkt.ten_loai_kien_thuc;
-                            htmlListKKT += htmlCurrentKKT;
+                            htmlListKKT = htmlCurrentKKT;
                             stcKKT = kkt.tong_tin_chi_ktt_bat_buoc + kkt.tong_tin_chi_ktt_tu_chon;
-                        } else if (kkt.loai_kien_thuc_id && currentLKT.id == kkt.loai_kien_thuc_id) {
+                        } else if (kkt.loai_kien_thuc_id && currentLKT.id === kkt.loai_kien_thuc_id) {
                             stcKKT += kkt.tong_tin_chi_ktt_bat_buoc + kkt.tong_tin_chi_ktt_tu_chon;
                             htmlListKKT += htmlCurrentKKT;
                         } else {
-                            //in khi chuyển tiếp kkt sang lkt
+                            //in khi chuyển tiếp lkt sang kkt
                             if (currentLKT.id) {
                                 html += htmlLKT(depthLKT, currentLKT.id, currentLKT.ten ?? '', stcKKT, stcKKT, true);
-
                                 html += htmlListKKT;
                             }
-                            resetCurrrentLKT();
+                            currentLKT = {
+                                id: undefined,
+                            };
+                            stcKKT = 0;
+                            htmlListKKT = '';
                         }
 
                         if (depthKKT == depthLKT) {
@@ -535,7 +543,6 @@ export function renderEditTreeCTDT(tableContainer, idProgram) {
                             }
                             break;
                         case 'hp':
-
                             break;
                         case 'default':
                             'Hãy chọn dòng để thêm hoặc sửa';
@@ -544,7 +551,7 @@ export function renderEditTreeCTDT(tableContainer, idProgram) {
             });
             let deleteBtn = document.createElement('div');
             deleteBtn.classList.add('btn', 'btn--danger');
-            deleteBtn.innerHTML = "Xoá"
+            deleteBtn.innerHTML = 'Xoá';
             deleteBtn.addEventListener('click', (e) => {
                 let rowID;
                 e.preventDefault();
@@ -559,21 +566,26 @@ export function renderEditTreeCTDT(tableContainer, idProgram) {
                             break;
                         case 'kkt':
                             rowID = radioEl.closest('tr').dataset.value;
-                            if (rowID)
-                            {
-                                new ConfirmComponent({questionText:"Bạn chắc chắn muốn xoá",trueButtonText:"Chắc chắn",falseButtonText:"Để sau"}).then(data => {
+                            if (rowID) {
+                                new ConfirmComponent({
+                                    questionText: 'Bạn chắc chắn muốn xoá',
+                                    trueButtonText: 'Chắc chắn',
+                                    falseButtonText: 'Để sau',
+                                }).then((data) => {
                                     if (data == 1) {
-                                        axios.delete(ChildProgram.URL_Program + '/' + idProgram + '/knowledge-block/' + rowID).then(() => {
-                                            renderEditTreeCTDT(tableContainer, idProgram)
-                                        }).catch(
-                                            error => {
+                                        axios
+                                            .delete(
+                                                ChildProgram.URL_Program + '/' + idProgram + '/knowledge-block/' + rowID
+                                            )
+                                            .then(() => {
+                                                renderEditTreeCTDT(tableContainer, idProgram);
+                                            })
+                                            .catch((error) => {
                                                 console.error(error);
-                                            }
-                                        );
+                                            });
                                     }
-                                })
-                            }
-                            else {
+                                });
+                            } else {
                                 alertComponent('Có lỗi xảy ra, hãy liên hệ hỗ trợ');
                             }
                             break;
@@ -583,26 +595,36 @@ export function renderEditTreeCTDT(tableContainer, idProgram) {
                             let depth = tr.dataset.depth;
                             let el = tr.previousElementSibling;
                             while (el) {
-                                if (el.dataset.depth && parseInt(el.dataset.depth) == parseInt(depth) - 2)
-                                    break;
+                                if (el.dataset.depth && parseInt(el.dataset.depth) == parseInt(depth) - 2) break;
                                 el = el.previousElementSibling;
                             }
                             let kkt_id = el.dataset.value;
-                            if (hp_id && kkt_id)
-                            {
-                                new ConfirmComponent({questionText:"Bạn chắc chắn muốn xoá",trueButtonText:"Chắc chắn",falseButtonText:"Để sau"}).then(data => {
+                            if (hp_id && kkt_id) {
+                                new ConfirmComponent({
+                                    questionText: 'Bạn chắc chắn muốn xoá',
+                                    trueButtonText: 'Chắc chắn',
+                                    falseButtonText: 'Để sau',
+                                }).then((data) => {
                                     if (data == 1) {
-                                        axios.delete(ChildProgram.URL_Program + '/' + idProgram + '/knowledge-block/' + kkt_id + '/subject/' + hp_id).then(() => {
-                                            renderEditTreeCTDT(tableContainer, idProgram)
-                                        }).catch(
-                                            error => {
+                                        axios
+                                            .delete(
+                                                ChildProgram.URL_Program +
+                                                    '/' +
+                                                    idProgram +
+                                                    '/knowledge-block/' +
+                                                    kkt_id +
+                                                    '/subject/' +
+                                                    hp_id
+                                            )
+                                            .then(() => {
+                                                renderEditTreeCTDT(tableContainer, idProgram);
+                                            })
+                                            .catch((error) => {
                                                 console.error(error);
-                                            }
-                                        );
+                                            });
                                     }
-                                })
-                            }
-                            else {
+                                });
+                            } else {
                                 alertComponent('Có lỗi xảy ra, hãy liên hệ hỗ trợ');
                             }
                             break;
