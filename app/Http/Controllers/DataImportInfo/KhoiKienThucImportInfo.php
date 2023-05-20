@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\DataImportInfo;
 
 use App\Models\Users\Students\TrainingProgram\ChuongTrinhDaoTao;
+use App\Models\Users\Students\TrainingProgram\Subjects\DieuKienTienQuyet;
 use App\Models\Users\Students\TrainingProgram\Subjects\LoaiKienThuc;
 use App\Models\Users\Students\TrainingProgram\Subjects\HocPhanKKTTuChon;
 use App\Models\Users\Students\TrainingProgram\Subjects\HocPhanKKTBatBuoc;
@@ -215,6 +216,15 @@ class KhoiKienThucImportInfo extends ImportInfo
                     // dd($ctdt->id, $loai_kt->id);
                     // if ($value['Bat-buoc'] != null)
                     foreach($value['Bat-buoc'] as $hp){
+                        if ($hp[2] !== null){
+                            DieuKienTienQuyet::updateOrCreate([
+                                'chuong_trinh_dao_tao_id' => $ctdt->id,
+                                'hoc_phan_id' => $hp[0]->id
+                            ],[
+                                'hoc_phan_truoc_id' => $hp[2]
+                            ]);
+
+                        }
                         if ($hp[1] == null)
                             HocPhanKKTBatBuoc::create([
                                 'hoc_phan_id' => $hp[0]->id,
@@ -234,6 +244,15 @@ class KhoiKienThucImportInfo extends ImportInfo
                     }
                     // if ($value['Tu-chon'] != null)
                     foreach($value['Tu-chon'] as $hp){
+                        if ($hp[2] !== null){
+                            DieuKienTienQuyet::updateOrCreate([
+                                'chuong_trinh_dao_tao_id' => $ctdt->id,
+                                'hoc_phan_id' => $hp[0]->id
+                            ],[
+                                'hoc_phan_truoc_id' => $hp[2]
+                            ]);
+
+                        }
                         if ($hp[1] == null)
                             HocPhanKKTTuChon::create([
                                 'hoc_phan_id' => $hp[0]->id,
@@ -282,15 +301,22 @@ class KhoiKienThucImportInfo extends ImportInfo
             return null;
         // $rs = HocPhan::where('ma_hoc_phan', $row[1])->first();
         // if ($rs == null){
-            $hoc_phan_tuong_duong = HocPhan::where('ma_hoc_phan', $row[13])->first();
-            if ($hoc_phan_tuong_duong != null)
-                $hoc_phan_tuong_duong = $hoc_phan_tuong_duong->id;
+            // dd($row[13]);
+            // if ($row[13] != null)
+                // dd($row[13]);
+            $hoc_phan_tien_quyet_id = null;
+            if ($row[13] !== null) {
+                $hoc_phan_tien_quyet_id = HocPhan::where('ma_hoc_phan', $row[13])->first();
+                if ($hoc_phan_tien_quyet_id != null)
+                    $hoc_phan_tien_quyet_id = $hoc_phan_tien_quyet_id->id;
+            }
+
+
             $rs = HocPhan::updateOrCreate([
                 'ma_hoc_phan' => $row[1],
             ],[
                 'ten' => $row[2],
                 'so_tin_chi' => $row[3],
-                'hoc_phan_tuong_duong_id' =>  $hoc_phan_tuong_duong,
                 'phan_tram_giua_ki' => 0,
                 'phan_tram_cuoi_ki' => 0,
                 'co_tinh_tich_luy' => 0
@@ -303,7 +329,7 @@ class KhoiKienThucImportInfo extends ImportInfo
 
         // dd($rs);
         // return null;
-        return [$rs, $this->getGoiY($row)];
+        return [$rs, $this->getGoiY($row), $hoc_phan_tien_quyet_id];
         // ##ĐÁNH DẤU CHO TEAM: đổi $rs->ten thành $rs để trả về model (->ten) để dễ nhìn kết quả thôi
     }
 

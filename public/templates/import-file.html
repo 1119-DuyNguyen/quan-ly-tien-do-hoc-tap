@@ -9,17 +9,23 @@
     <div class="import-body">
 
         <div class="import-body--form">
-            <input type="text" placeholder="Tên bảng tính (sheet)">
-            <input type="text" placeholder="Số thứ tự dòng tiêu đề (header)">
-            <select name="" id="">
-                <option value="giang-vien">Giảng viên</option>
-                <option value="sinhvien">Sinh viên</option>
-                <option value="hocphan">Học phần</option>
-                <option value="ctdt">Chương trình đào tạo</option>
-                <option value="nganh">Ngành</option>
-                <option value="khoa">Khoa</option>
-            </select>
-            <input type="file">
+            <input id="import-input-sheet" type="text" placeholder="Tên bảng tính (sheet)" value="CNTT-CLC-kehoachGV">
+            <input id="import-input-header" type="number" placeholder="Số thứ tự dòng tiêu đề (header)"
+            value="4">
+            <div class="import-body--form last-item">
+                <select name="" id="import-select-type">
+                    <option value="ctdt">Chương trình đào tạo</option>
+                    <option value="giang-vien">Giảng viên</option>
+                    <option value="sinhvien">Sinh viên</option>
+                    <option value="hocphan">Học phần</option>
+                    <option value="nganh">Ngành</option>
+                    <option value="khoa">Khoa</option>
+                </select>
+                <!-- <label for="import-file">Chọn file để nhập</label> -->
+                <input id="import-file" type="file" multiple>
+                <span id="import-err" ></span>
+                <button id="import-button">Nhập dữ liệu</button>
+            </div>
         </div>
 
     </div>
