@@ -1,5 +1,5 @@
 # Learning progress management system
-- a website with RESTful APIs that not only tracks and manages students' learning progress but also effectively manages the 
+- The Learning Progress Management System (LPMS) is a website with RESTful APIs that not only tracks and manages students' learning progress but also effectively manages the curriculum.
 ## Tech used:
 
 ### - Frontend:
