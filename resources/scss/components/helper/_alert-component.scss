@@ -1,6 +1,7 @@
+@use '../../abstract' as *;
 $screenMobile: '500px';
-$primaryColor: #007bff;
-$firstLight: #fffbeb;
+// $primaryColor: #007bff;
+// $firstLight: #fffbeb;
 // $secondLight: #f5ebe0;
 // $secondLight: #fff;
 @keyframes fadeIn {
@@ -23,7 +24,8 @@ $firstLight: #fffbeb;
     justify-content: center;
     align-items: center;
     font-weight: 400;
-    background-color: $firstLight;
+    background-color: var(--fourth-color);
+    color: var(--primary-color);
     &_overlay {
         position: absolute;
         left: 0;
@@ -73,16 +75,18 @@ $firstLight: #fffbeb;
             height: 60px;
             padding: 1rem;
             cursor: pointer;
-            background-color: $primaryColor;
+            background-color: var(--third-color);
             //color: #fff;
-            color: #fff;
+            color: var(--primary-color);
             font-size: 1.5rem;
             font-weight: 400;
             border-radius: 8px;
             border: none;
             // border: 1px solid #ccc;
             &:hover {
-                opacity: 0.8;
+                transition: filter 0.2s;
+                // opacity: 0.8;
+                filter: grayscale(10%);
             }
         }
     }

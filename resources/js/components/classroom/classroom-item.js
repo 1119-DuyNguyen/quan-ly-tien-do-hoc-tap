@@ -1,7 +1,7 @@
 import { routeHref } from '../../routes/route';
 
 export class ClassroomItem {
-    static URL_CLASSROOM = location.protocol + '//' + location.host + '/api/classes';
+    static URL_CLASSROOM = location.protocol + '//' + location.host + '/api/class';
     static URL_LINK_TO_GROUP = location.protocol + '//' + location.host + '/classroom';
     #container;
     createElement(type = 'div', className = '') {
@@ -9,6 +9,9 @@ export class ClassroomItem {
         element.classList.add(className);
         return element;
     }
+
+    nums = [];
+
     /**
      *
      * @param {Element} element
@@ -16,7 +19,7 @@ export class ClassroomItem {
     constructor(element) {
         this.#container = element;
     }
-    async getTeacherClassData() {
+    async getTeacherClassData(rightPanel) {
         this.#container.innerHTML = `<loader-component></loader-component>`;
         var classData;
         let html = '';
@@ -24,24 +27,49 @@ export class ClassroomItem {
             return response.data.data;
         });
         classData = data ? data : [];
-        classData.forEach((element, index) => {
-            html += `
-                <a href="${
-                    ClassroomItem.URL_LINK_TO_GROUP + `/${element.nhom_hoc_id}`
-                }" class="class-item" id="nhom_hoc_${element.nhom_hoc_id}">
-                    <div class="class-item__text">
-                        <h3>${element.ten_hoc_phan}</h3>
-                    </div>
-                    <div class="class-item__bar">
-                        <div class="class-item__bar--progress"></div>
-                        <span>10 tasks | 56%</span>
-                    </div>
-                </a>
-            `;
-        });
-        this.#container.innerHTML = html;
-        this.addColorForClassItem(this.#container);
-        this.routeClassroom();
+        if (rightPanel == null) {
+            classData.forEach((element, index) => {
+                html += `
+                    <a href="${
+                        ClassroomItem.URL_LINK_TO_GROUP + `/${element.nhom_hoc_id}`
+                    }" class="class-item" id="nhom_hoc_${element.nhom_hoc_id}">
+                        <div class="class-item__text">
+                            <h3>${element.ten_hoc_phan}</h3>
+                        </div>
+                        <div class="class-item__bar">
+                            <div class="class-item__bar--progress"></div>
+                        </div>
+                    </a>
+                `;
+                this.#container.innerHTML = html;
+                this.addColorForClassItem(this.#container);
+                this.routeClassroom();
+            });
+        } else {
+            for (let i = 0; i < 3; i++) {
+                let index = Math.floor(Math.random() * classData.length);
+                html += `
+                    <a 
+                            href="${ClassroomItem.URL_LINK_TO_GROUP + `/${classData[index].nhom_hoc_id}`}" 
+                            class="class-item" 
+                            id="nhom_hoc_${classData[index].nhom_hoc_id}", 
+                            style=  "text-decoration: none;
+                                    text-align: center;
+                                    color: white;"
+                    >
+                        <div class="class-item__text">
+                            <h3>${classData[index].ten_hoc_phan}</h3>
+                        </div>
+                        <div class="class-item__bar">
+                            <div class="class-item__bar--progress"></div>
+                        </div>
+                    </a>
+                `;
+                this.#container.innerHTML = html;
+                this.addColorForClassItem(this.#container);
+                this.routeClassroom();
+            }
+        }
     }
 
     async getStudentClassData() {

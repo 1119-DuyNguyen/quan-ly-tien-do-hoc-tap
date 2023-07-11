@@ -13,17 +13,22 @@ class BaiTapSinhVienSeeder extends Seeder
     {
         //
         // //bai_tap_sinh_vien
-        for ($i = 0; $i < 100; $i++) {
-            BaiTapSinhVien::create([
-                'bai_tap_id' => BaiDang::all()
-                    ->where('loai_noi_dung', '=', '2')
-                    ->random()->id,
-                'sinh_vien_id' => TaiKhoan::all()
-                    ->where('quyen_id', '=', '1')
-                    ->random()->id,
-                'updated_at' => fake()->dateTime(),
-                'created_at' => fake()->dateTime(),
-            ]);
+        for ($i = 0; $i < 50; $i++) {
+            try {
+                //code...
+                BaiTapSinhVien::create([
+                    'bai_tap_id' => BaiDang::all()
+                        ->where('loai_noi_dung', '=', '2')
+                        ->random()->id,
+                    'sinh_vien_id' => TaiKhoan::all()
+                        ->where('quyen_id', '=', '1')
+                        ->random()->id,
+                    'updated_at' => fake()->dateTime(),
+                    'created_at' => fake()->dateTime(),
+                ]);
+            } catch (\Throwable $th) {
+                //throw $th;
+            }
         }
     }
 }

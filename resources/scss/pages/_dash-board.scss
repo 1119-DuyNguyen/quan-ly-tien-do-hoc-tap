@@ -4,6 +4,7 @@
 @use '../components/popup';
 @use '../components/people';
 @use '../components/graduate';
+@use '../base/color';
 
 .home-container {
     @include abstract.gridViewTemplateTwoCol(70%, 30%);
@@ -11,7 +12,7 @@
 
 .home-center-container {
     padding-left: 12px;
-    background: #f7fafb;
+    background: var(--home-center-container);
     grid-area: center;
     display: flex;
     flex-wrap: wrap;
@@ -30,7 +31,7 @@
                 //font-weight: 500;
                 line-height: 35px;
                 text-align: center;
-                color: #000000;
+                color: var(--primary-color);
                 //color: #3218db;
                 margin-bottom: 8px;
             }
@@ -55,13 +56,15 @@
         .class-item {
             position: relative;
             max-width: 10rem;
+            min-width: 10rem;
             max-height: 14.6875rem;
             min-height: 10rem;
             display: inline-block;
             border-radius: 0.9375rem;
             text-align: center;
-            margin: 5px;
-
+            margin: 0.5rem;
+            text-decoration: none;
+            color: var(--color);
             &:hover {
                 cursor: pointer;
                 opacity: 0.6;
@@ -71,18 +74,16 @@
                 overflow: hidden;
                 width: 90%;
                 display: -webkit-box;
-                -webkit-line-clamp: 4;
+                -webkit-line-clamp: 3;
                 -webkit-box-orient: vertical;
 
                 text-align: center;
-                color: #ffffff;
                 margin: 0 auto;
             }
             .class-item__bar {
                 position: absolute;
                 width: 90%;
                 height: 0.3125rem;
-                background-color: #ffffff;
                 bottom: 1.5rem;
                 border-radius: 15px;
                 transform: translate(10px);
@@ -93,10 +94,24 @@
                     border-radius: 15px;
                 }
                 > span {
-                    color: white;
+                    color: inherit;
                     font-size: 0.8rem;
                 }
             }
+        }
+    }
+    .dashboard_link_to_classroom {
+        a {
+            text-decoration: none;
+            padding: 1rem;
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+            float: left;
+            margin-top: 1rem;
+        }
+
+        :hover {
+            opacity: 0.6;
         }
     }
 }
@@ -107,7 +122,8 @@
     .progress-container {
         display: flex;
         flex-direction: column;
-        background-color: #ffffff;
+        background-color: var(--secondary-color);
+        border-radius: 12px;
         .progress-container__heading {
             margin-top: 1rem;
             margin-left: 0.8rem;
@@ -122,7 +138,8 @@
             .percentage__circle {
                 grid-row: 1 / span 2;
 
-                background: #ffffff;
+                background: var(--third-color);
+                color: var(--color);
                 box-shadow: -0.125rem 1.5625rem 3.0625rem -0.625rem rgba(0, 0, 0, 0.08);
                 border-radius: 1.0625rem;
                 text-align: center;
@@ -133,13 +150,14 @@
                 .percentage__circle--circle {
                     margin-top: 1rem;
                 }
+
                 .percentage__text--daily {
                     margin-top: 1rem;
 
                     font-size: 0.8rem;
                     line-height: 15px;
 
-                    color: #6b6d78;
+                    color: var(--color-item-6);
                 }
                 .percentage__text--completed {
                     margin-top: 1rem;
@@ -154,7 +172,7 @@
                     font-size: 12px;
                     line-height: 15px;
 
-                    color: #6b6d78;
+                    color: var(--color-item-6);
                 }
             }
             .percentage__taskHours {
@@ -162,7 +180,7 @@
                 justify-content: space-around;
                 grid-template-columns: 100%;
                 .percentage__taskHours--item {
-                    background: #ffffff;
+                    background: var(--third-color);
                     box-shadow: -0.125rem 1.875rem 3.125rem -0.75rem rgba(0, 0, 0, 0.1);
                     border-radius: 0.8125rem;
                     min-height: 104px;
@@ -193,7 +211,7 @@
                         font-size: 12px;
                         line-height: 15px;
 
-                        color: #6b6d78;
+                        color: var(--color-item-6);
                     }
                 }
             }
@@ -211,50 +229,60 @@
                 a {
                     margin-left: 0.5rem;
                     text-decoration: none;
-                    color: #6b6d78;
+                    color: var(--color-item-6);
                 }
                 img {
                     margin-left: 0.4rem;
                     height: 0.8rem;
                 }
             }
-            .deadline__item {
-                background: #ffffff;
-                box-shadow: -0.125rem 1.625rem 3.125rem -0.625rem rgba(0, 0, 0, 0.08);
-                border-radius: 0.75rem;
 
-                margin: 0.625rem 0.625rem;
-                padding: 20px;
+            a {
+                :hover {
+                    border: 1px solid;
+                }
 
-                min-height: 141px;
-                height: max-content;
+                .deadline__item {
+                    background: var(--third-color);
+                    color: var(--primary-color);
+                    box-shadow: -0.125rem 1.625rem 3.125rem -0.625rem rgba(0, 0, 0, 0.08);
+                    border-radius: 0.75rem;
 
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                .deadline__item--subject {
-                    background: rgba(255, 156, 33, 0.1);
-                    border-radius: 16px;
-                    color: orange;
-                    padding: 10px;
-                    align-self: flex-start;
-                }
-                .deadline__item--teacher {
-                    font-weight: 700;
-                    margin-top: 12px;
-                    align-self: flex-start;
-                }
-                .deadline__item--time {
-                    padding: 8px;
-                    background: #ffbb55;
-                    color: #ffffff;
-                    border-radius: 25px;
-                    margin-top: 8px;
-                    align-self: flex-start;
-                }
-                .deadline__item--bio {
-                    color: #94959a;
-                    margin-top: 8px;
+                    margin: 0.625rem 0.625rem;
+                    padding: 20px;
+
+                    min-height: 141px;
+                    height: max-content;
+
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    .deadline__item--subject {
+                        color: var(--color);
+                        border-radius: 16px;
+                        padding: 10px;
+                        align-self: flex-start;
+                    }
+                    .deadline__item--teacher {
+                        font-weight: 700;
+                        margin-top: 12px;
+                        align-self: flex-start;
+                    }
+                    .deadline__item--time {
+                        padding: 8px;
+
+                        background: var(--fourth-color);
+
+                        color: var(--primary-color);
+                        border-radius: 25px;
+                        margin-top: 8px;
+                        align-self: flex-start;
+                    }
+                    .deadline__item--bio {
+                        color: var(--color);
+
+                        margin-top: 8px;
+                    }
                 }
             }
         }
@@ -263,7 +291,7 @@
             display: flex;
             flex-direction: column;
 
-            background: #ffffff;
+            background: var(--secondary-color);
             box-shadow: -0.125rem 1.625rem 3.125rem -0.5rem rgba(0, 0, 0, 0.08);
             border-radius: 0.75rem;
 
@@ -275,7 +303,7 @@
                 padding-left: 16px;
             }
             .calendar__item {
-                background: #ffffff;
+                background: var(--secondary-color);
                 box-shadow: -0.125rem 1.625rem 3.125rem -0.625rem rgba(0, 0, 0, 0.08);
                 padding-top: 0.6rem;
                 border-radius: 0.75rem;
@@ -338,11 +366,7 @@
         .home-right-container {
             grid-area: unset;
         }
-        .home-right-container
-            .progress-container
-            .percentage
-            .percentage__taskHours
-            .percentage__taskHours--item {
+        .home-right-container .progress-container .percentage .percentage__taskHours .percentage__taskHours--item {
             max-width: unset !important;
         }
     }

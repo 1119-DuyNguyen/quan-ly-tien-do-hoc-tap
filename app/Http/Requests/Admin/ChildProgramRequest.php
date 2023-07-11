@@ -22,11 +22,12 @@ class ChildProgramRequest extends FormRequest
     public function rules(): array
     {
         return [
-            // 'ten' => 'required',
-            // 'tong_tin_chi' => 'required|numeric',
-            // 'thoi_gian_dao_tao' => 'required|numeric',
-            // 'nganh_id' => 'required|numeric',
-            // 'chu_ky_id' => 'required|numeric'
+            'ten' => 'required',
+            'tong_tin_chi_ktt_tu_chon' => 'required',
+            'muc_luc_id' => 'required',
+            'chuong_trinh_dao_tao_id' => 'required',
+            'loai_kien_thuc_id' => '',
+
         ];
     }
     public function messages(): array

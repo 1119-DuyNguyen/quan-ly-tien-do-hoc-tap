@@ -2,6 +2,7 @@ export class HomeworkMark {
     static URL_ROLE = location.protocol + '//' + location.host + '/api/bai-tap-sinh-vien';
     static URL_THAMGIA = location.protocol + '//' + location.host + '/api/tham-gia-nhom-hoc';
     static URL_CHAMDIEM = location.protocol + '//' + location.host + '/api/cham-diem';
+    static URL_FILE_BAI_TAP = location.protocol + '//' + location.host + '/api/file-bai-tap';
 
     static show({ id }) {
         axios
@@ -18,7 +19,9 @@ export class HomeworkMark {
                     list += `
                             <td>${i + 1}</td>
                             <td>${element.ten_sinh_vien}</td> 
-                            <td><a href="${element.link_file === null ? '' : element.link_file}">${
+                            <td><a href="${
+                                element.link_file === null ? '' : element.link_file
+                            }" id='bai_tap_sinh_vien_${element.sinh_vien_id} class='bai_tap_sinh_vien'>${
                         element.link_file === null ? 'Không tìm thấy link file' : 'Link file ở đây'
                     }</a></td>
                             <td>${element.ngay_nop}</td>
@@ -98,6 +101,38 @@ export class HomeworkMark {
                         console.error(err);
                     });
             }
+        });
+
+        document.querySelectorAll('.bai_tap_sinh_vien').forEach((element) => {
+            element.addEventListener('click', (e) => {
+                let sinh_vien_id = element.id.split('_')[4];
+                axios
+                    .get(HomeworkMark.URL_FILE_BAI_TAP + `/${id}`, {
+                        Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
+                        responseType: 'arraybuffer',
+                        params: {
+                            sinh_vien_id: sinh_vien_id,
+                        },
+                    })
+                    .then((response) => {
+                        // Parses file, and creates proxy (local data-URL for file).
+                        var proxy = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
+
+                        // Download from proxy.
+                        var link = document.createElement('a');
+                        document.body.appendChild(link); // Maybe required by Fire-fox browsers.
+                        link.href = proxy;
+                        link.download = 'my-file.pdf';
+                        link.click();
+
+                        // Cleanup.
+                        window.URL.revokeObjectURL(proxy);
+                        link.remove();
+                    })
+                    .catch(function (err) {
+                        console.log(err);
+                    });
+            });
         });
     }
 }

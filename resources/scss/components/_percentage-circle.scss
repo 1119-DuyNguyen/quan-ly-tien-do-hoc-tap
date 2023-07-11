@@ -106,7 +106,7 @@
 .c100.p99 .fill,
 .c100.p100 .fill {
     position: absolute;
-    border: 0.08em solid #717EEE;
+    border: 0.08em solid #717eee;
     width: 0.84em;
     height: 0.84em;
     clip: rect(0em, 0.5em, 1em, 0em);
@@ -291,13 +291,14 @@
     top: 0.08em;
     left: 0.08em;
     display: block;
-    content: " ";
+    content: ' ';
     -webkit-border-radius: 50%;
     -moz-border-radius: 50%;
     -ms-border-radius: 50%;
     -o-border-radius: 50%;
     border-radius: 50%;
-    background-color: #ffffff;
+    background-color: var(--secondary-color);
+    color: var(--color);
     width: 0.84em;
     height: 0.84em;
     -webkit-transition-property: all;
@@ -1108,18 +1109,17 @@
     color: #e0dd33;
 }
 
-
 .c100.pink .bar,
 .c100.pink .fill {
-    border-color: #FF7782 !important;
+    border-color: #ff7782 !important;
 }
 .c100.pink:hover > span {
-    color:  #FF7782;
+    color: #ff7782;
 }
 .c100.pink.dark .bar,
 .c100.pink.dark .fill {
-    border-color: #FF7782 !important;
+    border-color: #ff7782 !important;
 }
 .c100.pink.dark:hover > span {
-    color: #FF7782;
+    color: #ff7782;
 }

@@ -2,7 +2,7 @@ import { AbjustTab } from '../../group/adjustTab.js';
 import { ToggleForm } from '../../group/toggleForm.js';
 
 export class Group {
-    static URL_GROUP = location.protocol + '//' + location.host + '/api/classes';
+    static URL_GROUP = location.protocol + '//' + location.host + '/api/class';
     #container;
     // createElement(type = 'div', className = '') {
     //     let element = document.createElement(type);

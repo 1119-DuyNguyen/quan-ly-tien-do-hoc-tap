@@ -11,6 +11,8 @@ use App\Http\Requests\Admin\ChildProgramRequest;
 use App\Http\Resources\Admin\ChildProgramResource;
 use App\Models\Users\Students\TrainingProgram\ChuongTrinhDaoTao;
 use App\Models\Users\Students\TrainingProgram\Subjects\KhoiKienThuc;
+use App\Models\Users\Students\TrainingProgram\Subjects\LoaiKienThuc;
+use Hamcrest\Type\IsNumeric;
 
 class ProgramKnowledgeBlockController extends ApiController
 {
@@ -19,16 +21,17 @@ class ProgramKnowledgeBlockController extends ApiController
      */
     public function index($id)
     {
-        $lktList = [];
+        $mucLucList = [];
         $kktList = DB::table('khoi_kien_thuc')
             ->whereIn('chuong_trinh_dao_tao_id', [$id])
+            ->join('muc_luc', 'khoi_kien_thuc.muc_luc_id', 'muc_luc.id')
             ->leftJoin(
                 'loai_kien_thuc',
                 'khoi_kien_thuc.loai_kien_thuc_id',
                 'loai_kien_thuc.id'
             )
             ->orderBy('loai_kien_thuc.id')
-            ->get(['khoi_kien_thuc.*', 'loai_kien_thuc.ten as ten_loai_kien_thuc']);
+            ->get(['khoi_kien_thuc.*', 'loai_kien_thuc.ten as ten_loai_kien_thuc', 'muc_luc.ten as ten_muc_luc']);
 
 
         foreach ($kktList as $kkt) {
@@ -67,21 +70,17 @@ class ProgramKnowledgeBlockController extends ApiController
                 }
             }
             $kkt->hpTuChon = $hpTuChon;
-            // if (isset($kkt->loai_kien_thuc_id)) {
-            //     if (!isset($lktList[$kkt->loai_kien_thuc_id])) {
-            //         $lktList[$kkt->loai_kien_thuc_id] = [$kkt];
-            //     } else {
-            //         // tương đương push
-            //         $lktList[$kkt->loai_kien_thuc_id] = [$lktList[$kkt->loai_kien_thuc_id],  [$kkt]];
-            //     }
-            // }
-            // else{
 
-            // }
+            if (isset($mucLucList[$kkt->muc_luc_id])) {
+
+                $mucLucList[$kkt->muc_luc_id] = array_merge($mucLucList[$kkt->muc_luc_id], [$kkt]);
+            } else {
+                $mucLucList[$kkt->muc_luc_id] =  [$kkt];
+            }
         }
 
 
-        return $this->success($kktList, 200);
+        return $this->success($mucLucList, 200);
     }
 
     /**
@@ -91,19 +90,20 @@ class ProgramKnowledgeBlockController extends ApiController
     {
         //
         try {
-            KhoiKienThuc::create($request->all());
+            $data = $request->all();
+            KhoiKienThuc::create($data);
 
             return $this->success(null, 200, 'Thêm dữ liệu thành công');
         } catch (Exception $e) {
             //catch exception
-            return $this->error(null, 400, 'Máy chủ thêm không thành công');
+            return $this->error(null, 400, 'Máy chủ thêm không thành công' . $e->getMessage());
         }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $ctdtID, string $id)
     {
         //
         $ctdt = KhoiKienThuc::find($id);
@@ -116,7 +116,7 @@ class ProgramKnowledgeBlockController extends ApiController
     /**
      * Update the specified resource in storage.
      */
-    public function update(ChildProgramRequest $request, string $id)
+    public function update(ChildProgramRequest $request, string $ctdtID, string $id)
     {
         //
         try {
@@ -147,12 +147,13 @@ class ProgramKnowledgeBlockController extends ApiController
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $ctdt_id, string $id_kkt)
     {
         //
         try {
             //code...
-            $data = KhoiKienThuc::findOrFail($id);
+            // db::table('khoi_kien_thuc')
+            $data = KhoiKienThuc::findOrFail($id_kkt);
             $data->delete();
             //
 

@@ -6,6 +6,7 @@
                 <div class="class-center-container__class-dashboard-tab-btn">Bài đăng</div>
                 <div class="class-center-container__class-dashboard-tab-btn">Bài tập</div>
                 <div class="class-center-container__class-dashboard-tab-btn">Mọi người</div>
+                <div class="mark-table-student">Bảng điểm nhóm học</div>
             </div>
             <div class="class-center-container__class-dashboard-tab-content">
                 <!-- Bài đăng -->
@@ -89,12 +90,17 @@
 
                 <!-- Bài tập -->
                 <div class="class-center-container__class-dashboard--homework tab-content">
+                    <div>
+                        <button id="giao_vien_new_bai_tap_btn">Bài tập mới nhất</button>
+                        <button id="giao_vien_deadline_bai_tap_btn">Bài tập đến hạn</button>
+                    </div>
                     <button
                         type="submit"
                         class="class-center-container__class-dashboard--homework--add-btn class-dashboard-btn"
                     >
                         Thêm bài tập mới
                     </button>
+
                     <form
                         class="new-homework__form class-center-container__class-dashboard--new-homework"
                         id="class-center-container__class-dashboard--new-homework"
@@ -228,10 +234,11 @@
         <div class="exercise-container">
             <div class="exercise__header">
                 <h3 class="exercise__header--heading">
-                    <span>Bài tập</span><a href="#">xem thêm<img src="../../img/next.png" /></a>
+                    <span>Lớp học</span>
+                    <a id="classroom-rightpanel-btn">xem thêm<img src="../../img/next.png" /></a>
                 </h3>
             </div>
-            <div class="exercise__content">
+            <div class="exercise__content" id="exercise__content">
                 <div class="exercise__content--item">
                     <div class="exercise__content--item--name">
                         LẬP TRÌNH WEB VÀ ỨNG DỤNG NÂNG CAO ĐỂ CỐ TÌNH ĐẶT TÊN SIÊU DÀI

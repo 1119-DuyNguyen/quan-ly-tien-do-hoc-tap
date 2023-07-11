@@ -12,12 +12,8 @@ function adjustPercentageCircle(taskCompleted, allTasks) {
     let percentage = Math.round((taskCompleted / allTasks) * 100);
 
     let text = document.createTextNode(`${percentage}%`);
-    let completedTasktext = document.createTextNode(
-        `${taskCompleted} đã hoàn thành`
-    );
-    let allTaskstext = document.createTextNode(
-        `trong tổng số ${allTasks} công việc`
-    );
+    let completedTasktext = document.createTextNode(`${taskCompleted} đã hoàn thành`);
+    let allTaskstext = document.createTextNode(`trong tổng số ${allTasks} công việc`);
 
     pText.appendChild(text);
     completedTask.appendChild(completedTasktext);

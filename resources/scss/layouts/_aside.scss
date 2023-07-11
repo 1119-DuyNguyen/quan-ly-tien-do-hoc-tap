@@ -18,37 +18,12 @@
     //  padding: 24px 4px;
     padding: 24px 4px;
     transition: width 0.2s ease;
-    background: #fff;
+    background: var(--secondary-color);
+    color: var(--color);
 
-    //   background: #fff;
-    //    border-right: 1px solid #262e4a;
     width: 30vw;
     max-width: 300px;
-    // &:hover,
-    // &.hover {
-    //     .container {
-    //         .sidebar__nav {
-    //             .sidebar__nav__link,
-    //             .sidebar__nav__static {
-    //                 // justify-content: left;
-    //                 .sidebar__nav__title {
-    //                     display: block;
-    //                 }
-    //                 .sidebar__nav__img {
-    //                     // display: inline-block;
 
-    //                     display: inline-block;
-    //                 }
-    //                 .sidebar__nav__text {
-    //                     display: flex;
-    //                 }
-    //                 #toggle-sidebar {
-    //                     display: none;
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
     .container {
         position: relative;
         height: 100%;
@@ -82,7 +57,7 @@
                 text-align: center;
                 i,
                 .icon {
-                    color: #9ca8ba;
+                    color: inherit;
                     display: flex;
                     justify-content: center;
                     align-items: center;
@@ -93,7 +68,7 @@
                     display: block;
                     text-align: center;
                     width: 100%;
-                    color: #2a83ff;
+                    color: var(--primary-color);
                     &__header {
                         margin: 0;
                         width: 100%;
@@ -105,7 +80,7 @@
                     &__description {
                         display: flex;
                         justify-content: left;
-                        color: #2a83ff;
+                        color: inherit;
                     }
                 }
                 @include abstract.rectangleImage(80px, 80px);
@@ -118,13 +93,16 @@
                 border-radius: 10px;
                 height: 57px;
                 padding: 8px 12px;
-                color: #262e4a;
+                color: inherit;
+
                 margin-bottom: 12px;
                 transition: color 0.2s ease, background-color 0.2s ease;
                 text-decoration: none;
                 text-align: center;
                 i {
-                    color: #9ca8ba;
+                    color: inherit;
+                    // color: #9ca8ba;
+
                     display: flex;
                     justify-content: center;
                     align-items: center;
@@ -134,7 +112,7 @@
                 &.hover,
                 &:hover,
                 &--active {
-                    background: #2a83ff;
+                    background: var(--primary-color);
 
                     cursor: pointer;
                     .sidebar__nav__text,

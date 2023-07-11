@@ -3,7 +3,7 @@
 .analytics {
     &__search {
         input {
-            padding: .5rem;
+            padding: 0.5rem;
         }
     }
     &__container {
@@ -19,31 +19,32 @@
         }
     }
     &__item {
-        background-color: white;
+        background-color: var(--secondary-color);
         border-radius: 1rem;
         padding: 3rem;
-        &--red {
-            background-color: #ff7782;
-            color: white;
-        }
-        &--green {
-            background-color: #84d295;
-            color: white;
-        }
-        &--orange {
-            background-color: #ffbb55;
-            color: white;
-        }
-        &--blue {
-            background-color: #45bfff;
-            color: white;
-        }
+
+        // &--red {
+        //     background-color: var(--color-item-4);
+        //     color: white;
+        // }
+        // &--green {
+        //     background-color: var(--color-item-2);
+        //     color: white;
+        // }
+        // &--orange {
+        //     background-color: var(--color-item-3);
+        //     color: white;
+        // }
+        // &--blue {
+        //     background-color: var(--color-item-5);
+        //     color: white;
+        // }
     }
     &__select__container {
         width: 100%;
         text-align: center;
         select {
-            padding: 1rem .5rem;
+            padding: 1rem 0.5rem;
         }
         & > * {
             display: inline-block;
@@ -74,7 +75,7 @@
         }
         &__item {
             min-width: 17.5rem;
-            width: 80vw;
+            width: 100%;
             max-width: 43rem;
         }
         &__select__container {
@@ -83,7 +84,8 @@
                 margin: 0 auto;
                 margin-bottom: 1rem;
             }
-            select, button {
+            select,
+            button {
                 width: 80%;
             }
         }

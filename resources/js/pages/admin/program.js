@@ -1,4 +1,4 @@
-import { Validator } from '../../components/helper/Validator';
+import { Validator } from '../../components/helper/validator';
 import { alertComponent } from '../../components/helper/alert-component';
 import { ConfirmComponent } from '../../components/helper/confirm-component';
 import { ModalComponent } from '../../components/helper/modal-component';
@@ -6,147 +6,46 @@ import { toast } from '../../components/helper/toast';
 import { SmartTableTemplate } from '../../components/smart-table-template/SmartTableTemplate';
 import { TableTree } from '../../components/table-tree';
 import { ChildProgram } from './child-program';
+import NiceSelect from '../../components/helper/nice-select';
+import { routeHref } from '../../routes/route';
+import {
+    htmlLKT,
+    htmlMucLucHP,
+    htmlKKT,
+    htmlHP,
+    htmlMucLucKKT,
+    renderTreeCTDT,
+    renderEditTreeCTDT,
+} from './program-helper';
 
 export class Program {
-    static URL_Program = location.protocol + '//' + location.host + '/api/admin/program';
+    static URL_PROGRAM = location.protocol + '//' + location.host + '/api/admin/program';
+
+    static URL_MAJOR = location.protocol + '//' + location.host + '/api/major/all';
+    static URL_PERIOD = location.protocol + '//' + location.host + '/api/period/all';
+    static URL_MUCLUC = location.protocol + '//' + location.host + '/api/admin/program/muc-luc';
     static export() {}
     static edit() {}
-    static getAddFormElement(textSubmit = '', tableTem) {
+    static addMucLucForm(callback) {
         let formContainer = document.createElement('form');
         formContainer.classList.add('form');
         formContainer.innerHTML = `
-        <div class="grid-container-half">
-        <div class="grid-item form-group">
-            <label for=""> Tên</label>
-            <input rules='required' type="text" name='ten' class="input" />
-        </div>
-        <div class="grid-item form-group">
-            <label for=""> Tổng tín chỉ</label>
-            <input name='tong_tin_chi'  type="text" class="input"rules='required|number' value="" />
-        </div>
-        <div class="grid-item form-group">
-            <label for=""> Thời gian đào tạo</label>
-            <input type="text" name='thoi_gian_dao_tao' rules='required|number' class="input" value="" />
-        </div>
-        <!-- select -->
-        <div class="grid-item form-group">
-            <label>Ngành</label>
-
-            <select name="nganh_id" rules='required'>
-
-            </select>
-        </div>
-        <div class="grid-item form-group">
-            <label>Chu kỳ</label>
-
-            <select name="chu_ky_id"  rules='required'>
-
-            </select>
-        </div>
-    </div>
-    <button class="form-submit">${textSubmit}</button>
-        `;
-        let selectContainer = tableTem.renderSelectList(tableTem.getDataSelectList);
-        if (selectContainer) {
-            let selectList = selectContainer.querySelectorAll('select') ?? [];
-            selectList.forEach((select) => {
-                let selectForm = formContainer.querySelector(`select[name="${select.getAttribute('name')}"`);
-                if (selectForm) {
-                    selectForm.innerHTML = select.innerHTML;
-                }
-            });
-        }
-        let handleValidator = new Validator(formContainer);
-        handleValidator.onSubmit = function (data) {
-            //  console.log(data);
-            axios
-                .post(Program.URL_Program, data)
-                .then((res) => tableTem.reRenderTable())
-                .catch((err) => {
-                    console.log(err.response);
-                    if (err?.response?.data?.message) {
-                        alertComponent('Có lỗi khi gửi yêu cầu lên máy chủ', err.response.data.message);
-                    }
-                });
-        };
-
-        return formContainer;
-    }
-    static getEditFormElement(textSubmit = '', tableTem, rowId) {
-        let formContainer = document.createElement('form');
-
-        axios
-            .get(Program.URL_Program + '/' + rowId)
-            .then((res) => res.data.data)
-            .then((data) => {
-                formContainer.classList.add('form');
-
-                formContainer.innerHTML = `
-                <div class="grid-container-half">
-                <div class="grid-item form-group">
-                    <label for=""> Tên</label>
-                    <input rules='required' type="text" name='ten' class="input" value="${data.ten}" />
-                </div>
-                <div class="grid-item form-group">
-                    <label for=""> Tổng tín chỉ</label>
-                    <input name='tong_tin_chi'  type="text" class="input"rules='required|number' 
-                    value="${data.tong_tin_chi}" />
-                </div>
-                <div class="grid-item form-group">
-                    <label for=""> Thời gian đào tạo</label>
-                    <input type="text" name='thoi_gian_dao_tao'
-                     rules='required|number' class="input" value="${data.thoi_gian_dao_tao}" />
-                </div>
-                <!-- select -->
-                <div class="grid-item form-group">
-                    <label>Ngành</label>
-        
-                    <select name="nganh_id" rules='required' data-select='ten_nganh'>
-        
-                    </select>
-                </div>
-                <div class="grid-item form-group">
-                    <label>Chu kỳ</label>
-        
-                    <select name="chu_ky_id"  rules='required'  data-select='ten_chu_ky'>
-        
-                    </select>
-                </div>
+            <div class="grid-container-half">
+            <div class="grid-item form-group">
+                <label for=""> Tên</label>
+                <input rules='required' type="text" name='ten' class="input" />
             </div>
-            <button class="form-submit">${textSubmit}</button>
-                `;
-                let selectContainer = tableTem.renderSelectList(tableTem.getDataSelectList);
-
-                if (selectContainer) {
-                    let selectList = selectContainer.querySelectorAll('select') ?? [];
-                    selectList.forEach((select) => {
-                        let selectForm = formContainer.querySelector(`select[name="${select.getAttribute('name')}"`);
-                        if (selectForm) {
-                            selectForm.innerHTML = select.innerHTML;
-                        }
-                    });
-
-                    formContainer.querySelectorAll(`select[name="chu_ky_id"] option`).forEach((option) => {
-                        if (option.value == data.chu_ky_id) {
-                            option.selected = true;
-                        } else option.selected = false;
-                    });
-                    formContainer.querySelectorAll(`select[name="nganh_id"] option`).forEach((option) => {
-                        if (option.value == data.nganh_id) {
-                            option.selected = true;
-                        } else option.selected = false;
-                    });
-                }
-            })
-            .catch((e) => {
-                formContainer.innerHTML = `Có lỗi khi lấy dữ liệu từ máy chủ`;
-            });
+        </div>
+        <button class="form-submit">Cập nhập</button>
+            `;
         let handleValidator = new Validator(formContainer);
         handleValidator.onSubmit = function (data) {
             //  console.log(data);
             axios
-                .put(Program.URL_Program + '/' + rowId, data)
-                .then((res) => tableTem.reRenderTable())
+                .post(Program.URL_MUCLUC, data)
+                .then((res) => {
+                    if (callback) callback();
+                })
                 .catch((err) => {
                     console.log(err.response);
                     if (err?.response?.data?.message) {
@@ -154,6 +53,7 @@ export class Program {
                     }
                 });
         };
+
         return formContainer;
     }
     static index() {
@@ -166,7 +66,7 @@ export class Program {
         rootElement.appendChild(programContainer);
         let tableTem = new SmartTableTemplate(programContainer);
 
-        tableTem.fetchDataTable(Program.URL_Program, {
+        tableTem.fetchDataTable(Program.URL_PROGRAM, {
             formatAttributeHeader: {
                 id: {
                     width: '40px',
@@ -211,13 +111,12 @@ export class Program {
                 },
             },
             pagination: true,
-            add: (e) => {
-                new ModalComponent(Program.getAddFormElement('Thêm ', tableTem));
-            },
-            edit: (e) => {
-                let rowId = e.target.closest('tr')?.querySelector('[data-attr="id"]')?.getAttribute('data-content');
-                if (rowId) new ModalComponent(Program.getEditFormElement('Cập nhập', tableTem, rowId));
-            },
+            add: true,
+            // edit: (e) => {
+            //     let rowId = e.target.closest('tr')?.querySelector('[data-attr="id"]')?.getAttribute('data-content');
+            //     if (rowId) new ModalComponent(Program.getEditFormElement('Cập nhập', tableTem, rowId));
+            // },
+            edit: true,
             export: true,
             view: (e) => {
                 let rowId = e.target.closest('tr')?.querySelector('[data-attr="id"]')?.getAttribute('data-content');
@@ -232,31 +131,325 @@ export class Program {
         //     edit: true,
         // });
     }
+    static view({ id }) {
+        try {
+            if (id) {
+                // ChildProgram.index(id);
+
+                let rootElement = document.getElementById('main-content');
+                let containerProgram = document.createElement('div');
+                rootElement.appendChild(containerProgram);
+                Program.renderEditCTDT(containerProgram, id);
+            } else {
+            }
+        } catch (err) {
+            console.log(err);
+            alertComponent('Đã xảy ra lỗi khi khởi tạo biểu mẫu', 'Hãy thử làm mới trang');
+        }
+    }
+    // static show({ id }) {
+    //     console.log(id);
+    // }
+    static add() {
+        try {
+            // ChildProgram.index(id);
+
+            let rootElement = document.getElementById('main-content');
+            rootElement.appendChild(Program.renderAddCTDT());
+        } catch (err) {
+            console.log(err);
+            alertComponent('Đã xảy ra lỗi khi khởi tạo biểu mẫu', 'Hãy thử làm mới trang');
+        }
+    }
     static getDetailProgram(id) {
-        return axios.get(Program.URL_Program + '/' + id).then((res) => res.data.data);
+        return axios.get(Program.URL_PROGRAM + '/' + id).then((res) => res.data.data);
     }
     static getDetailKnowledgeBlock(idProgram) {
-        return axios.get(Program.URL_Program + '/' + idProgram + '/knowledge_block').then((res) => res.data.data);
+        return axios.get(Program.URL_PROGRAM + '/' + idProgram + '/knowledge-block').then((res) => res.data.data);
     }
-    /**
-     * https://api.jquery.com/nextuntil/
-     * Get all following siblings of each element up to
-     *  but not including the element matched by the selector, DOM node, or jQuery object passed.
-     * @param {Element} elem
-     * @param {*} elements
-     * @returns
-     */
-    beforeUntilElement(elem, elements) {
-        var siblings = [];
-        elem = elem.previousElementSibling;
-        while (elem) {
-            // Vì con đều là tr nên phải chặn
-            if (elements.includes(elem)) break;
+    static renderAddCTDT() {
+        let knowledgeBlockContainer = document.createElement('div');
+        knowledgeBlockContainer.classList.add('child-program-container');
+        let programContainer = document.createElement('div');
 
-            siblings.push(elem);
-            elem = elem.nextElementSibling;
-        }
-        return siblings;
+        knowledgeBlockContainer.appendChild(programContainer);
+        programContainer.classList.add('program-container');
+        let errorMessage = [];
+        let promiseListMajor = axios
+            .get(Program.URL_MAJOR)
+            .then((res) => res.data.data)
+            .then((data) => {
+                if (data.length < 1) {
+                    errorMessage.push('Chưa khởi tạo ngành');
+                    return;
+                }
+                return data;
+            })
+            .catch((e) => {
+                errorMessage.push('Có lỗi khi lấy danh sách ngành');
+            });
+        let promiseListPeriod = axios
+            .get(Program.URL_PERIOD)
+            .then((res) => res.data.data)
+            .then((data) => {
+                if (data.length < 1) {
+                    errorMessage.push('Chưa khởi tạo chu kỳ');
+                    return;
+                }
+                return data;
+            })
+            .catch((e) => {
+                errorMessage.push('Có lỗi khi lấy danh sách ngành');
+            });
+        Promise.all([promiseListMajor, promiseListPeriod]).then(function (values) {
+            if (errorMessage.length > 0) {
+                errorMessage = errorMessage.join(' ,');
+                programContainer.innerHTML = errorMessage.slice(0, errorMessage.length - 1);
+                return;
+            }
+            let listMajor = values[0];
+            let htmlOptionMajor = '';
+            listMajor.forEach((major) => {
+                htmlOptionMajor += `<option value="${major.id}">${major.ten} ( ${major.ma_nganh} ) </option>`;
+            });
+            let listPeriod = values[1];
+            let htmlOptionPeriod = '';
+            listPeriod.forEach((period) => {
+                htmlOptionPeriod += `<option value="${period.id}"> ${period.ten} ( ${period.nam_bat_dau} - ${period.nam_ket_thuc})</option>`;
+            });
+            programContainer.innerHTML = `
+            <div class="program-container__item program-container__item--primary">
+            <form class="">
+
+            <div class="form-group">
+            <label for=""> Tên</label>
+            <input rules='required' type="text" name='ten' class="input" value="" />
+            </div>
+
+            <div class="form-group">
+            <label>Trình độ đào tạo: </label>
+            <input  rules='required'  name='trinh_do_dao_tao' value="">
+            </div>
+
+            <div class="form-group">
+            <label>Ngành đào tạo: </label>
+            <select  class="full-width" name='nganh_id' placeHolder="Lựa chọn ngành đào tạo" rules='required'>
+            <option value="" selected disabled hidden></option>
+            ${htmlOptionMajor}
+            </select >
+            </div>
+
+            <div class="form-group">
+            <label>Chu kỳ:</label>
+            <select class="full-width" name='chu_ky_id' placeHolder="Lựa chọn chu kỳ" rules='required'>
+            <option value="" selected disabled hidden></option>
+            ${htmlOptionPeriod}
+            </select >
+            </div>
+
+            <div class="form-group">
+            <label>Hình thức đào tạo: </label>
+            <input  rules='required'  name='hinh_thuc_dao_tao' value="">
+            </div>
+
+            <div class="form-group">
+            <label>Thời gian đào tạo(năm): </label>
+            <input  rules='required|number|minNum:0'  name='thoi_gian_dao_tao' value="">
+            </div>
+
+
+
+            <div class="form-group">
+            <label>Tín chỉ tối thiểu: </label>
+            <input  rules='required|number|minNum:0'  name='tong_tin_chi' value="0">
+            </div>
+
+            <div class="form-group">
+            <label>Ghi chú:</label>
+            <input  name='ghi_chu' value="">
+            </div>
+            <input type="submit" class="btn-submit" value="Thêm chương trình đào tao">
+            </form>
+            </div>
+            `;
+            let selectElements = programContainer.querySelectorAll('select[name]');
+            selectElements.forEach((el) => {
+                new NiceSelect(el, { searchable: true });
+            });
+            let formSubmit = new Validator(programContainer.querySelector('form'));
+            formSubmit.onSubmit = function (data) {
+                console.log(data);
+                axios
+                    .post(Program.URL_PROGRAM, data)
+                    .then((res) => routeHref(location.protocol + '//' + location.host + '/program'))
+                    .catch((err) => {
+                        if (err?.response?.data?.message) {
+                            alertComponent('Có lỗi khi gửi yêu cầu lên máy chủ', err.response.data.message);
+                        }
+                    });
+            };
+
+            // render chương trình đào tạo
+        });
+
+        return knowledgeBlockContainer;
+    }
+    static renderEditCTDT(container, id) {
+        if (container) container.innerHTML = '';
+        let knowledgeBlockContainer = document.createElement('div');
+        knowledgeBlockContainer.classList.add('child-program-container');
+        let programContainer = document.createElement('div');
+
+        let promiseProgram = Program.getDetailProgram(id)
+            .then((data) => {
+                programContainer.classList.add('program-container');
+
+                if (!data) {
+                    programContainer.innerHTML = `<p>Không tìm thấy chương trình đào tạo</p>`;
+                    return;
+                }
+
+                let errorMessage = [];
+                let promiseListMajor = axios
+                    .get(Program.URL_MAJOR)
+                    .then((res) => res.data.data)
+                    .then((data) => {
+                        if (data.length < 1) {
+                            errorMessage.push('Chưa khởi tạo ngành');
+                            return;
+                        }
+                        return data;
+                    })
+                    .catch((e) => {
+                        errorMessage.push('Có lỗi khi lấy danh sách ngành');
+                    });
+                let promiseListPeriod = axios
+                    .get(Program.URL_PERIOD)
+                    .then((res) => res.data.data)
+                    .then((data) => {
+                        if (data.length < 1) {
+                            errorMessage.push('Chưa khởi tạo chu kỳ');
+                            return;
+                        }
+                        return data;
+                    })
+                    .catch((e) => {
+                        errorMessage.push('Có lỗi khi lấy danh sách ngành');
+                    });
+                Promise.all([promiseListMajor, promiseListPeriod]).then(function (values) {
+                    if (errorMessage.length > 0) {
+                        errorMessage = errorMessage.join(' ,');
+                        programContainer.innerHTML = errorMessage.slice(0, errorMessage.length - 1);
+                        return;
+                    }
+                    let listMajor = values[0];
+                    let htmlOptionMajor = '';
+                    listMajor.forEach((major) => {
+                        htmlOptionMajor += `<option value="${major.id}" ${
+                            major.id === data.nganh_id ? 'selected' : ''
+                        }>${major.ten} ( ${major.ma_nganh} ) </option>`;
+                    });
+                    let listPeriod = values[1];
+                    let htmlOptionPeriod = '';
+                    listPeriod.forEach((period) => {
+                        htmlOptionPeriod += `<option value="${period.id}" ${
+                            period.id === data.chu_ky_id ? 'selected' : ''
+                        }> ${period.ten} ( ${period.nam_bat_dau} - ${period.nam_ket_thuc})</option>`;
+                    });
+                    programContainer.innerHTML = `
+                    <div class="program-container__item program-container__item--primary">
+                    <form class="">
+
+                    <div class="form-group">
+                    <label for=""> Tên</label>
+                    <input rules='required' type="text" name='ten' class="input" value="${data.ten}" />
+                    </div>
+
+                    <div class="form-group">
+                    <label>Trình độ đào tạo: </label>
+                    <input  rules='required'  name='trinh_do_dao_tao' value="${data.trinh_do_dao_tao ?? ''}">
+                    </div>
+
+                    <div class="form-group">
+                    <label>Ngành đào tạo: </label>
+                    <select  class="full-width" name='nganh_id' placeHolder="Lựa chọn ngành đào tạo" rules='required'>
+                    <option value="" selected disabled hidden></option>
+                    ${htmlOptionMajor}
+                    </select >
+                    </div>
+
+                    <div class="form-group">
+                    <label>Chu kỳ:</label>
+                    <select class="full-width" name='chu_ky_id' placeHolder="Lựa chọn chu kỳ" rules='required'>
+                    <option value="" selected disabled hidden></option>
+                    ${htmlOptionPeriod}
+                    </select >
+                    </div>
+
+                    <div class="form-group">
+                    <label>Hình thức đào tạo: </label>
+                    <input  rules='required'  name='hinh_thuc_dao_tao' value="${data.hinh_thuc_dao_tao ?? ''}">
+                    </div>
+
+                    <div class="form-group">
+                    <label>Thời gian đào tạo(năm): </label>
+                    <input  rules='required|number|minNum:0'  name='thoi_gian_dao_tao' value="${
+                        data.thoi_gian_dao_tao ?? ''
+                    }">
+                    </div>
+
+
+
+                    <div class="form-group">
+                    <label>Tín chỉ tối thiểu: </label>
+                    <input  rules='required|number|minNum:0'  name='tong_tin_chi' value="${data.tong_tin_chi ?? ''}">
+                    </div>
+
+                    <div class="form-group">
+                    <label>Ghi chú:</label>
+                    <input  name='ghi_chu' value="${data.ghi_chu ?? ''}">
+                    </div>
+                    <input type="submit" class="btn-submit" value="Cập nhập chương trình đào tao">
+                    </form>
+                    </div>
+                    `;
+                    let selectElements = programContainer.querySelectorAll('select[name]');
+                    selectElements.forEach((el) => {
+                        new NiceSelect(el, { searchable: true });
+                    });
+                    let formSubmit = new Validator(programContainer.querySelector('form'));
+                    formSubmit.onSubmit = function (data) {
+                        console.log(data);
+                        axios
+                            .post(Program.URL_PROGRAM, data)
+                            .then((res) => routeHref(location.protocol + '//' + location.host + '/program'))
+                            .catch((err) => {
+                                if (err?.response?.data?.message) {
+                                    alertComponent('Có lỗi khi gửi yêu cầu lên máy chủ', err.response.data.message);
+                                }
+                            });
+                    };
+
+                    // render chương trình đào tạo
+                });
+            })
+            .catch((err) => {
+                alertComponent('Tìm kiếm dữ liệu chương trình đào tạo thất bại');
+            });
+        // ----------------------RENDER TREE TABLE ------------------------------------------
+        let tableContainer = document.createElement('div');
+
+        let promiseKnowledge =
+        renderEditTreeCTDT(tableContainer, id);
+
+
+
+        Promise.all([promiseProgram, promiseKnowledge]).then((values) => {
+            knowledgeBlockContainer.appendChild(programContainer);
+            knowledgeBlockContainer.appendChild(tableContainer);
+        });
+        // return knowledgeBlockContainer;
+        container.appendChild(knowledgeBlockContainer);
     }
     static renderViewCTDT(id) {
         let knowledgeBlockContainer = document.createElement('div');
@@ -275,22 +468,20 @@ export class Program {
                 }
 
                 programContainer.innerHTML = `
-        <div class="" >
 
         <div class="program-container__item program-container__item--primary">
         <h2 >${data.ten}</h2>
         <p>Trình độ đào tạo: ${data.trinh_do_dao_tao ?? ''}</p>
-                                                 
-        <p>Ngành đào tạo: ${data.ten_nganh ?? ''}</p>													
-        <p>Mã ngành: ${data.nganh_id ?? ''}</p>													
-        <p>Hình thức đào tạo: ${data.hinh_thuc_dao_tao ?? ''}</p>													
-        <p>Thời gian đào tạo:${data.thoi_gian_dao_tao ?? '0'} năm </p>													
-        <p>Chu kỳ: ${data.ten_chu_ky}</p>													
-        <p>Tín chỉ tối thiểu:  ${data.tong_tin_chi}</p>													
-        <p>Ghi chú:  ${data.ghi_chu ?? 'Không'}</p>													
 
-                                                
-        </div>
+        <p>Ngành đào tạo: ${data.ten_nganh ?? ''}</p>
+        <p>Mã ngành: ${data.nganh_id ?? ''}</p>
+        <p>Hình thức đào tạo: ${data.hinh_thuc_dao_tao ?? ''}</p>
+        <p>Thời gian đào tạo:${data.thoi_gian_dao_tao ?? '0'} năm </p>
+        <p>Chu kỳ: ${data.ten_chu_ky}</p>
+        <p>Tín chỉ tối thiểu:  ${data.tong_tin_chi}</p>
+        <p>Ghi chú:  ${data.ghi_chu ?? 'Không'}</p>
+
+
         </div>
         `;
             })
@@ -303,335 +494,7 @@ export class Program {
         let index = 1;
         Program.getDetailKnowledgeBlock(id)
             .then((data) => {
-                //create Loại & Khối kiến thức
-                let html = '';
-                let currentLKT = {
-                    id: undefined,
-                };
-                let stcKKT = 0;
-                let htmlLKT = '';
-                function resetCurrrentLKT() {
-                    currentLKT = {
-                        id: undefined,
-                    };
-                    stcKKT = 0;
-                    htmlLKT = '';
-                }
-                function generateTdHocKy(num, arrayCheck) {
-                    let html = '';
-                    for (let i = 1; i <= num; ++i) {
-                        if (arrayCheck && arrayCheck.includes(i)) html += '<td style="text-align:center;">X</td>';
-                        else html += '<td ></td>';
-                    }
-                    return html;
-                }
-                data.forEach((kkt) => {
-                    let depthKKT = kkt.loai_kien_thuc_id ? 1 : 0;
-                    console.log(depthKKT);
-                    let htmlKKT = '';
-
-                    htmlKKT += `
-                    <tr data-depth="${depthKKT}" class='collapse'>
-                    <td colspan="3" class='toggle'>${kkt.ten}</td>
-                    <td colspan="1">${kkt.tong_tin_chi_ktt_bat_buoc + kkt.tong_tin_chi_ktt_tu_chon}/${
-                        kkt.tong_tin_chi_ktt_bat_buoc + kkt.tong_tin_chi_ktt_tu_chon
-                    }</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    </tr>        
-                    `;
-
-                    if (kkt.hpBatBuoc) {
-                        htmlKKT += `
-                        <tr data-depth="${depthKKT + 1}" class='collapse'>
-                        <td colspan="3" class='toggle'>Các học phần bắt buộc</td>
-                        <td colspan="1">${kkt.tong_tin_chi_ktt_bat_buoc}/${kkt.tong_tin_chi_ktt_bat_buoc}</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        </tr>
-                        `;
-                        let curHp = undefined;
-                        let hkGoiY = [];
-                        console.log(kkt.hpBatBuoc);
-                        Object.keys(kkt.hpBatBuoc).forEach((key) => {
-                            let hp = kkt.hpBatBuoc[key];
-                            htmlKKT += `
-                                    <tr data-depth="${depthKKT + 2}" class='collapse' data-hp="${hp.id}">
-                                    <td rowspan="1">${index++}</td>
-                                    <td rowspan="1">${hp.ma_hoc_phan}</td>
-                                    <td rowspan="1">${hp.ten}</td>
-                                    <td rowspan="1">${hp.so_tin_chi}</td>
-                                    ${generateTdHocKy(9, hp.hoc_ky_goi_y)}
-                                    <td rowspan="1">${
-                                        hp.hoc_phan_tuong_duong_id ? hp.hoc_phan_tuong_duong_id : ''
-                                    }</td> 
-                                    </tr>
-                                    `;
-                        });
-                    }
-
-                    if (kkt.hpTuChon) {
-                        htmlKKT += `
-                        <tr data-depth="${depthKKT + 1}" class='collapse'>
-                        <td colspan="3" class='toggle'>Các học phần tự chọn</td>
-                        <td colspan="1">${kkt.tong_tin_chi_ktt_tu_chon}/${kkt.tong_tin_chi_ktt_tu_chon}</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        </tr>
-                        `;
-
-                        Object.keys(kkt.hpTuChon).forEach((key) => {
-                            let hp = kkt.hpTuChon[key];
-                            htmlKKT += `
-                                    <tr data-depth="${depthKKT + 2}" class='collapse' data-hp="${hp.id}">
-                                    <td rowspan="1">${index++}</td>
-                                    <td rowspan="1">${hp.ma_hoc_phan}</td>
-                                    <td rowspan="1">${hp.ten}</td>
-                                    <td rowspan="1">${hp.so_tin_chi}</td>
-                                    ${generateTdHocKy(9, hp.hoc_ky_goi_y)}
-                                    <td rowspan="1">${
-                                        hp.hoc_phan_tuong_duong_id ? hp.hoc_phan_tuong_duong_id : ''
-                                    }</td> 
-                                    </tr>
-                                    `;
-                        });
-                    }
-
-                    if (kkt.loai_kien_thuc_id && currentLKT.id != kkt.loai_kien_thuc_id) {
-                        //in khi chuyển tiếp lkt sang lkt
-
-                        if (currentLKT.id) {
-                            html += `
-                            <tr data-depth="0" class='collapse'>
-                            <td colspan="3" class='toggle' value="${currentLKT.id}">
-                            ${currentLKT.ten ?? ''}</td>
-                            <td colspan="1">${stcKKT + '/' + stcKKT}</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            </tr>
-                            `;
-                            html += htmlLKT;
-                            resetCurrrentLKT();
-                        }
-                        currentLKT.id = kkt.loai_kien_thuc_id;
-                        currentLKT.ten = kkt.ten_loai_kien_thuc;
-                        htmlLKT += htmlKKT;
-                        stcKKT = kkt.tong_tin_chi_ktt_bat_buoc + kkt.tong_tin_chi_ktt_tu_chon;
-                    } else if (kkt.loai_kien_thuc_id && currentLKT.id == kkt.loai_kien_thuc_id) {
-                        stcKKT += kkt.tong_tin_chi_ktt_bat_buoc + kkt.tong_tin_chi_ktt_tu_chon;
-                        htmlLKT += htmlKKT;
-                    } else {
-                        //in khi chuyển tiếp kkt sang lkt
-                        if (currentLKT.id) {
-                            html += `
-                            <tr data-depth="0" class='collapse'>
-                            <td colspan="3" class='toggle' value="${currentLKT.id}">
-                            ${currentLKT.ten ?? ''}</td>
-                            <td colspan="1">${stcKKT + '/' + stcKKT}</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            </tr>
-                            `;
-                            html += htmlLKT;
-                        }
-                        resetCurrrentLKT();
-
-                        //kkt : depth=0;
-                    }
-
-                    if (depthKKT == 1) {
-                    } else if (depthKKT == 0) {
-                        html += htmlKKT;
-                    }
-                });
-                // in lần cuối
-                if (currentLKT.id) {
-                    html += `
-                    <tr data-depth="0" class='collapse'>
-                    <td colspan="3" class='toggle' value="${currentLKT.id}">
-                    ${currentLKT.ten ?? ''}</td>
-                    <td colspan="1">${stcKKT + '/' + stcKKT}</td>
-                    <td colspan="10"></td>
-
-                    </tr>
-                    `;
-                    html += htmlLKT;
-                }
-                tableContainer.innerHTML = `
-
-                        <div class="table-container">
-                        <table class="table-graduate">
-                        <colgroup>
-                        <col span="1" style="width: 5%; min-width:40px;">
-                        <col span="1" style="width: 10%; min-width:60px;">
-                        <col span="1" style="width: 40%; min-width:320px;">
-                        <col span="1" style="width: 10%;min-width:80px;">
-                        <col span="9" style="width: 15px; ">
-                        <col span="1" style="width: 10%; min-width:60px;">
-                        </colgroup>
-                        <thead>
-                        <tr>
-                            <th rowspan="2">TT</th>
-                            <th rowspan="2">Mã học phần</th>
-                            <th rowspan="2">Tên Học phần</th>
-                            <th rowspan="2">Số tín chỉ</th>
-                            <th rowspan="1" colspan="9">HỌC KỲ</th>
-                            <th rowspan="2">Mã học phần trước</th>
-                        </tr>
-                        <tr>
-
-                        <th rowspan="1">1</th>
-                        <th rowspan="1">2</th>
-                        <th rowspan="1">3</th>
-                        <th rowspan="1">4</th>
-                        <th rowspan="1">5</th>
-                        <th rowspan="1">6</th>
-                        <th rowspan="1">7</th>
-                        <th rowspan="1">8</th>
-                        <th rowspan="1">9</th>
-         
-                        </tr>
-                        </thead>
-                        <tbody>
-                        ${html}
-                        </tbody>
-                    </table>
-                </div>
-                        `;
-
-                //         tableContainer.innerHTML = `
-
-                //         <div class="table-container">
-                //         <table class="table-graduate">
-                //         <colgroup>
-                //         <col span="1" style="width: 5%; min-width:40px;">
-                //         <col span="1" style="width: 15%; min-width:120px;">
-                //         <col span="1" style="width: 40%; min-width:320px;">
-                //         <col span="1" style="width: 10%;min-width:80px;">
-                //         <col span="1" style="width: 15%;min-width:200px; ">
-                //         <col span="1" style="width: 15%; min-width:120px;">
-                //         </colgroup>
-                //         <thead>
-                //         <tr>
-                //             <th rowspan="2">TT</th>
-                //             <th rowspan="2">Mã học phần</th>
-                //             <th rowspan="2">Tên Học phần</th>
-                //             <th rowspan="2">Số tín chỉ</th>
-                //             <th rowspan="2">HỌC KỲ</th>
-                //             <th rowspan="2">Mã học phần trước</th>
-                //         </tr>
-
-                //         </thead>
-                //         <tbody>
-                //         <tr data-depth="0" class='collapse'>
-                //         <td colspan="3" class='toggle'>Loại kiến thức a</td>
-                //         <td colspan="1">25/25</td>
-                //         <td colspan="2"></td>
-                //         </tr>
-                //         <tr data-depth="1" class='collapse'>
-                //             <td colspan="3" class='toggle'>Khối kiến thức a</td>
-                //             <td colspan="1">25/25</td>
-                //             <td colspan="2"></td>
-                //         </tr>
-                //         <tr data-depth="2" class='collapse'>
-                //             <td colspan="3" class='toggle'>Các học phần tự chọn</td>
-                //             <td colspan="1">37/37</td>
-                //             <td colspan="2"></td>
-                //         </tr>
-
-                //         <tr>
-                //             <td>February</td>
-                //             <td>$80</td>
-                //             <td>$80</td>
-                //             <td>$80</td>
-                //             <td>
-                //             <label>
-                //             <input type="checkbox" value="1" name="">
-                //             1
-                //             </label>
-                //             <label>
-                //             <input type="checkbox" value="2" name="">
-                //             2
-                //             </label>
-                //             <label>
-                //             <input type="checkbox" value="3" name="">
-                //             3
-                //             </label>
-                //             <label>
-                //             <input type="checkbox" value="4" name="">
-                //             4
-                //             </label>
-                //             <label>
-                //             <input type="checkbox" value="5" name="">
-                //             5
-                //             </label>
-                //             <label>
-                //             <input type="checkbox" value="6" name="">
-                //             6
-                //             </label>
-
-                //             </td>
-
-                //             <td>$80</td>
-                //         </tr>
-                //         <tr data-depth="2" class='collapse'>
-                //         <td colspan="3" class='toggle'>Các học phần tự chọn</td>
-                //         <td colspan="1">37/37</td>
-                //         <td colspan="2"></td>
-                //         </tr>
-                //         <tr data-depth="0" class='collapse'>
-                //         <td colspan="3" class='toggle'>Loại kiến thức b</td>
-                //         <td colspan="1">25/25</td>
-                //         <td colspan="2"></td>
-                //         </tr>
-                //         </tbody>
-                //     </table>
-                // </div>
-                //         `;
-                tableContainer.querySelectorAll('table').forEach((table) => {
-                    TableTree.bind(table);
-                });
-                console.log(data);
+                renderTreeCTDT(tableContainer, data);
             })
             .catch((err) => {
                 console.error(err);
@@ -639,392 +502,4 @@ export class Program {
             });
         return knowledgeBlockContainer;
     }
-    static view({ id }) {
-        try {
-            if (id) {
-                // ChildProgram.index(id);
-
-                let rootElement = document.getElementById('main-content');
-                let knowledgeBlockContainer = document.createElement('div');
-                knowledgeBlockContainer.classList.add('child-program-container');
-                rootElement.appendChild(knowledgeBlockContainer);
-                let programContainer = document.createElement('div');
-
-                knowledgeBlockContainer.appendChild(programContainer);
-
-                Program.getDetailProgram(id)
-                    .then((data) => {
-                        programContainer.classList.add('program-container');
-
-                        if (!data) {
-                            programContainer.innerHTML = `<p>Không tìm thấy chương trình đào tạo</p>`;
-                            return;
-                        }
-
-                        programContainer.innerHTML = `
-                <div class="" >
-        
-                <div class="program-container__item program-container__item--primary">
-                <h2 >${data.ten}</h2>
-                <p>Trình độ đào tạo: ${data.trinh_do_dao_tao ?? ''}</p>
-                                                         
-                <p>Ngành đào tạo: ${data.ten_nganh ?? ''}</p>													
-                <p>Mã ngành: ${data.nganh_id ?? ''}</p>													
-                <p>Hình thức đào tạo: ${data.hinh_thuc_dao_tao ?? ''}</p>													
-                <p>Thời gian đào tạo:${data.thoi_gian_dao_tao ?? '0'} năm </p>													
-                <p>Chu kỳ: ${data.ten_chu_ky}</p>													
-                <p>Tín chỉ tối thiểu:  ${data.tong_tin_chi}</p>													
-                <p>Ghi chú:  ${data.ghi_chu ?? 'Không'}</p>													
-        
-                                                        
-                </div>
-                </div>
-                `;
-                    })
-                    .catch((err) => {
-                        alertComponent('Tìm kiếm dữ liệu chương trình đào tạo thất bại');
-                    });
-
-                let tableContainer = document.createElement('div');
-                knowledgeBlockContainer.appendChild(tableContainer);
-                let index = 1;
-                Program.getDetailKnowledgeBlock(id)
-                    .then((data) => {
-                        //create Loại & Khối kiến thức
-                        let html = '';
-                        let currentLKT = {
-                            id: undefined,
-                        };
-                        let stcKKT = 0;
-                        let htmlLKT = '';
-                        function resetCurrrentLKT() {
-                            currentLKT = {
-                                id: undefined,
-                            };
-                            stcKKT = 0;
-                            htmlLKT = '';
-                        }
-                        function generateTdHocKy(num, arrayCheck) {
-                            let html = '';
-                            for (let i = 1; i <= num; ++i) {
-                                if (arrayCheck && arrayCheck.includes(i))
-                                    html += '<td style="text-align:center;">X</td>';
-                                else html += '<td ></td>';
-                            }
-                            return html;
-                        }
-                        data.forEach((kkt) => {
-                            let depthKKT = kkt.loai_kien_thuc_id ? 1 : 0;
-                            console.log(depthKKT);
-                            let htmlKKT = '';
-
-                            htmlKKT += `
-                            <tr data-depth="${depthKKT}" class='collapse'>
-                            <td colspan="3" class='toggle'>${kkt.ten}</td>
-                            <td colspan="1">${kkt.tong_tin_chi_ktt_bat_buoc + kkt.tong_tin_chi_ktt_tu_chon}/${
-                                kkt.tong_tin_chi_ktt_bat_buoc + kkt.tong_tin_chi_ktt_tu_chon
-                            }</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            </tr>        
-                            `;
-
-                            if (kkt.hpBatBuoc) {
-                                htmlKKT += `
-                                <tr data-depth="${depthKKT + 1}" class='collapse'>
-                                <td colspan="3" class='toggle'>Các học phần bắt buộc</td>
-                                <td colspan="1">${kkt.tong_tin_chi_ktt_bat_buoc}/${kkt.tong_tin_chi_ktt_bat_buoc}</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                </tr>
-                                `;
-                                let curHp = undefined;
-                                let hkGoiY = [];
-                                console.log(kkt.hpBatBuoc);
-                                Object.keys(kkt.hpBatBuoc).forEach((key) => {
-                                    let hp = kkt.hpBatBuoc[key];
-                                    htmlKKT += `
-                                            <tr data-depth="${depthKKT + 2}" class='collapse' data-hp="${hp.id}">
-                                            <td rowspan="1">${index++}</td>
-                                            <td rowspan="1">${hp.ma_hoc_phan}</td>
-                                            <td rowspan="1">${hp.ten}</td>
-                                            <td rowspan="1">${hp.so_tin_chi}</td>
-                                            ${generateTdHocKy(9, hp.hoc_ky_goi_y)}
-                                            <td rowspan="1">${
-                                                hp.hoc_phan_tuong_duong_id ? hp.hoc_phan_tuong_duong_id : ''
-                                            }</td> 
-                                            </tr>
-                                            `;
-                                });
-                            }
-
-                            if (kkt.hpTuChon) {
-                                htmlKKT += `
-                                <tr data-depth="${depthKKT + 1}" class='collapse'>
-                                <td colspan="3" class='toggle'>Các học phần tự chọn</td>
-                                <td colspan="1">${kkt.tong_tin_chi_ktt_tu_chon}/${kkt.tong_tin_chi_ktt_tu_chon}</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                </tr>
-                                `;
-
-                                Object.keys(kkt.hpTuChon).forEach((key) => {
-                                    let hp = kkt.hpTuChon[key];
-                                    htmlKKT += `
-                                            <tr data-depth="${depthKKT + 2}" class='collapse' data-hp="${hp.id}">
-                                            <td rowspan="1">${index++}</td>
-                                            <td rowspan="1">${hp.ma_hoc_phan}</td>
-                                            <td rowspan="1">${hp.ten}</td>
-                                            <td rowspan="1">${hp.so_tin_chi}</td>
-                                            ${generateTdHocKy(9, hp.hoc_ky_goi_y)}
-                                            <td rowspan="1">${
-                                                hp.hoc_phan_tuong_duong_id ? hp.hoc_phan_tuong_duong_id : ''
-                                            }</td> 
-                                            </tr>
-                                            `;
-                                });
-                            }
-
-                            if (kkt.loai_kien_thuc_id && currentLKT.id != kkt.loai_kien_thuc_id) {
-                                //in khi chuyển tiếp lkt sang lkt
-
-                                if (currentLKT.id) {
-                                    html += `
-                                    <tr data-depth="0" class='collapse'>
-                                    <td colspan="3" class='toggle' value="${currentLKT.id}">
-                                    ${currentLKT.ten ?? ''}</td>
-                                    <td colspan="1">${stcKKT + '/' + stcKKT}</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    </tr>
-                                    `;
-                                    html += htmlLKT;
-                                    resetCurrrentLKT();
-                                }
-                                currentLKT.id = kkt.loai_kien_thuc_id;
-                                currentLKT.ten = kkt.ten_loai_kien_thuc;
-                                htmlLKT += htmlKKT;
-                                stcKKT = kkt.tong_tin_chi_ktt_bat_buoc + kkt.tong_tin_chi_ktt_tu_chon;
-                            } else if (kkt.loai_kien_thuc_id && currentLKT.id == kkt.loai_kien_thuc_id) {
-                                stcKKT += kkt.tong_tin_chi_ktt_bat_buoc + kkt.tong_tin_chi_ktt_tu_chon;
-                                htmlLKT += htmlKKT;
-                            } else {
-                                //in khi chuyển tiếp kkt sang lkt
-                                if (currentLKT.id) {
-                                    html += `
-                                    <tr data-depth="0" class='collapse'>
-                                    <td colspan="3" class='toggle' value="${currentLKT.id}">
-                                    ${currentLKT.ten ?? ''}</td>
-                                    <td colspan="1">${stcKKT + '/' + stcKKT}</td>
-                                    <td colspan="2"></td>
-                                    </tr>
-                                    `;
-                                    html += htmlLKT;
-                                }
-                                resetCurrrentLKT();
-
-                                //kkt : depth=0;
-                            }
-
-                            if (depthKKT == 1) {
-                            } else if (depthKKT == 0) {
-                                html += htmlKKT;
-                            }
-                        });
-                        // in lần cuối
-                        if (currentLKT.id) {
-                            html += `
-                            <tr data-depth="0" class='collapse'>
-                            <td colspan="3" class='toggle' value="${currentLKT.id}">
-                            ${currentLKT.ten ?? ''}</td>
-                            <td colspan="1">${stcKKT + '/' + stcKKT}</td>
-                            <td colspan="10"></td>
-
-                            </tr>
-                            `;
-                            html += htmlLKT;
-                        }
-                        tableContainer.innerHTML = `
-
-                                <div class="table-container">
-                                <table class="table-graduate">
-                                <colgroup>
-                                <col span="1" style="width: 5%; min-width:40px;">
-                                <col span="1" style="width: 10%; min-width:60px;">
-                                <col span="1" style="width: 40%; min-width:320px;">
-                                <col span="1" style="width: 10%;min-width:80px;">
-                                <col span="9" style="width: 15px; ">
-                                <col span="1" style="width: 10%; min-width:60px;">
-                                </colgroup>
-                                <thead>
-                                <tr>
-                                    <th rowspan="2">TT</th>
-                                    <th rowspan="2">Mã học phần</th>
-                                    <th rowspan="2">Tên Học phần</th>
-                                    <th rowspan="2">Số tín chỉ</th>
-                                    <th rowspan="1" colspan="9">HỌC KỲ</th>
-                                    <th rowspan="2">Mã học phần trước</th>
-                                </tr>
-                                <tr>
-
-                                <th rowspan="1">1</th>
-                                <th rowspan="1">2</th>
-                                <th rowspan="1">3</th>
-                                <th rowspan="1">4</th>
-                                <th rowspan="1">5</th>
-                                <th rowspan="1">6</th>
-                                <th rowspan="1">7</th>
-                                <th rowspan="1">8</th>
-                                <th rowspan="1">9</th>
-                 
-                                </tr>
-                                </thead>
-                                <tbody>
-                                ${html}
-                                </tbody>
-                            </table>
-                        </div>
-                                `;
-
-                        //         tableContainer.innerHTML = `
-
-                        //         <div class="table-container">
-                        //         <table class="table-graduate">
-                        //         <colgroup>
-                        //         <col span="1" style="width: 5%; min-width:40px;">
-                        //         <col span="1" style="width: 15%; min-width:120px;">
-                        //         <col span="1" style="width: 40%; min-width:320px;">
-                        //         <col span="1" style="width: 10%;min-width:80px;">
-                        //         <col span="1" style="width: 15%;min-width:200px; ">
-                        //         <col span="1" style="width: 15%; min-width:120px;">
-                        //         </colgroup>
-                        //         <thead>
-                        //         <tr>
-                        //             <th rowspan="2">TT</th>
-                        //             <th rowspan="2">Mã học phần</th>
-                        //             <th rowspan="2">Tên Học phần</th>
-                        //             <th rowspan="2">Số tín chỉ</th>
-                        //             <th rowspan="2">HỌC KỲ</th>
-                        //             <th rowspan="2">Mã học phần trước</th>
-                        //         </tr>
-
-                        //         </thead>
-                        //         <tbody>
-                        //         <tr data-depth="0" class='collapse'>
-                        //         <td colspan="3" class='toggle'>Loại kiến thức a</td>
-                        //         <td colspan="1">25/25</td>
-                        //         <td colspan="2"></td>
-                        //         </tr>
-                        //         <tr data-depth="1" class='collapse'>
-                        //             <td colspan="3" class='toggle'>Khối kiến thức a</td>
-                        //             <td colspan="1">25/25</td>
-                        //             <td colspan="2"></td>
-                        //         </tr>
-                        //         <tr data-depth="2" class='collapse'>
-                        //             <td colspan="3" class='toggle'>Các học phần tự chọn</td>
-                        //             <td colspan="1">37/37</td>
-                        //             <td colspan="2"></td>
-                        //         </tr>
-
-                        //         <tr>
-                        //             <td>February</td>
-                        //             <td>$80</td>
-                        //             <td>$80</td>
-                        //             <td>$80</td>
-                        //             <td>
-                        //             <label>
-                        //             <input type="checkbox" value="1" name="">
-                        //             1
-                        //             </label>
-                        //             <label>
-                        //             <input type="checkbox" value="2" name="">
-                        //             2
-                        //             </label>
-                        //             <label>
-                        //             <input type="checkbox" value="3" name="">
-                        //             3
-                        //             </label>
-                        //             <label>
-                        //             <input type="checkbox" value="4" name="">
-                        //             4
-                        //             </label>
-                        //             <label>
-                        //             <input type="checkbox" value="5" name="">
-                        //             5
-                        //             </label>
-                        //             <label>
-                        //             <input type="checkbox" value="6" name="">
-                        //             6
-                        //             </label>
-
-                        //             </td>
-
-                        //             <td>$80</td>
-                        //         </tr>
-                        //         <tr data-depth="2" class='collapse'>
-                        //         <td colspan="3" class='toggle'>Các học phần tự chọn</td>
-                        //         <td colspan="1">37/37</td>
-                        //         <td colspan="2"></td>
-                        //         </tr>
-                        //         <tr data-depth="0" class='collapse'>
-                        //         <td colspan="3" class='toggle'>Loại kiến thức b</td>
-                        //         <td colspan="1">25/25</td>
-                        //         <td colspan="2"></td>
-                        //         </tr>
-                        //         </tbody>
-                        //     </table>
-                        // </div>
-                        //         `;
-                        tableContainer.querySelectorAll('table').forEach((table) => {
-                            TableTree.bind(table);
-                        });
-                        console.log(data);
-                    })
-                    .catch((err) => {
-                        console.error(err);
-                        alertComponent('khởi tạo khối kiến thức chương trình đào tạo thất bại');
-                    });
-                // let treeTable = new TreeTable(childProgramContainer);
-            } else {
-            }
-        } catch (err) {
-            console.log(err);
-            alertComponent('Đã xảy ra lỗi khi khởi tạo biểu mẫu', 'Hãy thử làm mới trang');
-        }
-    }
-    // static show({ id }) {
-    //     console.log(id);
-    // }
 }

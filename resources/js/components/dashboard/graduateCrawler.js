@@ -127,11 +127,10 @@ export default class GraduateCrawler {
                             stt++;
                             list += `<tr>
                                 <td>${stt}</td>
-                                <td>${getFromHocPhan(hoc_phan, kq.hoc_phan_id)}</td>
+                                <td>${getFromHocPhan(hoc_phan, kq.hoc_phan_id, 'ma_hoc_phan')}</td>
                                 <td>${getFromHocPhan(hoc_phan, kq.hoc_phan_id, 'ten')}</td>
                                 <td>${getFromHocPhan(hoc_phan, kq.hoc_phan_id, 'so_tin_chi')}</td>
                                 <td>${(kq.diem_tong_ket == null) ? `<input style="width: 45px" data-hpid="${kq.hoc_phan_id}" class="ket_qua_du_kien">` : kq.diem_tong_ket}</td>
-                                <td>${(kq.loai_he_4 == null) ? "" : kq.loai_he_4}</td>
                                 <td>${(kq.qua_mon == 1) ? 'Đạt' : 'X' }</td>
                                 <td>
                                     <a href="#" class="graduate__more">Chi tiết</a>
@@ -157,7 +156,7 @@ export default class GraduateCrawler {
                             stt++;
                             list += `<tr>
                                 <td>${stt}</td>
-                                <td>${getFromHocPhan(hoc_phan, kq.hoc_phan_id)}</td>
+                                <td>${getFromHocPhan(hoc_phan, kq.hoc_phan_id, 'ma_hoc_phan')}</td>
                                 <td>${getFromHocPhan(hoc_phan, kq.hoc_phan_id, 'ten')}</td>
                                 <td>${getFromHocPhan(hoc_phan, kq.hoc_phan_id, 'so_tin_chi')}</td>
                                 <td>${(kq.diem_tong_ket == null) ? "" : kq.diem_tong_ket}</td>
@@ -196,7 +195,7 @@ export default class GraduateCrawler {
                                     <th>Tên học phần</th>
                                     <th>STC</th>
                                     <th>Điểm</th>
-                                    <th>Điểm chữ</th>
+                                    ${(type != 'suggest') ? '<th>Điểm chữ</th>' : ''}
                                     <th>Kết quả</th>
                                     <th>Chi tiết</th>
                                 </tr>
@@ -262,7 +261,7 @@ export default class GraduateCrawler {
         for (let i = 0; i < ds_goi_y.length; i++) {
             const kq = ds_goi_y[i];
             list += `<tr>
-                <td>${kq.hoc_phan_id}</td>
+                <td>${kq.ma_hoc_phan}</td>
                 <td>${kq.ten}</td>
                 <td>${kq.so_tin_chi}</td>
             </tr>`
@@ -321,7 +320,7 @@ export default class GraduateCrawler {
 
             list += `<tr>
                 <td><input type='checkbox' class='chon_mh_goiy' data-hpid='${kq.hoc_phan_id}' ${(this.listMHChon.indexOf(kq.hoc_phan_id) > -1) ? 'checked' : '' }></td>
-                <td>${kq.hoc_phan_id}</td>
+                <td>${kq.ma_hoc_phan}</td>
                 <td>${kq.ten}</td>
                 <td>${kq.so_tin_chi}</td>
             </tr>`

@@ -5,11 +5,6 @@ $firstLight: #fefcf3;
 // $secondLight: #f5ebe0;
 $secondLight: #fff;
 .table-tree {
-    // tr td {
-    //     max-height: 100px;
-    //     padding: 10px 10px;
-    //     transition: max-height 0.6s, padding 0.6s;
-    // }
     tr.hide {
         // max-height: 0;
         // padding: 0 10px;
@@ -31,20 +26,38 @@ $secondLight: #fff;
     //     content: '';
     //     padding-left: calc(attr(data-depth number) * 15px);
     // }
-    tr[data-depth='1'] td:first-child {
-        content: '';
-        padding-left: 15px;
-    }
-
-    tr[data-depth='2'] td:first-child {
-        content: '';
-        padding-left: 30px;
-    }
-
+    // tr[data-depth] {
+    //     --depth: attr(data-depth);
+    //     --data-depth: var(--depth);
+    // }
+    // tr[data-depth] .toggle::after {
+    //     content: var(--data-depth string);
+    //     padding-left: 8px;
+    // }
+    // tr[data-depth='2'] .toggle {
+    //     content: '';
+    //     padding-left: 16px;
+    // }
+    // tr[data-depth='2'] .toggle {
+    //     content: '';
+    //     padding-left: 16px;
+    // }
+    // tr[data-depth='3'] .toggle {
+    //     content: '';
+    //     padding-left: 24px;
+    // }
+    // tr[data-depth='4'] .toggle {
+    //     content: '';
+    //     padding-left: 32px;
+    // }
     .collapse .toggle::before {
-        content: '-';
+        color: var(--color);
+        content: attr(data-depth);
     }
     .expand .toggle::before {
+        color: var(--color);
+
+        content: attr(data-depth);
         content: '+';
     }
     .collapse .toggle,
